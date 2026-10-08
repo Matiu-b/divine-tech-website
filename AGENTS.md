@@ -2,33 +2,27 @@
 
 ## Project Context
 
-This is a Base44 app repository. Treat it as user-owned application code, keep changes focused on the user's request, and preserve existing project conventions.
+Divine Tech AI company website (divine-tech.ai). React, Vite and Tailwind CSS, built as a static single-page site and hosted on Netlify. It was originally exported from Base44; all Base44 dependencies have been removed from the code.
 
-Start with `README.md` for local setup, environment variables, and publish workflow.
+## Hosting and Deploys
 
-## Base44 References
+- Hosting: Netlify. Every push to `main` deploys to production; pull requests and branches get preview URLs.
+- Build settings live in `netlify.toml` (build command, publish dir, Node version, SPA redirect, security headers).
+- Domain: registered and DNS-managed at GoDaddy. Only the `@` A record and the `www` CNAME point at Netlify. Do not touch the email records (Google Workspace MX/SPF/DKIM/DMARC, Resend `send.*` and `resend._domainkey`).
 
-- CLI overview: https://docs.base44.com/developers/references/cli/get-started/overview.md
-- Agent skills: https://docs.base44.com/developers/backend/overview/skills.md
+## Lead Form
 
-If your agent supports Agent Skills, install or update Base44 skills before Base44-specific work:
-
-```bash
-npx skills add base44/skills
-```
+- `src/components/home-v2/LeadDrawer.jsx` submits to Netlify Forms (form name `lead`).
+- `public/__forms.html` is the hidden static copy Netlify uses to detect the form. If you add, rename or remove a field in the component, update this file to match exactly, or submissions will fail.
 
 ## Key Files
 
-- `src/`: frontend application source.
-- `src/api/base44Client.js`: frontend Base44 SDK client.
-- `vite.config.js`: Vite config and Base44 Vite plugin setup.
-- `.env.local`: local-only environment values; never commit secrets.
+- `src/`: frontend application source. `src/data/site.js` holds most of the page copy.
+- `vite.config.js`: Vite config, including the `@` → `src` alias.
+- `netlify.toml`: Netlify build and header settings.
 
 ## Working Notes
 
-- Use `base44 dev` as the default local development command when you need the local Base44 backend. It can run the backend and frontend together.
-- When docs or code mention the frontend being started automatically, that usually means the Base44 project config includes `site.serveCommand`, for example `"serveCommand": "npm run dev"` in `base44/config.jsonc`.
-- Use `npm run dev` only for frontend-only work against the hosted Base44 backend.
-- Prefer the existing Base44 CLI workflow over adding new npm scripts for Base44-specific tasks.
-- Reuse the existing SDK client and Vite plugin patterns before adding new Base44 integration paths.
-- Run the relevant checks from `package.json` before finishing code changes.
+- `npm install`, then `npm run dev` for local work; `npm run build` to check a production build.
+- Run `npm run lint` before finishing code changes.
+- `@base44/sdk` and `@base44/vite-plugin` are still listed in `package.json` but are no longer imported; they can be removed together with a lockfile refresh.

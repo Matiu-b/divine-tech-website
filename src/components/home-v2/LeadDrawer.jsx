@@ -1,7 +1,6 @@
 import React, { createContext, useCallback, useContext, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight, Check, X } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
 import { cn } from '@/lib/utils';
 import { brand, leadIndustries } from '@/data/site';
 import { EASE } from './motion';
@@ -55,8 +54,12 @@ function Field({ id, label, optional = false, error = undefined, dark = false, c
   );
 }
 
+/** Netlify Forms form name. The hidden copy in public/__forms.html must list the same fields. */
+const LEAD_FORM_NAME = 'lead';
+
 /**
- * Lead form. Writes to the Base44 `Lead` entity (same fields as before).
+ * Lead form. Submits to Netlify Forms (form "lead"); submissions appear in the
+ * Netlify dashboard and trigger the email notifications configured there.
  * @param {any} props
  */
 export function LeadForm({ dark = false, columns = 1, onDone = undefined, autoFocus = false }) {
@@ -109,16 +112,24 @@ export function LeadForm({ dark = false, columns = 1, onDone = undefined, autoFo
     setFailure('');
     setState('sending');
     try {
-      await base44.entities.Lead.create({
+      const body = new URLSearchParams({
+        'form-name': LEAD_FORM_NAME,
+        subject: 'New demo request from divine-tech.ai: ' + d.name,
         name: d.name,
-        company: d.company || undefined,
+        company: d.company || '',
         email: d.email,
-        phone: d.phone || undefined,
+        phone: d.phone || '',
         industry: d.industry,
-        message: d.message || undefined,
+        message: d.message || '',
         source: 'divine-tech.ai landing',
         page: window.location.href,
       });
+      const res = await fetch('/__forms.html', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: body.toString(),
+      });
+      if (!res.ok) throw new Error('Form submission failed: ' + res.status);
       setState('done');
       if (onDone) onDone();
     } catch {

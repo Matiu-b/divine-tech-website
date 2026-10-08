@@ -553,5 +553,5 @@ export const footer = {
   tagline: 'Divine Tech AI builds Aurora, the AI operating layer that runs real business work across every channel.',
 };
 
-// Must match the Lead entity enum (base44/entities/Lead.jsonc).
+// Must match the industry options in public/__forms.html (Netlify Forms).
 export const leadIndustries = ['Real Estate', 'Healthcare / Medical', 'Home Services', 'Other'];

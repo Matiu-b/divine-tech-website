@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="noindex" />
+    <title>Forms</title>
+  </head>
+  <body>
+    <!--
+      Hidden copy of the React lead form (src/components/home-v2/LeadDrawer.jsx)
+      so Netlify Forms can detect it at deploy time. Field names must match
+      exactly what the component submits.
+    -->
+    <form name="lead" data-netlify="true" hidden>
+      <input type="hidden" name="form-name" value="lead" />
+      <input type="hidden" name="subject" />
+      <input type="text" name="name" />
+      <input type="text" name="company" />
+      <input type="email" name="email" />
+      <input type="tel" name="phone" />
+      <select name="industry">
+        <option value="Real Estate">Real Estate</option>
+        <option value="Healthcare / Medical">Healthcare / Medical</option>
+        <option value="Home Services">Home Services</option>
+        <option value="Other">Other</option>
+      </select>
+      <textarea name="message"></textarea>
+      <input type="hidden" name="source" />
+      <input type="hidden" name="page" />
+    </form>
+  </body>
+</html>
