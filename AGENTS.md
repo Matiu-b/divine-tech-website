@@ -21,6 +21,7 @@ Divine Tech AI company website (divine-tech.ai). React, Vite and Tailwind CSS, b
 - Cookie banner: `src/components/ConsentBanner.jsx`, state and Consent Mode updates in `src/lib/consent.js` (localStorage key `dt_consent`, version 1). Footer "Cookie settings" reopens it.
 - `index.html` sets Google Consent Mode v2 defaults (granted, denied in EEA/UK/CH), re-applies a saved choice, then loads Google Tag Manager `GTM-KGSKS6PM`. GA4 and Google Ads are configured inside GTM, not in the code.
 - `src/lib/tracking.js` pushes `demo_request` (after a successful form submission only), `phone_click` and `email_click` to the dataLayer. If you add a new tool that sets cookies, add it to the policy's cookie table and gate it on consent.
+- Meta Pixel (dataset `1659090295741872`, Divine Tech AI business) lives in `src/lib/metaPixel.js`, in code rather than GTM. It loads only when marketing is allowed (saved choice, else no GPC and not an EEA/UK/CH time zone) and follows banner changes through the `dt:consent-change` event. Events: `PageView` (load and route changes, from `App.jsx`), `Lead` with hashed email/phone after a successful form submission, `Contact` on tel:/mailto: clicks.
 
 ## Key Files
 

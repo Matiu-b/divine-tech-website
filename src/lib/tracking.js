@@ -1,8 +1,11 @@
 // Analytics events for Google Tag Manager (container GTM-KGSKS6PM).
 // GTM turns these dataLayer events into GA4 and Google Ads tags; Consent Mode
 // (index.html + lib/consent.js) decides what each tag may store or send.
+// The same events also go to the Meta Pixel (lib/metaPixel.js), which checks
+// marketing consent itself.
 
 import { marketingNotRefused } from '@/lib/consent';
+import { trackMetaContact, trackMetaLead } from '@/lib/metaPixel';
 
 function push(data) {
   window.dataLayer = window.dataLayer || [];
@@ -41,6 +44,7 @@ export function trackDemoRequest(lead) {
     event.user_data = { email: (lead.email || '').trim().toLowerCase(), ...(phone ? { phone_number: phone } : {}) };
   }
   push(event);
+  trackMetaLead({ email: lead.email, phone: toE164(lead.phone || '') });
 }
 
 let clicksBound = false;
@@ -54,6 +58,8 @@ export function bindContactClickTracking() {
     const a = target && target.closest('a[href^="mailto:"], a[href^="tel:"]');
     if (!a) return;
     const href = a.getAttribute('href') || '';
-    push({ event: href.startsWith('tel:') ? 'phone_click' : 'email_click', link_url: href });
+    const isPhone = href.startsWith('tel:');
+    push({ event: isPhone ? 'phone_click' : 'email_click', link_url: href });
+    trackMetaContact(isPhone ? 'phone' : 'email');
   });
 }
