@@ -26,6 +26,9 @@
             analytics_storage: c.analytics ? 'granted' : 'denied',
             ad_storage: ads, ad_user_data: ads, ad_personalization: ads
           });
+        } else if (navigator.globalPrivacyControl === true) {
+          // Global Privacy Control: treat as an opt-out of marketing until the visitor chooses.
+          gtag('consent', 'update', { ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' });
         }
       } catch (e) {}
     </script>

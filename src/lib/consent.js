@@ -73,7 +73,17 @@ export function saveConsent(choice) {
  */
 export function marketingNotRefused() {
   const c = readConsent();
-  return !c || c.marketing;
+  if (c) return c.marketing;
+  return !hasGlobalPrivacyControl();
+}
+
+/** True when the browser sends a Global Privacy Control (opt-out) signal. */
+export function hasGlobalPrivacyControl() {
+  try {
+    return /** @type {any} */ (navigator).globalPrivacyControl === true;
+  } catch {
+    return false;
+  }
 }
 
 /** Reopen the cookie banner in settings mode (used by "Cookie settings" links). */

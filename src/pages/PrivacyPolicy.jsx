@@ -9,31 +9,44 @@ import { brand, legal } from '@/data/site';
 
 const UPDATED = 'October 8, 2026';
 
-/** @param {any} props */
-function Section({ id, title, children }) {
-  return (
-    <section id={id} className="scroll-mt-28 border-t border-ink/10 pt-10">
-      <h2 className="text-[22px] font-medium tracking-[-0.015em] text-ink sm:text-[24px]">{title}</h2>
-      <div className="legal-body mt-4">{children}</div>
-    </section>
-  );
-}
-
 const TOC = [
-  ['who-we-are', 'Who we are'],
+  ['scope', 'Who we are and what this policy covers'],
   ['what-we-collect', 'Information we collect'],
   ['how-we-use', 'How we use information'],
+  ['ai', 'AI tools and your information'],
   ['legal-bases', 'Legal bases'],
   ['cookies', 'Cookies and similar technologies'],
   ['sharing', 'Who we share information with'],
   ['transfers', 'International transfers'],
   ['retention', 'How long we keep information'],
   ['security', 'Security'],
-  ['your-rights', 'Your rights and choices'],
+  ['your-rights', 'Your rights and how to use them'],
+  ['us-notice', 'Additional notice for US residents'],
   ['children', 'Children'],
   ['changes', 'Changes to this policy'],
   ['contact', 'Contact us'],
 ];
+
+/** @param {any} props */
+function Section({ id, children }) {
+  const i = TOC.findIndex(([key]) => key === id);
+  return (
+    <section id={id} className="scroll-mt-28 border-t border-ink/10 pt-10">
+      <h2 className="text-[22px] font-medium tracking-[-0.015em] text-ink sm:text-[24px]">
+        {i + 1}. {TOC[i][1]}
+      </h2>
+      <div className="legal-body mt-4">{children}</div>
+    </section>
+  );
+}
+
+const CookieSettingsLink = () => (
+  <button type="button" onClick={openConsentSettings} className="legal-link">
+    Cookie settings
+  </button>
+);
+
+const Email = () => <a href={'mailto:' + brand.email}>{brand.email}</a>;
 
 export default function PrivacyPolicy() {
   useEffect(() => {
@@ -68,10 +81,9 @@ export default function PrivacyPolicy() {
 
             <div className="legal-body mt-8">
               <p>
-                This policy explains how {legal.entity} ("{brand.company}", "we", "us") collects, uses and protects
-                personal information when you visit {brand.domain} (the "Site") or contact us through it. It covers
-                the Site only. Our products, including {brand.product}, are governed by the agreements and privacy
-                terms we sign with each customer.
+                This policy explains how {legal.entity} ("{brand.company}", "we", "us") collects, uses, shares and
+                protects personal information when you visit {brand.domain} (the "Site"), contact us, book a demo or
+                otherwise talk to us as a prospective customer. It also explains your choices and rights.
               </p>
             </div>
 
@@ -89,77 +101,98 @@ export default function PrivacyPolicy() {
             </nav>
 
             <div className="mt-12 grid gap-12">
-              <Section id="who-we-are" title="1. Who we are">
+              <Section id="scope">
                 <p>
-                  The Site is operated by {legal.entity}, {legal.address}. We are responsible for the personal
-                  information collected through the Site. Our affiliated company in Israel may help us handle
-                  inquiries and operate the Site, under this policy.
+                  {legal.entity}, {legal.address}, is responsible (the "controller") for the personal information
+                  described in this policy. Our affiliated company in Israel helps us operate the Site and respond to
+                  inquiries, under this policy.
                 </p>
                 <p>
-                  Questions about this policy can be sent to <a href={'mailto:' + brand.email}>{brand.email}</a> or by
-                  phone to <a href={'tel:' + legal.phoneTel}>{legal.phone}</a>.
+                  <strong>What this policy does not cover.</strong> When businesses use {brand.product}, they may load
+                  information about their own customers and staff into it (for example conversations, call recordings or
+                  CRM records). For that information we act on the business's behalf as a processor or service provider,
+                  under our agreement and data processing terms with that business, and that business's own privacy notice
+                  applies. If you are a customer of one of our clients, please contact that business about your
+                  information. This policy also does not cover job applicants or our employees, who receive separate
+                  notices.
                 </p>
               </Section>
 
-              <Section id="what-we-collect" title="2. Information we collect">
+              <Section id="what-we-collect">
                 <p>
-                  <strong>Information you give us.</strong> When you request a demo or contact us, we collect what you
-                  enter in the form: your name, company, work email, phone number (optional), industry and your message.
-                  We also record the page you sent it from. If you email or call us, we keep that correspondence.
+                  <strong>Information you give us.</strong> When you book a demo or contact us, we collect what you enter
+                  in the form: your name, company, work email, phone number (optional), industry and message, together
+                  with the page you sent it from. We also keep the emails, messages and call details you exchange with us.
+                </p>
+                <p>
+                  <strong>Meetings and calls.</strong> Demos and sales calls may be held by video or phone. With notice,
+                  and with your consent where the law requires it, we may record or transcribe them and keep notes or
+                  summaries so we can follow up accurately.
                 </p>
                 <p>
                   <strong>Information collected automatically.</strong> When you visit the Site, our hosting provider and,
-                  if you allow them, analytics and advertising tools collect technical information such as your IP
-                  address, browser and device type, pages viewed, the site or ad that referred you, approximate location
-                  (city or country level) and the date and time of your visit. See{' '}
-                  <a href="#cookies">Cookies and similar technologies</a>.
+                  if you allow them, analytics and advertising tools collect technical information such as your IP address,
+                  browser and device type, pages viewed, referring site or ad, approximate location (city or country level)
+                  and the date and time of your visit. See <a href="#cookies">Cookies and similar technologies</a>.
                 </p>
                 <p>
-                  <strong>Information from advertising platforms.</strong> If you reach the Site from one of our ads,
-                  we receive reports from the advertising platform (for example Google Ads) about clicks and
-                  conversions. These reports are aggregated and do not identify you to us.
+                  <strong>Information from advertising platforms.</strong> If you reach the Site from one of our ads, we
+                  receive aggregated reports from the advertising platform (for example Google Ads) about clicks and
+                  conversions. These reports do not identify you to us.
+                </p>
+                <p>
+                  <strong>Aggregated information.</strong> We may combine information into statistics that do not identify
+                  anyone, such as the number of visitors per page. If we ever link such data to a person, we treat it as
+                  personal information under this policy.
                 </p>
                 <p>We do not ask for, and ask you not to send us, sensitive information through the Site.</p>
               </Section>
 
-              <Section id="how-we-use" title="3. How we use information">
+              <Section id="how-we-use">
                 <ul>
-                  <li>To answer your inquiry, schedule and run demos, and follow up about our products.</li>
+                  <li>To answer your inquiry, schedule and run demos, prepare proposals and follow up about our products.</li>
                   <li>To operate, secure and improve the Site, including detecting spam and abuse of our forms.</li>
                   <li>To understand how visitors use the Site, with analytics you have allowed.</li>
                   <li>
                     To measure and improve our advertising, for example learning which ads lead to demo requests, with
-                    advertising cookies you have allowed.
+                    marketing cookies you have allowed.
                   </li>
-                  <li>To comply with legal obligations and to protect our rights.</li>
+                  <li>To send occasional updates about {brand.product}, which you can unsubscribe from at any time.</li>
+                  <li>To comply with legal obligations, resolve disputes and protect our rights.</li>
                 </ul>
+              </Section>
+
+              <Section id="ai">
                 <p>
-                  We do not sell your personal information. We may send you occasional updates about {brand.product}{' '}
-                  after you contact us; you can unsubscribe at any time using the link in the message or by writing to
-                  us.
+                  We build AI agents, and we use AI tools in our own work. For example, an AI assistant may help answer or
+                  route your inquiry, and AI tools may transcribe or summarize our calls with you. When an AI assistant is
+                  talking to you, we will let you know where the law requires it, and a person on our team is available
+                  if you prefer.
+                </p>
+                <p>
+                  We use third-party AI providers under business terms that do not allow them to use your information to
+                  train their own models. We do not use personal information collected through the Site to train
+                  general-purpose AI models. We may use inquiries and call notes, with personal details removed where
+                  practical, to train our team and improve how we respond to prospects.
                 </p>
               </Section>
 
-              <Section id="legal-bases" title="4. Legal bases">
+              <Section id="legal-bases">
                 <p>
                   Where the law requires a legal basis (for example the GDPR for visitors in the European Economic Area,
-                  the United Kingdom or Switzerland), we rely on: steps you ask us to take before entering into a
-                  contract, when you request a demo; our legitimate interests in responding to inquiries, running and
-                  securing the Site and promoting our business; your consent, for analytics and advertising cookies;
-                  and compliance with legal obligations. You can withdraw consent at any time without affecting earlier
-                  processing.
+                  the United Kingdom or Switzerland), we rely on: steps you ask us to take before entering into a contract,
+                  when you request a demo; our legitimate interests in responding to inquiries, running and securing the
+                  Site and promoting our business; your consent, for analytics and marketing cookies and, where required,
+                  for call recordings; and compliance with legal obligations. You can withdraw consent at any time without
+                  affecting earlier processing.
                 </p>
               </Section>
 
-              <Section id="cookies" title="5. Cookies and similar technologies">
+              <Section id="cookies">
                 <p>
-                  Cookies are small files stored on your device. We group them into three categories, and you choose
-                  which non-essential categories to allow in our cookie banner. You can change your choice at any time
-                  in{' '}
-                  <button type="button" onClick={openConsentSettings} className="legal-link">
-                    Cookie settings
-                  </button>
-                  .
+                  Cookies are small files stored on your device. We group them into three categories, and you choose which
+                  non-essential categories to allow in our cookie banner. You can change your choice at any time in{' '}
+                  <CookieSettingsLink />.
                 </p>
                 <div className="mt-2 overflow-x-auto rounded-[18px] border border-ink/10">
                   <table className="w-full min-w-[560px] text-left text-[14.5px]">
@@ -194,17 +227,19 @@ export default function PrivacyPolicy() {
                   </table>
                 </div>
                 <p>
-                  We load these tools through Google Tag Manager and use Google Consent Mode, so Google's tags respect
-                  your choice. If you allow marketing cookies and submit our form, the email address and phone number you
-                  entered may be sent to Google in hashed (scrambled) form to help measure our ads ("enhanced
-                  conversions"). If you allow analytics, Google signals may associate visits with Google accounts of
-                  users who have turned on ad personalization, for aggregated cross-device reporting.
+                  We load these tools through Google Tag Manager and use Google Consent Mode, so Google's tags respect your
+                  choice. If you allow marketing cookies and submit our form, the email address and phone number you
+                  entered may be sent to Google in hashed (scrambled) form to measure our ads ("enhanced conversions"). If
+                  you allow analytics, Google signals may associate visits with Google accounts of users who have turned on
+                  ad personalization, for aggregated cross-device reporting.
                 </p>
                 <p>
-                  In some regions, including the European Economic Area, the United Kingdom and Switzerland, analytics
-                  and marketing cookies stay off unless you turn them on. Elsewhere they are on by default and you can
-                  turn them off in the banner or in Cookie settings. You can also block cookies in your browser, and
-                  learn more about how Google uses information at{' '}
+                  In the European Economic Area, the United Kingdom and Switzerland, analytics and marketing cookies stay
+                  off unless you turn them on. Elsewhere they are on by default and you can turn them off in the banner or
+                  in <CookieSettingsLink />. If your browser sends a Global Privacy Control signal, we treat it as a request
+                  to turn marketing cookies off. Browsers' "Do Not Track" setting has no agreed standard, so we rely on your
+                  cookie choices instead. You can also block cookies in your browser and read how Google uses information
+                  at{' '}
                   <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer">
                     policies.google.com/technologies/partner-sites
                   </a>
@@ -212,102 +247,144 @@ export default function PrivacyPolicy() {
                 </p>
               </Section>
 
-              <Section id="sharing" title="6. Who we share information with">
+              <Section id="sharing">
                 <p>We share personal information only as needed, with:</p>
                 <ul>
                   <li>
-                    <strong>Service providers</strong> who process it on our behalf: Netlify (website hosting and form
-                    handling, including spam filtering), Google (Workspace email, Google Analytics, Google Ads and Google
-                    Tag Manager) and other tools we use to manage customer relationships.
+                    <strong>Service providers</strong> who process it on our behalf under contract: Netlify (website hosting
+                    and form handling, including spam filtering), Google (Workspace email, Google Analytics, Google Ads and
+                    Google Tag Manager), AI and transcription providers, and tools we use to manage customer relationships
+                    and meetings.
+                  </li>
+                  <li>
+                    <strong>Advertising partners</strong> such as Google, only if you allow marketing cookies, to measure
+                    and improve our ads.
                   </li>
                   <li>
                     <strong>Our affiliates</strong>, including our affiliated company in Israel, to respond to you and
                     provide our services.
                   </li>
                   <li>
-                    <strong>Authorities or other parties</strong> when required by law or to protect our rights, users
-                    or the public.
+                    <strong>Authorities and advisers</strong> when required by law, to protect our rights, users or the
+                    public, or with our professional advisers under confidentiality.
                   </li>
                   <li>
                     <strong>A buyer or successor</strong> if our business, or part of it, is reorganized, merged or sold.
                   </li>
                 </ul>
+                <p>We do not sell personal information for money.</p>
               </Section>
 
-              <Section id="transfers" title="7. International transfers">
+              <Section id="transfers">
                 <p>
-                  We operate in the United States and Israel, and our service providers may process information in
-                  other countries. When we transfer personal information from the European Economic Area, the United
-                  Kingdom or Switzerland, we rely on appropriate safeguards such as adequacy decisions or standard
-                  contractual clauses.
+                  We operate in the United States and Israel, and our service providers may process information in other
+                  countries. Israel is recognized by the European Commission as providing adequate protection. For other
+                  transfers from the European Economic Area, the United Kingdom or Switzerland, we rely on safeguards such
+                  as the European Commission's standard contractual clauses and the UK International Data Transfer
+                  Addendum.
                 </p>
               </Section>
 
-              <Section id="retention" title="8. How long we keep information">
+              <Section id="retention">
                 <p>
-                  We keep inquiry and contact information for as long as needed to respond and follow up, and generally
-                  for up to 24 months after our last contact with you, unless you become a customer or the law requires
-                  us to keep it longer. Google Analytics data is kept for 14 months. When information is no longer
-                  needed, we delete or anonymize it.
+                  We keep inquiry and contact information, including call notes and recordings, for as long as needed to
+                  respond and follow up, and generally for up to 24 months after our last contact with you, unless you
+                  become a customer or the law requires us to keep it longer. Google Analytics data is kept for 14 months.
+                  If you unsubscribe from marketing, we keep a record of that so we respect your choice. When information is
+                  no longer needed, we delete or anonymize it.
                 </p>
               </Section>
 
-              <Section id="security" title="9. Security">
+              <Section id="security">
                 <p>
-                  We use reasonable technical and organizational measures to protect personal information, including
-                  encrypted connections (HTTPS) and access controls. No method of transmission or storage is completely
-                  secure, so we cannot guarantee absolute security.
+                  We use reasonable administrative, technical and physical measures to protect personal information,
+                  including encrypted connections (HTTPS), access controls and contractual commitments from our service
+                  providers. No method of transmission or storage is completely secure, so we cannot guarantee absolute
+                  security. If a security incident affects your personal information, we will notify you and the relevant
+                  authorities as the law requires.
                 </p>
               </Section>
 
-              <Section id="your-rights" title="10. Your rights and choices">
+              <Section id="your-rights">
                 <p>
                   Depending on where you live, you may have the right to access the personal information we hold about
-                  you, ask us to correct or delete it, object to or restrict certain processing, receive a copy of it,
-                  and withdraw consent. This includes your rights under the Israeli Protection of Privacy Law, the GDPR
-                  and the privacy laws of some US states.
+                  you, correct it, delete it, receive a copy of it, object to or restrict certain processing, and withdraw
+                  consent. This includes your rights under the Israeli Protection of Privacy Law to review your information
+                  and ask us to correct or delete it, your rights under the GDPR, and the rights described in the{' '}
+                  <a href="#us-notice">notice for US residents</a>.
                 </p>
                 <ul>
                   <li>
-                    To make a request, write to <a href={'mailto:' + brand.email}>{brand.email}</a>. We may need to
-                    verify your identity, and we will reply within the time the law requires.
+                    <strong>How to make a request.</strong> Email <Email /> with the subject "Privacy request". We will
+                    confirm your identity before acting, and reply within the time the law requires (for example, one month
+                    under the GDPR, which can be extended in some cases).
                   </li>
                   <li>
-                    To stop marketing emails, use the unsubscribe link or tell us. To change cookie choices, use{' '}
-                    <button type="button" onClick={openConsentSettings} className="legal-link">
-                      Cookie settings
-                    </button>
-                    .
+                    <strong>Authorized agents.</strong> Someone you authorize may make a request for you, if they show us
+                    your written permission and we can verify your identity.
                   </li>
                   <li>
-                    You may also complain to your data protection authority, such as the Israeli Privacy Protection
-                    Authority or your local authority in the EEA or the UK.
+                    <strong>Appeals and complaints.</strong> If we decline your request, you can ask us to reconsider by
+                    replying to our answer. You can also complain to your data protection authority, such as the Israeli
+                    Privacy Protection Authority or your local authority in the EEA or the UK.
+                  </li>
+                  <li>
+                    <strong>Marketing and cookies.</strong> Unsubscribe using the link in any marketing email or by writing
+                    to us. Change cookie choices in <CookieSettingsLink />.
+                  </li>
+                </ul>
+                <p>We will not treat you differently for exercising your privacy rights.</p>
+              </Section>
+
+              <Section id="us-notice">
+                <p>
+                  If you live in California or another US state with a consumer privacy law, this section adds to the rest
+                  of this policy.
+                </p>
+                <ul>
+                  <li>
+                    <strong>Categories we collect:</strong> identifiers and contact details (name, email, phone, IP
+                    address), professional information (company, industry), internet activity on the Site, approximate
+                    location, and audio or electronic information from recorded calls. Sources, purposes and recipients are
+                    described in sections 2, 3 and 7. We do not collect sensitive personal information through the Site.
+                  </li>
+                  <li>
+                    <strong>Sale and sharing:</strong> we do not sell personal information for money. Allowing marketing
+                    cookies lets Google use online identifiers for advertising, which some state laws call "sharing" for
+                    targeted advertising. You can opt out at any time in <CookieSettingsLink /> or by using a Global
+                    Privacy Control signal. We have no actual knowledge of selling or sharing information of anyone under
+                    16.
+                  </li>
+                  <li>
+                    <strong>Your rights:</strong> to know and access, correct, delete, receive a portable copy, and opt out
+                    of sale, sharing and targeted advertising. Make requests as described in section 11; we respond within
+                    45 days, which may be extended once by another 45 days where the law allows.
                   </li>
                 </ul>
               </Section>
 
-              <Section id="children" title="11. Children">
+              <Section id="children">
                 <p>
-                  The Site is intended for businesses and is not directed to children. We do not knowingly collect
-                  personal information from anyone under 18. If you believe a child has sent us information, contact us
-                  and we will delete it.
+                  The Site is for businesses and is not directed to children. We do not knowingly collect personal
+                  information from anyone under 18. If you believe a child has sent us information, contact us and we will
+                  delete it.
                 </p>
               </Section>
 
-              <Section id="changes" title="12. Changes to this policy">
+              <Section id="changes">
                 <p>
-                  We may update this policy from time to time. We will post the new version on this page and update the
-                  date at the top. If changes are significant, we will take additional steps to let you know.
+                  We may update this policy from time to time. We will post the new version here and update the date at
+                  the top. If a change is significant, we will take reasonable steps to let you know before it applies.
                 </p>
               </Section>
 
-              <Section id="contact" title="13. Contact us">
+              <Section id="contact">
                 <p>
                   {legal.entity}
                   <br />
                   {legal.address}
                   <br />
-                  Email: <a href={'mailto:' + brand.email}>{brand.email}</a>
+                  Email: <Email />
                   <br />
                   Phone: <a href={'tel:' + legal.phoneTel}>{legal.phone}</a>
                 </p>
