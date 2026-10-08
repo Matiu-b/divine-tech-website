@@ -119,7 +119,7 @@ export default function ConsentBanner() {
               <Toggle
                 id={'c-mkt-' + uid}
                 label="Marketing"
-                description="Google Ads: measures which ads lead to demo requests."
+                description="Google Ads and Meta Pixel: measure which ads lead to demo requests."
                 checked={marketing}
                 onChange={setMarketing}
               />

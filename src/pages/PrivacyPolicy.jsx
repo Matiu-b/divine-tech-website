@@ -219,9 +219,11 @@ export default function PrivacyPolicy() {
                       </tr>
                       <tr>
                         <td className="px-4 py-3 font-medium text-ink">Marketing</td>
-                        <td className="px-4 py-3">Google Ads: _gcl_au, _gcl_aw; Google advertising cookies</td>
+                        <td className="px-4 py-3">
+                          Google Ads: _gcl_au, _gcl_aw; Google advertising cookies. Meta Pixel: _fbp, _fbc
+                        </td>
                         <td className="px-4 py-3">Measures which ads lead to demo requests and helps show relevant ads.</td>
-                        <td className="px-4 py-3">Up to 90 days (Google cookies may last longer)</td>
+                        <td className="px-4 py-3">Up to 90 days (Google and Meta cookies may last longer)</td>
                       </tr>
                     </tbody>
                   </table>
@@ -232,6 +234,17 @@ export default function PrivacyPolicy() {
                   entered may be sent to Google in hashed (scrambled) form to measure our ads ("enhanced conversions"). If
                   you allow analytics, Google signals may associate visits with Google accounts of users who have turned on
                   ad personalization, for aggregated cross-device reporting.
+                </p>
+                <p>
+                  We also use the Meta Pixel (Meta Platforms) to measure our ads on Facebook and Instagram. It loads only
+                  when marketing cookies are allowed and stops sending information if you turn them off. It reports page
+                  views, demo requests and clicks on our phone and email links. If you submit our form, your email address
+                  and phone number are hashed in your browser before they are sent to Meta, to match the request to our
+                  ads. Meta explains how it uses this information at{' '}
+                  <a href="https://www.facebook.com/privacy/policy" target="_blank" rel="noopener noreferrer">
+                    facebook.com/privacy/policy
+                  </a>
+                  .
                 </p>
                 <p>
                   In the European Economic Area, the United Kingdom and Switzerland, analytics and marketing cookies stay
@@ -257,8 +270,8 @@ export default function PrivacyPolicy() {
                     and meetings.
                   </li>
                   <li>
-                    <strong>Advertising partners</strong> such as Google, only if you allow marketing cookies, to measure
-                    and improve our ads.
+                    <strong>Advertising partners</strong> such as Google and Meta, only if you allow marketing cookies, to
+                    measure and improve our ads.
                   </li>
                   <li>
                     <strong>Our affiliates</strong>, including our affiliated company in Israel, to respond to you and
@@ -350,7 +363,7 @@ export default function PrivacyPolicy() {
                   </li>
                   <li>
                     <strong>Sale and sharing:</strong> we do not sell personal information for money. Allowing marketing
-                    cookies lets Google use online identifiers for advertising, which some state laws call "sharing" for
+                    cookies lets Google and Meta use online identifiers for advertising, which some state laws call "sharing" for
                     targeted advertising. You can opt out at any time in <CookieSettingsLink /> or by using a Global
                     Privacy Control signal. We have no actual knowledge of selling or sharing information of anyone under
                     16.

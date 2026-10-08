@@ -9,6 +9,9 @@
 export const CONSENT_KEY = 'dt_consent';
 export const CONSENT_VERSION = 1;
 export const OPEN_CONSENT_EVENT = 'dt:open-consent';
+// Fired on window with the saved choice as `detail`, for non-Google tags
+// (the Meta Pixel in lib/metaPixel.js) that follow the banner themselves.
+export const CONSENT_CHANGE_EVENT = 'dt:consent-change';
 
 /** @typedef {{ v: number, analytics: boolean, marketing: boolean, ts: string }} ConsentChoice */
 
@@ -63,6 +66,7 @@ export function saveConsent(choice) {
   }
   consentUpdate(c);
   window.dataLayer.push({ event: 'consent_update', consent_analytics: c.analytics, consent_marketing: c.marketing });
+  window.dispatchEvent(new CustomEvent(CONSENT_CHANGE_EVENT, { detail: c }));
   return c;
 }
 
