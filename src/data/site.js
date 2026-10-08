@@ -14,6 +14,14 @@ export const brand = {
   symbol: '/img/dta-symbol-t.webp', // Divine Tech AI glass mark
 };
 
+// Legal entity details used by the privacy policy and cookie banner.
+export const legal = {
+  entity: 'Divine Tech AI, Inc.',
+  address: '1441 Broadway, Suite 6171, New York, NY 10018, USA',
+  phone: '+972 54-803-7207',
+  phoneTel: '+972548037207',
+};
+
 export const nav = [
   { href: '#platform', label: 'Platform' },
   { href: '#how-it-works', label: 'How it works' },

@@ -2,6 +2,7 @@ import React, { createContext, useCallback, useContext, useEffect, useId, useMem
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight, Check, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { trackDemoRequest } from '@/lib/tracking';
 import { brand, leadIndustries } from '@/data/site';
 import { EASE } from './motion';
 import { useMediaQuery, useScrollLock } from './hooks';
@@ -130,6 +131,12 @@ export function LeadForm({ dark = false, columns = 1, onDone = undefined, autoFo
         body: body.toString(),
       });
       if (!res.ok) throw new Error('Form submission failed: ' + res.status);
+      // Conversion is reported only after Netlify accepted the submission.
+      try {
+        trackDemoRequest({ email: d.email, phone: d.phone, industry: d.industry });
+      } catch {
+        // Never let analytics break the form.
+      }
       setState('done');
       if (onDone) onDone();
     } catch {

@@ -15,6 +15,13 @@ Divine Tech AI company website (divine-tech.ai). React, Vite and Tailwind CSS, b
 - `src/components/home-v2/LeadDrawer.jsx` submits to Netlify Forms (form name `lead`).
 - `public/__forms.html` is the hidden static copy Netlify uses to detect the form. If you add, rename or remove a field in the component, update this file to match exactly, or submissions will fail.
 
+## Privacy, Cookies and Tracking
+
+- `/privacy` (`src/pages/PrivacyPolicy.jsx`): the privacy policy. Legal entity details live in `legal` in `src/data/site.js`. Update the "Last updated" date when the text changes.
+- Cookie banner: `src/components/ConsentBanner.jsx`, state and Consent Mode updates in `src/lib/consent.js` (localStorage key `dt_consent`, version 1). Footer "Cookie settings" reopens it.
+- `index.html` sets Google Consent Mode v2 defaults (granted, denied in EEA/UK/CH), re-applies a saved choice, then loads Google Tag Manager `GTM-KGSKS6PM`. GA4 and Google Ads are configured inside GTM, not in the code.
+- `src/lib/tracking.js` pushes `demo_request` (after a successful form submission only), `phone_click` and `email_click` to the dataLayer. If you add a new tool that sets cookies, add it to the policy's cookie table and gate it on consent.
+
 ## Key Files
 
 - `src/`: frontend application source. `src/data/site.js` holds most of the page copy.

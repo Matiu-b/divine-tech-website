@@ -827,3 +827,49 @@
     display: none;
   }
 }
+
+/* --------------------------------------------------------------------------
+   Legal pages (privacy policy) and inline text links
+   -------------------------------------------------------------------------- */
+@layer components {
+  .legal-body {
+    display: grid;
+    gap: 1rem;
+    font-size: 1rem;
+    line-height: 1.68;
+    color: var(--dt-text-2);
+  }
+
+  .legal-body strong {
+    font-weight: 560;
+    color: var(--dt-text);
+  }
+
+  .legal-body ul {
+    display: grid;
+    gap: 0.6rem;
+    padding-inline-start: 1.25rem;
+    list-style: disc;
+  }
+
+  .legal-body a,
+  .legal-link {
+    color: var(--dt-text);
+    text-decoration: underline;
+    text-decoration-color: rgb(10 15 14 / 0.3);
+    text-underline-offset: 3px;
+    transition: text-decoration-color 0.2s ease;
+  }
+
+  .legal-body a:hover,
+  .legal-link:hover {
+    text-decoration-color: currentColor;
+  }
+
+  .legal-link {
+    font: inherit;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+  }
+}

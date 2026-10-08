@@ -2,6 +2,40 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <!-- Google Consent Mode v2: must run before Google Tag Manager. Granted by
+         default, denied by default in the EEA, UK and Switzerland, then a choice
+         saved by the cookie banner (src/lib/consent.js, key "dt_consent") is
+         re-applied before any tag fires. -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('consent', 'default', {
+        ad_storage: 'granted', ad_user_data: 'granted',
+        ad_personalization: 'granted', analytics_storage: 'granted'
+      });
+      gtag('consent', 'default', {
+        ad_storage: 'denied', ad_user_data: 'denied',
+        ad_personalization: 'denied', analytics_storage: 'denied',
+        region: ['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','CH','GB']
+      });
+      try {
+        var c = JSON.parse(localStorage.getItem('dt_consent') || 'null');
+        if (c && c.v === 1) {
+          var ads = c.marketing ? 'granted' : 'denied';
+          gtag('consent', 'update', {
+            analytics_storage: c.analytics ? 'granted' : 'denied',
+            ad_storage: ads, ad_user_data: ads, ad_personalization: ads
+          });
+        }
+      } catch (e) {}
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-KGSKS6PM');</script>
+    <!-- End Google Tag Manager -->
     <link rel="icon" type="image/webp" href="/img/dta-symbol-dark.webp" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>Divine Tech AI · Aurora, the AI operating layer for business</title>
@@ -16,6 +50,10 @@
     <link rel="preload" href="/fonts/google-sans-flex-latin-opsz.woff2" as="font" type="font/woff2" crossorigin />
   </head>
   <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KGSKS6PM"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
