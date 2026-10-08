@@ -41,9 +41,11 @@ export default function FinalCTA() {
               <a className="w-fit transition-colors hover:text-white" href={'mailto:' + brand.email}>
                 {brand.email}
               </a>
-              <a className="w-fit transition-colors hover:text-white" href={'tel:' + brand.phoneTel}>
-                {brand.phone}
-              </a>
+              {brand.phones.map((p) => (
+                <a key={p.tel} className="w-fit transition-colors hover:text-white" href={'tel:' + p.tel}>
+                  {p.display} <span className="text-white/40">({p.label})</span>
+                </a>
+              ))}
               <span>{brand.address}</span>
             </div>
           </Reveal>

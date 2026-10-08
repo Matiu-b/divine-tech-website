@@ -49,9 +49,11 @@ export default function Footer() {
               <a href={'mailto:' + brand.email} className="w-fit transition-colors hover:text-white">
                 {brand.email}
               </a>
-              <a href={'tel:' + brand.phoneTel} className="w-fit transition-colors hover:text-white">
-                {brand.phone}
-              </a>
+              {brand.phones.map((p) => (
+                <a key={p.tel} href={'tel:' + p.tel} className="w-fit transition-colors hover:text-white">
+                  {p.display} <span className="text-white/40">({p.label})</span>
+                </a>
+              ))}
               <span className="text-white/55">{brand.address}</span>
             </address>
           </div>

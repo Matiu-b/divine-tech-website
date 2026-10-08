@@ -9,6 +9,11 @@ export const brand = {
   email: 'info@divine-tech.ai',
   phone: '+1 212-359-3395',
   phoneTel: '+12123593395',
+  // All public phone numbers, shown together wherever contact details appear.
+  phones: [
+    { label: 'US', display: '+1 212-359-3395', tel: '+12123593395' },
+    { label: 'Israel', display: '+972 54-803-7207', tel: '+972548037207' },
+  ],
   address: '1441 Broadway, New York, NY 10018, USA',
   logo: '/img/dta-logo-t.webp', // Divine Tech AI horizontal logo (transparent, light wordmark)
   symbol: '/img/dta-symbol-t.webp', // Divine Tech AI glass mark

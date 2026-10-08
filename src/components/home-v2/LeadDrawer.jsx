@@ -339,9 +339,11 @@ function LeadSheet({ isOpen, onClose }) {
                 <a className="w-fit hover:text-ink" href={'mailto:' + brand.email}>
                   {brand.email}
                 </a>
-                <a className="w-fit hover:text-ink" href={'tel:' + brand.phoneTel}>
-                  {brand.phone}
-                </a>
+                {brand.phones.map((p) => (
+                  <a key={p.tel} className="w-fit hover:text-ink" href={'tel:' + p.tel}>
+                    {p.display} <span className="text-slate">({p.label})</span>
+                  </a>
+                ))}
                 <span>{brand.address}</span>
               </div>
             </div>
