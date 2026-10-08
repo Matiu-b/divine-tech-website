@@ -37,7 +37,7 @@ const SCENARIOS = [
   },
   {
     key: 'hc',
-    label: 'Healthcare',
+    label: 'Wellness & Healthcare',
     channel: 'Phone',
     icon: Phone,
     contact: 'Patient · verified',
