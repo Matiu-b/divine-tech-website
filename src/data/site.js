@@ -124,7 +124,7 @@ export const heroFilm = {
       key: 'webchat',
       channel: 'Web chat',
       mode: 'web',
-      industry: 'Healthcare',
+      industry: 'Wellness & Healthcare',
       contact: 'Website visitor',
       initials: 'WV',
       sub: 'Web chat · New patient',
@@ -425,7 +425,7 @@ export const solutions = {
     },
     {
       key: 'hc',
-      label: 'Healthcare',
+      label: 'Wellness & Healthcare',
       short: 'Answer every call, keep the schedule full and give front-desk time back to patients.',
       tone: 'mist',
       problem: [
@@ -567,4 +567,4 @@ export const footer = {
 };
 
 // Must match the industry options in public/__forms.html (Netlify Forms).
-export const leadIndustries = ['Real Estate', 'Healthcare / Medical', 'Home Services', 'Other'];
+export const leadIndustries = ['Real Estate', 'Wellness & Healthcare', 'Home Services', 'Other'];
