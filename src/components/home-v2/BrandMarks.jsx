@@ -3,7 +3,7 @@ import React from 'react';
 /*
  * Brand marks for the tools Aurora connects to, used small in the "How it works" illustration.
  * Most paths come from Simple Icons (CC0); the Slack mark follows Slack's published logo. Gmail,
- * Google Calendar, Outlook, Salesforce, Stripe, PayPal, Microsoft Teams and Zoom are the
+ * Google Calendar, Outlook, Salesforce, Stripe, PayPal, RingCentral and 3CX are the
  * full-colour logo files in /public/img/logos.
  * The phone tile is a simplified drawing.
  * Shown only to say "works with these tools" (nominative use), never as an endorsement.
@@ -75,5 +75,5 @@ export const GoogleCalendarMark = (p) => <LogoFile src="/img/logos/google-calend
 export const SalesforceMark = (p) => <LogoFile src="/img/logos/salesforce.svg" {...p} />;
 export const StripeMark = (p) => <LogoFile src="/img/logos/stripe.svg" {...p} />;
 export const PayPalMark = (p) => <LogoFile src="/img/logos/paypal.svg" {...p} />;
-export const TeamsMark = (p) => <LogoFile src="/img/logos/microsoft-teams.svg" {...p} />;
-export const ZoomMark = (p) => <LogoFile src="/img/logos/zoom.svg" {...p} />;
+export const RingCentralMark = (p) => <LogoFile src="/img/logos/ringcentral.svg" {...p} />;
+export const ThreeCXMark = (p) => <LogoFile src="/img/logos/3cx.svg" {...p} />;

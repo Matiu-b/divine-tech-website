@@ -377,7 +377,7 @@ export const howItWorks = {
     { key: 'calendar', label: 'Calendar' },
     { key: 'crm', label: 'CRM' },
     { key: 'messaging', label: 'Messaging channels', wide: true },
-    { key: 'pbx', label: 'PBX' },
+    { key: 'pbx', label: 'Phone system (PBX)' },
     { key: 'payments', label: 'Payments' },
   ],
   test: {

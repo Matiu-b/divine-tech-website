@@ -14,14 +14,14 @@ import {
   OutlookMark,
   PayPalMark,
   PhoneTile,
+  RingCentralMark,
   SalesforceMark,
   SignalMark,
   SlackMark,
   StripeMark,
-  TeamsMark,
   TelegramMark,
+  ThreeCXMark,
   WhatsAppMark,
-  ZoomMark,
 } from './BrandMarks';
 import MappingScene from './MappingScene';
 
@@ -131,7 +131,7 @@ const MARKS = {
     <TelegramMark key="t" className="h-6 w-6" />,
     <SlackMark key="sl" className="h-6 w-6" />,
   ],
-  pbx: [<TeamsMark key="tm" className="h-6 w-6" />, <ZoomMark key="z" className="h-4 w-12" />],
+  pbx: [<RingCentralMark key="rc" className="h-4 w-[84px]" />, <ThreeCXMark key="3cx" className="h-6 w-6 rounded-[5px]" />],
   payments: [<StripeMark key="st" className="h-[18px] w-11" />, <PayPalMark key="pp" className="h-6 w-5" />],
 };
 
