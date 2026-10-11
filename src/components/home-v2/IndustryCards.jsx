@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowUpRight, Check } from 'lucide-react';
+import { EVENT_ICONS } from './eventIcons';
 import { industriesSection } from '@/data/site';
 import { industries, industryPath } from '@/data/industries';
 import SectionHeader from './primitives/SectionHeader';
@@ -38,11 +39,14 @@ export default function IndustryCards() {
                     className="h-full w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.03]"
                   />
                   <div className="absolute inset-x-4 bottom-4">
-                    <span className="flex w-fit items-center gap-2 rounded-[12px] bg-white/90 px-3 py-2 text-[12px] font-medium text-ink shadow-sm backdrop-blur">
-                      <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-brand text-white">
-                        <Check className="h-2.5 w-2.5" strokeWidth={3} aria-hidden="true" />
+                    <span className="flex w-fit max-w-full items-center gap-2.5 rounded-[14px] bg-white/90 px-3 py-2.5 text-ink shadow-sm backdrop-blur">
+                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[9px] bg-paper-2">
+                        {React.createElement(EVENT_ICONS[it.card.icon] || Check, { className: 'h-3.5 w-3.5', strokeWidth: 1.8, 'aria-hidden': 'true' })}
                       </span>
-                      {it.how.chips[1]}
+                      <span className="min-w-0">
+                        <span className="block truncate text-[12.5px] font-medium">{it.card.title}</span>
+                        <span className="block truncate text-[11px] text-graphite">{it.card.detail}</span>
+                      </span>
                     </span>
                   </div>
                 </div>

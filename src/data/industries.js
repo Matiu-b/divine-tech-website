@@ -28,7 +28,7 @@ export const industries = [
       description:
         'Aurora answers every property inquiry in seconds on WhatsApp, phone, email and web, qualifies the lead, books the viewing in the right agent’s calendar and follows up until the deal moves.',
     },
-    short: 'Answer every lead in seconds, book viewings automatically and follow up until the deal moves.',
+    short: 'Answer every lead in seconds, book viewings, and handle the follow-up emails and paperwork.',
     hero: {
       eyebrow: 'Aurora for real estate',
       titleA: 'The first agent to reply wins the lead.',
@@ -46,13 +46,14 @@ export const industries = [
       cost: 'Leads you paid for, answered first by someone else.',
     },
     caption: 'Your agents are out showing homes. Aurora answers every new lead.',
+    card: { icon: 'calendar', title: 'Viewing booked', detail: 'Sat 11:00, right agent, confirmation sent' },
     events: [
-      { icon: 'message', title: 'New lead answered', detail: 'WhatsApp · 2BR inquiry' },
-      { icon: 'qualified', title: 'Lead qualified', detail: 'Budget, timeline, area' },
-      { icon: 'calendar', title: 'Viewing booked', detail: 'Sat 11:00 · 42 Maple St' },
-      { icon: 'crm', title: 'CRM updated', detail: 'Stage: viewing booked' },
-      { icon: 'send', title: 'Reminder sent', detail: 'Fri 18:00 · confirm attendance' },
-      { icon: 'approval', title: 'Fee waiver approved', detail: 'Routed to Dana · Leasing' },
+      { icon: 'message', title: 'New lead answered', detail: 'WhatsApp, 2BR inquiry' },
+      { icon: 'mail', title: 'Listing email written and sent', detail: '12 matching buyers, personal intro' },
+      { icon: 'invoice', title: 'Commission invoice issued', detail: 'Deal 318, sent to Finance' },
+      { icon: 'calendar', title: 'Viewing booked', detail: 'Sat 11:00, 42 Maple St' },
+      { icon: 'report', title: 'Weekly pipeline report', detail: 'Sent to managers, Monday 08:00' },
+      { icon: 'crm', title: 'CRM cleaned up', detail: '38 lead records updated' },
     ],
     how: {
       titleA: 'Aurora joins your process.',
@@ -99,7 +100,7 @@ export const industries = [
       description:
         'Aurora answers calls and messages on the first ring, books, confirms and reschedules appointments, and gives front-desk time back to the people in the room.',
     },
-    short: 'Answer every call, keep the schedule full and give front-desk time back to clients.',
+    short: 'Answer every call, keep the schedule full, and issue invoices and aftercare emails on their own.',
     hero: {
       eyebrow: 'Aurora for wellness & healthcare',
       titleA: 'Every call answered.',
@@ -117,13 +118,14 @@ export const industries = [
       cost: 'Empty slots, and a front desk that never gets ahead.',
     },
     caption: 'The front desk is with a client. Aurora answers the phone.',
+    card: { icon: 'invoice', title: 'Invoice issued and sent', detail: 'Payment link included, record updated' },
     events: [
-      { icon: 'service', title: 'Call answered', detail: 'First ring · after hours' },
-      { icon: 'calendar', title: 'Appointment booked', detail: 'Thu 16:15 · Dr. Patel' },
-      { icon: 'send', title: 'Reminder sent', detail: 'SMS · day before visit' },
-      { icon: 'crm', title: 'Client profile created', detail: 'New client · web chat' },
-      { icon: 'calendar', title: 'Appointment moved', detail: 'Tue → Thu 2:10 pm' },
-      { icon: 'approval', title: 'Handed to front desk', detail: 'Sensitive request · full history' },
+      { icon: 'service', title: 'Call answered', detail: 'First ring, after hours' },
+      { icon: 'invoice', title: 'Invoice issued and sent', detail: 'Visit 4821, payment link included' },
+      { icon: 'mail', title: 'Aftercare email sent', detail: 'Written for this treatment' },
+      { icon: 'approval', title: 'Insurance form prepared', detail: 'Ready for front desk sign-off' },
+      { icon: 'calendar', title: 'Appointment confirmed', detail: 'Thu 16:15 with Dr. Patel' },
+      { icon: 'report', title: 'Daily schedule summary', detail: 'Sent to the clinic manager' },
     ],
     how: {
       titleA: 'Aurora joins your front desk.',
@@ -170,7 +172,7 @@ export const industries = [
       description:
         'Aurora answers every call and message, captures the job and its urgency, quotes from your price book, books the technician and keeps the customer updated until the job is done.',
     },
-    short: 'Capture every job, quote from your price book and keep technicians on the road.',
+    short: 'Capture every job, quote from your price book, and send the invoice and follow-up after every visit.',
     hero: {
       eyebrow: 'Aurora for home services',
       titleA: 'Your team is on a job.',
@@ -188,13 +190,14 @@ export const industries = [
       cost: 'Jobs that went to whoever picked up first.',
     },
     caption: 'Your technician is on a job. Aurora books the next one.',
+    card: { icon: 'mail', title: 'Follow-up email written and sent', detail: 'Quote, photos and next steps' },
     events: [
-      { icon: 'service', title: 'Call answered', detail: 'Water heater · urgent' },
-      { icon: 'qualified', title: 'Job captured', detail: 'Address, access, urgency' },
+      { icon: 'service', title: 'Call answered', detail: 'Water heater, urgent' },
       { icon: 'send', title: 'Quote sent', detail: 'From your price book' },
-      { icon: 'calendar', title: 'Technician booked', detail: 'Today 2–4 pm · Luis' },
-      { icon: 'approval', title: 'Same-day slot approved', detail: 'Routed to dispatch' },
-      { icon: 'message', title: 'Customer updated', detail: 'On-the-way text sent' },
+      { icon: 'invoice', title: 'Job invoice issued', detail: 'Job 1186, payment link sent' },
+      { icon: 'mail', title: 'Follow-up email written', detail: 'Photos, warranty and next steps' },
+      { icon: 'approval', title: 'Parts order drafted', detail: 'Waiting for dispatch approval' },
+      { icon: 'calendar', title: 'Technician booked', detail: 'Today 2 to 4 pm, Luis' },
     ],
     how: {
       titleA: 'Aurora runs the office.',
