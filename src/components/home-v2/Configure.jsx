@@ -65,7 +65,7 @@ function ConnectVisual({ t }) {
       <div className="mt-2 h-1 overflow-hidden rounded-full bg-ink/[0.08]">
         <div className="h-full rounded-full bg-brand transition-[width] duration-700 ease-out" style={{ width: (done / hiw.connect.length) * 100 + '%' }} />
       </div>
-      <ul className="mt-auto grid grid-cols-5 gap-1.5 pt-3">
+      <ul className="mt-auto grid grid-cols-3 gap-x-1.5 gap-y-2.5 pt-3 sm:grid-cols-5 sm:gap-y-1.5">
         {hiw.connect.map((name, i) => {
           const Icon = CONNECT_ICON[name] || Database;
           const on = done > i;
