@@ -85,7 +85,7 @@ function LiveFeed({ events, slots, running, still }) {
  */
 function TaskButtons({ tasks, active, onPick, onPhoto }) {
   return (
-    <div role="group" aria-label="Show Aurora doing" className="flex flex-wrap gap-2">
+    <div role="group" aria-label="Show Aurora doing" className={cn('flex flex-wrap', onPhoto ? 'gap-2' : 'gap-1.5')}>
       {tasks.map((t) => {
         const on = active === t.key;
         return (
@@ -95,7 +95,8 @@ function TaskButtons({ tasks, active, onPick, onPhoto }) {
             aria-pressed={on}
             onClick={() => onPick(on ? null : t.key)}
             className={cn(
-              'h-9 rounded-full px-4 text-[13px] font-medium transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-glow',
+              'rounded-full font-medium transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-glow',
+              onPhoto ? 'h-9 px-4 text-[13px]' : 'h-8 px-3 text-[12px]',
               onPhoto
                 ? on
                   ? 'bg-white text-ink'
