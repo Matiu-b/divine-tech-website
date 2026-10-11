@@ -288,29 +288,18 @@ export default function Capabilities() {
         <h2 id="capabilities-title" className="sr-only">
           What {brand.product} does
         </h2>
-        <div className="grid gap-[clamp(96px,12vw,180px)]">
+        <div className="grid gap-[clamp(72px,8vw,120px)]">
           {capabilities.map((c, i) => {
             const Visual = VISUALS[c.key];
             const flip = i % 2 === 1;
             return (
-              <article key={c.key} aria-labelledby={'cap-' + c.key} className="grid items-center gap-10 lg:grid-cols-12 lg:gap-12">
+              <article key={c.key} id={c.key === 'control' ? 'security' : undefined} aria-labelledby={'cap-' + c.key} className="grid items-center gap-10 lg:grid-cols-12 lg:gap-12">
                 <div className={cn('lg:col-span-5', flip ? 'lg:order-2 lg:col-start-8' : 'lg:order-1')}>
-                  <Reveal y={12}>
-                    <p className="text-[13px] font-medium tabular-nums text-slate">{c.index} <span className="text-ink/25">/ 03</span></p>
-                  </Reveal>
-                  <h3 id={'cap-' + c.key} className="t-h1 balance mt-5">
+                  <h3 id={'cap-' + c.key} className="t-h1 balance">
                     <RevealLines lines={[c.title]} blur={false} y={20} />
                   </h3>
                   <Reveal delay={0.1}>
-                    <p className="t-lead pretty mt-6 max-w-[44ch]">{c.text}</p>
-                    <ul className="mt-8 flex max-w-[44ch] flex-wrap gap-x-5 gap-y-2.5">
-                      {c.points.map((p) => (
-                        <li key={p} className="flex items-center gap-2 text-[15px] font-medium tracking-[-0.01em] text-ink">
-                          <span className="h-1 w-1 rounded-full bg-brand" aria-hidden="true" />
-                          {p}
-                        </li>
-                      ))}
-                    </ul>
+                    <p className="t-lead pretty mt-5 max-w-[40ch]">{c.text}</p>
                   </Reveal>
                 </div>
                 <Reveal y={40} className={cn('lg:col-span-7', flip ? 'lg:order-1 lg:col-start-1 lg:row-start-1' : 'lg:order-2 lg:col-start-6')}>

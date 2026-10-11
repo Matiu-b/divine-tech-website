@@ -288,24 +288,18 @@ export const platform = {
 export const capabilities = [
   {
     key: 'understand',
-    index: '01',
     title: 'Understands the business',
-    text: 'Aurora learns how your company actually operates: what you sell, how a lead becomes a customer, the policies that apply and the exceptions nobody wrote down. Then it shows you the processes it will run.',
-    points: ['Processes', 'Knowledge', 'Rules', 'Systems', 'Exceptions'],
+    text: 'It learns how your company runs, from your documents, systems and rules, and shows you the processes before it runs them.',
   },
   {
     key: 'work',
-    index: '02',
     title: 'Does the work',
-    text: 'It answers, qualifies, books, updates records and follows up until the task is closed, inside the tools your team already uses. Real work completed, not summaries handed back to a person.',
-    points: ['Answers', 'Qualifies', 'Books', 'Updates systems', 'Follows up', 'Executes actions'],
+    text: 'It answers, books, updates records and follows up until the task is closed, inside the tools your team already uses.',
   },
   {
     key: 'control',
-    index: '03',
     title: 'Operates with control',
-    text: 'You decide what Aurora handles alone and what needs a person. Approvals, hand-offs, permissions and limits are built in, and every action is visible and on record.',
-    points: ['Human approvals', 'Hand-offs', 'Permissions', 'Auditability', 'Limits'],
+    text: 'You decide what it does alone and what waits for a person. Every action is on record, access is set per role, and your data is never used to train shared models.',
   },
 ];
 
@@ -393,7 +387,7 @@ export const teams = {
   eyebrow: 'Teams',
   titleA: 'Agents that work like your team.',
   titleB: 'In sales, in service and inside the company.',
-  text: 'Each agent is modeled on a real role: same tools, same KPIs, and a person brought in when a decision needs one.',
+  text: undefined,
   items: [
     {
       key: 'sales',
@@ -443,19 +437,6 @@ export const teams = {
   ],
 };
 
-export const security = {
-  eyebrow: 'Security and control',
-  titleA: 'Built for trust.',
-  titleB: 'Designed for control.',
-  text: 'Aurora works inside boundaries you set. Sensitive decisions wait for a person, and everything it does stays visible.',
-  items: [
-    { key: 'data', title: 'Your data stays yours', text: 'Customer and business data is used to run your system, never to train anything shared.' },
-    { key: 'approval', title: 'People approve changes', text: 'Anything that changes how the business runs waits for a human approval.' },
-    { key: 'audit', title: 'Full audit trail', text: 'Every conversation, action and update is logged and searchable.' },
-    { key: 'access', title: 'Access controls', text: 'Permissions per role and per channel, with data encrypted in transit and at rest.' },
-  ],
-};
-
 export const closing = {
   titleA: 'See Aurora run',
   titleB: 'on your business.',
@@ -472,7 +453,7 @@ export const platformPage = {
   eyebrow: 'Platform',
   titleA: 'Most AI talks.',
   titleB: 'Aurora works.',
-  text: 'Answers are where the job starts, not where it ends. Aurora books the appointment, updates the record, sends the follow-up and brings in a person when the moment calls for one. Watch one request go from first message to done.',
+  text: 'Aurora books the appointment, updates the record, sends the follow-up and brings in a person when it matters. Watch one request go from first message to done.',
   note: 'Scripted demo built from typical flows. Names, times and prices are examples.',
 };
 

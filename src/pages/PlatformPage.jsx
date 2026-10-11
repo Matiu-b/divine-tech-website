@@ -5,7 +5,6 @@ import SiteLayout from '@/components/home-v2/SiteLayout';
 import HeroFilm from '@/components/home-v2/HeroFilm';
 import Capabilities from '@/components/home-v2/Capabilities';
 import Teams from '@/components/home-v2/Teams';
-import Security from '@/components/home-v2/Security';
 import FinalCTA from '@/components/home-v2/FinalCTA';
 import CTAButton from '@/components/home-v2/primitives/CTAButton';
 import SafeBoundary from '@/components/home-v2/primitives/SafeBoundary';
@@ -71,7 +70,6 @@ export default function PlatformPage() {
         <Capabilities />
       </div>
       <Teams />
-      <Security />
       <FinalCTA />
     </SiteLayout>
   );
