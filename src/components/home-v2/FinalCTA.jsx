@@ -37,23 +37,24 @@ export default function FinalCTA({ industry = '', titleA = closing.titleA, title
         <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-b from-ink/0 to-ink" />
       </div>
 
-      <div className="shell relative grid gap-14 lg:grid-cols-12 lg:items-center lg:gap-12">
-        <div className="lg:col-span-6">
-          <h2 id="contact-title" className="t-display balance">
+      <div className="shell relative">
+        {/* Desktop: heading across the top, then the form laid out wide in two rows. Phones: everything stacks. */}
+        <div className="grid gap-6 lg:grid-cols-12 lg:items-end lg:gap-12">
+          <h2 id="contact-title" className="t-display balance lg:col-span-7">
             <RevealLines lines={[titleA, titleB]} lineClassNames={['', '']} />
           </h2>
-          <Reveal delay={0.15}>
-            <p className="t-lead pretty mt-8 max-w-[40ch] !text-white/65">{text}</p>
+          <Reveal delay={0.15} className="lg:col-span-5">
+            <p className="t-lead pretty max-w-[44ch] !text-white/65">{text}</p>
           </Reveal>
         </div>
 
-        <div className="lg:col-span-6 lg:col-start-7 xl:col-span-5 xl:col-start-8">
-          <LiquidGlass as={motion.div} {...appear} tone="dark" className="rounded-[clamp(24px,2.6vw,34px)] p-5 xs:p-7 md:p-8">
+        <LiquidGlass as={motion.div} {...appear} tone="dark" className="mt-10 rounded-[clamp(24px,2.6vw,34px)] p-5 xs:p-7 md:mt-14 md:p-8">
+          <div className="mb-6 flex flex-col gap-1.5 md:flex-row md:items-baseline md:justify-between md:gap-8">
             <h3 className="t-h3 text-white">Book a demo</h3>
-            <p className="mb-6 mt-2 text-[15px] leading-snug text-white/55">Leave your details and Aurora, our AI agent, will call you right away. Hear it for yourself.</p>
-            <LeadForm dark columns={2} industry={industry} />
-          </LiquidGlass>
-        </div>
+            <p className="text-[15px] leading-snug text-white/55">Leave your details and Aurora, our AI agent, will call you right away.</p>
+          </div>
+          <LeadForm dark wide industry={industry} />
+        </LiquidGlass>
       </div>
     </section>
   );

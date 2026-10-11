@@ -68,7 +68,7 @@ const LEAD_FORM_NAME = 'lead';
  * Netlify dashboard and trigger the email notifications configured there.
  * @param {any} props
  */
-export function LeadForm({ dark = false, columns = 1, onDone = undefined, autoFocus = false, industry = '' }) {
+export function LeadForm({ dark = false, columns = 1, wide = false, onDone = undefined, autoFocus = false, industry = '' }) {
   const uid = useId().replace(/:/g, '');
   const ids = {
     name: 'lf-name-' + uid,
@@ -169,105 +169,147 @@ export function LeadForm({ dark = false, columns = 1, onDone = undefined, autoFo
 
   const grid = columns === 2 ? 'grid gap-3.5 sm:grid-cols-2' : 'grid gap-3.5';
 
+  const nameField = (
+    <Field id={ids.name} label="Name" error={errors.name} dark={dark}>
+      <input
+        ref={firstRef}
+        id={ids.name}
+        name="name"
+        autoComplete="name"
+        className="field"
+        aria-invalid={errors.name ? 'true' : 'false'}
+        aria-describedby={errors.name ? ids.name + '-error' : undefined}
+        required
+      />
+    </Field>
+  );
+  const companyField = (
+    <Field id={ids.company} label="Company" optional dark={dark}>
+      <input id={ids.company} name="company" autoComplete="organization" className="field" />
+    </Field>
+  );
+  const emailField = (
+    <Field id={ids.email} label="Work email" error={errors.email} dark={dark}>
+      <input
+        id={ids.email}
+        name="email"
+        type="email"
+        inputMode="email"
+        autoComplete="email"
+        className="field"
+        aria-invalid={errors.email ? 'true' : 'false'}
+        aria-describedby={errors.email ? ids.email + '-error' : undefined}
+        required
+      />
+    </Field>
+  );
+  const phoneField = (
+    <Field id={ids.phone} label="Phone" error={errors.phone} dark={dark}>
+      <input
+        id={ids.phone}
+        name="phone"
+        type="tel"
+        inputMode="tel"
+        autoComplete="tel"
+        placeholder="+1 212 555 0100"
+        className="field"
+        aria-invalid={errors.phone ? 'true' : 'false'}
+        aria-describedby={errors.phone ? ids.phone + '-error' : undefined}
+        required
+      />
+    </Field>
+  );
+  const industryField = (
+    <Field id={ids.industry} label="Industry" error={errors.industry} dark={dark}>
+      <div className={cn('select-wrap', dark ? 'text-white' : 'text-ink')}>
+        <select
+          id={ids.industry}
+          name="industry"
+          defaultValue={leadIndustries.includes(industry) ? industry : ''}
+          className="field pr-11"
+          aria-invalid={errors.industry ? 'true' : 'false'}
+          aria-describedby={errors.industry ? ids.industry + '-error' : undefined}
+          required
+        >
+          <option value="" disabled>
+            Choose your industry
+          </option>
+          {leadIndustries.map((i) => (
+            <option key={i} value={i}>
+              {i}
+            </option>
+          ))}
+        </select>
+      </div>
+    </Field>
+  );
+  const messageField = wide ? (
+    <Field id={ids.message} label="Which process should we start with?" optional dark={dark}>
+      <input id={ids.message} name="message" placeholder="For example: inbound leads from WhatsApp" className="field" />
+    </Field>
+  ) : (
+    <Field id={ids.message} label="Which process should we start with?" optional dark={dark}>
+      <textarea id={ids.message} name="message" rows={2} placeholder="For example: inbound leads from our website and WhatsApp" className="field" />
+    </Field>
+  );
+  const submitButton = (
+    <button
+      type="submit"
+      disabled={state === 'sending'}
+      className={cn('btn w-full disabled:cursor-progress disabled:opacity-70', wide ? 'h-[46px]' : 'btn-lg mt-0.5', dark ? 'btn-light' : 'btn-primary')}
+    >
+      <span>{state === 'sending' ? 'Sending…' : 'Book a demo'}</span>
+      {state === 'sending' ? null : <ArrowRight aria-hidden="true" className="btn-arrow h-4 w-4" strokeWidth={1.9} />}
+    </button>
+  );
+  const consent = (
+    <p
+      role={failure ? 'alert' : undefined}
+      className={cn('min-h-[1.4em] text-[12.5px] leading-snug', failure ? (dark ? 'text-[#FF9C93]' : 'text-[#B3372F]') : dark ? 'text-white/45' : 'text-slate')}
+    >
+      {failure || 'By sending, you agree that Aurora, our AI agent, may call and text you about this request.'}
+    </p>
+  );
+
   return (
     <form onSubmit={submit} noValidate className={cn('grid gap-3.5', dark && 'on-dark')} aria-label="Book a demo">
-      <div className={grid}>
-        <Field id={ids.name} label="Name" error={errors.name} dark={dark}>
-          <input
-            ref={firstRef}
-            id={ids.name}
-            name="name"
-            autoComplete="name"
-            className="field"
-            aria-invalid={errors.name ? 'true' : 'false'}
-            aria-describedby={errors.name ? ids.name + '-error' : undefined}
-            required
-          />
-        </Field>
-        <Field id={ids.company} label="Company" optional dark={dark}>
-          <input id={ids.company} name="company" autoComplete="organization" className="field" />
-        </Field>
-      </div>
-      <div className={grid}>
-        <Field id={ids.email} label="Work email" error={errors.email} dark={dark}>
-          <input
-            id={ids.email}
-            name="email"
-            type="email"
-            inputMode="email"
-            autoComplete="email"
-            className="field"
-            aria-invalid={errors.email ? 'true' : 'false'}
-            aria-describedby={errors.email ? ids.email + '-error' : undefined}
-            required
-          />
-        </Field>
-        <Field id={ids.phone} label="Phone" error={errors.phone} dark={dark}>
-          <input
-            id={ids.phone}
-            name="phone"
-            type="tel"
-            inputMode="tel"
-            autoComplete="tel"
-            placeholder="+1 212 555 0100"
-            className="field"
-            aria-invalid={errors.phone ? 'true' : 'false'}
-            aria-describedby={errors.phone ? ids.phone + '-error' : undefined}
-            required
-          />
-        </Field>
-      </div>
-      <Field id={ids.industry} label="Industry" error={errors.industry} dark={dark}>
-        <div className={cn('select-wrap', dark ? 'text-white' : 'text-ink')}>
-          <select
-            id={ids.industry}
-            name="industry"
-            defaultValue={leadIndustries.includes(industry) ? industry : ''}
-            className="field pr-11"
-            aria-invalid={errors.industry ? 'true' : 'false'}
-            aria-describedby={errors.industry ? ids.industry + '-error' : undefined}
-            required
-          >
-            <option value="" disabled>
-              Choose your industry
-            </option>
-            {leadIndustries.map((i) => (
-              <option key={i} value={i}>
-                {i}
-              </option>
-            ))}
-          </select>
-        </div>
-      </Field>
-      <Field id={ids.message} label="Which process should we start with?" optional dark={dark}>
-        <textarea
-          id={ids.message}
-          name="message"
-          rows={2}
-          placeholder="For example: inbound leads from our website and WhatsApp"
-          className="field"
-        />
-      </Field>
+      {wide ? (
+        <>
+          {/* Wide screens: two rows across. Phones and tablets: one field under another. */}
+          <div className="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
+            {nameField}
+            {emailField}
+            {phoneField}
+            {industryField}
+          </div>
+          <div className="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-4 lg:items-end">
+            {companyField}
+            <div className="lg:col-span-2">{messageField}</div>
+            <div className="sm:col-span-2 lg:col-span-1">{submitButton}</div>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className={grid}>
+            {nameField}
+            {companyField}
+          </div>
+          <div className={grid}>
+            {emailField}
+            {phoneField}
+          </div>
+          {industryField}
+          {messageField}
+        </>
+      )}
       <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
         <label>
           Website
           <input type="text" name="website" tabIndex={-1} autoComplete="off" />
         </label>
       </div>
-      <button
-        type="submit"
-        disabled={state === 'sending'}
-        className={cn('btn btn-lg mt-0.5 w-full disabled:cursor-progress disabled:opacity-70', dark ? 'btn-light' : 'btn-primary')}
-      >
-        <span>{state === 'sending' ? 'Sending…' : 'Book a demo'}</span>
-        {state === 'sending' ? null : <ArrowRight aria-hidden="true" className="btn-arrow h-4 w-4" strokeWidth={1.9} />}
-      </button>
-      <p
-        role={failure ? 'alert' : undefined}
-        className={cn('min-h-[1.4em] text-[12.5px] leading-snug', failure ? (dark ? 'text-[#FF9C93]' : 'text-[#B3372F]') : dark ? 'text-white/45' : 'text-slate')}
-      >
-        {failure || 'By sending, you agree that Aurora, our AI agent, may call and text you about this request.'}
-      </p>
+      {wide ? null : submitButton}
+      {consent}
     </form>
   );
 }
