@@ -196,9 +196,10 @@ function StepPanel({ step, active }) {
 }
 
 /**
- * How it works: a small player. The four steps sit in a track (a column on desktop,
- * a swipeable row on phones) and advance on their own while the section is on screen;
- * the panel shows each step happening. Clicking a step jumps to it and pauses the player.
+ * How it works: a small player. All four steps sit in one selector row (on every screen
+ * size, no sideways scrolling) and advance on their own while the section is on screen;
+ * one short line explains the step and the panel shows it happening. Clicking a step
+ * jumps to it and pauses the player.
  */
 export default function Configure() {
   const reduce = !!useReducedMotion();
@@ -223,14 +224,6 @@ export default function Configure() {
     return () => window.clearTimeout(t);
   }, [held, active]);
 
-  // Keep the active step visible in the swipeable row on phones.
-  useEffect(() => {
-    const el = tabs.current[active];
-    const row = el && el.parentElement;
-    if (!el || !row || row.scrollWidth <= row.clientWidth) return;
-    row.scrollTo({ left: el.offsetLeft - 16, behavior: reduce ? 'auto' : 'smooth' });
-  }, [active, reduce]);
-
   const pick = (i) => {
     setActive(i);
     setHeld(true);
@@ -251,14 +244,12 @@ export default function Configure() {
         <SectionHeader id="hiw-title" eyebrow={hiw.eyebrow} titleA={hiw.titleA} titleB={hiw.titleB} text={hiw.text} layout="split" />
 
         <Reveal y={36} className="mt-12 md:mt-16">
-          <div ref={ref} className="grid gap-4 lg:grid-cols-12 lg:gap-6">
-            <div
-              role="tablist"
-              aria-label="Setup steps"
-              className="-mx-[var(--gutter)] flex snap-x gap-2 overflow-x-auto px-[var(--gutter)] pb-1 no-scrollbar lg:col-span-4 lg:mx-0 lg:flex-col lg:overflow-visible lg:px-0 lg:pb-0"
-            >
+          <div ref={ref}>
+            {/* All four steps always visible: a 4-column selector on every screen size. */}
+            <div role="tablist" aria-label="Setup steps" className="grid grid-cols-4 gap-1 rounded-[22px] bg-white/60 p-1 shadow-[0_0_0_1px_rgba(10,15,14,0.06)] sm:gap-1.5 sm:p-1.5">
               {hiw.steps.map((s, i) => {
                 const on = i === active;
+                const done = i < active;
                 return (
                   <button
                     key={s.name}
@@ -274,27 +265,24 @@ export default function Configure() {
                     onClick={() => pick(i)}
                     onKeyDown={(e) => onKey(e, i)}
                     className={cn(
-                      'relative w-[232px] shrink-0 snap-start overflow-hidden rounded-[20px] p-4 text-left transition-[background,box-shadow] duration-500 lg:w-auto lg:flex-1 lg:p-5',
-                      on ? 'bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_18px_40px_-26px_rgba(10,15,14,0.35)]' : 'bg-white/40 hover:bg-white/70'
+                      'relative flex min-w-0 flex-col items-center gap-1.5 overflow-hidden rounded-[18px] px-1 py-2.5 transition-[background,box-shadow] duration-500 sm:flex-row sm:justify-center sm:gap-2.5 sm:px-3 sm:py-3.5',
+                      on ? 'bg-white shadow-[0_8px_24px_-16px_rgba(10,15,14,0.4)]' : 'hover:bg-white/60'
                     )}
                   >
-                    <span className="flex items-center gap-3">
-                      <span
-                        className={cn(
-                          'flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px] font-medium tabular-nums transition-colors duration-500',
-                          on ? 'bg-ink text-white' : i < active ? 'bg-brand-mint text-brand-ink' : 'bg-ink/[0.06] text-graphite'
-                        )}
-                      >
-                        {i < active && !on ? <Check className="h-3.5 w-3.5" strokeWidth={2.4} aria-hidden="true" /> : i + 1}
-                      </span>
-                      <span className={cn('text-[15px] font-medium transition-colors duration-500', on ? 'text-ink' : 'text-graphite')}>{s.name}</span>
+                    <span
+                      className={cn(
+                        'flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10.5px] font-medium tabular-nums transition-colors duration-500 sm:h-7 sm:w-7 sm:text-[11px]',
+                        on ? 'bg-ink text-white' : done ? 'bg-brand-mint text-brand-ink' : 'bg-ink/[0.06] text-graphite'
+                      )}
+                    >
+                      {done ? <Check className="h-3 w-3" strokeWidth={2.6} aria-hidden="true" /> : i + 1}
                     </span>
-                    <span className={cn('mt-2.5 block text-[13px] leading-relaxed transition-colors duration-500', on ? 'text-graphite' : 'text-slate')}>{s.short}</span>
-                    <span aria-hidden="true" className="absolute inset-x-4 bottom-0 h-[2px] overflow-hidden rounded-full bg-ink/[0.06] lg:inset-x-5">
+                    <span className={cn('max-w-full truncate text-[11px] font-medium transition-colors duration-500 sm:text-[14px]', on ? 'text-ink' : 'text-graphite')}>{s.name}</span>
+                    <span aria-hidden="true" className="absolute inset-x-3 bottom-1 h-[2px] overflow-hidden rounded-full sm:inset-x-5">
                       {on ? (
                         <motion.span
                           key={active + (running ? ':run' : ':hold')}
-                          className="absolute inset-y-0 left-0 bg-ink"
+                          className="absolute inset-y-0 left-0 bg-ink/70"
                           initial={{ width: running ? '0%' : '100%' }}
                           animate={{ width: '100%' }}
                           transition={running ? { duration: STEP_MS / 1000, ease: 'linear' } : { duration: 0 }}
@@ -306,7 +294,19 @@ export default function Configure() {
               })}
             </div>
 
-            <div id="hiw-panel" role="tabpanel" aria-labelledby={'hiw-tab-' + active} className="relative h-[500px] sm:h-[500px] lg:col-span-8 lg:h-auto lg:min-h-[540px]">
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.p
+                key={active}
+                className="mt-5 min-h-[3.2em] text-center text-[14px] leading-relaxed text-graphite sm:min-h-0 sm:text-[15px]"
+                initial={reduce ? { opacity: 0 } : { opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0, transition: { duration: 0.35, ease: EASE } }}
+                exit={{ opacity: 0, transition: { duration: 0.2 } }}
+              >
+                {hiw.steps[active].short}
+              </motion.p>
+            </AnimatePresence>
+
+            <div id="hiw-panel" role="tabpanel" aria-labelledby={'hiw-tab-' + active} className="relative mx-auto mt-5 h-[480px] max-w-[880px] sm:h-[500px] lg:h-[520px]">
               <AnimatePresence initial={false}>
                 <motion.div
                   key={active}
