@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { BookOpen, CalendarDays, Database, ListChecks, Mail, MessageCircle, MessageSquare, Phone, Smartphone, Users } from 'lucide-react';
+import { BookOpen, CalendarDays, Database, Hash, ListChecks, Mail, MessageCircle, MessageSquare, Phone, Smartphone, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { brand, platform } from '@/data/site';
 import { useNavigate } from 'react-router-dom';
@@ -10,13 +10,14 @@ import { Reveal, RevealGroup, RevealItem } from './primitives/MotionReveal';
 import { useInViewport, usePageVisible } from './hooks';
 import { EASE } from './motion';
 
-const CH_ICONS = [MessageSquare, MessageCircle, Phone, Smartphone, Mail];
+const CH_ICONS = [MessageSquare, MessageCircle, Phone, Smartphone, Mail, Hash];
 const SYS_ICONS = [Database, CalendarDays, ListChecks, BookOpen, Users];
 
 // Diagram geometry (desktop), in a 1200 × 600 frame.
 const W = 1200;
 const H = 600;
-const ROWS = [108, 204, 300, 396, 492];
+const ROWS = [108, 204, 300, 396, 492]; // systems (right)
+const CH_ROWS = [92, 175, 258, 342, 425, 508]; // channels (left): six, incl. Slack for internal requests
 const CORE = { x: 450, y: 56, w: 300, h: 488 };
 const LEFT_X = 232;
 const RIGHT_X = 968;
@@ -110,7 +111,7 @@ export default function Platform() {
 
   useEffect(() => {
     if (reduce || !inView || !visible) return undefined;
-    const id = window.setInterval(() => setActive((a) => (a + 1) % ROWS.length), 2600);
+    const id = window.setInterval(() => setActive((a) => (a + 1) % CH_ROWS.length), 2600);
     return () => window.clearInterval(id);
   }, [reduce, inView, visible]);
 
@@ -131,21 +132,25 @@ export default function Platform() {
                     <stop offset="1" stopColor="#13A89C" stopOpacity="0.3" />
                   </linearGradient>
                 </defs>
-                {ROWS.map((y, i) => (
-                  <g key={y}>
+                {CH_ROWS.map((y, i) => (
+                  <g key={'c' + y}>
                     <path d={leftPath(y)} fill="none" stroke={i === active ? 'rgba(10,15,14,0.32)' : 'rgba(10,15,14,0.1)'} strokeWidth="1" vectorEffect="non-scaling-stroke" style={{ transition: 'stroke 0.6s ease' }} />
-                    <path d={rightPath(y)} fill="none" stroke={i === active ? 'rgba(10,15,14,0.32)' : 'rgba(10,15,14,0.1)'} strokeWidth="1" vectorEffect="non-scaling-stroke" style={{ transition: 'stroke 0.6s ease' }} />
                     {!reduce && i === active ? (
-                      <>
-                        <path key={'l' + active} d={leftPath(y)} fill="none" stroke="url(#pf-pulse)" strokeWidth="2.25" strokeLinecap="round" vectorEffect="non-scaling-stroke" pathLength={1} className="flow-pulse" style={{ animationDuration: '1.3s', animationIterationCount: 1, animationFillMode: 'both' }} />
-                        <path key={'r' + active} d={rightPath(y)} fill="none" stroke="url(#pf-pulse)" strokeWidth="2.25" strokeLinecap="round" vectorEffect="non-scaling-stroke" pathLength={1} className="flow-pulse" style={{ animationDuration: '1.3s', animationDelay: '1.1s', animationIterationCount: 1, animationFillMode: 'both' }} />
-                      </>
+                      <path key={'l' + active} d={leftPath(y)} fill="none" stroke="url(#pf-pulse)" strokeWidth="2.25" strokeLinecap="round" vectorEffect="non-scaling-stroke" pathLength={1} className="flow-pulse" style={{ animationDuration: '1.3s', animationIterationCount: 1, animationFillMode: 'both' }} />
+                    ) : null}
+                  </g>
+                ))}
+                {ROWS.map((y, i) => (
+                  <g key={'s' + y}>
+                    <path d={rightPath(y)} fill="none" stroke={i === active % ROWS.length ? 'rgba(10,15,14,0.32)' : 'rgba(10,15,14,0.1)'} strokeWidth="1" vectorEffect="non-scaling-stroke" style={{ transition: 'stroke 0.6s ease' }} />
+                    {!reduce && i === active % ROWS.length ? (
+                      <path key={'r' + active} d={rightPath(y)} fill="none" stroke="url(#pf-pulse)" strokeWidth="2.25" strokeLinecap="round" vectorEffect="non-scaling-stroke" pathLength={1} className="flow-pulse" style={{ animationDuration: '1.3s', animationDelay: '1.1s', animationIterationCount: 1, animationFillMode: 'both' }} />
                     ) : null}
                   </g>
                 ))}
               </svg>
 
-              <p className="absolute left-0 top-0 text-[12.5px] font-medium text-slate">Customer channels</p>
+              <p className="absolute left-0 top-0 text-[12.5px] font-medium text-slate">Channels</p>
               <p className="absolute right-0 top-0 text-[12.5px] font-medium text-slate">Your systems</p>
 
               {platform.channels.map((c, i) => (
@@ -155,7 +160,7 @@ export default function Platform() {
                   label={c}
                   active={i === active}
                   className="absolute h-[8.8%]"
-                  style={{ left: 0, top: pct(ROWS[i] - 26, H), width: pct(LEFT_X, W) }}
+                  style={{ left: 0, top: pct(CH_ROWS[i] - 26, H), width: pct(LEFT_X, W) }}
                 />
               ))}
 
@@ -169,7 +174,7 @@ export default function Platform() {
                   icon={SYS_ICONS[i]}
                   label={s.name}
                   detail={s.detail}
-                  active={i === active}
+                  active={i === active % ROWS.length}
                   className="absolute h-[10.6%]"
                   style={{ left: pct(RIGHT_X, W), top: pct(ROWS[i] - 32, H), width: pct(W - RIGHT_X, W) }}
                 />
@@ -178,7 +183,7 @@ export default function Platform() {
 
             {/* Mobile / tablet architecture */}
             <div className="flex flex-col items-center xl:hidden">
-              <p className="text-[12.5px] font-medium text-slate">Customer channels</p>
+              <p className="text-[12.5px] font-medium text-slate">Channels</p>
               <ul className="mt-3 flex flex-wrap justify-center gap-2">
                 {platform.channels.map((c, i) => {
                   const Icon = CH_ICONS[i];
@@ -200,7 +205,7 @@ export default function Platform() {
                 {platform.systems.map((s, i) => {
                   const Icon = SYS_ICONS[i];
                   return (
-                    <li key={s.name} className={cn('flex items-center gap-2 rounded-full border px-3 py-2 text-[13.5px] font-medium transition-colors duration-500', i === active ? 'border-ink bg-ink text-white' : 'border-ink/[0.08] bg-paper text-ink')}>
+                    <li key={s.name} className={cn('flex items-center gap-2 rounded-full border px-3 py-2 text-[13.5px] font-medium transition-colors duration-500', i === active % ROWS.length ? 'border-ink bg-ink text-white' : 'border-ink/[0.08] bg-paper text-ink')}>
                       <Icon className="h-3.5 w-3.5" strokeWidth={1.8} aria-hidden="true" />
                       {s.name}
                     </li>

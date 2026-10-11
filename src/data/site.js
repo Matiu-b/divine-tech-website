@@ -57,7 +57,7 @@ export const media = {
 export const hero = {
   titleA: 'Aurora runs the work.',
   titleB: 'Your team runs the business.',
-  text: 'Every inquiry answered in seconds, on WhatsApp, phone, email and web. Bookings made, records updated and follow-ups sent inside the systems you already use, with your approval on what matters.',
+  text: 'AI agents that answer every customer, finish the work in your systems and ask you before anything that matters.',
   primary: 'Book a demo',
   secondary: 'See it in action',
 };
@@ -221,7 +221,7 @@ export const platform = {
   titleB: 'Between your customers and your systems.',
   text: 'Aurora sits between the channels your customers use and the systems your team relies on. It understands each request, applies your rules and carries the work through to done.',
   link: 'Explore the platform',
-  channels: ['Web chat', 'WhatsApp', 'Voice', 'SMS', 'Email'],
+  channels: ['Web chat', 'WhatsApp', 'Voice', 'SMS', 'Email', 'Slack'],
   layers: [
     { name: 'Understand', detail: 'Intent, context and history' },
     { name: 'Decide', detail: 'Rules, knowledge and approvals' },
@@ -330,7 +330,7 @@ export const howItWorks = {
       who: 'Aurora',
       tone: 'aurora',
       name: 'Aurora sets itself up',
-      text: 'It connects to your WhatsApp, phone, CRM and calendar, learns your services and rules, and builds the flows from what you told us.',
+      text: 'It connects to your WhatsApp, phone, Slack, CRM and calendar, learns your services and rules, and builds the flows from what you told us.',
     },
     {
       who: 'You approve',

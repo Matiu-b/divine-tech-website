@@ -10,7 +10,7 @@ const srcSet = (name, widths) => widths.map((w) => PHOTOS + name + '-' + w + '.w
 // Shared answers, so every page says the same thing about the same question.
 const FAQ_CHANNELS = [
   'Which channels does Aurora cover?',
-  'Web chat, WhatsApp, voice, SMS and email. A conversation that starts on one channel and continues on another stays one conversation, with its full history.',
+  'Web chat, WhatsApp, voice, SMS and email with customers, and Slack for your team’s internal requests. A conversation that starts on one channel and continues on another stays one conversation, with its full history.',
 ];
 const FAQ_LIVE = [
   'How long does it take to go live?',
