@@ -6,11 +6,9 @@ import { industries, industryPath } from '@/data/industries';
 import { openConsentSettings } from '@/lib/consent';
 import Logo from './primitives/Logo';
 import SmartLink from './primitives/SmartLink';
-import { useLead } from './LeadDrawer';
 import { scrollToHash } from './hooks';
 
 export default function Footer() {
-  const { open } = useLead();
   useLocation(); // re-render on navigation so SmartLink picks the right behaviour
   const linkClass = 'text-[14px] text-white/75 transition-colors hover:text-white';
   return (
@@ -21,9 +19,6 @@ export default function Footer() {
           <div className="md:col-span-4">
             <Logo tone="light" height={30} />
             <p className="mt-6 max-w-[36ch] text-[15px] leading-relaxed text-white/55">{footer.tagline}</p>
-            <button type="button" onClick={open} className="btn btn-light btn-sm mt-8">
-              <span>Book a demo</span>
-            </button>
           </div>
 
           <nav aria-label="Footer" className="grid grid-cols-2 gap-8 md:col-span-4 md:col-start-6">

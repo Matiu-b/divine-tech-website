@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { brand, closing, media } from '@/data/site';
+import { closing, media } from '@/data/site';
 import LiquidGlass from './primitives/LiquidGlass';
 import MediaSlot from './primitives/MediaSlot';
 import { Reveal, RevealLines } from './primitives/MotionReveal';
@@ -33,6 +33,8 @@ export default function FinalCTA({ industry = '', titleA = closing.titleA, title
           }
         />
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
+        {/* the glow settles back to plain ink before the footer, so the footer reads as its own quiet area */}
+        <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-b from-ink/0 to-ink" />
       </div>
 
       <div className="shell relative grid gap-14 lg:grid-cols-12 lg:items-center lg:gap-12">
@@ -42,17 +44,6 @@ export default function FinalCTA({ industry = '', titleA = closing.titleA, title
           </h2>
           <Reveal delay={0.15}>
             <p className="t-lead pretty mt-8 max-w-[40ch] !text-white/65">{text}</p>
-            <div className="mt-10 grid gap-1.5 text-[15px] text-white/60">
-              <a className="w-fit transition-colors hover:text-white" href={'mailto:' + brand.email}>
-                {brand.email}
-              </a>
-              {brand.phones.map((p) => (
-                <a key={p.tel} className="w-fit transition-colors hover:text-white" href={'tel:' + p.tel}>
-                  {p.display} <span className="text-white/40">({p.label})</span>
-                </a>
-              ))}
-              <span>{brand.address}</span>
-            </div>
           </Reveal>
         </div>
 

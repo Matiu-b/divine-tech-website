@@ -109,7 +109,7 @@ export default function PhotoStage({ photo, events, caption = undefined, classNa
     <Reveal y={40} amount={0.05} className={className}>
       <figure
         ref={ref}
-        className="canvas relative m-0 aspect-[4/5] bg-cover bg-center sm:aspect-[4/3] lg:aspect-[16/8.6]"
+        className="canvas relative m-0 aspect-[4/5] bg-cover bg-center sm:aspect-[16/10] lg:aspect-[16/7]"
         style={photo.lqip ? { backgroundImage: 'url(' + (wide || !photo.lqipMobile ? photo.lqip : photo.lqipMobile) + ')' } : undefined}
       >
         <picture>
