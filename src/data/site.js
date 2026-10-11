@@ -57,7 +57,7 @@ export const media = {
 export const hero = {
   titleA: 'Aurora runs the work.',
   titleB: 'Your team runs the business.',
-  text: 'AI agents that answer every customer, finish the work in your systems and ask you before anything that matters.',
+  text: 'The AI operating system for businesses and organizations. Its agents answer every customer, finish the work in your systems and ask you before anything that matters.',
   primary: 'Book a demo',
   secondary: 'See it in action',
 };
@@ -217,9 +217,9 @@ export const heroStage = {
 
 export const platform = {
   eyebrow: 'Platform',
-  titleA: 'One operating layer.',
-  titleB: 'Between your customers and your systems.',
-  text: 'Aurora sits between the channels your customers use and the systems your team relies on. It understands each request, applies your rules and carries the work through to done.',
+  titleA: 'One AI operating system',
+  titleB: 'for your whole business.',
+  text: 'Aurora connects the channels your customers and team use to the systems you already run on: CRM, calendars, invoicing, email. It understands each request, applies your rules and carries the work through to done.',
   link: 'Explore the platform',
   channels: ['Web chat', 'WhatsApp', 'Voice', 'SMS', 'Email', 'Slack'],
   layers: [
@@ -316,7 +316,7 @@ export const controlVisual = {
 // How it works (home page): three plain steps from the customer's side, each saying who does it.
 export const howItWorks = {
   eyebrow: 'How it works',
-  titleA: 'Live in up to 7 days.',
+  titleA: 'Live in hours.',
   titleB: 'Your part is explaining your business.',
   text: 'No technical project on your side. Our experts and Aurora do the setup, and nothing goes live until you approve it.',
   steps: [
@@ -452,7 +452,7 @@ export const platformPage = {
 };
 
 export const footer = {
-  tagline: 'Divine Tech AI builds Aurora, the AI operating layer that runs real business work across every channel.',
+  tagline: 'Divine Tech AI builds Aurora, the AI operating system for businesses and organizations.',
 };
 
 // Home page industries section: a card per vertical, each linking to its page.

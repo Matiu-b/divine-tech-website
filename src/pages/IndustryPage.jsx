@@ -171,7 +171,7 @@ function GoLive({ it }) {
           <div className="flex flex-col gap-6 rounded-[28px] bg-white p-6 shadow-[0_0_0_1px_rgba(10,15,14,0.06)] md:flex-row md:items-center md:justify-between md:gap-10 md:p-8">
             <div>
               <h2 id="ind-live-title" className="t-h3">
-                Live in up to 7 days.
+                Live in hours.
               </h2>
               <p className="mt-2 max-w-[52ch] text-[14px] leading-relaxed text-graphite">
                 One scoping session with our experts and your approval. {brand.product} and our team do the setup, the connections and the testing.

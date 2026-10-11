@@ -8,12 +8,12 @@ import { useInViewport } from './hooks';
 
 // Who does each phase decides its colour on the timeline: ink = you, green = Aurora.
 const TONE = { you: 'bg-ink', aurora: 'bg-brand' };
-// Relative length of each phase on the 7-day ruler (desktop): scoping, setup, approval.
+// Relative length of each phase on the ruler (desktop): scoping, setup, approval.
 const SPAN = ['md:col-span-1', 'md:col-span-2', 'md:col-span-1'];
 
 /**
- * How it works (home page): the first week as one timeline. The content really is a
- * sequence in time, so it is drawn as a ruler from day 1 to day 7 with three phases,
+ * How it works (home page): going live as one timeline. The content really is a
+ * sequence in time, so it is drawn as a ruler from start to live (within hours) with three phases,
  * coloured by who does the work, instead of a row of cards. Horizontal from tablet up,
  * vertical on phones. The bars fill once, in order, when the section comes into view.
  */
@@ -31,11 +31,11 @@ export default function Configure() {
         <Reveal className="mt-14 md:mt-20">
           <div ref={ref}>
             <div className="mb-4 hidden justify-between text-[13px] text-slate md:flex" aria-hidden="true">
-              <span>Day 1</span>
-              <span>Day 7</span>
+              <span>Start</span>
+              <span>Live</span>
             </div>
             <p className="mb-4 text-[13px] text-slate md:hidden" aria-hidden="true">
-              Day 1
+              Start
             </p>
 
             <ol className="grid gap-0 md:grid-cols-4 md:gap-1.5">
@@ -63,7 +63,7 @@ export default function Configure() {
 
             <p className="-mt-4 flex items-center gap-2 text-[13px] text-slate md:mt-6 md:justify-end">
               <span className="h-2 w-2 rounded-full bg-brand" aria-hidden="true" />
-              Day 7: live on your channels
+              Live on your channels, within hours
             </p>
           </div>
         </Reveal>

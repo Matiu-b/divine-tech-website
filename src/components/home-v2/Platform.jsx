@@ -37,7 +37,7 @@ function Core({ active, compact = false }) {
       <div className="relative flex items-start justify-between">
         <div>
           <p className="text-[22px] font-normal leading-none tracking-[-0.03em]">{brand.product}</p>
-          <p className="mt-1.5 text-[13px] text-white/50">Operating layer</p>
+          <p className="mt-1.5 text-[13px] text-white/50">AI operating system</p>
         </div>
         <span className="flex items-center gap-1.5 rounded-full bg-white/[0.07] px-2.5 py-1 text-[11.5px] font-medium text-white/75">
           <span className="h-1.5 w-1.5 animate-pulse-soft rounded-full bg-brand-glow" />
