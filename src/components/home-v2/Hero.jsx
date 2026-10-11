@@ -41,10 +41,10 @@ export default function Hero() {
           <Logo variant="aurora" tone="light" height={26} />
           <span className="text-[17px] font-medium text-white/70">{hero.lockup}</span>
         </motion.div>
-        <h1 id="hero-title" className="t-display balance mx-auto mt-6 max-w-[20ch] text-center text-white max-sm:text-[30px] max-sm:leading-[1.1] md:mt-8">
+        <h1 id="hero-title" className="t-display balance mx-auto mt-6 max-w-[20ch] text-center text-white max-sm:px-4 max-sm:text-[27px] max-sm:leading-[1.12] md:mt-8">
           <RevealLines lines={hero.titleB ? [hero.titleA, hero.titleB] : [hero.titleA]} lineClassNames={['', '']} immediate delay={0.08} stagger={0.14} />
         </h1>
-        <motion.p className="t-lead pretty mx-auto mt-6 max-w-[46ch] text-center !text-white/80 md:mt-7" {...rise(0.3)}>
+        <motion.p className="t-lead pretty mx-auto mt-6 max-w-[46ch] text-center !text-white/80 max-sm:px-4 md:mt-7" {...rise(0.3)}>
           {hero.text}
         </motion.p>
         <motion.div className="mt-8 flex flex-wrap items-center justify-center gap-2.5 sm:gap-3" {...slide(0.42)}>
