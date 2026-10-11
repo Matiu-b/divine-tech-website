@@ -318,10 +318,10 @@ export const howItWorks = {
   titleB: 'Live in days, not months.',
   text: 'The setup that used to take consultants and developers happens inside one automatic cycle. Aurora configures itself and your team approves. It does not build.',
   steps: [
-    { name: 'Describe', text: 'Explain the business in plain language: what you sell, how a lead becomes a customer, what must never happen. Share the documents you already have.' },
-    { name: 'Configure', text: 'Aurora builds its own setup: flows, integrations, knowledge, tone of voice and rules. No forms, no consultants.' },
-    { name: 'Adapt', text: 'It runs test cycles on your real cases, finds the gaps and tunes itself until the results match how you work.' },
-    { name: 'Run', text: 'It goes live on your channels and keeps learning from every conversation, with your approval on anything that changes the business.' },
+    { name: 'Describe', short: 'Explain your business in plain words and share the files you already have.', text: 'Explain the business in plain language: what you sell, how a lead becomes a customer, what must never happen. Share the documents you already have.' },
+    { name: 'Configure', short: 'Aurora builds its own flows, integrations, knowledge and rules.', text: 'Aurora builds its own setup: flows, integrations, knowledge, tone of voice and rules. No forms, no consultants.' },
+    { name: 'Adapt', short: 'It tests itself on your real cases and fixes the gaps.', text: 'It runs test cycles on your real cases, finds the gaps and tunes itself until the results match how you work.' },
+    { name: 'Run', short: 'It goes live on your channels. Changes wait for your approval.', text: 'It goes live on your channels and keeps learning from every conversation, with your approval on anything that changes the business.' },
   ],
   describe: {
     prompt: 'We sell and rent apartments in Brooklyn. Leads come from our website, Instagram ads and walk-ins. Book viewings with the listing agent. Never promise a price.',

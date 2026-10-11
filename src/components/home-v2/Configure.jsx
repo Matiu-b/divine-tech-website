@@ -6,7 +6,7 @@ import { brand, howItWorks as hiw } from '@/data/site';
 import LiquidGlass from './primitives/LiquidGlass';
 import SectionHeader from './primitives/SectionHeader';
 import { Reveal } from './primitives/MotionReveal';
-import { useInViewport } from './hooks';
+import { useInViewport, usePageVisible } from './hooks';
 import { EASE } from './motion';
 
 /* ------------------------------------------------------------------ */
@@ -123,6 +123,7 @@ function AdaptView({ active }) {
 
 /** @param {any} props */
 function RunView({ active }) {
+  const reduce = useReducedMotion();
   return (
     <div className="flex h-full flex-col">
       <p className="text-[12px] font-medium text-ink">Live</p>
@@ -138,6 +139,18 @@ function RunView({ active }) {
           </li>
         ))}
       </ul>
+      <motion.div
+        className="ui-card mt-3 rounded-[14px] px-3.5 py-3"
+        initial={reduce ? false : { opacity: 0, y: 8 }}
+        animate={active ? { opacity: 1, y: 0 } : undefined}
+        transition={{ duration: 0.5, delay: reduce ? 0 : 0.9, ease: EASE }}
+      >
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-[12px] text-slate">WhatsApp · first conversation</p>
+          <span className="ui-chip bg-brand-mint text-brand-ink">Answered</span>
+        </div>
+        <p className="mt-1.5 truncate text-[13.5px] font-medium text-ink">“Hi, is the 2-bedroom still available?”</p>
+      </motion.div>
       <div className="ui-card mt-3 flex items-center justify-between gap-4 rounded-[14px] px-3.5 py-3">
         <div className="min-w-0">
           <p className="text-[13.5px] font-medium text-ink">Changes wait for your approval</p>
@@ -152,18 +165,17 @@ function RunView({ active }) {
 }
 
 const VIEWS = [DescribeView, ConfigureView, AdaptView, RunView];
+const STEP_MS = 6500; // time on each step while the player runs on its own
+const RESUME_MS = 14000; // after a click, the player waits this long before moving on again
 
 /** @param {any} props */
-function StepPanel({ step, compact = false }) {
+function StepPanel({ step, active }) {
   const View = VIEWS[step];
-  const ref = useRef(null);
-  const seen = useInViewport(ref, { threshold: 0.4, once: true });
-  const active = compact ? seen : true;
   return (
-    <div ref={ref} className={cn('canvas canvas-grain bg-[linear-gradient(165deg,#EEF0EB_0%,#E1E7DF_100%)]', compact ? 'p-4 xs:p-5' : 'h-full p-6 xl:p-8')}>
+    <div className="canvas canvas-grain relative h-full bg-[linear-gradient(165deg,#EEF0EB_0%,#E1E7DF_100%)] p-3 xs:p-4 sm:p-6 xl:p-8">
       <div aria-hidden="true" className="orb right-[-14%] top-[-26%] h-[70%] w-[60%] bg-[radial-gradient(closest-side,rgba(60,224,154,0.22),rgba(60,224,154,0))]" />
       <div aria-hidden="true" className="orb bottom-[-30%] left-[-10%] h-[70%] w-[55%] bg-[radial-gradient(closest-side,rgba(255,255,255,0.8),rgba(255,255,255,0))]" />
-      <LiquidGlass className={cn('relative flex flex-col rounded-[24px]', compact ? 'p-4' : 'h-full p-5 xl:p-6')}>
+      <LiquidGlass className="relative flex h-full flex-col rounded-[24px] p-4 sm:p-5 xl:p-6">
         <div className="mb-5 flex items-center justify-between">
           <span className="flex items-center gap-2 text-[12px] font-medium text-ink">
             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-ink text-[10px] font-medium text-white">{step + 1}</span>
@@ -175,7 +187,7 @@ function StepPanel({ step, compact = false }) {
             ))}
           </span>
         </div>
-        <div className={cn('relative', compact ? '' : 'min-h-0 flex-1')}>
+        <div className="relative min-h-0 flex-1 overflow-hidden">
           <View active={active} />
         </div>
       </LiquidGlass>
@@ -183,82 +195,135 @@ function StepPanel({ step, compact = false }) {
   );
 }
 
-/** @param {any} props */
-function Step({ index, step, active, done, onActive }) {
-  const ref = useRef(null);
-  const inBand = useInViewport(ref, { rootMargin: '-30% 0px -60% 0px' });
-  useEffect(() => {
-    if (inBand) onActive(index);
-  }, [inBand, index, onActive]);
-  return (
-    <div ref={ref} className="relative pb-14 lg:min-h-[var(--step-h)] lg:pb-0 lg:pt-[var(--step-pad)]">
-      <span
-        aria-hidden="true"
-        className={cn(
-          'absolute left-0 top-[calc(var(--step-pad)+3px)] hidden h-[15px] w-[15px] rounded-full border-2 transition-colors duration-500 lg:block',
-          done || active ? 'border-ink bg-ink' : 'border-ink/20 bg-paper'
-        )}
-      />
-      <div className={cn('transition-opacity duration-700 lg:pl-12', active ? 'lg:opacity-100' : 'lg:opacity-35')}>
-        <p className="text-[13px] font-medium tabular-nums text-slate">Step {index + 1}</p>
-        <h3 className="t-h2 mt-3">{step.name}</h3>
-        <p className="t-lead pretty mt-4 max-w-[40ch]">{step.text}</p>
-      </div>
-      <div className="mt-7 lg:hidden">
-        <StepPanel step={index} compact />
-      </div>
-    </div>
-  );
-}
-
+/**
+ * How it works: a small player. The four steps sit in a track (a column on desktop,
+ * a swipeable row on phones) and advance on their own while the section is on screen;
+ * the panel shows each step happening. Clicking a step jumps to it and pauses the player.
+ */
 export default function Configure() {
+  const reduce = !!useReducedMotion();
+  const ref = useRef(null);
+  const tabs = useRef([]);
+  const inView = useInViewport(ref, { threshold: 0.3 });
+  const visible = usePageVisible();
   const [active, setActive] = useState(0);
-  const reduce = useReducedMotion();
-  const onActive = React.useCallback((i) => setActive(i), []);
+  const [held, setHeld] = useState(false);
+  const running = inView && visible && !held && !reduce;
+  const n = hiw.steps.length;
+
+  useEffect(() => {
+    if (!running) return undefined;
+    const t = window.setTimeout(() => setActive((a) => (a + 1) % n), STEP_MS);
+    return () => window.clearTimeout(t);
+  }, [running, active, n]);
+
+  useEffect(() => {
+    if (!held) return undefined;
+    const t = window.setTimeout(() => setHeld(false), RESUME_MS);
+    return () => window.clearTimeout(t);
+  }, [held, active]);
+
+  // Keep the active step visible in the swipeable row on phones.
+  useEffect(() => {
+    const el = tabs.current[active];
+    const row = el && el.parentElement;
+    if (!el || !row || row.scrollWidth <= row.clientWidth) return;
+    row.scrollTo({ left: el.offsetLeft - 16, behavior: reduce ? 'auto' : 'smooth' });
+  }, [active, reduce]);
+
+  const pick = (i) => {
+    setActive(i);
+    setHeld(true);
+  };
+  const onKey = (e, i) => {
+    const d = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
+    if (!d) return;
+    e.preventDefault();
+    const next = (i + d + n) % n;
+    pick(next);
+    const el = tabs.current[next];
+    if (el) el.focus();
+  };
 
   return (
     <section id="how-it-works" data-nav-theme="light" aria-labelledby="hiw-title" className="section relative">
       <div className="shell">
         <SectionHeader id="hiw-title" eyebrow={hiw.eyebrow} titleA={hiw.titleA} titleB={hiw.titleB} text={hiw.text} layout="split" />
 
-        <div className="relative mt-16 grid gap-0 [--step-h:min(68vh,620px)] [--step-pad:6vh] lg:mt-14 lg:grid-cols-12 lg:gap-12">
-          <div className="relative lg:col-span-5">
-            {/* progress rail */}
+        <Reveal y={36} className="mt-12 md:mt-16">
+          <div ref={ref} className="grid gap-4 lg:grid-cols-12 lg:gap-6">
             <div
-              aria-hidden="true"
-              className="absolute bottom-[calc(var(--step-h)-var(--step-pad)-10px)] left-[7px] top-[calc(var(--step-pad)+10px)] hidden w-px bg-ink/10 lg:block"
+              role="tablist"
+              aria-label="Setup steps"
+              className="-mx-[var(--gutter)] flex snap-x gap-2 overflow-x-auto px-[var(--gutter)] pb-1 no-scrollbar lg:col-span-4 lg:mx-0 lg:flex-col lg:overflow-visible lg:px-0 lg:pb-0"
             >
-              <motion.span
-                className="absolute left-0 top-0 w-px origin-top bg-ink"
-                animate={{ height: (active / (hiw.steps.length - 1)) * 100 + '%' }}
-                transition={reduce ? { duration: 0 } : { duration: 0.7, ease: EASE }}
-              />
+              {hiw.steps.map((s, i) => {
+                const on = i === active;
+                return (
+                  <button
+                    key={s.name}
+                    ref={(el) => {
+                      tabs.current[i] = el;
+                    }}
+                    type="button"
+                    role="tab"
+                    id={'hiw-tab-' + i}
+                    aria-selected={on}
+                    aria-controls="hiw-panel"
+                    tabIndex={on ? 0 : -1}
+                    onClick={() => pick(i)}
+                    onKeyDown={(e) => onKey(e, i)}
+                    className={cn(
+                      'relative w-[232px] shrink-0 snap-start overflow-hidden rounded-[20px] p-4 text-left transition-[background,box-shadow] duration-500 lg:w-auto lg:flex-1 lg:p-5',
+                      on ? 'bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_18px_40px_-26px_rgba(10,15,14,0.35)]' : 'bg-white/40 hover:bg-white/70'
+                    )}
+                  >
+                    <span className="flex items-center gap-3">
+                      <span
+                        className={cn(
+                          'flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px] font-medium tabular-nums transition-colors duration-500',
+                          on ? 'bg-ink text-white' : i < active ? 'bg-brand-mint text-brand-ink' : 'bg-ink/[0.06] text-graphite'
+                        )}
+                      >
+                        {i < active && !on ? <Check className="h-3.5 w-3.5" strokeWidth={2.4} aria-hidden="true" /> : i + 1}
+                      </span>
+                      <span className={cn('text-[15px] font-medium transition-colors duration-500', on ? 'text-ink' : 'text-graphite')}>{s.name}</span>
+                    </span>
+                    <span className={cn('mt-2.5 block text-[13px] leading-relaxed transition-colors duration-500', on ? 'text-graphite' : 'text-slate')}>{s.short}</span>
+                    <span aria-hidden="true" className="absolute inset-x-4 bottom-0 h-[2px] overflow-hidden rounded-full bg-ink/[0.06] lg:inset-x-5">
+                      {on ? (
+                        <motion.span
+                          key={active + (running ? ':run' : ':hold')}
+                          className="absolute inset-y-0 left-0 bg-ink"
+                          initial={{ width: running ? '0%' : '100%' }}
+                          animate={{ width: '100%' }}
+                          transition={running ? { duration: STEP_MS / 1000, ease: 'linear' } : { duration: 0 }}
+                        />
+                      ) : null}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
-            {hiw.steps.map((s, i) => (
-              <Step key={s.name} index={i} step={s} active={i === active} done={i < active} onActive={onActive} />
-            ))}
-          </div>
 
-          <div className="hidden lg:col-span-7 lg:block">
-            <div className="sticky top-[calc(50vh-var(--step-h)/2+12px)] h-[calc(var(--step-h)-24px)]">
-              {/* Layered crossfade: steps can change quickly while scrolling, so panels overlap instead of queueing */}
+            <div id="hiw-panel" role="tabpanel" aria-labelledby={'hiw-tab-' + active} className="relative h-[440px] sm:h-[460px] lg:col-span-8 lg:h-auto lg:min-h-[480px]">
               <AnimatePresence initial={false}>
                 <motion.div
                   key={active}
                   className="absolute inset-0"
-                  initial={reduce ? { opacity: 0 } : { opacity: 0, y: 18 }}
-                  animate={{ opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE } }}
-                  exit={{ opacity: 0, transition: { duration: 0.35, ease: EASE } }}
+                  initial={reduce ? { opacity: 0 } : { opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0, transition: { duration: 0.5, ease: EASE } }}
+                  exit={{ opacity: 0, transition: { duration: 0.3, ease: EASE } }}
                 >
-                  <StepPanel step={active} />
+                  <StepPanel step={active} active={inView || reduce} />
                 </motion.div>
               </AnimatePresence>
             </div>
           </div>
-        </div>
+        </Reveal>
 
-        <Reveal className="mt-4 lg:mt-16">
-          <div className="flex flex-col gap-4 rounded-[24px] border border-ink/[0.08] bg-white/60 p-5 text-[15px] leading-relaxed text-graphite md:flex-row md:items-center md:gap-10 md:p-7">
+        <Reveal className="mt-6 lg:mt-8">
+          <div className="flex flex-col gap-4 rounded-[24px] border border-ink/[0.08] bg-white/60 p-5 text-[14px] leading-relaxed text-graphite md:flex-row md:items-center md:gap-10 md:p-7">
             <p className="md:flex-1">
               <span className="font-medium text-ink">What you do:</span> describe the business and approve the map.
             </p>

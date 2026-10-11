@@ -2,7 +2,7 @@ import React from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight, ArrowUpRight, Check, Plus, ShieldCheck } from 'lucide-react';
-import { brand, howItWorks } from '@/data/site';
+import { brand } from '@/data/site';
 import { industries, industryBySlug, industryPath } from '@/data/industries';
 import SiteLayout from '@/components/home-v2/SiteLayout';
 import FinalCTA from '@/components/home-v2/FinalCTA';
@@ -162,31 +162,32 @@ function ControlAndValue({ it }) {
   );
 }
 
-/** Going live: the four-step cycle from the home page, plus the tools Aurora works in. */
+/** Going live: one line (the full four-step story is on the home page) plus the tools Aurora works in. */
 function GoLive({ it }) {
   return (
-    <section data-nav-theme="light" aria-labelledby="ind-live-title" className="section relative border-t border-ink/[0.06]">
+    <section data-nav-theme="light" aria-labelledby="ind-live-title" className="relative pb-[var(--section-y)]">
       <div className="shell">
-        <SectionHeader id="ind-live-title" eyebrow="Going live" titleA="Describe it once." titleB="Live in days, not months." layout="split" text="Your team explains the process and approves. Aurora does the setup, the integration and the testing." />
-        <RevealGroup className="mt-12 grid gap-4 sm:grid-cols-2 md:mt-16 lg:grid-cols-4" amount={0.15}>
-          {howItWorks.steps.map((s, i) => (
-            <RevealItem key={s.name} className="rounded-[24px] bg-white p-6 shadow-[0_0_0_1px_rgba(10,15,14,0.06)]">
-              <p className="text-[12px] font-medium tabular-nums text-slate">{'0' + (i + 1)}</p>
-              <h3 className="t-h4 mt-4">{s.name}</h3>
-              <p className="mt-2 text-[13.5px] leading-relaxed text-graphite">{s.text}</p>
-            </RevealItem>
-          ))}
-        </RevealGroup>
-        <Reveal className="mt-10 md:mt-12">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:gap-8">
-            <p className="shrink-0 text-[13px] font-medium text-slate">Works inside</p>
-            <ul className="flex flex-wrap gap-2">
-              {it.systems.map((s) => (
-                <li key={s} className="rounded-full border border-ink/10 bg-white/70 px-3.5 py-1.5 text-[12.5px] text-ink">
-                  {s}
-                </li>
-              ))}
-            </ul>
+        <Reveal>
+          <div className="flex flex-col gap-6 rounded-[28px] bg-white p-6 shadow-[0_0_0_1px_rgba(10,15,14,0.06)] md:flex-row md:items-center md:justify-between md:gap-10 md:p-8">
+            <div>
+              <h2 id="ind-live-title" className="t-h3">
+                Live in days, not months.
+              </h2>
+              <p className="mt-2 max-w-[52ch] text-[14px] leading-relaxed text-graphite">
+                Your team describes the process and approves. {brand.product} does the setup, the integration and the testing.
+              </p>
+              <ul className="mt-5 flex flex-wrap gap-2">
+                {it.systems.map((s) => (
+                  <li key={s} className="rounded-full border border-ink/10 px-3 py-1 text-[12px] text-ink">
+                    {s}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <SmartLink href="/#how-it-works" className="flex shrink-0 items-center gap-1.5 text-[13.5px] font-medium text-ink hover:underline">
+              See how setup works
+              <ArrowRight className="h-4 w-4" strokeWidth={1.8} aria-hidden="true" />
+            </SmartLink>
           </div>
         </Reveal>
       </div>
