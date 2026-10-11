@@ -22,7 +22,7 @@ const FINAL = 12;
 /** Step 1: the action plan being written, line by line. */
 function PlanVisual({ t }) {
   return (
-    <div className="ui-card flex min-h-[150px] flex-col p-3.5">
+    <div className="ui-card flex min-h-[172px] flex-col p-3.5">
       <div className="flex items-center gap-2">
         <span className="flex h-6 w-6 items-center justify-center rounded-[7px] bg-paper text-ink/70">
           <ListChecks className="h-3.5 w-3.5" strokeWidth={1.8} aria-hidden="true" />
@@ -55,7 +55,7 @@ function ConnectVisual({ t }) {
   const done = Math.max(0, Math.min(hiw.connect.length, t - 3));
   const ready = done === hiw.connect.length;
   return (
-    <div className="ui-card flex min-h-[150px] flex-col p-3.5">
+    <div className="ui-card flex min-h-[172px] flex-col p-3.5">
       <div className="flex items-center justify-between">
         <span className="text-[12px] font-medium text-ink">{ready ? 'Connected' : 'Connecting…'}</span>
         <span className="t-data text-[11px] text-slate">
@@ -65,7 +65,7 @@ function ConnectVisual({ t }) {
       <div className="mt-2 h-1 overflow-hidden rounded-full bg-ink/[0.08]">
         <div className="h-full rounded-full bg-brand transition-[width] duration-700 ease-out" style={{ width: (done / hiw.connect.length) * 100 + '%' }} />
       </div>
-      <ul className="mt-3 grid grid-cols-5 gap-1.5">
+      <ul className="mt-auto grid grid-cols-5 gap-1.5 pt-3">
         {hiw.connect.map((name, i) => {
           const Icon = CONNECT_ICON[name] || Database;
           const on = done > i;
@@ -102,7 +102,7 @@ function GoLiveVisual({ t }) {
   const reply = t >= 10;
   const live = t >= 11;
   return (
-    <div className="ui-card flex min-h-[150px] flex-col p-3.5">
+    <div className="ui-card flex min-h-[172px] flex-col p-3.5">
       <div className="mb-3 grid gap-1.5">
         <p className={cn('w-fit max-w-[92%] rounded-[12px] rounded-bl-[4px] bg-paper px-2.5 py-1.5 text-[11.5px] leading-snug text-ink transition-opacity duration-500', ask ? 'opacity-100' : 'opacity-0')}>
           {hiw.test.ask}
@@ -178,11 +178,11 @@ export default function Configure() {
                         style={{ transitionDelay: reduce ? '0ms' : i * 450 + 'ms' }}
                       />
                     </span>
-                    <div className="min-w-0 flex-1 pb-10 md:pb-0 md:pr-4">
+                    <div className="flex min-w-0 flex-1 flex-col pb-10 md:pb-0 md:pr-4">
                       <p className="text-[13px] text-slate">{s.who}</p>
                       <h3 className="mt-1.5 text-[19px] font-medium leading-snug md:text-[20px]">{s.name}</h3>
                       <p className="mt-1.5 text-[14px] leading-relaxed text-graphite">{s.text}</p>
-                      <div className={cn('mt-4', i === 1 && 'md:max-w-[440px]')} aria-hidden="true">
+                      <div className={cn('pt-4 md:mt-auto', i === 1 && 'md:max-w-[440px]')} aria-hidden="true">
                         <Visual t={t} />
                       </div>
                     </div>
