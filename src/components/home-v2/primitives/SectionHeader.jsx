@@ -4,7 +4,9 @@ import { Reveal, RevealLines } from './MotionReveal';
 
 /**
  * Two-tone editorial section header.
- * layout: 'stack' (eyebrow, title, text) | 'split' (title left, text right on desktop) | 'center'
+ * Headlines are one colour and carry no label above them (the old dot labels and grey
+ * second lines read as template chrome). `eyebrow` is accepted but not shown.
+ * layout: 'stack' (title, text) | 'split' (title left, text right on desktop) | 'center'
  * @param {any} props
  */
 export default function SectionHeader({
@@ -22,10 +24,9 @@ export default function SectionHeader({
   textClassName = undefined,
   children = undefined,
 }) {
-  const muted = dark ? 'text-white/45' : 'text-mute';
   const title = (
     <H id={id} className={cn(size, 'balance', titleClassName)}>
-      <RevealLines lines={titleB ? [titleA, titleB] : [titleA]} lineClassNames={['', muted]} blur={false} y={22} />
+      <RevealLines lines={titleB ? [titleA, titleB] : [titleA]} lineClassNames={['', '']} blur={false} y={22} />
     </H>
   );
   const body = text ? (
@@ -41,11 +42,6 @@ export default function SectionHeader({
     return (
       <div className={cn('grid gap-8 md:grid-cols-12 md:items-end md:gap-10', className)}>
         <div className="md:col-span-7">
-          {eyebrow ? (
-            <Reveal y={12}>
-              <p className="eyebrow mb-6">{eyebrow}</p>
-            </Reveal>
-          ) : null}
           {title}
         </div>
         <div className="md:col-span-5 md:col-start-8 lg:col-span-4 lg:col-start-9">{body}</div>
@@ -55,11 +51,6 @@ export default function SectionHeader({
 
   return (
     <div className={cn(layout === 'center' && 'mx-auto flex flex-col items-center text-center', className)}>
-      {eyebrow ? (
-        <Reveal y={12}>
-          <p className="eyebrow mb-6">{eyebrow}</p>
-        </Reveal>
-      ) : null}
       {title}
       {body ? <div className={cn('mt-6 max-w-[46ch]', layout === 'center' && 'mx-auto')}>{body}</div> : null}
     </div>

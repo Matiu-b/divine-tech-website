@@ -1,69 +1,85 @@
-import React from 'react';
-import { ArrowRight, Check, MessagesSquare, Plug, Power } from 'lucide-react';
+import React, { useRef } from 'react';
+import { useReducedMotion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { howItWorks as hiw } from '@/data/site';
 import SectionHeader from './primitives/SectionHeader';
-import { Reveal, RevealGroup, RevealItem } from './primitives/MotionReveal';
+import { Reveal } from './primitives/MotionReveal';
+import { useInViewport } from './hooks';
 
-const ICONS = { talk: MessagesSquare, build: Plug, live: Power };
-
-// Who does each step: the customer (with our experts), Aurora, or the customer approving.
-const WHO_TONE = ['bg-[#F7EDDC] text-[#8A5A12]', 'bg-brand-mint text-brand-ink', 'bg-ink text-white'];
+// Who does each phase decides its colour on the timeline: ink = you, green = Aurora.
+const TONE = { you: 'bg-ink', aurora: 'bg-brand' };
+// Relative length of each phase on the 7-day ruler (desktop): scoping, setup, approval.
+const SPAN = ['md:col-span-1', 'md:col-span-2', 'md:col-span-1'];
 
 /**
- * How it works (home page): three plain steps from the customer's side, each
- * labelled with who does it, and a strip that splits "your part" from ours.
- * Deliberately simple: readable in a few seconds, the same on every screen size.
+ * How it works (home page): the first week as one timeline. The content really is a
+ * sequence in time, so it is drawn as a ruler from day 1 to day 7 with three phases,
+ * coloured by who does the work, instead of a row of cards. Horizontal from tablet up,
+ * vertical on phones. The bars fill once, in order, when the section comes into view.
  */
 export default function Configure() {
+  const ref = useRef(null);
+  const seen = useInViewport(ref, { threshold: 0.35, once: true });
+  const reduce = useReducedMotion();
+  const fill = seen || reduce;
+
   return (
     <section id="how-it-works" data-nav-theme="light" aria-labelledby="hiw-title" className="section relative">
       <div className="shell">
-        <SectionHeader id="hiw-title" eyebrow={hiw.eyebrow} titleA={hiw.titleA} titleB={hiw.titleB} text={hiw.text} layout="split" />
+        <SectionHeader id="hiw-title" titleA={hiw.titleA} titleB={hiw.titleB} text={hiw.text} layout="split" />
 
-        <RevealGroup as="ol" className="mt-12 grid gap-4 md:mt-16 md:grid-cols-3 md:gap-5" amount={0.15}>
-          {hiw.steps.map((s, i) => {
-            const Icon = ICONS[s.icon] || MessagesSquare;
-            return (
-              <RevealItem as="li" key={s.name} className="relative">
-                <div className="flex h-full flex-col rounded-[28px] bg-white p-6 shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_24px_48px_-36px_rgba(10,15,14,0.35)] md:p-7">
-                  <div className="flex items-center justify-between">
-                    <span className={cn('rounded-full px-3 py-1 text-[11.5px] font-medium', WHO_TONE[i])}>{s.who}</span>
-                    <span className="text-[12px] font-medium tabular-nums text-slate">{'0' + (i + 1)}</span>
+        <Reveal className="mt-14 md:mt-20">
+          <div ref={ref}>
+            <div className="mb-4 hidden justify-between text-[13px] text-slate md:flex" aria-hidden="true">
+              <span>Day 1</span>
+              <span>Day 7</span>
+            </div>
+            <p className="mb-4 text-[13px] text-slate md:hidden" aria-hidden="true">
+              Day 1
+            </p>
+
+            <ol className="grid gap-0 md:grid-cols-4 md:gap-1.5">
+              {hiw.steps.map((s, i) => (
+                <li key={s.name} className={cn('flex gap-5 md:flex-col md:gap-7', SPAN[i])}>
+                  {/* the phase on the ruler */}
+                  <span aria-hidden="true" className="relative w-1.5 shrink-0 overflow-hidden rounded-full bg-ink/[0.08] md:h-2 md:w-full">
+                    <span
+                      className={cn(
+                        'absolute inset-0 origin-top rounded-full transition-transform duration-700 ease-out md:origin-left',
+                        TONE[s.tone],
+                        fill ? 'scale-100' : 'scale-y-0 md:scale-x-0 md:scale-y-100'
+                      )}
+                      style={{ transitionDelay: reduce ? '0ms' : i * 450 + 'ms' }}
+                    />
+                  </span>
+                  <div className="pb-10 md:pb-0 md:pr-6">
+                    <p className="text-[13px] text-slate">{s.who}</p>
+                    <h3 className="mt-2 text-[19px] font-medium leading-snug md:text-[21px]">{s.name}</h3>
+                    <p className="mt-3 max-w-[40ch] text-[15px] leading-relaxed text-graphite">{s.text}</p>
                   </div>
-                  <span className="mt-8 flex h-14 w-14 items-center justify-center rounded-[18px] bg-paper-2 text-ink">
-                    <Icon className="h-6 w-6" strokeWidth={1.6} aria-hidden="true" />
-                  </span>
-                  <h3 className="t-h4 mt-6">{s.name}</h3>
-                  <p className="mt-2 text-[14px] leading-relaxed text-graphite">{s.text}</p>
-                </div>
-                {i < hiw.steps.length - 1 ? (
-                  <span
-                    aria-hidden="true"
-                    className="absolute -right-[18px] top-1/2 z-10 hidden h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-paper text-ink/50 shadow-[0_0_0_1px_rgba(10,15,14,0.08)] md:flex"
-                  >
-                    <ArrowRight className="h-4 w-4" strokeWidth={1.8} />
-                  </span>
-                ) : null}
-              </RevealItem>
-            );
-          })}
-        </RevealGroup>
+                </li>
+              ))}
+            </ol>
 
-        <Reveal className="mt-5">
-          <div className="grid gap-px overflow-hidden rounded-[24px] bg-ink/[0.08] md:grid-cols-2">
+            <p className="-mt-4 flex items-center gap-2 text-[13px] text-slate md:mt-6 md:justify-end">
+              <span className="h-2 w-2 rounded-full bg-brand" aria-hidden="true" />
+              Day 7: live on your channels
+            </p>
+          </div>
+        </Reveal>
+
+        <Reveal className="mt-12 md:mt-16">
+          <dl className="grid gap-4 border-t border-ink/10 pt-6 text-[15px] leading-relaxed md:grid-cols-2 md:gap-10">
             {hiw.split.map(([k, v], i) => (
-              <div key={k} className={cn('flex items-start gap-3 p-5 md:p-6', i === 0 ? 'bg-white/80' : 'bg-ink text-white')}>
-                <span className={cn('mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full', i === 0 ? 'bg-brand text-white' : 'bg-brand-glow text-ink')}>
-                  <Check className="h-3 w-3" strokeWidth={3} aria-hidden="true" />
-                </span>
-                <p className="text-[14px] leading-relaxed">
-                  <span className="font-medium">{k}: </span>
-                  <span className={i === 0 ? 'text-graphite' : 'text-white/70'}>{v}</span>
-                </p>
+              <div key={k} className="flex gap-3">
+                <span aria-hidden="true" className={cn('mt-[0.45em] h-2.5 w-2.5 shrink-0 rounded-[3px]', i === 0 ? 'bg-ink' : 'bg-brand')} />
+                <div>
+                  <dt className="font-medium text-ink">{k}</dt>
+                  <dd className="text-graphite">{v}</dd>
+                </div>
               </div>
             ))}
-          </div>
+          </dl>
         </Reveal>
       </div>
     </section>

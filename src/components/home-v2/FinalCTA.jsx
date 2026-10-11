@@ -38,7 +38,7 @@ export default function FinalCTA({ industry = '', titleA = closing.titleA, title
       <div className="shell relative grid gap-14 lg:grid-cols-12 lg:items-center lg:gap-12">
         <div className="lg:col-span-6">
           <h2 id="contact-title" className="t-display balance">
-            <RevealLines lines={[titleA, titleB]} lineClassNames={['', 'text-white/45']} />
+            <RevealLines lines={[titleA, titleB]} lineClassNames={['', '']} />
           </h2>
           <Reveal delay={0.15}>
             <p className="t-lead pretty mt-8 max-w-[40ch] !text-white/65">{text}</p>

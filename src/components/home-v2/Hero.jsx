@@ -32,7 +32,7 @@ export default function Hero() {
 
       <div className="shell relative">
         <h1 id="hero-title" className="t-display max-w-[16ch] lg:max-w-none">
-          <RevealLines lines={[hero.titleA, hero.titleB]} lineClassNames={['', 'text-mute']} immediate delay={0.08} stagger={0.14} />
+          <RevealLines lines={[hero.titleA, hero.titleB]} lineClassNames={['', '']} immediate delay={0.08} stagger={0.14} />
         </h1>
 
         <div className="mt-7 grid gap-7 md:mt-9 lg:grid-cols-12 lg:items-end lg:gap-8">

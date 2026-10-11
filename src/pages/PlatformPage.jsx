@@ -28,11 +28,8 @@ function PlatformHero() {
     <section id="top" data-nav-theme="light" aria-labelledby="platform-hero-title" className="relative overflow-hidden pb-[clamp(64px,8vw,120px)] pt-[calc(var(--nav-h)+44px)] md:pt-[calc(var(--nav-h)+64px)]">
       <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[720px] bg-[radial-gradient(60%_60%_at_78%_0%,rgba(220,236,226,0.9),rgba(246,245,241,0)_70%),radial-gradient(40%_50%_at_10%_10%,rgba(240,232,218,0.7),rgba(246,245,241,0)_70%)]" />
       <div className="shell relative">
-        <motion.p className="eyebrow" {...rise(0)}>
-          {p.eyebrow}
-        </motion.p>
-        <h1 id="platform-hero-title" className="t-display mt-5 md:mt-7">
-          <RevealLines lines={[p.titleA, p.titleB]} lineClassNames={['', 'text-mute']} immediate delay={0.08} stagger={0.14} />
+        <h1 id="platform-hero-title" className="t-display">
+          <RevealLines lines={[p.titleA, p.titleB]} lineClassNames={['', '']} immediate delay={0.08} stagger={0.14} />
         </h1>
         <div className="mt-7 grid gap-7 md:mt-9 lg:grid-cols-12 lg:items-end lg:gap-8">
           <motion.p className="t-lead pretty max-w-[56ch] lg:col-span-7" {...rise(0.3)}>

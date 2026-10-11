@@ -320,27 +320,27 @@ export const howItWorks = {
   text: 'No technical project on your side. Our experts and Aurora do the setup, and nothing goes live until you approve it.',
   steps: [
     {
-      who: 'You + our experts',
-      icon: 'talk',
+      who: 'You, with our experts',
+      tone: 'you',
       name: 'Tell us how you work',
       text: 'A precise scoping session with our team of experts, working together with AI. Bring the files you already have, like your price list and policies.',
     },
     {
       who: 'Aurora',
-      icon: 'build',
+      tone: 'aurora',
       name: 'Aurora sets itself up',
       text: 'It connects to your WhatsApp, phone, CRM and calendar, learns your services and rules, and builds the flows from what you told us.',
     },
     {
       who: 'You approve',
-      icon: 'live',
+      tone: 'you',
       name: 'Test it, then go live',
       text: 'See how it answers real examples from your business, change anything you want, and switch it on. Changes later still need your approval.',
     },
   ],
   split: [
     ['Your part', 'One scoping session and your approval.'],
-    ['Aurora and our team', 'Everything else: setup, connections and testing.'],
+    ['Aurora and our team', 'Setup, connections and testing.'],
   ],
 };
 

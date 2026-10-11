@@ -231,33 +231,20 @@
     text-wrap: pretty;
   }
 
+  /* Small plain-text label, used only where it carries information (e.g. which industry). */
   .eyebrow {
     display: inline-flex;
     align-items: center;
-    gap: 0.6rem;
     font-size: 0.875rem;
     font-weight: 500;
     letter-spacing: -0.005em;
     color: var(--dt-text-2);
   }
 
-  .eyebrow::before {
-    content: '';
-    width: 6px;
-    height: 6px;
-    border-radius: 999px;
-    background: var(--dt-green);
-    box-shadow: 0 0 0 4px rgba(20, 163, 107, 0.12);
-  }
-
   .on-dark .eyebrow {
     color: rgba(255, 255, 255, 0.72);
   }
 
-  .on-dark .eyebrow::before {
-    background: var(--dt-green-glow);
-    box-shadow: 0 0 0 4px rgba(60, 224, 154, 0.14);
-  }
 
   .hairline {
     height: 1px;

@@ -33,7 +33,7 @@ function IndustryHero({ it }) {
           {it.hero.eyebrow}
         </motion.p>
         <h1 id="ind-hero-title" className="t-display balance mt-5 max-w-[20ch] md:mt-7">
-          <RevealLines lines={[it.hero.titleA, it.hero.titleB]} lineClassNames={['', 'text-mute']} immediate delay={0.08} stagger={0.14} />
+          <RevealLines lines={[it.hero.titleA, it.hero.titleB]} lineClassNames={['', '']} immediate delay={0.08} stagger={0.14} />
         </h1>
         <div className="mt-7 grid gap-7 md:mt-9 lg:grid-cols-12 lg:items-end lg:gap-8">
           <motion.p className="t-lead pretty max-w-[56ch] lg:col-span-7" {...rise(0.3)}>
