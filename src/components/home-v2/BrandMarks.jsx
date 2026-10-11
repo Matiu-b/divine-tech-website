@@ -2,8 +2,9 @@ import React from 'react';
 
 /*
  * Brand marks for the tools Aurora connects to, used small in the "How it works" illustration.
- * Most paths come from Simple Icons (CC0); the Slack mark follows Slack's published logo; the
- * Salesforce cloud, the Outlook tile and the phone tile are simplified drawings.
+ * Most paths come from Simple Icons (CC0); the Slack mark follows Slack's published logo. Gmail,
+ * Google Calendar, Outlook and Salesforce are the full-colour logo files in /public/img/logos.
+ * The phone tile is a simplified drawing.
  * Shown only to say "works with these tools" (nominative use), never as an endorsement.
  */
 
@@ -16,9 +17,7 @@ const P = {
   aircall: 'M23.451 5.906a6.978 6.978 0 0 0-5.375-5.39C16.727.204 14.508 0 12 0S7.273.204 5.924.516a6.978 6.978 0 0 0-5.375 5.39C.237 7.26.034 9.485.034 12s.203 4.74.515 6.094a6.978 6.978 0 0 0 5.375 5.39C7.273 23.796 9.492 24 12 24s4.727-.204 6.076-.516a6.978 6.978 0 0 0 5.375-5.39c.311-1.354.515-3.578.515-6.094 0-2.515-.203-4.74-.515-6.094zm-5.873 12.396l-.003.001c-.428.152-1.165.283-2.102.377l-.147.014a.444.444 0 0 1-.45-.271 1.816 1.816 0 0 0-1.296-1.074c-.351-.081-.928-.134-1.58-.134s-1.229.053-1.58.134a1.817 1.817 0 0 0-1.291 1.062.466.466 0 0 1-.471.281 8 8 0 0 0-.129-.012c-.938-.094-1.676-.224-2.105-.377l-.003-.001a.76.76 0 0 1-.492-.713c0-.032.003-.066.005-.098.073-.979.666-3.272 1.552-5.89C8.5 8.609 9.559 6.187 10.037 5.714a1.029 1.029 0 0 1 .404-.26l.004-.002c.314-.106.892-.178 1.554-.178.663 0 1.241.071 1.554.178l.005.002a1.025 1.025 0 0 1 .405.26c.478.472 1.537 2.895 2.549 5.887.886 2.617 1.479 4.91 1.552 5.89.002.032.005.066.005.098a.76.76 0 0 1-.491.713z',
   zoom: 'M5.033 14.649H.743a.74.74 0 0 1-.686-.458.74.74 0 0 1 .16-.808L3.19 10.41H1.06A1.06 1.06 0 0 1 0 9.35h3.957c.301 0 .57.18.686.458a.74.74 0 0 1-.161.808L1.51 13.59h2.464c.585 0 1.06.475 1.06 1.06zM24 11.338c0-1.14-.927-2.066-2.066-2.066-.61 0-1.158.265-1.537.686a2.061 2.061 0 0 0-1.536-.686c-1.14 0-2.066.926-2.066 2.066v3.311a1.06 1.06 0 0 0 1.06-1.06v-2.251a1.004 1.004 0 0 1 2.013 0v2.251c0 .586.474 1.06 1.06 1.06v-3.311a1.004 1.004 0 0 1 2.012 0v2.251c0 .586.475 1.06 1.06 1.06zM16.265 12a2.728 2.728 0 1 1-5.457 0 2.728 2.728 0 0 1 5.457 0zm-1.06 0a1.669 1.669 0 1 0-3.338 0 1.669 1.669 0 0 0 3.338 0zm-4.82 0a2.728 2.728 0 1 1-5.458 0 2.728 2.728 0 0 1 5.457 0zm-1.06 0a1.669 1.669 0 1 0-3.338 0 1.669 1.669 0 0 0 3.338 0z',
   whatsapp: 'M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z',
-  googlecalendar: 'M18.316 5.684H24v12.632h-5.684V5.684zM5.684 24h12.632v-5.684H5.684V24zM18.316 5.684V0H1.895A1.894 1.894 0 0 0 0 1.895v16.421h5.684V5.684h12.632zm-7.207 6.25v-.065c.272-.144.5-.349.687-.617s.279-.595.279-.982c0-.379-.099-.72-.3-1.025a2.05 2.05 0 0 0-.832-.714 2.703 2.703 0 0 0-1.197-.257c-.6 0-1.094.156-1.481.467-.386.311-.65.671-.793 1.078l1.085.452c.086-.249.224-.461.413-.633.189-.172.445-.257.767-.257.33 0 .602.088.816.264a.86.86 0 0 1 .322.703c0 .33-.12.589-.36.778-.24.19-.535.284-.886.284h-.567v1.085h.633c.407 0 .748.109 1.02.327.272.218.407.499.407.843 0 .336-.129.614-.387.832s-.565.327-.924.327c-.351 0-.651-.103-.897-.311-.248-.208-.422-.502-.521-.881l-1.096.452c.178.616.505 1.082.977 1.401.472.319.984.478 1.538.477a2.84 2.84 0 0 0 1.293-.291c.382-.193.684-.458.902-.794.218-.336.327-.72.327-1.149 0-.429-.115-.797-.344-1.105a2.067 2.067 0 0 0-.881-.689zm2.093-1.931l.602.913L15 10.045v5.744h1.187V8.446h-.827l-2.158 1.557zM22.105 0h-3.289v5.184H24V1.895A1.894 1.894 0 0 0 22.105 0zm-3.289 23.5l4.684-4.684h-4.684V23.5zM0 22.105C0 23.152.848 24 1.895 24h3.289v-5.184H0v3.289z',
   hubspot: 'M18.164 7.93V5.084a2.198 2.198 0 001.267-1.978v-.067A2.2 2.2 0 0017.238.845h-.067a2.2 2.2 0 00-2.193 2.193v.067a2.196 2.196 0 001.252 1.973l.013.006v2.852a6.22 6.22 0 00-2.969 1.31l.012-.01-7.828-6.095A2.497 2.497 0 104.3 4.656l-.012.006 7.697 5.991a6.176 6.176 0 00-1.038 3.446c0 1.343.425 2.588 1.147 3.607l-.013-.02-2.342 2.343a1.968 1.968 0 00-.58-.095h-.002a2.033 2.033 0 102.033 2.033 1.978 1.978 0 00-.1-.595l.005.014 2.317-2.317a6.247 6.247 0 104.782-11.134l-.036-.005zm-.964 9.378a3.206 3.206 0 113.215-3.207v.002a3.206 3.206 0 01-3.207 3.207z',
-  gmail: 'M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z',
 };
 
 /** @param {any} props */
@@ -31,9 +30,7 @@ function Glyph({ d, color, className }) {
 }
 
 export const WhatsAppMark = (p) => <Glyph d={P.whatsapp} color="#25D366" {...p} />;
-export const GoogleCalendarMark = (p) => <Glyph d={P.googlecalendar} color="#4285F4" {...p} />;
 export const HubSpotMark = (p) => <Glyph d={P.hubspot} color="#FF7A59" {...p} />;
-export const GmailMark = (p) => <Glyph d={P.gmail} color="#EA4335" {...p} />;
 export const SignalMark = (p) => <Glyph d={P.signal} color="#3A76F0" {...p} />;
 export const TelegramMark = (p) => <Glyph d={P.telegram} color="#26A5E4" {...p} />;
 export const IMessageMark = (p) => <Glyph d={P.imessage} color="#34DA50" {...p} />;
@@ -42,15 +39,6 @@ export const PayPalMark = (p) => <Glyph d={P.paypal} color="#003087" {...p} />;
 export const AircallMark = (p) => <Glyph d={P.aircall} color="#00B388" {...p} />;
 export const ZoomMark = (p) => <Glyph d={P.zoom} color="#0B5CFF" {...p} />;
 
-/** Outlook, simplified: blue tile with a white O. @param {any} props */
-export function OutlookMark({ className }) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
-      <rect x="1" y="2" width="22" height="20" rx="4" fill="#0078D4" />
-      <ellipse cx="12" cy="12" rx="5" ry="5.6" fill="none" stroke="#fff" strokeWidth="2.6" />
-    </svg>
-  );
-}
 
 /** @param {any} props */
 export function SlackMark({ className }) {
@@ -64,21 +52,6 @@ export function SlackMark({ className }) {
   );
 }
 
-/** A plain blue cloud standing in for Salesforce. @param {any} props */
-export function SalesforceMark({ className }) {
-  return (
-    <svg viewBox="0 0 32 22" className={className} aria-hidden="true">
-      <g fill="#00A1E0">
-        <circle cx="10" cy="9" r="6.5" />
-        <circle cx="17" cy="7" r="6.5" />
-        <circle cx="24" cy="10" r="6" />
-        <circle cx="7" cy="14" r="5.5" />
-        <circle cx="16" cy="15" r="6" />
-        <circle cx="25" cy="15" r="5" />
-      </g>
-    </svg>
-  );
-}
 
 /** The phone app tile: green gradient square with a white handset. @param {any} props */
 export function PhoneTile({ className }) {
@@ -98,3 +71,12 @@ export function PhoneTile({ className }) {
     </svg>
   );
 }
+
+/** Full-colour logo files (official artwork) shown as images. @param {any} props */
+function LogoFile({ src, className }) {
+  return <img src={src} alt="" aria-hidden="true" className={className} style={{ objectFit: 'contain' }} />;
+}
+export const GmailMark = (p) => <LogoFile src="/img/logos/gmail.svg" {...p} />;
+export const OutlookMark = (p) => <LogoFile src="/img/logos/outlook.svg" {...p} />;
+export const GoogleCalendarMark = (p) => <LogoFile src="/img/logos/google-calendar.svg" {...p} />;
+export const SalesforceMark = (p) => <LogoFile src="/img/logos/salesforce.svg" {...p} />;

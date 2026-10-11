@@ -123,7 +123,7 @@ const MARKS = {
   phone: [<PhoneTile key="p" className="h-9 w-9" />],
   email: [<GmailMark key="g" className="h-6 w-6" />, <OutlookMark key="o" className="h-6 w-6" />],
   calendar: [<GoogleCalendarMark key="c" className="h-6 w-6" />],
-  crm: [<HubSpotMark key="h" className="h-6 w-6" />, <SalesforceMark key="s" className="h-[20px] w-[29px]" />],
+  crm: [<HubSpotMark key="h" className="h-6 w-6" />, <SalesforceMark key="s" className="h-6 w-9" />],
   messaging: [
     <WhatsAppMark key="w" className="h-6 w-6" />,
     <IMessageMark key="i" className="h-6 w-6" />,
