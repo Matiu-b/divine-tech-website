@@ -22,7 +22,7 @@ const FINAL = 12;
 /** Step 1: the action plan being written, line by line. */
 function PlanVisual({ t }) {
   return (
-    <div className="ui-card p-3.5">
+    <div className="ui-card flex min-h-[150px] flex-col p-3.5">
       <div className="flex items-center gap-2">
         <span className="flex h-6 w-6 items-center justify-center rounded-[7px] bg-paper text-ink/70">
           <ListChecks className="h-3.5 w-3.5" strokeWidth={1.8} aria-hidden="true" />
@@ -55,7 +55,7 @@ function ConnectVisual({ t }) {
   const done = Math.max(0, Math.min(hiw.connect.length, t - 3));
   const ready = done === hiw.connect.length;
   return (
-    <div className="ui-card p-3.5">
+    <div className="ui-card flex min-h-[150px] flex-col p-3.5">
       <div className="flex items-center justify-between">
         <span className="text-[12px] font-medium text-ink">{ready ? 'Connected' : 'Connecting…'}</span>
         <span className="t-data text-[11px] text-slate">
@@ -102,8 +102,8 @@ function GoLiveVisual({ t }) {
   const reply = t >= 10;
   const live = t >= 11;
   return (
-    <div className="ui-card p-3.5">
-      <div className="grid gap-1.5">
+    <div className="ui-card flex min-h-[150px] flex-col p-3.5">
+      <div className="mb-3 grid gap-1.5">
         <p className={cn('w-fit max-w-[92%] rounded-[12px] rounded-bl-[4px] bg-paper px-2.5 py-1.5 text-[11.5px] leading-snug text-ink transition-opacity duration-500', ask ? 'opacity-100' : 'opacity-0')}>
           {hiw.test.ask}
         </p>
@@ -116,7 +116,7 @@ function GoLiveVisual({ t }) {
           {hiw.test.reply}
         </p>
       </div>
-      <div className="mt-3 flex items-center justify-between border-t border-ink/[0.07] pt-2.5">
+      <div className="mt-auto flex items-center justify-between border-t border-ink/[0.07] pt-2.5">
         <span className={cn('text-[12px] font-medium transition-colors duration-500', live ? 'text-brand-ink' : 'text-slate')}>{live ? 'Live' : 'Go live'}</span>
         <span className={cn('relative h-5 w-9 rounded-full transition-colors duration-500', live ? 'bg-brand' : 'bg-ink/15')}>
           <span className={cn('absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-[left] duration-500', live ? 'left-[18px]' : 'left-0.5')} />
