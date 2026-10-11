@@ -55,9 +55,11 @@ export const media = {
 };
 
 export const hero = {
-  titleA: 'Aurora runs the work.',
-  titleB: undefined,
-  text: 'The AI operating system for businesses.',
+  // Category headline under a small "Aurora AI OS" lockup (centered, in the spirit of wonderful.ai).
+  lockup: 'AI OS',
+  titleA: 'The AI operating system',
+  titleB: 'for modern business',
+  text: 'AI agents that do the work, inside the tools you already use.',
   primary: 'Book a demo',
   secondary: 'See it in action',
 };
