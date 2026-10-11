@@ -71,7 +71,7 @@ function ConfigureView({ active }) {
         {hiw.configure.map((m, i) => {
           const done = n > i;
           return (
-            <li key={m} className="ui-card flex items-center gap-3 rounded-[14px] px-3.5 py-3">
+            <li key={m} className="ui-card flex items-center gap-3 rounded-[14px] px-3.5 py-2.5">
               <Sparkles className={cn('h-4 w-4 shrink-0 transition-colors duration-500', done ? 'text-brand' : 'text-ink/25')} strokeWidth={1.7} aria-hidden="true" />
               <span className={cn('min-w-0 flex-1 truncate text-[13.5px] font-medium transition-colors duration-500', done ? 'text-ink' : 'text-ink/40')}>{m}</span>
               <span className="relative h-1 w-10 shrink-0 overflow-hidden rounded-full bg-ink/[0.07] sm:w-16">
@@ -306,7 +306,7 @@ export default function Configure() {
               })}
             </div>
 
-            <div id="hiw-panel" role="tabpanel" aria-labelledby={'hiw-tab-' + active} className="relative h-[440px] sm:h-[460px] lg:col-span-8 lg:h-auto lg:min-h-[480px]">
+            <div id="hiw-panel" role="tabpanel" aria-labelledby={'hiw-tab-' + active} className="relative h-[500px] sm:h-[500px] lg:col-span-8 lg:h-auto lg:min-h-[540px]">
               <AnimatePresence initial={false}>
                 <motion.div
                   key={active}
