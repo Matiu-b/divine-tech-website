@@ -55,7 +55,6 @@ export const media = {
 };
 
 export const hero = {
-  eyebrow: 'Aurora by Divine Tech AI',
   titleA: 'Aurora runs the work.',
   titleB: 'Your team runs the business.',
   text: 'Every inquiry answered in seconds, on WhatsApp, phone, email and web. Bookings made, records updated and follow-ups sent inside the systems you already use, with your approval on what matters.',

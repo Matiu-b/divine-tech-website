@@ -31,11 +31,7 @@ export default function Hero() {
       <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[720px] bg-[radial-gradient(60%_60%_at_78%_0%,rgba(220,236,226,0.9),rgba(246,245,241,0)_70%),radial-gradient(40%_50%_at_10%_10%,rgba(240,232,218,0.7),rgba(246,245,241,0)_70%)]" />
 
       <div className="shell relative">
-        <motion.p className="eyebrow" {...rise(0)}>
-          {hero.eyebrow}
-        </motion.p>
-
-        <h1 id="hero-title" className="t-display mt-5 max-w-[16ch] md:mt-7 lg:max-w-none">
+        <h1 id="hero-title" className="t-display max-w-[16ch] lg:max-w-none">
           <RevealLines lines={[hero.titleA, hero.titleB]} lineClassNames={['', 'text-mute']} immediate delay={0.08} stagger={0.14} />
         </h1>
 
