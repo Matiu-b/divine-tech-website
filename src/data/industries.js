@@ -66,9 +66,11 @@ export const industries = [
       ],
       chips: ['New lead · 2BR Maple St', 'Viewing booked · Sat 11:00', 'Follow-up · Fri 18:00'],
       photo: {
-        src: PHOTOS + 'team-sales-960.webp',
-        srcSet: srcSet('team-sales', [640, 960, 1440]),
-        alt: 'A real-estate professional smiling at a message on her phone as she walks out of a sunlit office building',
+        src: PHOTOS + 're-viewing-960.webp',
+        srcSet: srcSet('re-viewing', [640, 960, 1376]),
+        alt: 'A real-estate agent holding keys and a tablet, showing a young couple around a bright, newly staged apartment',
+        // keep the agent and the couple in frame when the photo is cropped tall on phones
+        position: 'object-[30%_45%]',
       },
     },
     control: {
