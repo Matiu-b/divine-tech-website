@@ -245,7 +245,7 @@ export function LeadForm({ dark = false, columns = 1, wide = false, onDone = und
   );
   const messageField = wide ? (
     <Field id={ids.message} label="Which process should we start with?" optional dark={dark}>
-      <input id={ids.message} name="message" placeholder="For example: inbound leads from WhatsApp" className="field" />
+      <input id={ids.message} name="message" placeholder="E.g. leads from WhatsApp" className="field" />
     </Field>
   ) : (
     <Field id={ids.message} label="Which process should we start with?" optional dark={dark}>
