@@ -54,7 +54,7 @@ function Person({ x, y, scale = 1, skin, hair, top, hairStyle = 'short', arm = n
 export default function MappingScene({ t, className = undefined }) {
   const shown = (i) => t > i;
   return (
-    <svg viewBox="0 0 720 340" className={cn('block h-auto w-full', className)} role="img" aria-label="Two experts and a client around a table, mapping the business's processes on a board while an AI agent maps along on a laptop">
+    <svg viewBox="20 10 690 318" className={cn('block h-auto w-full', className)} role="img" aria-label="Two experts and a client around a table, mapping the business's processes on a board while an AI agent maps along on a laptop">
       {/* floor shadow */}
       <ellipse cx="300" cy="322" rx="290" ry="12" fill={INK} opacity="0.06" />
 

@@ -75,7 +75,7 @@ function PlanVisual() {
     <div ref={ref}>
       <Stage tone="sage">
         <MappingScene t={t} />
-        <div className="ui-card relative -mt-4 overflow-hidden sm:ml-auto sm:max-w-[520px] md:-mt-16">
+        <div className="ui-card relative mt-2 overflow-hidden">
           <div className="flex items-center gap-3 border-b border-ink/[0.07] px-4 py-3">
             <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[9px] bg-paper text-ink/70">
               <FileText className="h-4 w-4" strokeWidth={1.8} aria-hidden="true" />
