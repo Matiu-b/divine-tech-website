@@ -56,8 +56,8 @@ export const media = {
 
 export const hero = {
   titleA: 'Aurora runs the work.',
-  titleB: 'Your team runs the business.',
-  text: 'The AI operating system for businesses and organizations. Its agents answer every customer, finish the work in your systems and ask you before anything that matters.',
+  titleB: undefined,
+  text: 'The AI operating system for businesses.',
   primary: 'Book a demo',
   secondary: 'See it in action',
 };
