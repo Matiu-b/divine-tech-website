@@ -60,7 +60,7 @@ function IndustryHero({ it }) {
       </div>
       <div className="shell relative mt-10 md:mt-12">
         <SafeBoundary>
-          <HeroFilm first={it.scene} />
+          <HeroFilm startScene={it.scene} />
         </SafeBoundary>
       </div>
     </section>
