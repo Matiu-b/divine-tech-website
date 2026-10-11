@@ -65,7 +65,7 @@ export default function PrivacyPolicy() {
       <div className="min-h-screen bg-paper text-ink">
         <header className="shell flex items-center justify-between py-6">
           <a href="/" aria-label={brand.company + ' home'}>
-            <Logo tone="dark" height={30} />
+            <Logo tone="dark" height={24} />
           </a>
           <a href="/" className="flex items-center gap-1.5 text-[14px] text-graphite transition-colors hover:text-ink">
             <ArrowLeft className="h-4 w-4" strokeWidth={1.8} aria-hidden="true" />

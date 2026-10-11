@@ -91,7 +91,7 @@ export default function Industries() {
                     )}
                   >
                     <span className="flex items-baseline justify-between gap-6">
-                      <span className="text-[15px] font-medium tracking-[-0.015em] lg:text-[clamp(1.6rem,1.1rem+1vw,2.15rem)] lg:font-[440] lg:leading-tight lg:tracking-[-0.03em]">
+                      <span className="text-[15px] font-medium tracking-[-0.015em] lg:text-[clamp(1.6rem,1.1rem+1vw,2.15rem)] lg:font-normal lg:leading-tight lg:tracking-[-0.03em]">
                         <span className={cn('transition-colors duration-500', !on && 'lg:text-ink/30 lg:group-hover:text-ink/60')}>{it.label}</span>
                       </span>
                       <span className="hidden text-[13px] font-medium tabular-nums text-slate lg:inline">{'0' + (i + 1)}</span>

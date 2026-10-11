@@ -41,7 +41,7 @@ export default function PhotoDuo() {
                       {Icon ? <Icon className="h-4 w-4" strokeWidth={1.7} aria-hidden="true" /> : null}
                     </span>
                     <span className="min-w-0">
-                      <span className="block truncate text-[12.5px] font-semibold leading-tight tracking-[-0.01em] text-ink">{it.chip.title}</span>
+                      <span className="block truncate text-[12.5px] font-medium leading-tight tracking-[-0.01em] text-ink">{it.chip.title}</span>
                       <span className="block truncate text-[11px] text-graphite">{it.chip.detail}</span>
                     </span>
                   </LiquidGlass>

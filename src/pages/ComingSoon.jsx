@@ -10,12 +10,12 @@ export default function ComingSoon() {
 
       <div className="relative z-10 flex flex-col items-center">
         <div className="mb-8 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#0A2E24] text-[#00D1C1] ring-1 ring-[#00D1C1]/30">
-          <span className="font-heading text-2xl font-bold">A</span>
+          <span className="font-heading text-2xl font-medium">A</span>
         </div>
         <p className="mb-4 font-mono text-xs uppercase tracking-[0.35em] text-[#22E37A]">
           Divine Tech AI
         </p>
-        <h1 className="max-w-2xl font-heading text-3xl font-bold leading-tight text-white sm:text-4xl md:text-5xl">
+        <h1 className="max-w-2xl font-heading text-3xl font-medium leading-tight text-white sm:text-4xl md:text-5xl">
           The website is under construction and will launch soon.
         </h1>
         <p className="mt-6 max-w-md text-base leading-relaxed text-[#7FE3D9]/70">

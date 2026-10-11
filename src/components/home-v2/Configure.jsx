@@ -35,7 +35,7 @@ function DescribeView({ active }) {
   }, [active, reduce, text]);
   return (
     <div className="flex h-full flex-col">
-      <p className="text-[12px] font-semibold text-ink">Describe your business</p>
+      <p className="text-[12px] font-medium text-ink">Describe your business</p>
       <p className="text-[11.5px] text-slate">Plain language. No forms.</p>
       <div className="ui-card mt-4 flex-1 p-4 text-[14px] leading-relaxed text-ink md:text-[15px]">
         <span className={cn(n < text.length && 'caret')}>{text.slice(0, n)}</span>
@@ -65,7 +65,7 @@ function ConfigureView({ active }) {
   }, [active, reduce]);
   return (
     <div className="flex h-full flex-col">
-      <p className="text-[12px] font-semibold text-ink">{brand.product} builds its setup</p>
+      <p className="text-[12px] font-medium text-ink">{brand.product} builds its setup</p>
       <p className="text-[11.5px] text-slate">Flows, integrations, knowledge, voice and rules</p>
       <ul className="mt-4 grid gap-2">
         {hiw.configure.map((m, i) => {
@@ -98,7 +98,7 @@ function AdaptView({ active }) {
   }, [active, reduce]);
   return (
     <div className="flex h-full flex-col">
-      <p className="text-[12px] font-semibold text-ink">Test cycles on your real cases</p>
+      <p className="text-[12px] font-medium text-ink">Test cycles on your real cases</p>
       <p className="text-[11.5px] text-slate">Gaps found and fixed before anything goes live</p>
       <ul className="mt-4 grid gap-2">
         {hiw.adapt.map(([c, r], i) => {
@@ -125,7 +125,7 @@ function AdaptView({ active }) {
 function RunView({ active }) {
   return (
     <div className="flex h-full flex-col">
-      <p className="text-[12px] font-semibold text-ink">Live</p>
+      <p className="text-[12px] font-medium text-ink">Live</p>
       <p className="text-[11.5px] text-slate">Learning from every conversation</p>
       <ul className="mt-4 grid gap-2">
         {hiw.run.map((ch, i) => (
@@ -165,8 +165,8 @@ function StepPanel({ step, compact = false }) {
       <div aria-hidden="true" className="orb bottom-[-30%] left-[-10%] h-[70%] w-[55%] bg-[radial-gradient(closest-side,rgba(255,255,255,0.8),rgba(255,255,255,0))]" />
       <LiquidGlass className={cn('relative flex flex-col rounded-[24px]', compact ? 'p-4' : 'h-full p-5 xl:p-6')}>
         <div className="mb-5 flex items-center justify-between">
-          <span className="flex items-center gap-2 text-[12px] font-semibold text-ink">
-            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-ink text-[10px] font-semibold text-white">{step + 1}</span>
+          <span className="flex items-center gap-2 text-[12px] font-medium text-ink">
+            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-ink text-[10px] font-medium text-white">{step + 1}</span>
             {brand.product} setup
           </span>
           <span className="flex gap-1" aria-hidden="true">

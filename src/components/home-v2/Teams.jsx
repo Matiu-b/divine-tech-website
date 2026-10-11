@@ -31,7 +31,7 @@ function TeamCard({ t }) {
           </span>
           <span className="min-w-0 flex-1">
             <span className="block truncate text-[11px] font-medium text-slate">{t.agent}</span>
-            <span className="block truncate text-[13px] font-semibold leading-tight tracking-[-0.01em] text-ink">{t.chip.title}</span>
+            <span className="block truncate text-[13px] font-medium leading-tight tracking-[-0.01em] text-ink">{t.chip.title}</span>
           </span>
           <span className="shrink-0 text-[11.5px] text-graphite lg:hidden xl:inline">{t.chip.detail}</span>
         </LiquidGlass>

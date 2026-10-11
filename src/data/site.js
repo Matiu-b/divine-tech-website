@@ -15,8 +15,6 @@ export const brand = {
     { label: 'Israel', display: '+972 54-803-7207', tel: '+972548037207' },
   ],
   address: '1441 Broadway, New York, NY 10018, USA',
-  logo: '/img/dta-logo-t.webp', // Divine Tech AI horizontal logo (transparent, light wordmark)
-  symbol: '/img/dta-symbol-t.webp', // Divine Tech AI glass mark
 };
 
 // Legal entity details used by the privacy policy and cookie banner.

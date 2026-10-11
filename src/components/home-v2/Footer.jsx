@@ -18,7 +18,7 @@ export default function Footer() {
         <div className="hairline" />
         <div className="grid gap-12 py-16 md:grid-cols-12 md:gap-8 md:py-20">
           <div className="md:col-span-5">
-            <Logo tone="light" height={36} />
+            <Logo tone="light" height={30} />
             <p className="mt-6 max-w-[36ch] text-[15px] leading-relaxed text-white/55">{footer.tagline}</p>
             <button type="button" onClick={open} className="btn btn-light btn-sm mt-8">
               <span>Book a demo</span>

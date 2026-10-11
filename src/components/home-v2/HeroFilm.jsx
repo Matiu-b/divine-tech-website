@@ -341,7 +341,7 @@ function PanelHeader({ scene, phone, callTime, live }) {
       ) : (
         <span
           className={cn(
-            'flex shrink-0 items-center justify-center rounded-full bg-[linear-gradient(140deg,#E9E4DA,#D9D2C4)] font-semibold text-ink/70',
+            'flex shrink-0 items-center justify-center rounded-full bg-[linear-gradient(140deg,#E9E4DA,#D9D2C4)] font-medium text-ink/70',
             phone ? 'h-8 w-8 text-[11px]' : 'h-9 w-9 text-[12px]'
           )}
         >
@@ -349,7 +349,7 @@ function PanelHeader({ scene, phone, callTime, live }) {
         </span>
       )}
       <div className="min-w-0 flex-1">
-        <p className={cn('truncate font-semibold leading-tight tracking-[-0.01em]', phone ? 'text-[12.5px]' : 'text-[13.5px]')}>
+        <p className={cn('truncate font-medium leading-tight tracking-[-0.01em]', phone ? 'text-[12.5px]' : 'text-[13.5px]')}>
           {scene.mode === 'email' ? scene.subject : scene.contact}
         </p>
         <p className={cn('truncate', phone ? 'text-[10.5px]' : 'text-[11.5px]', web ? 'text-white/55' : 'text-slate')}>
@@ -385,7 +385,7 @@ function PanelFooter({ scene, phone, takeover, onTakeover }) {
         onClick={onTakeover}
         aria-pressed={takeover}
         className={cn(
-          'shrink-0 rounded-full font-semibold transition-colors',
+          'shrink-0 rounded-full font-medium transition-colors',
           phone ? 'px-2 py-1 text-[10.5px]' : 'px-2.5 py-1 text-[11.5px]',
           takeover ? 'bg-ink text-white hover:bg-[#1D2625]' : 'text-ink hover:bg-ink/[0.06]'
         )}
@@ -488,7 +488,7 @@ function VoiceBody({ scene, st, phone, reduce }) {
               return (
                 <Grow key={scene.key + i}>
                   <div className={cn('pt-3 transition-opacity duration-500', isLast ? 'opacity-100' : 'opacity-55')}>
-                    <p className={cn('font-semibold uppercase tracking-[0.06em]', phone ? 'text-[9.5px]' : 'text-[10px]', mine ? 'text-brand-ink' : 'text-slate')}>
+                    <p className={cn('font-medium uppercase tracking-[0.06em]', phone ? 'text-[9.5px]' : 'text-[10px]', mine ? 'text-brand-ink' : 'text-slate')}>
                       {mine ? brand.product : 'Caller'}
                     </p>
                     <p className={cn('mt-0.5 leading-[1.45] text-ink', phone ? 'text-[12.5px]' : 'text-[13.5px]')}>
@@ -518,10 +518,10 @@ function EmailBody({ scene, st, phone, reduce }) {
               <div className="pt-2.5">
                 <div className={cn('rounded-[14px] border', phone ? 'p-2.5' : 'p-3', mine ? 'border-brand/20 bg-[#F3FAF6]' : 'border-ink/[0.07] bg-[#FAF9F6]')}>
                   <div className="mb-1 flex items-center gap-2">
-                    <span className={cn('flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[9px] font-semibold', mine ? 'bg-brand text-white' : 'bg-ink/[0.08] text-ink/70')}>
+                    <span className={cn('flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[9px] font-medium', mine ? 'bg-brand text-white' : 'bg-ink/[0.08] text-ink/70')}>
                       {mine ? brand.product[0] : scene.initials}
                     </span>
-                    <span className={cn('min-w-0 flex-1 truncate font-semibold', phone ? 'text-[11px]' : 'text-[12px]')}>{mine ? brand.product + (scene.desk ? ' · ' + scene.desk : '') : scene.contact}</span>
+                    <span className={cn('min-w-0 flex-1 truncate font-medium', phone ? 'text-[11px]' : 'text-[12px]')}>{mine ? brand.product + (scene.desk ? ' · ' + scene.desk : '') : scene.contact}</span>
                     {mine ? <span className="ui-chip h-[18px] shrink-0 bg-brand/10 px-1.5 text-[10px] text-brand-ink">Sent</span> : null}
                     <span className="t-data shrink-0 text-ink/35">{'09:' + String(12 + i * 2).padStart(2, '0')}</span>
                   </div>
@@ -592,7 +592,7 @@ function CoreCard({ scene, st, takeover }) {
         <span className="flex min-w-0 items-center gap-2.5">
           <Ring active={working} done={st.approval === 'done'} />
           <span className="min-w-0">
-            <span className="block text-[12.5px] font-semibold leading-tight text-ink">{brand.product}</span>
+            <span className="block text-[12.5px] font-medium leading-tight text-ink">{brand.product}</span>
             <motion.span key={status} initial={{ opacity: 0, y: 3 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease: EASE }} className="block truncate text-[11px] text-slate">
               {status}
             </motion.span>
@@ -643,7 +643,7 @@ function ActionCard({ scene, a, state, tablet }) {
       </span>
       <div className="relative min-w-0 flex-1">
         <p className="text-[11px] font-medium text-slate">{a.sys}</p>
-        <p className={cn('truncate text-[13px] font-semibold leading-tight tracking-[-0.01em] transition-colors duration-500', state === 'idle' ? 'text-ink/45' : 'text-ink')}>{a.title}</p>
+        <p className={cn('truncate text-[13px] font-medium leading-tight tracking-[-0.01em] transition-colors duration-500', state === 'idle' ? 'text-ink/45' : 'text-ink')}>{a.title}</p>
         <p className={cn('truncate text-[11.5px] transition-colors duration-500', state === 'done' ? 'text-graphite' : 'text-ink/30')}>{a.detail}</p>
       </div>
       <span className="relative">
@@ -667,7 +667,7 @@ function WorkCard({ scene, st, takeover }) {
         <span className="flex min-w-0 items-center gap-2">
           <Ring active={working} done={st.approval === 'done'} small />
           <span className="min-w-0">
-            <span className="block text-[12px] font-semibold leading-tight text-ink">{brand.product}</span>
+            <span className="block text-[12px] font-medium leading-tight text-ink">{brand.product}</span>
             <motion.span key={statusText(st, takeover)} initial={{ opacity: 0, y: 3 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease: EASE }} className="block truncate text-[10.5px] text-slate">
               {statusText(st, takeover)}
             </motion.span>
@@ -682,7 +682,7 @@ function WorkCard({ scene, st, takeover }) {
             <li key={scene.key + r.title} className={cn('flex items-center gap-2 rounded-[12px] px-2 py-[6px] transition-colors duration-500', r.state === 'done' ? 'bg-brand/[0.07]' : 'bg-white/55')}>
               <Status state={r.state} size={14} />
               {Icon ? <Icon className="h-3.5 w-3.5 shrink-0 text-ink/45" strokeWidth={1.8} aria-hidden="true" /> : null}
-              <span className={cn('shrink-0 text-[11.5px] font-semibold transition-colors duration-500', r.state === 'idle' ? 'text-ink/40' : 'text-ink')}>{r.title}</span>
+              <span className={cn('shrink-0 text-[11.5px] font-medium transition-colors duration-500', r.state === 'idle' ? 'text-ink/40' : 'text-ink')}>{r.title}</span>
               <span className={cn('min-w-0 flex-1 truncate text-right text-[10.5px] transition-colors duration-500', r.state === 'done' ? 'text-graphite' : 'text-ink/25')}>{r.detail}</span>
             </li>
           );
@@ -708,7 +708,7 @@ function AuditTrail({ scene, st, approvedBy }) {
   return (
     <LiquidGlass className="rounded-[20px] p-4">
       <div className="mb-1 flex items-center justify-between">
-        <p className="text-[12px] font-semibold text-ink">Audit trail</p>
+        <p className="text-[12px] font-medium text-ink">Audit trail</p>
         <span className="text-[11px] text-slate">Every step, logged</span>
       </div>
       <div className="flex h-[138px] flex-col justify-end overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,#000_16px)]">
@@ -739,7 +739,7 @@ function ApprovalCard({ scene, st, phone, approvedBy, onApprove, btnRef }) {
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.4, ease: EASE }}
-        className={cn('inline-flex shrink-0 items-center gap-1.5 rounded-full bg-brand font-semibold text-white', phone ? 'h-7 px-2.5 text-[11px]' : 'h-8 px-3 text-[12px]')}
+        className={cn('inline-flex shrink-0 items-center gap-1.5 rounded-full bg-brand font-medium text-white', phone ? 'h-7 px-2.5 text-[11px]' : 'h-8 px-3 text-[12px]')}
       >
         <Check className="h-3.5 w-3.5" strokeWidth={3} aria-hidden="true" />
         {phone ? 'Approved' : scene.approval.result}
@@ -753,7 +753,7 @@ function ApprovalCard({ scene, st, phone, approvedBy, onApprove, btnRef }) {
         disabled={state !== 'pending'}
         aria-label={'Approve: ' + scene.approval.ask}
         className={cn(
-          'relative inline-flex shrink-0 items-center gap-1.5 rounded-full font-semibold transition-colors duration-300',
+          'relative inline-flex shrink-0 items-center gap-1.5 rounded-full font-medium transition-colors duration-300',
           phone ? 'h-7 px-3 text-[11px]' : 'h-8 px-3.5 text-[12px]',
           state === 'pending' ? 'halo bg-ink text-white hover:bg-[#1D2625]' : 'cursor-default bg-ink/[0.06] text-ink/35'
         )}
@@ -772,7 +772,7 @@ function ApprovalCard({ scene, st, phone, approvedBy, onApprove, btnRef }) {
           <p className={cn('truncate font-medium', phone ? 'text-[10.5px]' : 'text-[11px]', state === 'pending' ? 'text-[#8A5A12]' : state === 'done' ? 'text-brand-ink' : 'text-slate')}>
             {state === 'none' ? 'Policy check' : state === 'pending' ? 'Needs a person · ' + scene.approval.by : 'Approved by ' + by + ' · logged'}
           </p>
-          <p className={cn('truncate font-semibold leading-tight tracking-[-0.01em]', phone ? 'text-[12px]' : 'text-[13px]', state === 'none' ? 'text-ink/45' : 'text-ink')}>{scene.approval.ask}</p>
+          <p className={cn('truncate font-medium leading-tight tracking-[-0.01em]', phone ? 'text-[12px]' : 'text-[13px]', state === 'none' ? 'text-ink/45' : 'text-ink')}>{scene.approval.ask}</p>
         </div>
         {phone ? control : null}
       </div>
@@ -934,7 +934,7 @@ function GhostCursor({ target, clicking, name }) {
       <motion.svg width="22" height="22" viewBox="0 0 24 24" className="-ml-[4px] -mt-[2px] drop-shadow-[0_2px_4px_rgba(10,15,14,0.3)]" animate={{ scale: clicking ? [1, 0.8, 1] : 1 }} transition={{ duration: 0.35 }}>
         <path d="M4 2 L4 19.2 L8.6 15 L11.6 21.6 L14.4 20.4 L11.5 14 L17.6 13.8 Z" fill="#0A0F0E" stroke="#fff" strokeWidth="1.4" strokeLinejoin="round" />
       </motion.svg>
-      <span className="absolute left-4 top-5 whitespace-nowrap rounded-full bg-brand px-2 py-0.5 text-[11px] font-semibold text-white shadow-[0_4px_12px_-4px_rgba(11,110,74,0.6)]">{name}</span>
+      <span className="absolute left-4 top-5 whitespace-nowrap rounded-full bg-brand px-2 py-0.5 text-[11px] font-medium text-white shadow-[0_4px_12px_-4px_rgba(11,110,74,0.6)]">{name}</span>
     </motion.div>
   );
 }

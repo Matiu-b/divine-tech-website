@@ -63,7 +63,7 @@ function LiveFeed({ slots, running, still }) {
                 <Icon className="h-[17px] w-[17px]" strokeWidth={1.7} />
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block truncate text-[13px] font-semibold leading-tight tracking-[-0.01em] text-ink">{e.title}</span>
+                <span className="block truncate text-[13px] font-medium leading-tight tracking-[-0.01em] text-ink">{e.title}</span>
                 <span className="mt-0.5 block truncate text-[11.5px] text-graphite">{e.detail}</span>
               </span>
               <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand text-white">

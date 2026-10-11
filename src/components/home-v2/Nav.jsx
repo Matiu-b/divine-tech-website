@@ -99,8 +99,8 @@ export default function Nav() {
             aria-label={brand.company + ' — back to top'}
             className="flex items-center rounded-full py-1"
           >
-            <Logo tone={onDark ? 'light' : 'dark'} height={30} className="md:hidden" />
-            <Logo tone={onDark ? 'light' : 'dark'} height={33} className="hidden md:inline-block" />
+            <Logo tone={onDark ? 'light' : 'dark'} height={22} className="md:hidden" />
+            <Logo tone={onDark ? 'light' : 'dark'} height={26} className="hidden md:inline-block" />
           </a>
 
           <nav aria-label="Primary" className="hidden items-center gap-0.5 lg:flex">
@@ -196,7 +196,7 @@ export default function Nav() {
                         <a
                           href={l.href}
                           onClick={(e) => onAnchorClick(e, l.href, () => closeMenu(false))}
-                          className="flex items-center justify-between rounded-2xl px-4 py-4 text-[22px] font-[460] tracking-[-0.025em] text-ink transition-colors hover:bg-ink/[0.04]"
+                          className="flex items-center justify-between rounded-2xl px-4 py-4 text-[22px] font-normal tracking-[-0.025em] text-ink transition-colors hover:bg-ink/[0.04]"
                         >
                           {l.label}
                           <ArrowRight className="h-5 w-5 text-ink/30" strokeWidth={1.6} aria-hidden="true" />

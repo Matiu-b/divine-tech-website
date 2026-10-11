@@ -39,7 +39,7 @@ function UnderstandVisual() {
       <div aria-hidden="true" className="orb right-[-10%] top-[-30%] h-[80%] w-[60%] bg-[radial-gradient(closest-side,rgba(255,255,255,0.75),rgba(255,255,255,0))]" />
       <div className="relative grid gap-3 md:grid-cols-[0.85fr_1.15fr] md:items-start md:gap-4 lg:grid-cols-1 xl:grid-cols-[0.85fr_1.15fr]">
         <LiquidGlass className="rounded-[20px] p-4">
-          <p className="text-[12px] font-semibold text-ink">Sources</p>
+          <p className="text-[12px] font-medium text-ink">Sources</p>
           <p className="text-[11.5px] text-slate">What you already have</p>
           <ul className="mt-3 grid gap-2">
             {understandVisual.sources.map((src, i) => {
@@ -63,7 +63,7 @@ function UnderstandVisual() {
         <div className="ui-card p-4 md:mt-8 lg:mt-0 xl:mt-8">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[12px] font-semibold text-ink">How your business runs</p>
+              <p className="text-[12px] font-medium text-ink">How your business runs</p>
               <p className="text-[11.5px] text-slate">Mapped by {brand.product} · review and approve</p>
             </div>
             <span className="ui-chip bg-paper text-graphite">Draft</span>
@@ -119,7 +119,7 @@ function WorkVisual() {
       <div className="ui-card relative overflow-hidden">
         <div className="flex items-center justify-between border-b border-ink/[0.07] px-4 py-3.5">
           <div>
-            <p className="text-[12.5px] font-semibold text-ink">Activity</p>
+            <p className="text-[12.5px] font-medium text-ink">Activity</p>
             <p className="text-[11.5px] text-slate">Completed by {brand.product}, in your tools</p>
           </div>
           <span className="ui-chip bg-brand-mint text-brand-ink">
@@ -197,7 +197,7 @@ function ControlVisual() {
       <div className="relative grid gap-3 md:grid-cols-[1.1fr_0.9fr] md:gap-4 lg:grid-cols-1 xl:grid-cols-[1.1fr_0.9fr]">
         <LiquidGlass tone="dark" className="rounded-[22px] p-4 md:p-5">
           <div className="flex items-center justify-between">
-            <span className="flex items-center gap-2 text-[12px] font-semibold text-white">
+            <span className="flex items-center gap-2 text-[12px] font-medium text-white">
               <Lock className="h-3.5 w-3.5 text-white/70" strokeWidth={1.8} aria-hidden="true" />
               {controlVisual.title}
             </span>
@@ -217,7 +217,7 @@ function ControlVisual() {
           <p className="mt-4 text-[17px] font-medium tracking-[-0.02em] text-white">{controlVisual.item}</p>
           <p className="mt-1 text-[13px] text-white/55">{controlVisual.reason}</p>
           <div className="mt-4 flex items-center gap-2.5 rounded-[14px] bg-white/[0.05] px-3 py-2.5">
-            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/10 text-[11px] font-semibold">DK</span>
+            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/10 text-[11px] font-medium">DK</span>
             <div className="min-w-0 text-[12px] leading-tight">
               <p className="truncate text-white/85">{controlVisual.approver}</p>
               <p className="truncate text-white/45">{controlVisual.requester}</p>
@@ -239,7 +239,7 @@ function ControlVisual() {
 
         <div className="grid gap-3 md:gap-4">
           <LiquidGlass tone="dark" className="rounded-[22px] p-4">
-            <p className="text-[12px] font-semibold text-white">Permissions</p>
+            <p className="text-[12px] font-medium text-white">Permissions</p>
             <ul className="mt-2.5 grid gap-2">
               {controlVisual.permissions.map(([what, rule]) => (
                 <li key={what} className="flex items-center justify-between gap-3 text-[12px]">
@@ -250,7 +250,7 @@ function ControlVisual() {
             </ul>
           </LiquidGlass>
           <LiquidGlass tone="dark" className="rounded-[22px] p-4">
-            <p className="text-[12px] font-semibold text-white">Audit trail</p>
+            <p className="text-[12px] font-medium text-white">Audit trail</p>
             <ul className="mt-2.5 grid gap-1.5">
               <AnimatePresence initial={false}>
                 {audit.map(([t, what, who]) => (
