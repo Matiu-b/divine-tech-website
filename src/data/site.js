@@ -358,7 +358,7 @@ export const howItWorks = {
   steps: [
     { who: 'Our experts, with you', tone: 'you', name: 'We map your business', text: 'Together with our AI agents, into an action plan.' },
     { who: 'Aurora', tone: 'aurora', name: 'Aurora sets itself up', text: 'It connects your channels and systems from the plan.' },
-    { who: 'You approve', tone: 'you', name: 'Test it, go live', text: 'Try real examples, then switch it on.' },
+    { who: 'You approve', tone: 'you', name: 'Test it, go live', text: 'Real questions, answered from your own data. You approve, it goes live.' },
   ],
   // Illustrative content of the step visuals (a fictional business, not customer data).
   plan: {
@@ -371,8 +371,28 @@ export const howItWorks = {
       { process: 'Weekly pipeline report', channels: 'Email', owner: 'Aurora' },
     ],
   },
-  connect: ['Phone', 'Email', 'Calendar', 'CRM', 'Slack', 'WhatsApp'],
-  test: { ask: 'Can I see the 2-bedroom on Saturday?', reply: 'Yes, 11:00 is open with Dana. Shall I book it?', ok: 'Yes, please!' },
+  connect: [
+    { key: 'phone', label: 'Phone' },
+    { key: 'email', label: 'Email' },
+    { key: 'calendar', label: 'Calendar' },
+    { key: 'crm', label: 'CRM' },
+    { key: 'messaging', label: 'Messaging channels', wide: true },
+    { key: 'pbx', label: 'PBX' },
+    { key: 'payments', label: 'Payments' },
+  ],
+  test: {
+    ask: 'Do you have a 2-bedroom under $3,000 with parking, near downtown?',
+    source: 'Listings database',
+    filters: ['2 bedrooms', 'Up to $3,000', 'Parking', 'Downtown'],
+    scanned: '1,248 listings',
+    results: [
+      ['42 Maple St', '$2,850', 'Parking'],
+      ['18 Cedar Ave', '$2,990', 'Parking'],
+    ],
+    reply: 'Two match: 42 Maple St at $2,850 and 18 Cedar Ave at $2,990, both with parking. Want the details?',
+    checks: ['Answer matches your data', 'Prices from the live database', 'Nothing promised outside policy'],
+    passed: '24 of 24 test cases passed',
+  },
 };
 
 // Agents modeled on real roles, one per team (see Teams.jsx).
