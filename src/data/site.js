@@ -194,6 +194,7 @@ const srcSet = (name, widths) => widths.map((w) => PHOTOS + name + '-' + w + '.w
 
 // Home hero visual: a real-life moment with Aurora's work arriving as a live feed (PhotoStage.jsx).
 export const heroStage = {
+  caption: 'Your team steps away. Aurora keeps answering, booking and following up.',
   photo: {
     src: PHOTOS + 'moment-1600.webp',
     srcSet: srcSet('moment', [960, 1600, 2400]),

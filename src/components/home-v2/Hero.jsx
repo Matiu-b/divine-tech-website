@@ -68,7 +68,7 @@ export default function Hero() {
       </div>
 
       <div className="shell relative mt-10 md:mt-12">
-        <PhotoStage photo={heroStage.photo} events={heroStage.events} />
+        <PhotoStage photo={heroStage.photo} events={heroStage.events} caption={heroStage.caption} />
       </div>
     </section>
   );

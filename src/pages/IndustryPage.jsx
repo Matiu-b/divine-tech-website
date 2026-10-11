@@ -59,7 +59,7 @@ function IndustryHero({ it }) {
       </div>
       <div className="shell relative mt-10 md:mt-12">
         <SafeBoundary>
-          <PhotoStage photo={it.how.photo} events={it.events} />
+          <PhotoStage photo={it.how.photo} events={it.events} caption={it.caption} />
         </SafeBoundary>
       </div>
     </section>

@@ -45,6 +45,7 @@ export const industries = [
       ],
       cost: 'Leads you paid for, answered first by someone else.',
     },
+    caption: 'Your agents are out showing homes. Aurora answers every new lead.',
     events: [
       { icon: 'message', title: 'New lead answered', detail: 'WhatsApp · 2BR inquiry' },
       { icon: 'qualified', title: 'Lead qualified', detail: 'Budget, timeline, area' },
@@ -115,6 +116,7 @@ export const industries = [
       ],
       cost: 'Empty slots, and a front desk that never gets ahead.',
     },
+    caption: 'The front desk is with a client. Aurora answers the phone.',
     events: [
       { icon: 'service', title: 'Call answered', detail: 'First ring · after hours' },
       { icon: 'calendar', title: 'Appointment booked', detail: 'Thu 16:15 · Dr. Patel' },
@@ -185,6 +187,7 @@ export const industries = [
       ],
       cost: 'Jobs that went to whoever picked up first.',
     },
+    caption: 'Your technician is on a job. Aurora books the next one.',
     events: [
       { icon: 'service', title: 'Call answered', detail: 'Water heater · urgent' },
       { icon: 'qualified', title: 'Job captured', detail: 'Address, access, urgency' },
