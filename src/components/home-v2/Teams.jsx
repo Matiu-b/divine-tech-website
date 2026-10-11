@@ -14,7 +14,7 @@ function TeamCard({ t }) {
   const Icon = EVENT_ICONS[t.chip.icon];
   return (
     <RevealItem as="article" y={28} className="flex flex-col">
-      <div className="canvas relative aspect-[4/3] bg-cover bg-center" style={{ backgroundImage: 'url(' + t.photo.lqip + ')' }}>
+      <div className="canvas relative aspect-[4/3] bg-cover bg-center" style={t.photo.lqip ? { backgroundImage: 'url(' + t.photo.lqip + ')' } : undefined}>
         <img
           src={t.photo.src}
           srcSet={t.photo.srcSet}

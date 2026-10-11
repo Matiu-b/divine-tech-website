@@ -66,11 +66,10 @@ export const industries = [
       ],
       chips: ['New lead · 2BR Maple St', 'Viewing booked · Sat 11:00', 'Follow-up · Fri 18:00'],
       photo: {
-        src: PHOTOS + 're-viewing-960.webp',
-        srcSet: srcSet('re-viewing', [640, 960, 1376]),
-        alt: 'A real-estate agent holding keys and a tablet, showing a young couple around a bright, newly staged apartment',
-        // keep the agent and the couple in frame when the photo is cropped tall on phones
-        position: 'object-[15%_45%]',
+        src: PHOTOS + 're-agent-960.webp',
+        srcSet: srcSet('re-agent', [640, 960, 1440]),
+        alt: 'A real-estate agent with a tablet showing a couple around a bright, newly staged apartment',
+        position: 'object-[35%_40%]',
       },
     },
     control: {
@@ -140,9 +139,9 @@ export const industries = [
       ],
       chips: ['Appointment moved · Thu 2:10 pm', 'Reminder scheduled · SMS', 'Urgent case → front desk'],
       photo: {
-        src: PHOTOS + 'duo-clinic-900.webp',
-        srcSet: srcSet('duo-clinic', [560, 900, 1280]),
-        alt: 'A clinic receptionist laughing with an older client at a sunlit front desk surrounded by plants',
+        src: PHOTOS + 'clinic-desk-960.webp',
+        srcSet: srcSet('clinic-desk', [640, 960, 1440]),
+        alt: 'A practitioner and a front-desk colleague reviewing the day’s schedule on a tablet at a modern clinic reception',
       },
     },
     control: {
@@ -212,9 +211,9 @@ export const industries = [
       ],
       chips: ['Job captured · AC not cooling', 'Technician · today 3–5 pm', 'Review request queued'],
       photo: {
-        src: PHOTOS + 'duo-tech-1024.webp',
-        srcSet: srcSet('duo-tech', [640, 1024, 1600]),
-        alt: 'A home-services technician smiling at his phone while sitting by his van on a sunny suburban street',
+        src: PHOTOS + 'tech-hvac-960.webp',
+        srcSet: srcSet('tech-hvac', [640, 960, 1440]),
+        alt: 'A home-services technician checking readings on a tablet beside an outdoor HVAC unit, his van behind him',
       },
     },
     control: {

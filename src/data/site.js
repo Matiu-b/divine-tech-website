@@ -205,6 +205,14 @@ export const heroStage = {
     lqip: 'data:image/webp;base64,UklGRuAAAABXRUJQVlA4INQAAADQBQCdASogABIAPu1gp02ppSMiMAgBMB2JbACnFYzkwPdGaIVPx6SF4vHdd1qolZ+4nr0YX0gAAP7cS9Qqm7G8thbNxuhg2tlt7P7RgzcsgCup7vxO5U1z4SNgACCwo21XEhr/Pi2yda1plwtGeOvac9dho1g6gER9FjwAZ9frjlFl5FV0d23UscS3T7sMK+kem1ni3ifbpRtrAoKkuSvM70BR/OvI3kmB+HC1zB0UaT7hsAYvmptb/rzgyL+DoDG7fXRwE9CbjUjvEP6RtML474AAAA==',
     lqipMobile: 'data:image/webp;base64,UklGRgwBAABXRUJQVlA4IAABAAAwBgCdASoYABgAPu1qqFAppiOiqA1RMB2JbACdM1dv/i2Jy3mtDQMkSdbjqqQ9YVDlTVem/S38U02AAP6pt7IVuSi5Xq+Mlgx9vN6z0N/jHvGDk4P9B2ST0yGvjBqJ5YQ3OEvmijKbKwmGHYcqNP20icTqPYMiVKeHnVPRgyr/lNapqTrCGqIjtwqkwO7n8k3CjJgNA0zuEX96MdrwX7ZP7pMCmt919zvVxZs/ZnvZVk3stI84ogLjPMPN/jlt8YduOVvtSKh4F5QwSvJBKomI427dSB/iRD96q+UZid6FKp6/0tmO5EE795LWjOIO8e1TlJ9B2HemyHEBqF7LAAAA',
   },
+  // Background clips for the home hero (generated footage, fictional people). Each has a wide version
+  // for desktop and a vertical one for phones, a still poster, and one line saying what Aurora did there.
+  clips: [
+    { key: 'realty', wide: '/video/hero-1.mp4', tall: '/video/hero-1-v.mp4', poster: PHOTOS + 'hero-1-1600.webp', posterTall: PHOTOS + 'hero-1-v-720.webp', icon: 'calendar', title: 'Viewing booked', detail: 'Real estate · Sat 11:00' },
+    { key: 'clinic', wide: '/video/hero-2.mp4', tall: '/video/hero-2-v.mp4', poster: PHOTOS + 'hero-2-1600.webp', posterTall: PHOTOS + 'hero-2-v-720.webp', icon: 'service', title: 'Appointment moved', detail: 'Clinic · Thu 2:10 pm' },
+    { key: 'service', wide: '/video/hero-3.mp4', tall: '/video/hero-3-v.mp4', poster: PHOTOS + 'hero-3-1600.webp', posterTall: PHOTOS + 'hero-3-v-720.webp', icon: 'invoice', title: 'Invoice sent', detail: 'Home services · paid by link' },
+    { key: 'ops', wide: '/video/hero-4.mp4', tall: '/video/hero-4-v.mp4', poster: PHOTOS + 'hero-4-1600.webp', posterTall: PHOTOS + 'hero-4-v-720.webp', icon: 'report', title: 'Weekly report ready', detail: 'Operations · sent to the team' },
+  ],
   // Illustrative live activity shown over the photo (examples, not customer data).
   events: [
     { icon: 'calendar', title: 'Viewing booked', detail: 'Sat 11:00 · 42 Maple St' },
@@ -413,10 +421,9 @@ export const teams = {
       agent: 'Sales agent',
       chip: { icon: 'calendar', title: 'Meeting booked', detail: 'Thu 11:00' },
       photo: {
-        src: PHOTOS + 'team-sales-960.webp',
-        srcSet: srcSet('team-sales', [640, 960, 1440]),
-        alt: 'A sales professional smiling at a message on her phone as she walks out of a sunlit office building',
-        lqip: 'data:image/webp;base64,UklGRiIBAABXRUJQVlA4IBYBAACwBQCdASogABgAPu1gp02ppSOiMAgBMB2JQBajXkS4ok/o+39fA9geVS6wZkBJXnSJPlcXMpQA/A7NmBoYiez6DuS4FVqHAnKwKZ9YQCyRPqL4d7dZkcx3n8PlF2qQbOSNjHbX2mc6EvEGagocxCWXvg25/YDDjHSdHsOjiV9YXQlCa/xKKrTSaBExBWK4aUXgyI58M/YL5TBNZu/N00th0GHy2s+rBGGTwRGzTOLNKsWJb+2xHFb5Vy9L0If/HtvmrMOK1XFVO/7ucYp9UiwDKgGRr4n7SKDsIO9bW8n6ER5iPxyHj3vWR6WKsIfuwLy3/RGOd8J+P7vzgKYhUpUgfW3NsHPK/H9b9ONig8MAXD+XRsVIAA==',
+        src: PHOTOS + 'team-sales2-960.webp',
+        srcSet: srcSet('team-sales2', [640, 960, 1440]),
+        alt: 'An account executive reading a message on her phone as she walks out of a glass office building',
       },
     },
     {
@@ -428,10 +435,9 @@ export const teams = {
       agent: 'Service agent',
       chip: { icon: 'service', title: 'Request resolved', detail: 'Moved to Thu' },
       photo: {
-        src: PHOTOS + 'team-service-960.webp',
-        srcSet: srcSet('team-service', [640, 960, 1440]),
-        alt: 'A support specialist with a headset laughing with a colleague at a bright office desk surrounded by plants',
-        lqip: 'data:image/webp;base64,UklGRkQBAABXRUJQVlA4IDgBAADQBQCdASogABgAPu1kqk2ppaQiMAgBMB2JZACzgd5JhKWggk0BnBfE1Gij+n3noRrtrV6mq10AAP7rWrIiEkvI2baGwyp57y0RExgBT5N2ExhibNMEl/BZMgBgWvaHZivMTTetgfjR+cfWxdSu1UX4b4aNXwb2DWVhR2acyRCshn/9DSMbTEygX4metcX1q+ygz5JeJGwikZNZJcL3GdjJMqSzA8pWTWkWJcUXChh4JzsHbsGO/da8BaoWa5Okp5Q7afU/H+9AktYhiwUFtsTI7BmtCdb1PRcWUiRUnLkb1x3pr77PhmSsXqbPNqh+TjdaK2IChytkFbtBaOYFMIMi5F4BBUKurG9RwGvaak4xB4mAU/8vXMN5ZEuYgEjkel2UYI8QuAgN7viE1pby8mGWxPjSjKZAAAA=',
+        src: PHOTOS + 'team-service2-960.webp',
+        srcSet: srcSet('team-service2', [640, 960, 1440]),
+        alt: 'A customer support specialist with a headset working at a monitor in a bright office',
       },
     },
     {
@@ -443,10 +449,9 @@ export const teams = {
       agent: 'Operations agent',
       chip: { icon: 'approval', title: 'Invoice approved', detail: 'To Finance' },
       photo: {
-        src: PHOTOS + 'team-internal-960.webp',
-        srcSet: srcSet('team-internal', [640, 960, 1440]),
-        alt: 'Three coworkers around a sunlit table on an office terrace, seen from above, sharing a tablet and coffee',
-        lqip: 'data:image/webp;base64,UklGRkoBAABXRUJQVlA4ID4BAAAQBgCdASogABgAPu1iqE2ppaOiMAgBMB2JZgCsM2Qlug0zgxQZGvf7/1w5WHKZAqF2/4hnQGuoPAAA/n5v4PU39p1HenXUF2fAMfQ9CFKMasjt7llfHFolCLtiblj9ZpmEq+bd2ETM58tzmszBxl702uDlBSkiPMP7S54dtAiHi1l46GFhbhtDcM9hDY6dIpysD0Q2s+xhEQ7bWD/i8HW/zsy7iN1SkcsHdoxlP1RXZt1ZMhxLrw6hN+OM1Jtyy201dw852AYRMRXJH1uYa5XsA2LwQ2+3sW+0IZxaCd6nshieSLtqVGfA/Kicu87BisLRU6kdVcKgdfPpfdMCko/mj8L/ZY6xgsn1/DQFye21zGw3bpuLk1aCFLOpDCo+iXbTXTVn7LPosDqfIDEFbEAlic6ED6+weQW8TInAAAA=',
+        src: PHOTOS + 'team-internal2-960.webp',
+        srcSet: srcSet('team-internal2', [640, 960, 1440]),
+        alt: 'Operations and finance colleagues reviewing a report and a laptop around a meeting table',
       },
     },
   ],

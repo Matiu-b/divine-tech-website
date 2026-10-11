@@ -2,11 +2,11 @@ import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Play } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { hero, heroStage } from '@/data/site';
+import { hero } from '@/data/site';
 import CTAButton from './primitives/CTAButton';
 import Logo from './primitives/Logo';
 import { RevealLines } from './primitives/MotionReveal';
-import PhotoStage from './PhotoStage';
+import HeroReel from './HeroReel';
 import { useLead } from './LeadDrawer';
 import { EASE } from './motion';
 
@@ -27,29 +27,33 @@ export default function Hero() {
   const fade = (delay) => (reduce ? undefined : { initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { duration: 0.9, delay, ease: EASE } });
 
   return (
-    <section id="top" data-nav-theme="light" aria-labelledby="hero-title" className="relative overflow-hidden pb-[clamp(64px,8vw,120px)] pt-[calc(var(--nav-h)+44px)] md:pt-[calc(var(--nav-h)+64px)]">
-      {/* faint warm light at the top of the page */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[720px] bg-[radial-gradient(60%_60%_at_78%_0%,rgba(220,236,226,0.9),rgba(246,245,241,0)_70%),radial-gradient(40%_50%_at_10%_10%,rgba(240,232,218,0.7),rgba(246,245,241,0)_70%)]" />
+    <section
+      id="top"
+      data-nav-theme="dark"
+      aria-labelledby="hero-title"
+      className="on-dark relative flex min-h-[100svh] items-center overflow-hidden text-white md:min-h-[min(100svh,960px)]"
+    >
+      <HeroReel />
 
-      <div className="shell relative">
-        {/* brand lockup, headline, one line and the two actions, all centred */}
+      <div className="shell relative w-full pb-28 pt-[calc(var(--nav-h)+40px)] md:pb-32">
+        {/* brand lockup, headline, one line and the two actions, all centred over the reel */}
         <motion.div className="flex items-center justify-center gap-2.5" {...rise(0)}>
-          <Logo variant="aurora" tone="dark" height={26} />
-          <span className="text-[17px] font-medium text-slate">{hero.lockup}</span>
+          <Logo variant="aurora" tone="light" height={26} />
+          <span className="text-[17px] font-medium text-white/70">{hero.lockup}</span>
         </motion.div>
-        <h1 id="hero-title" className="t-display balance mx-auto mt-6 max-w-[22ch] text-center md:mt-8">
+        <h1 id="hero-title" className="t-display balance mx-auto mt-6 max-w-[20ch] text-center text-white md:mt-8">
           <RevealLines lines={hero.titleB ? [hero.titleA, hero.titleB] : [hero.titleA]} lineClassNames={['', '']} immediate delay={0.08} stagger={0.14} />
         </h1>
-        <motion.p className="t-lead pretty mx-auto mt-6 max-w-[46ch] text-center md:mt-7" {...rise(0.3)}>
+        <motion.p className="t-lead pretty mx-auto mt-6 max-w-[46ch] text-center !text-white/80 md:mt-7" {...rise(0.3)}>
           {hero.text}
         </motion.p>
         <motion.div className="mt-8 flex flex-wrap items-center justify-center gap-2.5 sm:gap-3" {...slide(0.42)}>
-          <CTAButton size="lg" onClick={open} motionProps={fade(0.42)} className="max-sm:h-12 max-sm:px-5 max-sm:text-[15px]">
+          <CTAButton size="lg" variant="light" onClick={open} motionProps={fade(0.42)} className="max-sm:h-12 max-sm:px-5 max-sm:text-[15px]">
             {hero.primary}
           </CTAButton>
           <CTAButton
             size="lg"
-            variant="glass"
+            variant="glass-dark"
             href="/platform"
             arrow={false}
             onClick={(e) => {
@@ -59,7 +63,7 @@ export default function Hero() {
             }}
             motionProps={fade(0.48)}
             icon={
-              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-ink text-white">
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-ink">
                 <Play className="ml-[1px] h-2.5 w-2.5 fill-current" strokeWidth={0} aria-hidden="true" />
               </span>
             }
@@ -68,10 +72,6 @@ export default function Hero() {
             {hero.secondary}
           </CTAButton>
         </motion.div>
-      </div>
-
-      <div className="shell relative mt-10 md:mt-12">
-        <PhotoStage photo={heroStage.photo} events={heroStage.events} caption={heroStage.caption} tasks={heroStage.tasks} />
       </div>
     </section>
   );
