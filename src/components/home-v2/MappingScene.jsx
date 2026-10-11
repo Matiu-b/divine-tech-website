@@ -1,4 +1,5 @@
 import React from 'react';
+import { useReducedMotion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
 /*
@@ -27,24 +28,62 @@ const EDGES = [
   { d: 'M626 166 V196', at: 5 },
 ];
 
-/** A seated or standing person, drawn flat. @param {any} props */
-function Person({ x, y, scale = 1, skin, hair, top, hairStyle = 'short', arm = null, flip = false, extend = 0 }) {
+/**
+ * Small SVG animations (SMIL), so they stay in the drawing's own coordinates.
+ * Skipped entirely for reduced motion.
+ */
+function Spin({ values, dur, begin = '0s', still }) {
+  if (still) return null;
+  return <animateTransform attributeName="transform" type="rotate" values={values} dur={dur} begin={begin} repeatCount="indefinite" calcMode="spline" keySplines={values.split(';').slice(1).map(() => '0.45 0 0.55 1').join(';')} />;
+}
+
+/** Eyes that blink every few seconds, looking a little to one side. @param {any} props */
+function Eyes({ look = 0, delay = '0s', still }) {
   return (
-    <g transform={`translate(${x} ${y}) scale(${flip ? -scale : scale} ${scale})`}>
+    <g fill="#1C1A18">
+      {[-7, 7].map((ex) => (
+        <ellipse key={ex} cx={ex + look} cy={-8} rx={2} ry={2.4}>
+          {still ? null : <animate attributeName="ry" values="2.4;2.4;0.3;2.4;2.4" keyTimes="0;0.9;0.94;0.98;1" dur="4.6s" begin={delay} repeatCount="indefinite" />}
+        </ellipse>
+      ))}
+    </g>
+  );
+}
+
+/** A seated or standing person, drawn flat, with a simple friendly face. @param {any} props */
+function Person({ x, y, scale = 1, skin, hair, top, hairStyle = 'short', arm = null, extend = 0, look = 0, nod = null, talk = false, blinkDelay = '0s', still }) {
+  return (
+    <g transform={`translate(${x} ${y}) scale(${scale})`}>
       {/* torso (extended down behind the table when seated) */}
       {extend ? <rect x="-30" y="50" width="60" height={extend} fill={top} /> : null}
       <path d="M-30 64 C-30 28 -18 18 0 18 C18 18 30 28 30 64 Z" fill={top} />
-      {/* neck and head */}
       <rect x="-6" y="6" width="12" height="16" rx="5" fill={skin} />
-      <circle cx="0" cy="-8" r="19" fill={skin} />
-      {hairStyle === 'short' ? <path d="M-19 -10 C-19 -30 19 -32 19 -12 C14 -20 -8 -22 -19 -10 Z" fill={hair} /> : null}
-      {hairStyle === 'long' ? <path d="M-21 -6 C-24 -34 24 -34 21 -6 L22 22 C14 18 16 4 14 -8 C4 -16 -8 -16 -14 -8 C-16 4 -14 18 -22 22 Z" fill={hair} /> : null}
-      {hairStyle === 'bun' ? (
-        <>
-          <circle cx="0" cy="-30" r="8" fill={hair} />
-          <path d="M-19 -8 C-20 -30 20 -30 19 -8 C12 -18 -10 -18 -19 -8 Z" fill={hair} />
-        </>
-      ) : null}
+      {/* the head nods around the neck */}
+      <g>
+        {nod ? <Spin values={nod.values} dur={nod.dur} begin={nod.begin} still={still} /> : null}
+        {hairStyle === 'long' ? <path d="M-22 -6 C-25 -36 25 -36 22 -6 L23 24 C14 22 15 6 13 -2 L-13 -2 C-15 6 -14 22 -23 24 Z" fill={hair} /> : null}
+        <circle cx="0" cy="-8" r="19" fill={skin} />
+        {hairStyle === 'short' ? <path d="M-19 -10 C-19 -31 19 -33 19 -12 C14 -21 -8 -23 -19 -10 Z" fill={hair} /> : null}
+        {hairStyle === 'long' ? <path d="M-19 -8 C-20 -31 20 -31 19 -8 C12 -19 -10 -19 -19 -8 Z" fill={hair} /> : null}
+        {hairStyle === 'bun' ? (
+          <>
+            <circle cx="0" cy="-31" r="8" fill={hair} />
+            <path d="M-19 -8 C-20 -30 20 -30 19 -8 C12 -18 -10 -18 -19 -8 Z" fill={hair} />
+          </>
+        ) : null}
+        {/* face */}
+        <path d={`M${-10 + look} -14 q3 -2 6 0 M${4 + look} -14 q3 -2 6 0`} stroke="#1C1A18" strokeOpacity="0.55" strokeWidth="1.4" strokeLinecap="round" fill="none" />
+        <Eyes look={look} delay={blinkDelay} still={still} />
+        <ellipse cx={-11 + look} cy="0" rx="3.2" ry="2" fill="#E0846F" opacity="0.35" />
+        <ellipse cx={11 + look} cy="0" rx="3.2" ry="2" fill="#E0846F" opacity="0.35" />
+        {talk && !still ? (
+          <ellipse cx={look} cy="2" rx="3.4" ry="1.4" fill="#7A3B2E">
+            <animate attributeName="ry" values="1.2;2.6;1;2.2;1.2" dur="0.9s" repeatCount="indefinite" />
+          </ellipse>
+        ) : (
+          <path d={`M${-4.5 + look} 1 q4.5 4 9 0`} stroke="#7A3B2E" strokeWidth="1.6" strokeLinecap="round" fill="none" />
+        )}
+      </g>
       {arm}
     </g>
   );
@@ -52,6 +91,7 @@ function Person({ x, y, scale = 1, skin, hair, top, hairStyle = 'short', arm = n
 
 /** @param {{ t: number, className?: string }} props */
 export default function MappingScene({ t, className = undefined }) {
+  const still = !!useReducedMotion();
   const shown = (i) => t > i;
   return (
     <svg viewBox="20 10 690 318" className={cn('block h-auto w-full', className)} role="img" aria-label="Two experts and a client around a table, mapping the business's processes on a board while an AI agent maps along on a laptop">
@@ -112,14 +152,58 @@ export default function MappingScene({ t, className = undefined }) {
         hair="#1C1A18"
         top="#1F3B4D"
         hairStyle="short"
-        arm={<path d="M18 30 L40 6 L52 -6" stroke="#1F3B4D" strokeWidth="9" strokeLinecap="round" fill="none" />}
+        look={4}
+        talk
+        still={still}
+        nod={{ values: '0 0 6;-4 0 6;3 0 6;0 0 6', dur: '5s' }}
+        arm={
+          <g>
+            <Spin values="0 18 30;-9 18 30;5 18 30;-3 18 30;0 18 30" dur="4.4s" still={still} />
+            <path d="M18 30 L40 6 L52 -6" stroke="#1F3B4D" strokeWidth="9" strokeLinecap="round" fill="none" />
+            <circle cx="53" cy="-7" r="5" fill={SKIN.b} />
+          </g>
+        }
       />
       <rect x="276" y="186" width="48" height="80" rx="10" fill="#2A3640" />
 
-      {/* the client, seated on the left */}
-      <Person x={104} y={178} skin={SKIN.c} hair="#8A5A2B" top="#D98E5B" hairStyle="long" extend={30} />
-      {/* our second expert, seated, with the laptop */}
-      <Person x={206} y={182} skin={SKIN.a} hair="#3B2A20" top="#14A36B" hairStyle="bun" extend={26} />
+      {/* the client, seated on the left, nodding along */}
+      <Person
+        x={104}
+        y={178}
+        skin={SKIN.c}
+        hair="#8A5A2B"
+        top="#D98E5B"
+        hairStyle="long"
+        extend={30}
+        look={4}
+        blinkDelay="1.3s"
+        still={still}
+        nod={{ values: '0 0 8;6 0 8;0 0 8;5 0 8;0 0 8;0 0 8', dur: '3.6s', begin: '0.8s' }}
+      />
+      {/* our second expert, seated, typing on the laptop */}
+      <Person
+        x={206}
+        y={182}
+        skin={SKIN.a}
+        hair="#3B2A20"
+        top="#14A36B"
+        hairStyle="bun"
+        extend={26}
+        look={-3}
+        blinkDelay="2.4s"
+        still={still}
+        nod={{ values: '0 0 8;-5 0 8;-5 0 8;4 0 8;0 0 8', dur: '6s', begin: '0.4s' }}
+        arm={
+          <g fill={SKIN.a}>
+            <ellipse cx="26" cy="64" rx="5" ry="3.5">
+              {still ? null : <animateTransform attributeName="transform" type="translate" values="0 0;0 -2.5;0 0" dur="0.42s" repeatCount="indefinite" />}
+            </ellipse>
+            <ellipse cx="38" cy="66" rx="5" ry="3.5">
+              {still ? null : <animateTransform attributeName="transform" type="translate" values="0 -2.5;0 0;0 -2.5" dur="0.42s" repeatCount="indefinite" />}
+            </ellipse>
+          </g>
+        }
+      />
 
       {/* the table */}
       <rect x="40" y="252" width="420" height="14" rx="7" fill="#CDB89A" />
