@@ -62,8 +62,8 @@ function PlanVisual() {
               <FileText className="h-4 w-4" strokeWidth={1.8} aria-hidden="true" />
             </span>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-[13px] font-medium text-ink">Action plan · {hiw.plan.company}</p>
-              <p className="truncate text-[11.5px] text-slate">{hiw.plan.people.join(' · ')}</p>
+              <p className="text-[13px] font-medium leading-snug text-ink sm:truncate">Action plan · {hiw.plan.company}</p>
+              <p className="text-[11.5px] text-slate sm:truncate">{hiw.plan.people.join(' · ')}</p>
             </div>
             <span className={cn('ui-chip shrink-0 transition-colors duration-500', approved ? 'bg-brand-mint text-brand-ink' : 'bg-paper text-graphite')}>
               {approved ? 'Approved' : 'Draft'}
@@ -89,7 +89,7 @@ function PlanVisual() {
                     <span className={cn('flex h-4 w-4 shrink-0 items-center justify-center rounded-[5px] border transition-colors duration-500', approved ? 'border-brand bg-brand text-white' : 'border-ink/20 text-transparent')}>
                       <Check className="h-2.5 w-2.5" strokeWidth={3.2} aria-hidden="true" />
                     </span>
-                    <span className="truncate">{r.process}</span>
+                    <span className="leading-snug sm:truncate">{r.process}</span>
                   </span>
                   <span className="hidden truncate text-[11.5px] text-graphite sm:block">{r.channels}</span>
                   <span className={cn('truncate text-[11.5px] font-medium', r.owner === 'Aurora' ? 'text-brand-ink' : 'text-[#8A5A12]')}>{r.owner}</span>
