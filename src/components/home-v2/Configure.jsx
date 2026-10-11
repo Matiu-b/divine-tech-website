@@ -7,7 +7,6 @@ import SectionHeader from './primitives/SectionHeader';
 import { Reveal } from './primitives/MotionReveal';
 import { useInViewport, usePageVisible } from './hooks';
 import {
-  AircallMark,
   GmailMark,
   GoogleCalendarMark,
   HubSpotMark,
@@ -19,6 +18,7 @@ import {
   SignalMark,
   SlackMark,
   StripeMark,
+  TeamsMark,
   TelegramMark,
   WhatsAppMark,
   ZoomMark,
@@ -131,8 +131,8 @@ const MARKS = {
     <TelegramMark key="t" className="h-6 w-6" />,
     <SlackMark key="sl" className="h-6 w-6" />,
   ],
-  pbx: [<AircallMark key="a" className="h-6 w-6" />, <ZoomMark key="z" className="h-7 w-14" />],
-  payments: [<StripeMark key="st" className="h-6 w-6" />, <PayPalMark key="pp" className="h-6 w-6" />],
+  pbx: [<TeamsMark key="tm" className="h-6 w-6" />, <ZoomMark key="z" className="h-6 w-6" />],
+  payments: [<StripeMark key="st" className="h-[18px] w-11" />, <PayPalMark key="pp" className="h-6 w-5" />],
 };
 
 function ConnectVisual() {
