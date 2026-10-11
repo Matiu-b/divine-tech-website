@@ -38,7 +38,7 @@ export function LeadProvider({ children, industry = '' }) {
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 /** @param {any} props */
-function Field({ id, label, optional = false, error = undefined, dark = false, children }) {
+function Field({ id, label, optional = false, hint = undefined, error = undefined, dark = false, children }) {
   return (
     <div className="grid gap-1.5">
       <label htmlFor={id} className={cn('text-[13.5px] font-medium tracking-[-0.005em]', dark ? 'text-white/80' : 'text-graphite')}>
@@ -46,6 +46,11 @@ function Field({ id, label, optional = false, error = undefined, dark = false, c
         {optional ? <span className={cn('ml-1.5 font-normal', dark ? 'text-white/40' : 'text-slate')}>Optional</span> : null}
       </label>
       {children}
+      {hint && !error ? (
+        <p id={id + '-hint'} className={cn('text-[12.5px] leading-snug', dark ? 'text-white/55' : 'text-slate')}>
+          {hint}
+        </p>
+      ) : null}
       {error ? (
         <p id={id + '-error'} className={cn('text-[13px]', dark ? 'text-[#FF9C93]' : 'text-[#B3372F]')}>
           {error}
@@ -102,6 +107,8 @@ export function LeadForm({ dark = false, columns = 1, onDone = undefined, autoFo
     if (!d.name) next.name = 'Please enter your name.';
     if (!d.email) next.email = 'Please enter your work email.';
     else if (!EMAIL_RE.test(d.email)) next.email = 'Please enter a valid email address.';
+    if (!d.phone) next.phone = 'Please enter your phone number, so Aurora can call you.';
+    else if ((d.phone.match(/\d/g) || []).length < 7) next.phone = 'Please enter a full phone number, with the country code.';
     if (!d.industry) next.industry = 'Please choose an industry.';
     setErrors(next);
     const firstKey = Object.keys(next)[0];
@@ -119,7 +126,7 @@ export function LeadForm({ dark = false, columns = 1, onDone = undefined, autoFo
         name: d.name,
         company: d.company || '',
         email: d.email,
-        phone: d.phone || '',
+        phone: d.phone,
         industry: d.industry,
         message: d.message || '',
         source: 'divine-tech.ai landing',
@@ -151,9 +158,10 @@ export function LeadForm({ dark = false, columns = 1, onDone = undefined, autoFo
         <span className={cn('flex h-12 w-12 items-center justify-center rounded-full', dark ? 'bg-brand-glow/15 text-brand-glow' : 'bg-brand-mint text-brand-ink')}>
           <Check className="h-5 w-5" strokeWidth={2.2} aria-hidden="true" />
         </span>
-        <h3 className={cn('t-h3 mt-5', dark && 'text-white')}>Request received</h3>
+        <h3 className={cn('t-h3 mt-5', dark && 'text-white')}>Aurora is calling you now</h3>
         <p className={cn('mt-2 text-[15px] leading-relaxed', dark ? 'text-white/65' : 'text-graphite')}>
-          Thank you. We reply within one business day from {brand.email}.
+          Keep your phone close. Aurora, our AI agent, will call you in a moment to hear about your business and book your demo.
+          This is the same agent your customers would talk to.
         </p>
       </div>
     );
@@ -194,8 +202,19 @@ export function LeadForm({ dark = false, columns = 1, onDone = undefined, autoFo
             required
           />
         </Field>
-        <Field id={ids.phone} label="Phone" optional dark={dark}>
-          <input id={ids.phone} name="phone" type="tel" autoComplete="tel" className="field" />
+        <Field id={ids.phone} label="Phone" hint="Aurora, our AI agent, will call you right after you send this." error={errors.phone} dark={dark}>
+          <input
+            id={ids.phone}
+            name="phone"
+            type="tel"
+            inputMode="tel"
+            autoComplete="tel"
+            placeholder="+1 212 555 0100"
+            className="field"
+            aria-invalid={errors.phone ? 'true' : 'false'}
+            aria-describedby={errors.phone ? ids.phone + '-error' : ids.phone + '-hint'}
+            required
+          />
         </Field>
       </div>
       <Field id={ids.industry} label="Industry" error={errors.industry} dark={dark}>
@@ -247,7 +266,7 @@ export function LeadForm({ dark = false, columns = 1, onDone = undefined, autoFo
         role={failure ? 'alert' : undefined}
         className={cn('min-h-[1.4em] text-[13.5px]', failure ? (dark ? 'text-[#FF9C93]' : 'text-[#B3372F]') : dark ? 'text-white/45' : 'text-slate')}
       >
-        {failure || 'No commitment. We reply within one business day.'}
+        {failure || 'By sending, you agree that Aurora, our AI agent, may call and text you about this request.'}
       </p>
     </form>
   );
@@ -321,7 +340,7 @@ function LeadSheet({ isOpen, onClose, industry }) {
                   See {brand.product} run on your business
                 </h2>
                 <p className="mt-2 text-[15px] leading-relaxed text-graphite">
-                  Bring one real process. We describe it together, and you watch the system configure itself.
+                  Leave your details and {brand.product}, our AI agent, will call you right away to hear about your business.
                 </p>
               </div>
               <button

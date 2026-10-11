@@ -7,7 +7,7 @@ import Footer from '@/components/home-v2/Footer';
 import { openConsentSettings } from '@/lib/consent';
 import { brand, legal } from '@/data/site';
 
-const UPDATED = 'October 8, 2026';
+const UPDATED = 'October 11, 2026';
 
 const TOC = [
   ['scope', 'Who we are and what this policy covers'],
@@ -168,6 +168,12 @@ export default function PrivacyPolicy() {
                   route your inquiry, and AI tools may transcribe or summarize our calls with you. When an AI assistant is
                   talking to you, we will let you know where the law requires it, and a person on our team is available
                   if you prefer.
+                </p>
+                <p>
+                  When you request a demo through the Site, {brand.product}, our AI agent, calls the phone number you
+                  give us right away, using an AI-generated voice, and may follow up by text message. By sending the form
+                  you agree to these calls and messages about your request. The call may be recorded and transcribed to
+                  prepare your demo. You can ask for a person at any time, or tell us to stop calling you.
                 </p>
                 <p>
                   We use third-party AI providers under business terms that do not allow them to use your information to
