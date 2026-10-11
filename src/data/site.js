@@ -213,6 +213,49 @@ export const heroStage = {
     { icon: 'approval', title: 'Invoice approved', detail: 'Routed to Dana · Finance' },
     { icon: 'crm', title: 'CRM updated', detail: 'Notes logged after the call' },
   ],
+  // Buttons on the photo: pick a kind of work and the live feed shows only that (examples, not customer data).
+  tasks: [
+    {
+      key: 'leads',
+      label: 'Answer leads',
+      events: [
+        { icon: 'message', title: 'New lead answered', detail: 'WhatsApp · 2BR inquiry' },
+        { icon: 'qualified', title: 'Lead qualified', detail: 'Budget, timeline, area' },
+        { icon: 'crm', title: 'Lead added to CRM', detail: 'Source: website chat' },
+        { icon: 'message', title: 'Missed call answered', detail: 'Called back, question solved' },
+      ],
+    },
+    {
+      key: 'bookings',
+      label: 'Book appointments',
+      events: [
+        { icon: 'calendar', title: 'Viewing booked', detail: 'Sat 11:00 · 42 Maple St' },
+        { icon: 'service', title: 'Appointment moved', detail: 'Tue to Thu 2:10 pm' },
+        { icon: 'send', title: 'Reminder sent', detail: 'SMS · the day before' },
+        { icon: 'calendar', title: 'Consultation booked', detail: 'Mon 9:30 · front desk notified' },
+      ],
+    },
+    {
+      key: 'invoices',
+      label: 'Send invoices',
+      events: [
+        { icon: 'invoice', title: 'Invoice issued', detail: 'INV-2041 · payment link included' },
+        { icon: 'approval', title: 'Invoice approved', detail: 'Routed to Finance' },
+        { icon: 'mail', title: 'Payment reminder sent', detail: 'Friendly tone · due Friday' },
+        { icon: 'crm', title: 'Payment recorded', detail: 'Books updated' },
+      ],
+    },
+    {
+      key: 'followups',
+      label: 'Follow up',
+      events: [
+        { icon: 'mail', title: 'Follow-up email sent', detail: 'Next steps after the call' },
+        { icon: 'send', title: 'Quote sent', detail: 'Unit 4B · photos attached' },
+        { icon: 'report', title: 'Weekly summary ready', detail: 'Sent to the team on Slack' },
+        { icon: 'crm', title: 'CRM updated', detail: 'Notes logged after the call' },
+      ],
+    },
+  ],
 };
 
 export const platform = {

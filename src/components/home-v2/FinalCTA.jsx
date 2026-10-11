@@ -19,7 +19,7 @@ export default function FinalCTA({ industry = '', titleA = closing.titleA, title
     ? {}
     : { initial: { opacity: 0, y: 40 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, amount: 0.2 }, transition: { duration: 0.9, delay: 0.1, ease: EASE } };
   return (
-    <section id="contact" data-nav-theme="dark" aria-labelledby="contact-title" className="on-dark relative overflow-hidden bg-ink pb-[clamp(88px,10vw,150px)] pt-[clamp(104px,12vw,180px)] text-white">
+    <section id="contact" data-nav-theme="dark" aria-labelledby="contact-title" className="on-dark relative overflow-hidden bg-ink pb-[clamp(72px,7vw,112px)] pt-[clamp(88px,8vw,128px)] text-white">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
         <MediaSlot
           media={media.closing}
@@ -48,9 +48,9 @@ export default function FinalCTA({ industry = '', titleA = closing.titleA, title
         </div>
 
         <div className="lg:col-span-6 lg:col-start-7 xl:col-span-5 xl:col-start-8">
-          <LiquidGlass as={motion.div} {...appear} tone="dark" className="rounded-[clamp(24px,2.6vw,34px)] p-5 xs:p-7 md:p-9">
+          <LiquidGlass as={motion.div} {...appear} tone="dark" className="rounded-[clamp(24px,2.6vw,34px)] p-5 xs:p-7 md:p-8">
             <h3 className="t-h3 text-white">Book a demo</h3>
-            <p className="mb-7 mt-2 text-[15px] text-white/55">Leave your details and Aurora, our AI agent, will call you right away. Hear it for yourself.</p>
+            <p className="mb-6 mt-2 text-[15px] leading-snug text-white/55">Leave your details and Aurora, our AI agent, will call you right away. Hear it for yourself.</p>
             <LeadForm dark columns={2} industry={industry} />
           </LiquidGlass>
         </div>

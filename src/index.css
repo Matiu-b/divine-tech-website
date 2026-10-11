@@ -532,7 +532,7 @@
   /* Form fields */
   .field {
     width: 100%;
-    height: 50px;
+    height: 46px;
     padding: 0 1rem;
     border-radius: 14px;
     font-size: 16px;
@@ -547,7 +547,7 @@
 
   textarea.field {
     height: auto;
-    min-height: 96px;
+    min-height: 72px;
     padding: 0.85rem 1rem;
     line-height: 1.5;
     resize: vertical;

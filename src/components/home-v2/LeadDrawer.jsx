@@ -167,10 +167,10 @@ export function LeadForm({ dark = false, columns = 1, onDone = undefined, autoFo
     );
   }
 
-  const grid = columns === 2 ? 'grid gap-4 sm:grid-cols-2' : 'grid gap-4';
+  const grid = columns === 2 ? 'grid gap-3.5 sm:grid-cols-2' : 'grid gap-3.5';
 
   return (
-    <form onSubmit={submit} noValidate className={cn('grid gap-4', dark && 'on-dark')} aria-label="Book a demo">
+    <form onSubmit={submit} noValidate className={cn('grid gap-3.5', dark && 'on-dark')} aria-label="Book a demo">
       <div className={grid}>
         <Field id={ids.name} label="Name" error={errors.name} dark={dark}>
           <input
@@ -202,7 +202,7 @@ export function LeadForm({ dark = false, columns = 1, onDone = undefined, autoFo
             required
           />
         </Field>
-        <Field id={ids.phone} label="Phone" hint="Aurora, our AI agent, will call you right after you send this." error={errors.phone} dark={dark}>
+        <Field id={ids.phone} label="Phone" error={errors.phone} dark={dark}>
           <input
             id={ids.phone}
             name="phone"
@@ -212,7 +212,7 @@ export function LeadForm({ dark = false, columns = 1, onDone = undefined, autoFo
             placeholder="+1 212 555 0100"
             className="field"
             aria-invalid={errors.phone ? 'true' : 'false'}
-            aria-describedby={errors.phone ? ids.phone + '-error' : ids.phone + '-hint'}
+            aria-describedby={errors.phone ? ids.phone + '-error' : undefined}
             required
           />
         </Field>
@@ -243,7 +243,7 @@ export function LeadForm({ dark = false, columns = 1, onDone = undefined, autoFo
         <textarea
           id={ids.message}
           name="message"
-          rows={3}
+          rows={2}
           placeholder="For example: inbound leads from our website and WhatsApp"
           className="field"
         />
@@ -257,14 +257,14 @@ export function LeadForm({ dark = false, columns = 1, onDone = undefined, autoFo
       <button
         type="submit"
         disabled={state === 'sending'}
-        className={cn('btn btn-lg mt-1 w-full disabled:cursor-progress disabled:opacity-70', dark ? 'btn-light' : 'btn-primary')}
+        className={cn('btn btn-lg mt-0.5 w-full disabled:cursor-progress disabled:opacity-70', dark ? 'btn-light' : 'btn-primary')}
       >
         <span>{state === 'sending' ? 'Sending…' : 'Book a demo'}</span>
         {state === 'sending' ? null : <ArrowRight aria-hidden="true" className="btn-arrow h-4 w-4" strokeWidth={1.9} />}
       </button>
       <p
         role={failure ? 'alert' : undefined}
-        className={cn('min-h-[1.4em] text-[13.5px]', failure ? (dark ? 'text-[#FF9C93]' : 'text-[#B3372F]') : dark ? 'text-white/45' : 'text-slate')}
+        className={cn('min-h-[1.4em] text-[12.5px] leading-snug', failure ? (dark ? 'text-[#FF9C93]' : 'text-[#B3372F]') : dark ? 'text-white/45' : 'text-slate')}
       >
         {failure || 'By sending, you agree that Aurora, our AI agent, may call and text you about this request.'}
       </p>
@@ -329,7 +329,7 @@ function LeadSheet({ isOpen, onClose, industry }) {
             className={cn(
               'lg lg-solid absolute flex flex-col overflow-hidden text-ink',
               wide
-                ? 'bottom-3 right-3 top-3 w-[min(480px,calc(100%-24px))] rounded-[30px]'
+                ? 'bottom-3 right-3 top-3 w-[min(540px,calc(100%-24px))] rounded-[30px]'
                 : 'inset-x-0 bottom-0 max-h-[92dvh] rounded-t-[28px]'
             )}
           >
@@ -352,19 +352,8 @@ function LeadSheet({ isOpen, onClose, industry }) {
                 <X className="h-[18px] w-[18px]" strokeWidth={1.8} aria-hidden="true" />
               </button>
             </div>
-            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-6 pb-6 pt-4 sm:px-8 sm:pb-8">
-              <LeadForm autoFocus={wide} industry={industry} />
-              <div className="mt-6 grid gap-1 border-t border-ink/10 pt-5 text-[14px] text-graphite">
-                <a className="w-fit hover:text-ink" href={'mailto:' + brand.email}>
-                  {brand.email}
-                </a>
-                {brand.phones.map((p) => (
-                  <a key={p.tel} className="w-fit hover:text-ink" href={'tel:' + p.tel}>
-                    {p.display} <span className="text-slate">({p.label})</span>
-                  </a>
-                ))}
-                <span>{brand.address}</span>
-              </div>
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-6 pb-6 pt-4 sm:px-8 sm:pb-7">
+              <LeadForm autoFocus={wide} columns={2} industry={industry} />
             </div>
           </motion.div>
         </motion.div>

@@ -22,11 +22,20 @@ const SLOT = CARD_H + GAP;
  */
 function LiveFeed({ events, slots, running, still }) {
   const [head, setHead] = useState(slots);
+  // A new set of events (a task button was pressed) replaces every card at once, and the timer restarts.
+  const first = useRef(true);
+  useEffect(() => {
+    if (first.current) {
+      first.current = false;
+      return;
+    }
+    setHead((n) => n + slots);
+  }, [events, slots]);
   useEffect(() => {
     if (!running || still) return undefined;
     const id = window.setInterval(() => setHead((n) => n + 1), 2800);
     return () => window.clearInterval(id);
-  }, [running, still]);
+  }, [running, still, events]);
 
   const items = Array.from({ length: slots }, (_, i) => {
     const n = head - 1 - i;
@@ -69,6 +78,41 @@ function LiveFeed({ events, slots, running, still }) {
   );
 }
 
+/**
+ * Buttons that pick which kind of work the live feed shows. Pressing the active one again
+ * goes back to the mix of everything.
+ * @param {any} props
+ */
+function TaskButtons({ tasks, active, onPick, onPhoto }) {
+  return (
+    <div role="group" aria-label="Show Aurora doing" className="flex flex-wrap gap-2">
+      {tasks.map((t) => {
+        const on = active === t.key;
+        return (
+          <button
+            key={t.key}
+            type="button"
+            aria-pressed={on}
+            onClick={() => onPick(on ? null : t.key)}
+            className={cn(
+              'h-9 rounded-full px-4 text-[13px] font-medium transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-glow',
+              onPhoto
+                ? on
+                  ? 'bg-white text-ink'
+                  : 'border border-white/35 bg-white/15 text-white backdrop-blur-md hover:bg-white/25'
+                : on
+                  ? 'bg-ink text-white'
+                  : 'border border-ink/15 bg-white text-ink hover:border-ink/30'
+            )}
+          >
+            {t.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 /** Rendered width of an element, measured before paint and kept current. */
 function useWidth(ref) {
   const [w, setW] = useState(0);
@@ -94,7 +138,7 @@ function useWidth(ref) {
  * events: [{ icon, title, detail }]  (illustrative examples, not customer data)
  * @param {any} props
  */
-export default function PhotoStage({ photo, events, caption = undefined, className = undefined }) {
+export default function PhotoStage({ photo, events, caption = undefined, tasks = undefined, className = undefined }) {
   const ref = useRef(null);
   const reduce = useReducedMotion();
   const visible = usePageVisible();
@@ -104,6 +148,9 @@ export default function PhotoStage({ photo, events, caption = undefined, classNa
   // New cards arrive on top and push the earlier ones down: three on wide photos, two on phones
   // (so the people and the caption stay visible).
   const slots = width === 0 || width >= 600 ? 3 : 2;
+  const [task, setTask] = useState(/** @type {string | null} */ (null));
+  const picked = tasks && task ? tasks.find((t) => t.key === task) : null;
+  const feed = picked ? picked.events : events;
 
   return (
     <Reveal y={40} amount={0.05} className={className}>
@@ -129,6 +176,11 @@ export default function PhotoStage({ photo, events, caption = undefined, classNa
             <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-[linear-gradient(to_top,rgba(6,12,10,0.6)_0%,rgba(6,12,10,0.22)_45%,rgba(6,12,10,0)_100%)]" />
             <figcaption className="absolute inset-x-0 bottom-0 p-5 xs:p-6 md:p-8">
               <p className="max-w-[30ch] text-[17px] font-medium leading-snug text-white sm:text-[20px] md:max-w-[34ch] md:text-[24px]">{caption}</p>
+              {tasks ? (
+                <div className="mt-4 hidden sm:block md:mt-5">
+                  <TaskButtons tasks={tasks} active={task} onPick={setTask} onPhoto />
+                </div>
+              ) : null}
             </figcaption>
           </>
         ) : null}
@@ -137,9 +189,14 @@ export default function PhotoStage({ photo, events, caption = undefined, classNa
             <span className={cn('h-2 w-2 rounded-full bg-brand', !reduce && 'animate-blink')} aria-hidden="true" />
             <span className="text-[11.5px] font-medium text-ink">{brand.product} · working</span>
           </LiquidGlass>
-          <LiveFeed events={events} slots={slots} running={inView && visible} still={!!reduce} />
+          <LiveFeed events={feed} slots={slots} running={inView && visible} still={!!reduce} />
         </div>
       </figure>
+      {tasks ? (
+        <div className="mt-4 sm:hidden">
+          <TaskButtons tasks={tasks} active={task} onPick={setTask} onPhoto={false} />
+        </div>
+      ) : null}
     </Reveal>
   );
 }
