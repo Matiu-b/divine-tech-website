@@ -10,7 +10,7 @@ import { Reveal, RevealGroup, RevealItem } from './primitives/MotionReveal';
 import { useInViewport, usePageVisible } from './hooks';
 import { EASE } from './motion';
 
-const CH_ICONS = [MessageSquare, MessageCircle, Phone, Smartphone, Mail, Hash];
+const CH_ICONS = [Phone, Smartphone, MessageSquare, Mail, MessageCircle, Hash];
 const SYS_ICONS = [Database, CalendarDays, ListChecks, BookOpen, Users];
 
 // Diagram geometry (desktop), in a 1200 × 600 frame.

@@ -70,8 +70,8 @@ export const heroFilm = {
   chapters: ['Listen', 'Understand', 'Act', 'Confirm'],
   scenes: [
     {
-      key: 'whatsapp',
-      channel: 'WhatsApp',
+      key: 'sms',
+      channel: 'Text message',
       mode: 'chat',
       industry: 'Real estate',
       contact: 'Sarah K.',
@@ -206,7 +206,7 @@ export const heroStage = {
   // Illustrative live activity shown over the photo (examples, not customer data).
   events: [
     { icon: 'calendar', title: 'Viewing booked', detail: 'Sat 11:00 · 42 Maple St' },
-    { icon: 'message', title: 'New lead answered', detail: 'WhatsApp · 2BR inquiry' },
+    { icon: 'message', title: 'New lead answered', detail: 'Text message · 2BR inquiry' },
     { icon: 'qualified', title: 'Lead qualified', detail: 'Budget, timeline, area' },
     { icon: 'send', title: 'Follow-up sent', detail: 'Quote · Unit 4B' },
     { icon: 'service', title: 'Request resolved', detail: 'Appointment moved to Thu' },
@@ -219,7 +219,7 @@ export const heroStage = {
       key: 'leads',
       label: 'Answer leads',
       events: [
-        { icon: 'message', title: 'New lead answered', detail: 'WhatsApp · 2BR inquiry' },
+        { icon: 'message', title: 'New lead answered', detail: 'Text message · 2BR inquiry' },
         { icon: 'qualified', title: 'Lead qualified', detail: 'Budget, timeline, area' },
         { icon: 'crm', title: 'Lead added to CRM', detail: 'Source: website chat' },
         { icon: 'message', title: 'Missed call answered', detail: 'Called back, question solved' },
@@ -264,7 +264,7 @@ export const platform = {
   titleB: 'for your whole business.',
   text: 'Aurora connects the channels your customers and team use to the systems you already run on: CRM, calendars, invoicing, email. It understands each request, applies your rules and carries the work through to done.',
   link: 'Explore the platform',
-  channels: ['Web chat', 'WhatsApp', 'Voice', 'SMS', 'Email', 'Slack'],
+  channels: ['Voice', 'SMS', 'Web chat', 'Email', 'WhatsApp', 'Slack'],
   layers: [
     { name: 'Understand', detail: 'Intent, context and history' },
     { name: 'Decide', detail: 'Rules, knowledge and approvals' },
@@ -278,7 +278,7 @@ export const platform = {
     { name: 'Your team', detail: 'Hand-offs and approvals' },
   ],
   notes: [
-    ['One context, every channel', 'A conversation that starts on WhatsApp and continues by phone stays one conversation, with its full history.'],
+    ['One context, every channel', 'A conversation that starts in web chat and continues by phone stays one conversation, with its full history.'],
     ['Your rules on every decision', 'Policies, limits and exceptions are applied the same way at 3 pm and at 3 am.'],
     ['Real actions in real systems', 'Aurora updates the CRM, books the slot and creates the task, instead of leaving a summary for someone else.'],
   ],
@@ -320,7 +320,7 @@ export const understandVisual = {
 };
 
 export const workVisual = [
-  { t: '09:14', ch: 'WhatsApp', text: 'Answered a question about parking' },
+  { t: '09:14', ch: 'Web chat', text: 'Answered a question about parking' },
   { t: '09:14', ch: 'CRM', text: 'Qualified lead · budget, timeline, area' },
   { t: '09:15', ch: 'Calendar', text: 'Booked a viewing · Sat 11:00 with Dana' },
   { t: '09:15', ch: 'SMS', text: 'Sent confirmation and directions' },
@@ -360,10 +360,19 @@ export const howItWorks = {
     { who: 'Aurora', tone: 'aurora', name: 'Aurora sets itself up', text: 'It connects your channels and systems from the plan.' },
     { who: 'You approve', tone: 'you', name: 'Test it, go live', text: 'Try real examples, then switch it on.' },
   ],
-  // Illustrative content of the step visuals (examples, not customer data).
-  plan: ['Answer leads on WhatsApp', 'Book viewings in the calendar', 'Discounts need a manager'],
-  connect: ['WhatsApp', 'Phone', 'Slack', 'CRM', 'Calendar'],
-  test: { ask: 'Can I see the flat on Saturday?', reply: 'Yes, 11:00 is free. Shall I book it?' },
+  // Illustrative content of the step visuals (a fictional business, not customer data).
+  plan: {
+    company: 'Maple Realty',
+    people: ['Our expert', 'You', 'AI agent'],
+    rows: [
+      { process: 'New lead → qualify → book a viewing', channels: 'Phone · Text · Web', owner: 'Aurora' },
+      { process: 'Viewing reminders', channels: 'Text · Email', owner: 'Aurora' },
+      { process: 'Discounts above 5%', channels: 'Slack', owner: 'Manager approves' },
+      { process: 'Weekly pipeline report', channels: 'Email', owner: 'Aurora' },
+    ],
+  },
+  connect: ['Phone', 'Email', 'Calendar', 'CRM', 'Slack', 'WhatsApp'],
+  test: { ask: 'Can I see the 2-bedroom on Saturday?', reply: 'Yes, 11:00 is open with Dana. Shall I book it?', ok: 'Booked. See you Saturday!' },
 };
 
 // Agents modeled on real roles, one per team (see Teams.jsx).
@@ -432,7 +441,7 @@ export const platformPage = {
   meta: {
     title: 'Aurora platform · AI agents that do the work | Divine Tech AI',
     description:
-      'See Aurora work: one conversation on WhatsApp, voice, web chat or email becomes a booked appointment, an updated CRM and a follow-up, with people approving what matters and every step on record.',
+      'See Aurora work: one conversation by phone, text, web chat or email becomes a booked appointment, an updated CRM and a follow-up, with people approving what matters and every step on record.',
   },
   eyebrow: 'Platform',
   titleA: 'Most AI talks.',

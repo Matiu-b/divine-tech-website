@@ -10,7 +10,7 @@ const srcSet = (name, widths) => widths.map((w) => PHOTOS + name + '-' + w + '.w
 // Shared answers, so every page says the same thing about the same question.
 const FAQ_CHANNELS = [
   'Which channels does Aurora cover?',
-  'Web chat, WhatsApp, voice, SMS and email with customers, and Slack for your team’s internal requests. A conversation that starts on one channel and continues on another stays one conversation, with its full history.',
+  'Phone, text, web chat, email and WhatsApp with customers, and Slack for your team’s internal requests. A conversation that starts on one channel and continues on another stays one conversation, with its full history.',
 ];
 const FAQ_LIVE = [
   'How long does it take to go live?',
@@ -26,20 +26,20 @@ export const industries = [
     meta: {
       title: 'Aurora for real estate · Answer every lead in seconds | Divine Tech AI',
       description:
-        'Aurora answers every property inquiry in seconds on WhatsApp, phone, email and web, qualifies the lead, books the viewing in the right agent’s calendar and follows up until the deal moves.',
+        'Aurora answers every property inquiry in seconds by phone, text, email and web chat, qualifies the lead, books the viewing in the right agent’s calendar and follows up until the deal moves.',
     },
     short: 'Answer every lead in seconds, book viewings, and handle the follow-up emails and paperwork.',
     hero: {
       eyebrow: 'Aurora for real estate',
       titleA: 'The first agent to reply wins the lead.',
       titleB: 'Aurora replies in seconds.',
-      text: 'Aurora answers every inquiry from portals, ads, WhatsApp and calls, qualifies budget, timeline and area, books the viewing into the right agent’s calendar and follows up until the client shows.',
+      text: 'Aurora answers every inquiry from portals, ads, calls and texts, qualifies budget, timeline and area, books the viewing into the right agent’s calendar and follows up until the client shows.',
     },
     problem: {
       titleA: 'You pay for every lead.',
       titleB: 'Most are answered too late.',
       points: [
-        ['Leads arrive around the clock', 'Portals, ads, calls and WhatsApp bring inquiries at every hour, and the first agent to answer usually wins.'],
+        ['Leads arrive around the clock', 'Portals, ads, calls and texts bring inquiries at every hour, and the first agent to answer usually wins.'],
         ['Agents chase instead of showing', 'Hours go to qualifying, scheduling and follow-ups instead of time with buyers and tenants.'],
         ['Follow-up slips', 'A viewing without a reminder or a next step is a lead that quietly goes cold.'],
       ],
@@ -48,7 +48,7 @@ export const industries = [
     caption: 'Your agents are out showing homes. Aurora answers every new lead.',
     card: { icon: 'calendar', title: 'Viewing booked', detail: 'Sat 11:00, right agent, confirmation sent' },
     events: [
-      { icon: 'message', title: 'New lead answered', detail: 'WhatsApp, 2BR inquiry' },
+      { icon: 'message', title: 'New lead answered', detail: 'Text message, 2BR inquiry' },
       { icon: 'mail', title: 'Listing email written and sent', detail: '12 matching buyers, personal intro' },
       { icon: 'invoice', title: 'Commission invoice issued', detail: 'Deal 318, sent to Finance' },
       { icon: 'calendar', title: 'Viewing booked', detail: 'Sat 11:00, 42 Maple St' },
@@ -84,7 +84,7 @@ export const industries = [
       ['Operations', 'Every lead handled the same way, every time.'],
     ],
     success: 'From chasing leads to showing properties.',
-    systems: ['Your CRM', 'Agent calendars', 'Listing portals', 'WhatsApp', 'Phone', 'Email', 'Web chat'],
+    systems: ['Your CRM', 'Agent calendars', 'Listing portals', 'Phone', 'SMS', 'Email', 'Web chat', 'WhatsApp'],
     faq: [
       ['Will Aurora quote prices or negotiate?', 'Only within the rules you set. You can tell it never to quote a final price and to offer a viewing instead. Anything outside your rules goes to an agent for approval.'],
       ['Does it work with our CRM and calendars?', 'Aurora works inside the systems your team already uses. During setup it is connected to your CRM, lead sources and agents’ calendars.'],
@@ -133,7 +133,7 @@ export const industries = [
       titleA: 'Aurora joins your front desk.',
       titleB: 'Your team stays with clients.',
       steps: [
-        ['Answers on the first ring', 'Calls, WhatsApp and web chat, including evenings and weekends.'],
+        ['Answers on the first ring', 'Calls, texts and web chat, including evenings and weekends.'],
         ['Books and reschedules', 'Into your scheduling system, by service, practitioner and availability.'],
         ['Confirms and reminds', 'Confirmations and reminders before every visit, and a new time offered when plans change.'],
         ['Hands off what is sensitive', 'Urgent or sensitive cases go to your staff at once, with the whole conversation attached.'],
@@ -156,7 +156,7 @@ export const industries = [
       ['Operations', 'Consistent intake and reminders across every location.'],
     ],
     success: 'From a ringing phone to a full, confirmed schedule.',
-    systems: ['Scheduling system', 'Practice management', 'CRM', 'WhatsApp', 'Phone', 'SMS', 'Web chat'],
+    systems: ['Scheduling system', 'Practice management', 'CRM', 'Phone', 'SMS', 'Web chat', 'WhatsApp'],
     faq: [
       ['Does Aurora give medical advice?', 'No. Aurora is set up for scheduling, questions about your services and admin. Anything clinical or urgent goes straight to your staff.'],
       ['Can it work across several locations?', 'Yes. Intake, reminders and answers stay consistent across every location, and each booking lands in the right calendar.'],

@@ -245,11 +245,11 @@ export function LeadForm({ dark = false, columns = 1, wide = false, onDone = und
   );
   const messageField = wide ? (
     <Field id={ids.message} label="Which process should we start with?" optional dark={dark}>
-      <input id={ids.message} name="message" placeholder="E.g. leads from WhatsApp" className="field" />
+      <input id={ids.message} name="message" placeholder="E.g. inbound calls and web leads" className="field" />
     </Field>
   ) : (
     <Field id={ids.message} label="Which process should we start with?" optional dark={dark}>
-      <textarea id={ids.message} name="message" rows={2} placeholder="For example: inbound leads from our website and WhatsApp" className="field" />
+      <textarea id={ids.message} name="message" rows={2} placeholder="For example: inbound calls and leads from our website" className="field" />
     </Field>
   );
   const submitButton = (
