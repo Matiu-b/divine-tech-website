@@ -131,7 +131,7 @@ const MARKS = {
     <TelegramMark key="t" className="h-6 w-6" />,
     <SlackMark key="sl" className="h-6 w-6" />,
   ],
-  pbx: [<AircallMark key="a" className="h-6 w-6" />, <ZoomMark key="z" className="h-6 w-6" />],
+  pbx: [<AircallMark key="a" className="h-6 w-6" />, <ZoomMark key="z" className="h-7 w-14" />],
   payments: [<StripeMark key="st" className="h-6 w-6" />, <PayPalMark key="pp" className="h-6 w-6" />],
 };
 
@@ -269,7 +269,7 @@ function GoLiveVisual() {
             <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-[10px] font-medium text-ink">You</span>
             <span className="text-[12px] font-medium leading-tight">
               {t >= 8 ? 'Approved · live' : 'Waiting for your approval'}
-              <span className="block text-[10.5px] font-normal opacity-80">{T.passed}</span>
+              <span className="block text-[10.5px] font-normal opacity-80">{t >= 7 ? T.passed : 'Running test cases…'}</span>
             </span>
           </div>
         </div>
