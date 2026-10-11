@@ -312,29 +312,36 @@ export const controlVisual = {
   ],
 };
 
+// How it works (home page): three plain steps from the customer's side, each saying who does it.
 export const howItWorks = {
   eyebrow: 'How it works',
-  titleA: 'Describe it once.',
-  titleB: 'Live in days, not months.',
-  text: 'The setup that used to take consultants and developers happens inside one automatic cycle. Aurora configures itself and your team approves. It does not build.',
+  titleA: 'Live in up to 7 days.',
+  titleB: 'Your part is explaining your business.',
+  text: 'No technical project on your side. Our experts and Aurora do the setup, and nothing goes live until you approve it.',
   steps: [
-    { name: 'Describe', short: 'Explain your business in plain words and share the files you already have.', text: 'Explain the business in plain language: what you sell, how a lead becomes a customer, what must never happen. Share the documents you already have.' },
-    { name: 'Configure', short: 'Aurora builds its own flows, integrations, knowledge and rules.', text: 'Aurora builds its own setup: flows, integrations, knowledge, tone of voice and rules. No forms, no consultants.' },
-    { name: 'Adapt', short: 'It tests itself on your real cases and fixes the gaps.', text: 'It runs test cycles on your real cases, finds the gaps and tunes itself until the results match how you work.' },
-    { name: 'Run', short: 'It goes live on your channels. Changes wait for your approval.', text: 'It goes live on your channels and keeps learning from every conversation, with your approval on anything that changes the business.' },
+    {
+      who: 'You + our experts',
+      icon: 'talk',
+      name: 'Tell us how you work',
+      text: 'A precise scoping session with our team of experts, working together with AI. Bring the files you already have, like your price list and policies.',
+    },
+    {
+      who: 'Aurora',
+      icon: 'build',
+      name: 'Aurora sets itself up',
+      text: 'It connects to your WhatsApp, phone, CRM and calendar, learns your services and rules, and builds the flows from what you told us.',
+    },
+    {
+      who: 'You approve',
+      icon: 'live',
+      name: 'Test it, then go live',
+      text: 'See how it answers real examples from your business, change anything you want, and switch it on. Changes later still need your approval.',
+    },
   ],
-  describe: {
-    prompt: 'We sell and rent apartments in Brooklyn. Leads come from our website, Instagram ads and walk-ins. Book viewings with the listing agent. Never promise a price.',
-    files: ['price-list.pdf', 'policies.docx', 'listings.csv'],
-  },
-  configure: ['Lead intake flow', 'Viewing scheduler', 'CRM sync', 'Agent calendars', 'Knowledge from 3 sources', 'Tone: warm and concise'],
-  adapt: [
-    ['Weekend viewing request', 'Pass'],
-    ['Price negotiation', 'Adjusted: offers a viewing'],
-    ['After-hours inquiry', 'Adjusted: tone'],
-    ['Complaint', 'Escalates to a manager'],
+  split: [
+    ['Your part', 'One scoping session and your approval.'],
+    ['Aurora and our team', 'Everything else: setup, connections and testing.'],
   ],
-  run: ['Web chat', 'WhatsApp', 'Voice'],
 };
 
 // Agents modeled on real roles, one per team (see Teams.jsx).
