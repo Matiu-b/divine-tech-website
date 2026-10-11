@@ -4,7 +4,7 @@ import { teams } from '@/data/site';
 import LiquidGlass from './primitives/LiquidGlass';
 import SectionHeader from './primitives/SectionHeader';
 import { RevealGroup, RevealItem } from './primitives/MotionReveal';
-import { EVENT_ICONS } from './Moment';
+import { EVENT_ICONS } from './eventIcons';
 
 /**
  * One team, one agent. The photo and its glass status chip share a canvas, so

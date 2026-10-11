@@ -7,7 +7,12 @@ import { Reveal, RevealLines } from './primitives/MotionReveal';
 import { LeadForm } from './LeadDrawer';
 import { EASE } from './motion';
 
-export default function FinalCTA() {
+/**
+ * Closing section with the demo form. On an industry page, pass `industry` (pre-selects it in the form)
+ * and optionally `titleA` / `titleB` / `text` to speak to that industry.
+ * @param {any} props
+ */
+export default function FinalCTA({ industry = '', titleA = closing.titleA, titleB = closing.titleB, text = closing.text }) {
   const reduce = useReducedMotion();
   // The form card is glass: it reveals itself rather than through a fading wrapper.
   const appear = reduce
@@ -33,10 +38,10 @@ export default function FinalCTA() {
       <div className="shell relative grid gap-14 lg:grid-cols-12 lg:items-center lg:gap-12">
         <div className="lg:col-span-6">
           <h2 id="contact-title" className="t-display balance">
-            <RevealLines lines={[closing.titleA, closing.titleB]} lineClassNames={['', 'text-white/45']} />
+            <RevealLines lines={[titleA, titleB]} lineClassNames={['', 'text-white/45']} />
           </h2>
           <Reveal delay={0.15}>
-            <p className="t-lead pretty mt-8 max-w-[40ch] !text-white/65">{closing.text}</p>
+            <p className="t-lead pretty mt-8 max-w-[40ch] !text-white/65">{text}</p>
             <div className="mt-10 grid gap-1.5 text-[15px] text-white/60">
               <a className="w-fit transition-colors hover:text-white" href={'mailto:' + brand.email}>
                 {brand.email}
@@ -55,7 +60,7 @@ export default function FinalCTA() {
           <LiquidGlass as={motion.div} {...appear} tone="dark" className="rounded-[clamp(24px,2.6vw,34px)] p-5 xs:p-7 md:p-9">
             <h3 className="t-h3 text-white">Book a demo</h3>
             <p className="mb-7 mt-2 text-[15px] text-white/55">Tell us where to start. We will set up the conversation around your process.</p>
-            <LeadForm dark columns={2} />
+            <LeadForm dark columns={2} industry={industry} />
           </LiquidGlass>
         </div>
       </div>

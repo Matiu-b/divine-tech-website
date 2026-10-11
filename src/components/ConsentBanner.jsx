@@ -86,14 +86,18 @@ export default function ConsentBanner() {
           animate={to}
           exit={from}
           transition={{ duration: 0.45, ease: EASE }}
-          className="lg lg-solid fixed inset-x-3 bottom-3 z-[110] max-h-[85dvh] overflow-y-auto rounded-[26px] p-5 text-ink sm:inset-x-auto sm:bottom-5 sm:left-5 sm:w-[420px] sm:p-6"
+          className="lg lg-solid fixed inset-x-2 bottom-2 z-[110] max-h-[85dvh] overflow-y-auto rounded-[20px] p-4 text-ink sm:inset-x-auto sm:bottom-5 sm:left-5 sm:w-[420px] sm:rounded-[26px] sm:p-6"
         >
-          <h2 id={titleId} className="text-[17px] font-medium tracking-[-0.01em]">
+          {/* On phones the first view is a slim bar: short text and one row of buttons. */}
+          <h2 id={titleId} className={cn('text-[15px] font-medium sm:text-[17px]', !custom && 'sr-only sm:not-sr-only')}>
             {custom ? 'Cookie settings' : 'Cookies on this site'}
           </h2>
-          <p className="mt-2 text-[14px] leading-relaxed text-graphite">
-            We use cookies to see how the site is used and to measure our ads. Choose what you allow. You can change it
-            anytime in Cookie settings at the bottom of the page.{' '}
+          <p className={cn('text-[13px] leading-relaxed text-graphite sm:mt-2 sm:text-[14px]', custom && 'mt-2')}>
+            <span className={cn(!custom && 'sm:hidden')}>We use cookies for analytics and to measure our ads. </span>
+            <span className={cn(!custom && 'hidden sm:inline', custom && 'hidden')}>
+              We use cookies to see how the site is used and to measure our ads. Choose what you allow. You can change it
+              anytime in Cookie settings at the bottom of the page.{' '}
+            </span>
             <Link to="/privacy#cookies" className="legal-link">
               Privacy Policy
             </Link>
@@ -126,7 +130,7 @@ export default function ConsentBanner() {
             </div>
           ) : null}
 
-          <div className="mt-4 grid grid-cols-2 gap-2.5">
+          <div className={cn('mt-3 sm:mt-4', custom ? 'grid grid-cols-2 gap-2.5' : 'flex items-center gap-2 sm:grid sm:grid-cols-2 sm:gap-2.5')}>
             {custom ? (
               <>
                 <button
@@ -156,21 +160,21 @@ export default function ConsentBanner() {
                 <button
                   type="button"
                   onClick={() => decide({ analytics: false, marketing: false })}
-                  className="btn btn-sm justify-center border border-ink/15 bg-white/70 text-ink hover:bg-white"
+                  className="btn btn-sm flex-1 justify-center border border-ink/15 bg-white/70 text-ink hover:bg-white"
                 >
                   Reject all
                 </button>
                 <button
                   type="button"
                   onClick={() => decide({ analytics: true, marketing: true })}
-                  className="btn btn-sm btn-primary justify-center"
+                  className="btn btn-sm btn-primary flex-1 justify-center"
                 >
                   Accept all
                 </button>
                 <button
                   type="button"
                   onClick={() => setCustom(true)}
-                  className="col-span-2 py-1 text-[13.5px] text-graphite underline-offset-4 hover:text-ink hover:underline"
+                  className="order-first shrink-0 px-1.5 py-1 text-[12.5px] text-graphite underline-offset-4 hover:text-ink hover:underline sm:order-none sm:col-span-2 sm:text-[13.5px]"
                 >
                   Customize
                 </button>

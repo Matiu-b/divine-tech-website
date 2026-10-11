@@ -50,9 +50,9 @@ export default function Hero() {
             <CTAButton
               size="lg"
               variant="glass"
-              href="#demo"
+              href="#how-it-works"
               arrow={false}
-              onClick={(e) => onAnchorClick(e, '#demo')}
+              onClick={(e) => onAnchorClick(e, '#how-it-works')}
               motionProps={fade(0.48)}
               icon={
                 <span className="flex h-6 w-6 items-center justify-center rounded-full bg-ink text-white">

@@ -11,7 +11,7 @@ const LeadCtx = createContext({ open: () => {}, close: () => {}, isOpen: false }
 export const useLead = () => useContext(LeadCtx);
 
 /** @param {any} props */
-export function LeadProvider({ children }) {
+export function LeadProvider({ children, industry = '' }) {
   const [isOpen, setOpen] = useState(false);
   const returnFocus = useRef(null);
   const open = useCallback(() => {
@@ -30,7 +30,7 @@ export function LeadProvider({ children }) {
   return (
     <LeadCtx.Provider value={value}>
       {children}
-      <LeadSheet isOpen={isOpen} onClose={close} />
+      <LeadSheet isOpen={isOpen} onClose={close} industry={industry} />
     </LeadCtx.Provider>
   );
 }
@@ -63,7 +63,7 @@ const LEAD_FORM_NAME = 'lead';
  * Netlify dashboard and trigger the email notifications configured there.
  * @param {any} props
  */
-export function LeadForm({ dark = false, columns = 1, onDone = undefined, autoFocus = false }) {
+export function LeadForm({ dark = false, columns = 1, onDone = undefined, autoFocus = false, industry = '' }) {
   const uid = useId().replace(/:/g, '');
   const ids = {
     name: 'lf-name-' + uid,
@@ -203,7 +203,7 @@ export function LeadForm({ dark = false, columns = 1, onDone = undefined, autoFo
           <select
             id={ids.industry}
             name="industry"
-            defaultValue=""
+            defaultValue={leadIndustries.includes(industry) ? industry : ''}
             className="field pr-11"
             aria-invalid={errors.industry ? 'true' : 'false'}
             aria-describedby={errors.industry ? ids.industry + '-error' : undefined}
@@ -270,7 +270,7 @@ function trapTab(e, root) {
 }
 
 /** @param {any} props */
-function LeadSheet({ isOpen, onClose }) {
+function LeadSheet({ isOpen, onClose, industry }) {
   const reduce = useReducedMotion();
   const wide = useMediaQuery('(min-width: 640px)', true);
   const panelRef = useRef(null);
@@ -334,7 +334,7 @@ function LeadSheet({ isOpen, onClose }) {
               </button>
             </div>
             <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-6 pb-6 pt-4 sm:px-8 sm:pb-8">
-              <LeadForm autoFocus={wide} />
+              <LeadForm autoFocus={wide} industry={industry} />
               <div className="mt-6 grid gap-1 border-t border-ink/10 pt-5 text-[14px] text-graphite">
                 <a className="w-fit hover:text-ink" href={'mailto:' + brand.email}>
                   {brand.email}

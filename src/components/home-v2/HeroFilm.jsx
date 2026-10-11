@@ -1011,7 +1011,11 @@ function Group({ p, index, dim = false, children, className = undefined, z = 1, 
   );
 }
 
-export default function HeroFilm() {
+/**
+ * first: key of the scene to open on (e.g. 'voice' on the home-services page); the film then cycles as usual.
+ * @param {any} props
+ */
+export default function HeroFilm({ first = undefined }) {
   const reduce = !!useReducedMotion();
   const wideUp = useMediaQuery('(min-width: 1024px)');
   const tabletUp = useMediaQuery('(min-width: 640px)');
@@ -1024,7 +1028,7 @@ export default function HeroFilm() {
   const compRef = useRef(null);
   const btnRef = useRef(null);
 
-  const [k, setK] = useState(0);
+  const [k, setK] = useState(() => Math.max(0, SCENES.findIndex((s) => s.key === first)));
   const [loop, setLoop] = useState(0);
   const [playing, setPlaying] = useState(true);
   const [takeover, setTakeover] = useState(false);

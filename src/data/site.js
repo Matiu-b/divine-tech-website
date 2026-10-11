@@ -25,12 +25,13 @@ export const legal = {
   phoneTel: '+972548037207',
 };
 
+// Primary navigation. `href` values starting with '/#' are sections of the home page;
+// an item with `children` opens a menu (Industries lists the pages in src/data/industries.js).
 export const nav = [
-  { href: '#platform', label: 'Platform' },
-  { href: '#how-it-works', label: 'How it works' },
-  { href: '#solutions', label: 'Solutions' },
-  { href: '#teams', label: 'Teams' },
-  { href: '#security', label: 'Security' },
+  { href: '/#platform', label: 'Platform' },
+  { href: '/#how-it-works', label: 'How it works' },
+  { label: 'Industries', children: 'industries' },
+  { href: '/#security', label: 'Security' },
 ];
 
 /*
@@ -50,9 +51,9 @@ export const hero = {
   eyebrow: 'Aurora by Divine Tech AI',
   titleA: 'Aurora runs the work.',
   titleB: 'Your team runs the business.',
-  text: 'Aurora is an AI operating layer that understands how your company works, handles customers on every channel and completes the follow-through inside the systems you already use. Your people stay in charge of what matters.',
+  text: 'Every inquiry answered in seconds, on WhatsApp, phone, email and web. Bookings made, records updated and follow-ups sent inside the systems you already use, with your approval on what matters.',
   primary: 'Book a demo',
-  secondary: 'See it in action',
+  secondary: 'See how it works',
 };
 
 // Hero film: the same request flow on four channels (illustrative scenarios,
@@ -179,47 +180,17 @@ export const heroFilm = {
   ],
 };
 
-export const statement = {
-  a: 'Most AI talks.',
-  b: 'Aurora works.',
-  text: 'Answers are where the job starts, not where it ends. Aurora books the appointment, updates the record, sends the follow-up and brings in a person when the moment calls for one.',
-};
-
 // Atmosphere photography: AI-generated stills (OpenArt, Nano Banana 2) in one
 // warm, sunny look. Files live in /public/img/photos; `lqip` is a tiny blurred
 // preview shown until the photo arrives, so nothing jumps while it loads.
 const PHOTOS = '/img/photos/';
 const srcSet = (name, widths) => widths.map((w) => PHOTOS + name + '-' + w + '.webp ' + w + 'w').join(', ');
 
-export const moment = {
-  titleA: 'Step away.',
-  titleB: 'The work keeps moving.',
-  text: 'Aurora answers, books and follows up on every channel, so your people get their time back.',
-  photo: {
-    src: PHOTOS + 'moment-1600.webp',
-    srcSet: srcSet('moment', [960, 1600, 2400]),
-    mobileSrcSet: srcSet('moment-sq', [720, 1080]),
-    alt: 'Three colleagues laughing together on the grass in a sunny park while one of them checks her phone',
-    lqip: 'data:image/webp;base64,UklGRuAAAABXRUJQVlA4INQAAADQBQCdASogABIAPu1gp02ppSMiMAgBMB2JbACnFYzkwPdGaIVPx6SF4vHdd1qolZ+4nr0YX0gAAP7cS9Qqm7G8thbNxuhg2tlt7P7RgzcsgCup7vxO5U1z4SNgACCwo21XEhr/Pi2yda1plwtGeOvac9dho1g6gER9FjwAZ9frjlFl5FV0d23UscS3T7sMK+kem1ni3ifbpRtrAoKkuSvM70BR/OvI3kmB+HC1zB0UaT7hsAYvmptb/rzgyL+DoDG7fXRwE9CbjUjvEP6RtML474AAAA==',
-    lqipMobile: 'data:image/webp;base64,UklGRgwBAABXRUJQVlA4IAABAAAwBgCdASoYABgAPu1qqFAppiOiqA1RMB2JbACdM1dv/i2Jy3mtDQMkSdbjqqQ9YVDlTVem/S38U02AAP6pt7IVuSi5Xq+Mlgx9vN6z0N/jHvGDk4P9B2ST0yGvjBqJ5YQ3OEvmijKbKwmGHYcqNP20icTqPYMiVKeHnVPRgyr/lNapqTrCGqIjtwqkwO7n8k3CjJgNA0zuEX96MdrwX7ZP7pMCmt919zvVxZs/ZnvZVk3stI84ogLjPMPN/jlt8YduOVvtSKh4F5QwSvJBKomI427dSB/iRD96q+UZid6FKp6/0tmO5EE795LWjOIO8e1TlJ9B2HemyHEBqF7LAAAA',
-  },
-  // Illustrative live activity shown over the photo (examples, not customer data).
-  events: [
-    { icon: 'calendar', title: 'Viewing booked', detail: 'Sat 11:00 · 42 Maple St' },
-    { icon: 'message', title: 'New lead answered', detail: 'WhatsApp · 2BR inquiry' },
-    { icon: 'qualified', title: 'Lead qualified', detail: 'Budget, timeline, area' },
-    { icon: 'send', title: 'Follow-up sent', detail: 'Quote · Unit 4B' },
-    { icon: 'service', title: 'Request resolved', detail: 'Appointment moved to Thu' },
-    { icon: 'approval', title: 'Invoice approved', detail: 'Routed to Dana · Finance' },
-    { icon: 'crm', title: 'CRM updated', detail: 'Notes logged after the call' },
-  ],
-};
-
 export const platform = {
   eyebrow: 'Platform',
-  titleA: 'One operating layer.',
-  titleB: 'Between your customers and your systems.',
-  text: 'Aurora sits between the channels your customers use and the systems your team relies on. It understands each request, applies your rules and carries the work through to done.',
+  titleA: 'Most AI talks.',
+  titleB: 'Aurora works.',
+  text: 'Aurora is an AI operating layer between the channels your customers use and the systems your team relies on. It understands each request, applies your rules and carries the work through to done.',
   channels: ['Web chat', 'WhatsApp', 'Voice', 'SMS', 'Email'],
   layers: [
     { name: 'Understand', detail: 'Intent, context and history' },
@@ -240,90 +211,11 @@ export const platform = {
   ],
 };
 
-export const capabilities = [
-  {
-    key: 'understand',
-    index: '01',
-    title: 'Understands the business',
-    text: 'Aurora learns how your company actually operates: what you sell, how a lead becomes a customer, the policies that apply and the exceptions nobody wrote down. Then it shows you the processes it will run.',
-    points: ['Processes', 'Knowledge', 'Rules', 'Systems', 'Exceptions'],
-  },
-  {
-    key: 'work',
-    index: '02',
-    title: 'Does the work',
-    text: 'It answers, qualifies, books, updates records and follows up until the task is closed, inside the tools your team already uses. Real work completed, not summaries handed back to a person.',
-    points: ['Answers', 'Qualifies', 'Books', 'Updates systems', 'Follows up', 'Executes actions'],
-  },
-  {
-    key: 'control',
-    index: '03',
-    title: 'Operates with control',
-    text: 'You decide what Aurora handles alone and what needs a person. Approvals, hand-offs, permissions and limits are built in, and every action is visible and on record.',
-    points: ['Human approvals', 'Hand-offs', 'Permissions', 'Auditability', 'Limits'],
-  },
-];
-
-export const understandVisual = {
-  sources: [
-    { name: 'Price book', kind: 'PDF' },
-    { name: 'Service policies', kind: 'DOC' },
-    { name: 'Website and FAQs', kind: 'WEB' },
-    { name: 'CRM fields', kind: 'CRM' },
-  ],
-  rules: [
-    { kind: 'Rule', text: 'Never quote a final price. Offer a viewing instead.' },
-    { kind: 'Process', text: 'New lead → qualify → book → follow up' },
-    { kind: 'Approval', text: 'Discounts above 5% need a manager' },
-    { kind: 'Exception', text: 'Returning clients skip qualification' },
-    { kind: 'Escalation', text: 'Complaints reach a person within the hour' },
-  ],
-};
-
-export const workVisual = [
-  { t: '09:14', ch: 'WhatsApp', text: 'Answered a question about parking' },
-  { t: '09:14', ch: 'CRM', text: 'Qualified lead · budget, timeline, area' },
-  { t: '09:15', ch: 'Calendar', text: 'Booked a viewing · Sat 11:00 with Dana' },
-  { t: '09:15', ch: 'SMS', text: 'Sent confirmation and directions' },
-  { t: '09:15', ch: 'Tasks', text: 'Created a follow-up · Fri 18:00' },
-  { t: '09:21', ch: 'Voice', text: 'Moved a showing to Monday 10:30' },
-  { t: '09:22', ch: 'CRM', text: 'Logged call notes to the record' },
-  { t: '09:30', ch: 'Email', text: 'Sent the application link' },
-  { t: '09:34', ch: 'Team', text: 'Handed a complaint to Dana with full context' },
-];
-
-export const controlVisual = {
-  title: 'Approval required',
-  item: 'Refund of $340 · Order 4821',
-  reason: 'Above the $250 limit you set',
-  requester: 'Requested by Aurora',
-  approver: 'Dana K. · Operations',
-  permissions: [
-    ['Book and reschedule appointments', 'Allowed'],
-    ['Refunds up to $250', 'Allowed'],
-    ['Refunds above $250', 'Needs approval'],
-    ['Change prices', 'Not allowed'],
-  ],
-  audit: [
-    ['14:12', 'Refund requested', 'Aurora'],
-    ['14:14', 'Approved', 'Dana K.'],
-    ['14:14', 'Refund issued · Order 4821', 'Aurora'],
-  ],
-};
-
-export const demo = {
-  eyebrow: 'Product',
-  titleA: 'Watch Aurora do the work.',
-  titleB: 'Not summarize it.',
-  text: 'One real conversation, start to finish. The customer writes, Aurora answers, and the CRM, calendar and task list update on their own.',
-  note: 'Scripted demo built from typical flows. Names, times and prices are examples.',
-};
-
 export const howItWorks = {
   eyebrow: 'How it works',
   titleA: 'Describe it once.',
-  titleB: 'Aurora configures the rest.',
-  text: 'The setup, configuration and business fit that used to take a project team happen inside one automatic cycle. Your team reviews and approves. It does not build.',
+  titleB: 'Live in days, not months.',
+  text: 'The setup that used to take consultants and developers happens inside one automatic cycle. Aurora configures itself and your team approves. It does not build.',
   steps: [
     { name: 'Describe', text: 'Explain the business in plain language: what you sell, how a lead becomes a customer, what must never happen. Share the documents you already have.' },
     { name: 'Configure', text: 'Aurora builds its own setup: flows, integrations, knowledge, tone of voice and rules. No forms, no consultants.' },
@@ -342,130 +234,6 @@ export const howItWorks = {
     ['Complaint', 'Escalates to a manager'],
   ],
   run: ['Web chat', 'WhatsApp', 'Voice'],
-};
-
-export const speed = {
-  eyebrow: 'Implementation',
-  titleA: 'Live in days.',
-  titleB: 'Not months.',
-  text: 'A traditional AI rollout is a project: discovery, scoping, building, integrating, training, fixing. Aurora compresses it, because the system does the configuring.',
-  traditional: { label: 'Traditional rollout', sub: 'Consultants, developers and a long queue', segs: ['Discovery', 'Scoping', 'Build', 'Integrations', 'Training', 'Fixes'] },
-  aurora: { label: 'With Aurora', sub: 'One AI-driven cycle', segs: ['Describe', 'Configure', 'Adapt', 'Run'] },
-  benefits: [
-    ['Less manual work', 'Setup, configuration and business fit run inside the cycle. People review instead of building.'],
-    ['Fewer people to launch', 'No implementation team on your side. One owner who knows the business is enough.'],
-    ['Value from the first day', 'Value starts on the first live day and compounds as Aurora learns from every interaction.'],
-  ],
-};
-
-// Two more real-life moments between Implementation and Solutions (PhotoDuo.jsx).
-export const duo = {
-  label: 'Aurora at work in the field and at the front desk',
-  items: [
-    {
-      key: 'field',
-      caption: 'On the road, every call still gets answered.',
-      chip: { icon: 'calendar', title: 'Job booked', detail: 'Today 3–5 pm' },
-      mobileAspect: 'aspect-[4/5]',
-      photo: {
-        src: PHOTOS + 'duo-tech-1024.webp',
-        srcSet: srcSet('duo-tech', [640, 1024, 1600]),
-        sizes: '(min-width: 1440px) 760px, (min-width: 768px) 58vw, calc(100vw - 32px)',
-        position: 'object-[40%_50%]',
-        alt: 'A home-services technician smiling at his phone while sitting by his van on a sunny suburban street',
-        lqip: 'data:image/webp;base64,UklGRigBAABXRUJQVlA4IBwBAACwBQCdASoeABgAPu1wsFKppiSiqAgBMB2JaAAIFo6JzX/4WUiWkyWVPOrdXWEzC++wzoHPtAAA/ppGvbfobt/HpbQyymsea6KVb2Ukvu5Payj71a3OPPXb8K6EXbaKGb+I/PPHSSp6cqTl5CGcx5yGWbZWsGuF3z0u32XDSRYD/+GN7YMzluoewsJo59zxfKk0e7AgaJ3obYK3MyEP7OYTsvX2mUXo4SEKPS2VDzAA+JSMP13yNBFUdI/t7J9LppBAe5sSLG7TZ/Tq/lLMTn32sosWCShUCOwB86at5HC67XTiOKQwT6MnUIWGUHG1aBdGC8f/hCWLpPOb6ZMaNpzIHUhxvbMHU/YyxnjFEQynwknQM2yUAeY9XzQAAA==',
-      },
-    },
-    {
-      key: 'desk',
-      caption: 'Front desk time goes back to patients.',
-      chip: { icon: 'service', title: 'Appointment confirmed', detail: 'Thu 2:10 pm' },
-      mobileAspect: 'aspect-[4/5]',
-      photo: {
-        src: PHOTOS + 'duo-clinic-900.webp',
-        srcSet: srcSet('duo-clinic', [560, 900, 1280]),
-        sizes: '(min-width: 1440px) 540px, (min-width: 768px) 41vw, calc(100vw - 32px)',
-        position: 'object-[60%_50%]',
-        alt: 'A clinic receptionist laughing with an older patient at a sunlit front desk surrounded by plants',
-        lqip: 'data:image/webp;base64,UklGRgwBAABXRUJQVlA4IAABAADQBQCdASoYAB4APu1qr1CppaQiqAqpMB2JZgCdBAgR8pvtZtywc6PcVvlCOJw1erFdT0tQECzgAP6vB91T70wxDxBSXGVHWMk08o7Xa/gIOmXtlynOi/8GFdve49o7IIa7mflPGJFMZCDVFwyN/fTePh14Bghj1TBBT+oUa1DWh6o3fAKS4yvWvmWGp/vmkF2xKNQ6fRlI5uQB37OaVxTERBUkygUPudmV1FVOZ6ELig3pEY697z17c0T6gOVK0FO+m2hQ81zwRWJWfAd8huub51+sZWQgyNvR7sbuHUIjtMnpw/F0S+5i9y0wYNSeH8iaVeC0qROZLug7XbGmAAAA',
-      },
-    },
-  ],
-};
-
-export const solutions = {
-  eyebrow: 'Solutions',
-  titleA: 'Made for businesses',
-  titleB: 'where every inquiry counts.',
-  text: 'Each industry has its own problem, its own process and its own value. Aurora does not replace your process. It joins it.',
-  items: [
-    {
-      key: 're',
-      label: 'Real estate',
-      short: 'Answer every lead in seconds, book viewings automatically and follow up until the deal moves.',
-      tone: 'stone',
-      problem: [
-        'Leads arrive around the clock from portals, ads, calls and WhatsApp, and the first agent to answer usually wins.',
-        'Agents spend hours qualifying, scheduling and chasing follow-ups instead of showing properties.',
-      ],
-      fit: [
-        "Connects to your CRM, lead sources and agents' calendars.",
-        'Answers within seconds and qualifies budget, timeline and area.',
-        "Books viewings into the right agent's calendar and confirms the day before.",
-      ],
-      value: [
-        ['Revenue', 'More booked viewings from the same ad spend.'],
-        ['Time', 'First response in seconds instead of hours.'],
-        ['Headcount', 'Agents show properties instead of chasing leads.'],
-        ['Operations', 'Every lead handled the same way, every time.'],
-      ],
-      chips: ['New lead · 2BR Maple St', 'Viewing booked · Sat 11:00', 'Follow-up · Fri 18:00'],
-    },
-    {
-      key: 'hc',
-      label: 'Wellness & Healthcare',
-      short: 'Answer every call, keep the schedule full and give front-desk time back to patients.',
-      tone: 'mist',
-      problem: [
-        'Front desks are overwhelmed: missed calls, long holds and the same questions all day.',
-        'No-shows and late cancellations leave expensive gaps in the schedule.',
-      ],
-      fit: [
-        'Connects to your practice management and scheduling system.',
-        'Schedules, confirms and reschedules appointments on calls and messages.',
-        'Routes urgent cases to staff immediately, with approval on anything sensitive.',
-      ],
-      value: [
-        ['Revenue', 'Fewer empty slots when every appointment is confirmed.'],
-        ['Time', 'Calls answered on the first ring, including after hours.'],
-        ['Headcount', 'Staff focus on patients in the room, not the phone queue.'],
-        ['Operations', 'Consistent intake and reminders across every location.'],
-      ],
-      chips: ['Appointment moved · Thu 2:10 pm', 'Reminder scheduled · SMS', 'Urgent case → front desk'],
-    },
-    {
-      key: 'hs',
-      label: 'Home services',
-      short: 'Capture every job, quote from your price book and keep technicians on the road.',
-      tone: 'dusk',
-      problem: [
-        "Calls come in while the team is on a job, and unanswered calls become someone else's customer.",
-        'Quotes go out late and dispatch gets chaotic when demand spikes.',
-      ],
-      fit: [
-        'Answers every call and message and captures job details and urgency.',
-        'Quotes from your price book, books the job and dispatches it.',
-        'Confirms arrival windows and requests reviews after the job.',
-      ],
-      value: [
-        ['Revenue', 'No missed jobs, faster quotes, more repeat customers.'],
-        ['Time', 'Same-hour quotes instead of end-of-day callbacks.'],
-        ['Headcount', 'The office does not scale with call volume.'],
-        ['Operations', 'Tighter schedules and fewer dispatch errors.'],
-      ],
-      chips: ['Job captured · AC not cooling', 'Technician · today 3–5 pm', 'Review request queued'],
-    },
-  ],
 };
 
 // Agents modeled on real roles, one per team (see Teams.jsx).
@@ -562,6 +330,14 @@ export const closing = {
 
 export const footer = {
   tagline: 'Divine Tech AI builds Aurora, the AI operating layer that runs real business work across every channel.',
+};
+
+// Home page industries section: a card per vertical, each linking to its page.
+export const industriesSection = {
+  eyebrow: 'Industries',
+  titleA: 'Made for businesses',
+  titleB: 'where every inquiry counts.',
+  text: 'Each industry has its own problem, its own process and its own value. Aurora does not replace your process. It joins it.',
 };
 
 // Must match the industry options in public/__forms.html (Netlify Forms).
