@@ -76,4 +76,4 @@ export const SalesforceMark = (p) => <LogoFile src="/img/logos/salesforce.svg" {
 export const StripeMark = (p) => <LogoFile src="/img/logos/stripe.svg" {...p} />;
 export const PayPalMark = (p) => <LogoFile src="/img/logos/paypal.svg" {...p} />;
 export const TeamsMark = (p) => <LogoFile src="/img/logos/microsoft-teams.svg" {...p} />;
-export const ZoomMark = (p) => <LogoFile src="/img/logos/zoom-icon.svg" {...p} />;
+export const ZoomMark = (p) => <LogoFile src="/img/logos/zoom.svg" {...p} />;

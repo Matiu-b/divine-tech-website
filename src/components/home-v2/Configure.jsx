@@ -131,7 +131,7 @@ const MARKS = {
     <TelegramMark key="t" className="h-6 w-6" />,
     <SlackMark key="sl" className="h-6 w-6" />,
   ],
-  pbx: [<TeamsMark key="tm" className="h-6 w-6" />, <ZoomMark key="z" className="h-6 w-6" />],
+  pbx: [<TeamsMark key="tm" className="h-6 w-6" />, <ZoomMark key="z" className="h-4 w-12" />],
   payments: [<StripeMark key="st" className="h-[18px] w-11" />, <PayPalMark key="pp" className="h-6 w-5" />],
 };
 
