@@ -69,8 +69,8 @@ function PlanVisual() {
               {approved ? 'Approved' : 'Draft'}
             </span>
           </div>
-          <div className="hidden grid-cols-[1.6fr_1fr_0.9fr] gap-3 px-4 pb-1 pt-3 text-[10.5px] font-medium text-slate sm:grid">
-            <span>Process</span>
+          <div className="hidden gap-3 px-4 pb-1 pt-3 text-[10.5px] font-medium text-slate sm:grid sm:grid-cols-[1.6fr_1fr_0.9fr]">
+            <span className="pl-8">Process</span>
             <span>Channels</span>
             <span>Owner</span>
           </div>
