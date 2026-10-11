@@ -144,6 +144,11 @@ export default function MappingScene({ t, className = undefined }) {
       </g>
 
       {/* the expert at the board, standing and pointing */}
+      {/* legs and shoes of the standing expert, behind the table */}
+      <rect x="278" y="184" width="21" height="132" rx="9" fill="#2A3640" />
+      <rect x="301" y="184" width="21" height="132" rx="9" fill="#2A3640" />
+      <rect x="272" y="310" width="28" height="10" rx="5" fill="#1C1A18" />
+      <rect x="300" y="310" width="28" height="10" rx="5" fill="#1C1A18" />
       <Person
         x={300}
         y={108}
@@ -164,7 +169,6 @@ export default function MappingScene({ t, className = undefined }) {
           </g>
         }
       />
-      <rect x="276" y="186" width="48" height="80" rx="10" fill="#2A3640" />
 
       {/* the client, seated on the left, nodding along */}
       <Person
