@@ -354,20 +354,20 @@ export const controlVisual = {
 export const howItWorks = {
   eyebrow: 'How it works',
   titleA: 'Live in hours.',
-  titleB: 'Your part is explaining your business.',
-  text: 'No technical project on your side. Our experts and Aurora do the setup, and nothing goes live until you approve it.',
+  titleB: 'Our experts map it with you.',
+  text: 'No technical project on your side. Our experts and AI agents map your business with you and turn it into an action plan for the Aurora engine. Nothing goes live until you approve it.',
   steps: [
     {
-      who: 'You, with our experts',
+      who: 'Our experts, with you',
       tone: 'you',
-      name: 'Tell us how you work',
-      text: 'A precise scoping session with our team of experts, working together with AI. Bring the files you already have, like your price list and policies.',
+      name: 'We map your business',
+      text: 'Our experts and AI agents map how your business works together with you, and build an action plan for the Aurora engine.',
     },
     {
       who: 'Aurora',
       tone: 'aurora',
       name: 'Aurora sets itself up',
-      text: 'It connects to your WhatsApp, phone, Slack, CRM and calendar, learns your services and rules, and builds the flows from what you told us.',
+      text: 'It follows the action plan: connects to your WhatsApp, phone, Slack, CRM and calendar, learns your services and rules, and builds the flows.',
     },
     {
       who: 'You approve',
@@ -377,8 +377,8 @@ export const howItWorks = {
     },
   ],
   split: [
-    ['Your part', 'One scoping session and your approval.'],
-    ['Aurora and our team', 'Setup, connections and testing.'],
+    ['Our experts, with you', 'Mapping the business and the action plan, then your approval.'],
+    ['Aurora', 'Setup, connections and testing, from that plan.'],
   ],
 };
 

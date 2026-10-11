@@ -174,7 +174,7 @@ function GoLive({ it }) {
                 Live in hours.
               </h2>
               <p className="mt-2 max-w-[52ch] text-[14px] leading-relaxed text-graphite">
-                One scoping session with our experts and your approval. {brand.product} and our team do the setup, the connections and the testing.
+                Our experts and AI agents map your business with you and build an action plan for {brand.product}. Then it sets itself up, connects and is tested. You only approve.
               </p>
               <ul className="mt-5 flex flex-wrap gap-2">
                 {it.systems.map((s) => (

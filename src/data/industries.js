@@ -14,7 +14,7 @@ const FAQ_CHANNELS = [
 ];
 const FAQ_LIVE = [
   'How long does it take to go live?',
-  'Within hours. It starts with a scoping session with our team of experts, working together with AI. Aurora then sets itself up and is tested on real examples from your business, and it goes live as soon as you approve.',
+  'Within hours. Our experts and AI agents map your business with you and build an action plan for the Aurora engine. Aurora then sets itself up from that plan, is tested on real examples from your business, and goes live as soon as you approve.',
 ];
 
 export const industries = [
