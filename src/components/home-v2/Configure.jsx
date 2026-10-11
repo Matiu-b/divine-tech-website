@@ -193,7 +193,7 @@ function GoLiveVisual() {
           <div className="grid gap-2 px-4 py-4">
             <p className={cn(bubble, 'rounded-bl-[5px] bg-paper text-ink', t >= 1 ? 'opacity-100' : 'translate-y-1 opacity-0')}>{hiw.test.ask}</p>
             <p className={cn(bubble, 'ml-auto rounded-br-[5px] bg-ink text-white', t >= 2 ? 'opacity-100' : 'translate-y-1 opacity-0')}>{hiw.test.reply}</p>
-            <p className={cn(bubble, 'ml-auto rounded-br-[5px] bg-ink text-white', t >= 3 ? 'opacity-100' : 'translate-y-1 opacity-0')}>{hiw.test.ok}</p>
+            <p className={cn(bubble, 'rounded-bl-[5px] bg-paper text-ink', t >= 3 ? 'opacity-100' : 'translate-y-1 opacity-0')}>{hiw.test.ok}</p>
           </div>
           <div className="flex items-center justify-between border-t border-ink/[0.07] px-4 py-3">
             <span className={cn('text-[13px] font-medium transition-colors duration-500', live ? 'text-brand-ink' : 'text-ink')}>{live ? 'Live on your channels' : 'Go live'}</span>

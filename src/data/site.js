@@ -372,7 +372,7 @@ export const howItWorks = {
     ],
   },
   connect: ['Phone', 'Email', 'Calendar', 'CRM', 'Slack', 'WhatsApp'],
-  test: { ask: 'Can I see the 2-bedroom on Saturday?', reply: 'Yes, 11:00 is open with Dana. Shall I book it?', ok: 'Booked. See you Saturday!' },
+  test: { ask: 'Can I see the 2-bedroom on Saturday?', reply: 'Yes, 11:00 is open with Dana. Shall I book it?', ok: 'Yes, please!' },
 };
 
 // Agents modeled on real roles, one per team (see Teams.jsx).
