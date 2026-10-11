@@ -354,32 +354,16 @@ export const controlVisual = {
 export const howItWorks = {
   eyebrow: 'How it works',
   titleA: 'Live in hours.',
-  titleB: 'Our experts map it with you.',
-  text: 'No technical project on your side. Our experts and AI agents map your business with you and turn it into an action plan for the Aurora engine. Nothing goes live until you approve it.',
+  text: 'No technical project on your side. Nothing goes live until you approve it.',
   steps: [
-    {
-      who: 'Our experts, with you',
-      tone: 'you',
-      name: 'We map your business',
-      text: 'Our experts and AI agents map how your business works together with you, and build an action plan for the Aurora engine.',
-    },
-    {
-      who: 'Aurora',
-      tone: 'aurora',
-      name: 'Aurora sets itself up',
-      text: 'It follows the action plan: connects to your WhatsApp, phone, Slack, CRM and calendar, learns your services and rules, and builds the flows.',
-    },
-    {
-      who: 'You approve',
-      tone: 'you',
-      name: 'Test it, then go live',
-      text: 'See how it answers real examples from your business, change anything you want, and switch it on. Changes later still need your approval.',
-    },
+    { who: 'Our experts, with you', tone: 'you', name: 'We map your business', text: 'Together with our AI agents, into an action plan.' },
+    { who: 'Aurora', tone: 'aurora', name: 'Aurora sets itself up', text: 'It connects your channels and systems from the plan.' },
+    { who: 'You approve', tone: 'you', name: 'Test it, go live', text: 'Try real examples, then switch it on.' },
   ],
-  split: [
-    ['Our experts, with you', 'Mapping the business and the action plan, then your approval.'],
-    ['Aurora', 'Setup, connections and testing, from that plan.'],
-  ],
+  // Illustrative content of the step visuals (examples, not customer data).
+  plan: ['Answer leads on WhatsApp', 'Book viewings in the calendar', 'Discounts need a manager'],
+  connect: ['WhatsApp', 'Phone', 'Slack', 'CRM', 'Calendar'],
+  test: { ask: 'Can I see the flat on Saturday?', reply: 'Yes, 11:00 is free. Shall I book it?' },
 };
 
 // Agents modeled on real roles, one per team (see Teams.jsx).
