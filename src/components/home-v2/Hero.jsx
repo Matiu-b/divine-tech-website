@@ -1,17 +1,17 @@
 import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Play } from 'lucide-react';
-import { hero } from '@/data/site';
+import { useNavigate } from 'react-router-dom';
+import { hero, heroStage } from '@/data/site';
 import CTAButton from './primitives/CTAButton';
 import { RevealLines } from './primitives/MotionReveal';
-import HeroFilm from './HeroFilm';
-import SafeBoundary from './primitives/SafeBoundary';
+import PhotoStage from './PhotoStage';
 import { useLead } from './LeadDrawer';
 import { EASE } from './motion';
-import { onAnchorClick } from './hooks';
 
 export default function Hero() {
   const { open } = useLead();
+  const navigate = useNavigate();
   const reduce = useReducedMotion();
   const rise = (delay) =>
     reduce
@@ -50,9 +50,13 @@ export default function Hero() {
             <CTAButton
               size="lg"
               variant="glass"
-              href="#how-it-works"
+              href="/platform"
               arrow={false}
-              onClick={(e) => onAnchorClick(e, '#how-it-works')}
+              onClick={(e) => {
+                if (e.metaKey || e.ctrlKey || e.shiftKey) return;
+                e.preventDefault();
+                navigate('/platform');
+              }}
               motionProps={fade(0.48)}
               icon={
                 <span className="flex h-6 w-6 items-center justify-center rounded-full bg-ink text-white">
@@ -68,9 +72,7 @@ export default function Hero() {
       </div>
 
       <div className="shell relative mt-10 md:mt-12">
-        <SafeBoundary>
-          <HeroFilm />
-        </SafeBoundary>
+        <PhotoStage photo={heroStage.photo} events={heroStage.events} />
       </div>
     </section>
   );

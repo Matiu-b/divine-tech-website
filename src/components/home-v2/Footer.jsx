@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ArrowUp } from 'lucide-react';
-import { brand, footer, nav } from '@/data/site';
+import { brand, footer, footerLinks } from '@/data/site';
 import { industries, industryPath } from '@/data/industries';
 import { openConsentSettings } from '@/lib/consent';
 import Logo from './primitives/Logo';
@@ -12,7 +12,6 @@ import { scrollToHash } from './hooks';
 export default function Footer() {
   const { open } = useLead();
   useLocation(); // re-render on navigation so SmartLink picks the right behaviour
-  const sections = nav.filter((l) => !l.children);
   const linkClass = 'text-[14px] text-white/75 transition-colors hover:text-white';
   return (
     <footer data-nav-theme="dark" className="on-dark relative bg-ink text-white">
@@ -31,7 +30,7 @@ export default function Footer() {
             <div>
               <p className="text-[12px] font-medium text-white/40">Explore</p>
               <ul className="mt-4 grid gap-2.5">
-                {sections.map((l) => (
+                {footerLinks.map((l) => (
                   <li key={l.href}>
                     <SmartLink href={l.href} className={linkClass}>
                       {l.label}

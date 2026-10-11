@@ -1,4 +1,4 @@
-// Industry landing pages (/industries/:slug). One page per vertical, used as the
+// Industry landing pages (/industries/:slug). `events` feed the live cards over the hero photo. One page per vertical, used as the
 // destination for that vertical's ads and videos.
 // Structure follows the StoryBrand frame from the site review: the customer's
 // problem and what it costs, how Aurora joins the process, where people stay in
@@ -23,7 +23,6 @@ export const industries = [
     key: 're',
     label: 'Real estate',
     leadIndustry: 'Real Estate',
-    scene: 'whatsapp',
     meta: {
       title: 'Aurora for real estate · Answer every lead in seconds | Divine Tech AI',
       description:
@@ -46,6 +45,14 @@ export const industries = [
       ],
       cost: 'Leads you paid for, answered first by someone else.',
     },
+    events: [
+      { icon: 'message', title: 'New lead answered', detail: 'WhatsApp · 2BR inquiry' },
+      { icon: 'qualified', title: 'Lead qualified', detail: 'Budget, timeline, area' },
+      { icon: 'calendar', title: 'Viewing booked', detail: 'Sat 11:00 · 42 Maple St' },
+      { icon: 'crm', title: 'CRM updated', detail: 'Stage: viewing booked' },
+      { icon: 'send', title: 'Reminder sent', detail: 'Fri 18:00 · confirm attendance' },
+      { icon: 'approval', title: 'Fee waiver approved', detail: 'Routed to Dana · Leasing' },
+    ],
     how: {
       titleA: 'Aurora joins your process.',
       titleB: 'It does not replace it.',
@@ -86,7 +93,6 @@ export const industries = [
     key: 'hc',
     label: 'Wellness & Healthcare',
     leadIndustry: 'Wellness & Healthcare',
-    scene: 'webchat',
     meta: {
       title: 'Aurora for wellness & healthcare · Every call answered | Divine Tech AI',
       description:
@@ -109,6 +115,14 @@ export const industries = [
       ],
       cost: 'Empty slots, and a front desk that never gets ahead.',
     },
+    events: [
+      { icon: 'service', title: 'Call answered', detail: 'First ring · after hours' },
+      { icon: 'calendar', title: 'Appointment booked', detail: 'Thu 16:15 · Dr. Patel' },
+      { icon: 'send', title: 'Reminder sent', detail: 'SMS · day before visit' },
+      { icon: 'crm', title: 'Client profile created', detail: 'New client · web chat' },
+      { icon: 'calendar', title: 'Appointment moved', detail: 'Tue → Thu 2:10 pm' },
+      { icon: 'approval', title: 'Handed to front desk', detail: 'Sensitive request · full history' },
+    ],
     how: {
       titleA: 'Aurora joins your front desk.',
       titleB: 'Your team stays with clients.',
@@ -149,7 +163,6 @@ export const industries = [
     key: 'hs',
     label: 'Home services',
     leadIndustry: 'Home Services',
-    scene: 'voice',
     meta: {
       title: 'Aurora for home services · Never miss a job | Divine Tech AI',
       description:
@@ -172,6 +185,14 @@ export const industries = [
       ],
       cost: 'Jobs that went to whoever picked up first.',
     },
+    events: [
+      { icon: 'service', title: 'Call answered', detail: 'Water heater · urgent' },
+      { icon: 'qualified', title: 'Job captured', detail: 'Address, access, urgency' },
+      { icon: 'send', title: 'Quote sent', detail: 'From your price book' },
+      { icon: 'calendar', title: 'Technician booked', detail: 'Today 2–4 pm · Luis' },
+      { icon: 'approval', title: 'Same-day slot approved', detail: 'Routed to dispatch' },
+      { icon: 'message', title: 'Customer updated', detail: 'On-the-way text sent' },
+    ],
     how: {
       titleA: 'Aurora runs the office.',
       titleB: 'Your technicians stay on the road.',

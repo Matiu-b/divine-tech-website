@@ -10,6 +10,7 @@ import ConsentBanner from './components/ConsentBanner';
 import Home from '@/pages/Home';
 import PrivacyPolicy from '@/pages/PrivacyPolicy';
 import IndustryPage from '@/pages/IndustryPage';
+import PlatformPage from '@/pages/PlatformPage';
 
 // Meta PageView on first load and on every client-side route change.
 function MetaPageViews() {
@@ -28,6 +29,7 @@ function App() {
         <MetaPageViews />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/platform" element={<PlatformPage />} />
           <Route path="/industries/:slug" element={<IndustryPage />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="*" element={<PageNotFound />} />

@@ -25,8 +25,8 @@ Divine Tech AI company website (divine-tech.ai). React, Vite and Tailwind CSS, b
 
 ## Pages and Content
 
-- Routes (`src/App.jsx`): `/` (home), `/industries/:slug` (one page per vertical: `real-estate`, `wellness-healthcare`, `home-services`), `/privacy`.
-- `src/data/site.js`: home page copy, contact details and navigation. `src/data/industries.js`: everything on the industry pages (copy, photo, film scene, FAQ). Add an industry there and it appears in the nav menu, the footer, the home page cards and its own page.
+- Routes (`src/App.jsx`): `/` (home), `/platform` (the product in depth; the product film `HeroFilm` appears on this page only), `/industries/:slug` (one page per vertical: `real-estate`, `wellness-healthcare`, `home-services`), `/privacy`.
+- `src/data/site.js`: home page copy, contact details and navigation. `src/data/industries.js`: everything on the industry pages (copy, hero photo and live-feed events, FAQ). Add an industry there and it appears in the nav menu, the footer, the home page cards and its own page.
 - Home and industry pages share `SiteLayout` (nav, footer, demo drawer, per-page title and description). Use `SmartLink` for links: `/#section` scrolls on the home page and routes there from other pages.
 - No performance numbers, customer names or testimonials on the site until they are verified with the team.
 

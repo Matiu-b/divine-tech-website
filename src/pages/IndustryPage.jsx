@@ -6,9 +6,8 @@ import { brand, howItWorks } from '@/data/site';
 import { industries, industryBySlug, industryPath } from '@/data/industries';
 import SiteLayout from '@/components/home-v2/SiteLayout';
 import FinalCTA from '@/components/home-v2/FinalCTA';
-import HeroFilm from '@/components/home-v2/HeroFilm';
+import PhotoStage from '@/components/home-v2/PhotoStage';
 import CTAButton from '@/components/home-v2/primitives/CTAButton';
-import LiquidGlass from '@/components/home-v2/primitives/LiquidGlass';
 import SafeBoundary from '@/components/home-v2/primitives/SafeBoundary';
 import SectionHeader from '@/components/home-v2/primitives/SectionHeader';
 import SmartLink from '@/components/home-v2/primitives/SmartLink';
@@ -60,7 +59,7 @@ function IndustryHero({ it }) {
       </div>
       <div className="shell relative mt-10 md:mt-12">
         <SafeBoundary>
-          <HeroFilm startScene={it.scene} />
+          <PhotoStage photo={it.how.photo} events={it.events} />
         </SafeBoundary>
       </div>
     </section>
@@ -94,63 +93,27 @@ function Problem({ it }) {
   );
 }
 
-/** How Aurora joins the process (StoryBrand: the plan), with the scene shown on a photo. */
+/** How Aurora joins the process (StoryBrand: the plan). */
 function How({ it }) {
-  const reduce = useReducedMotion();
   return (
     <section id="how" data-nav-theme="light" aria-labelledby="ind-how-title" className="section relative">
       <div className="shell">
         <SectionHeader id="ind-how-title" eyebrow={'How ' + brand.product + ' works'} titleA={it.how.titleA} titleB={it.how.titleB} layout="split" />
-        <div className="mt-12 grid gap-10 md:mt-16 lg:grid-cols-12 lg:gap-12">
-          <div className="lg:col-span-6">
-            {it.how.steps.map(([title, text], i) => (
-              <Reveal key={title} delay={i * 0.05}>
-                <div className="grid grid-cols-[40px_1fr] gap-4 border-t border-ink/10 py-6 md:py-7">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-ink text-[12px] font-medium tabular-nums text-white">{i + 1}</span>
-                  <div>
-                    <h3 className="t-h4">{title}</h3>
-                    <p className="mt-1.5 max-w-[46ch] text-[14px] leading-relaxed text-graphite">{text}</p>
-                  </div>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-          <Reveal y={36} className="lg:col-span-6">
-            <div className="relative aspect-[4/4.4] overflow-hidden rounded-[clamp(22px,2.4vw,32px)] bg-paper-2 sm:aspect-[4/3.6] lg:sticky lg:top-28 lg:aspect-[4/4.6]">
-              <img
-                src={it.how.photo.src}
-                srcSet={it.how.photo.srcSet}
-                sizes="(min-width: 1024px) 600px, calc(100vw - 40px)"
-                alt={it.how.photo.alt}
-                loading="lazy"
-                decoding="async"
-                className="absolute inset-0 h-full w-full object-cover"
-              />
-              <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-ink/35 to-transparent" />
-              <motion.ul
-                className="absolute bottom-4 left-4 right-4 grid max-w-[320px] gap-2 xs:bottom-6 xs:left-6"
-                initial="hidden"
-                whileInView="show"
-                viewport={{ once: true, amount: 0.4 }}
-                variants={{ hidden: {}, show: { transition: { staggerChildren: 0.18, delayChildren: 0.2 } } }}
-              >
-                {it.how.chips.map((c) => (
-                  <LiquidGlass
-                    key={c}
-                    as={motion.li}
-                    variants={{ hidden: { opacity: 0, y: reduce ? 0 : 10 }, show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE } } }}
-                    className="flex items-center gap-2.5 rounded-[14px] px-3 py-2.5 text-[12.5px] font-medium text-ink"
-                  >
-                    <span className="flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full bg-brand text-white">
-                      <Check className="h-3 w-3" strokeWidth={3} aria-hidden="true" />
-                    </span>
-                    <span className="truncate">{c}</span>
-                  </LiquidGlass>
-                ))}
-              </motion.ul>
-            </div>
-          </Reveal>
-        </div>
+        <RevealGroup className="mt-12 grid gap-4 sm:grid-cols-2 md:mt-16 lg:grid-cols-4" amount={0.15}>
+          {it.how.steps.map(([title, text], i) => (
+            <RevealItem key={title} className="flex flex-col rounded-[24px] bg-white p-6 shadow-[0_0_0_1px_rgba(10,15,14,0.06)] md:p-7">
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-ink text-[12px] font-medium tabular-nums text-white">{i + 1}</span>
+              <h3 className="t-h4 mt-6">{title}</h3>
+              <p className="mt-2 text-[14px] leading-relaxed text-graphite">{text}</p>
+              <p className="mt-auto flex items-center gap-2 pt-6 text-[12px] font-medium text-ink">
+                <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-brand text-white">
+                  <Check className="h-2.5 w-2.5" strokeWidth={3} aria-hidden="true" />
+                </span>
+                {it.how.chips[i] || it.how.chips[it.how.chips.length - 1]}
+              </p>
+            </RevealItem>
+          ))}
+        </RevealGroup>
       </div>
     </section>
   );

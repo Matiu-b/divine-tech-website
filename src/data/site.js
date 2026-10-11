@@ -28,10 +28,17 @@ export const legal = {
 // Primary navigation. `href` values starting with '/#' are sections of the home page;
 // an item with `children` opens a menu (Industries lists the pages in src/data/industries.js).
 export const nav = [
-  { href: '/#platform', label: 'Platform' },
-  { href: '/#how-it-works', label: 'How it works' },
+  { href: '/platform', label: 'Platform' },
   { label: 'Industries', children: 'industries' },
-  { href: '/#security', label: 'Security' },
+  { href: '/#how-it-works', label: 'How it works' },
+];
+
+// Footer "Explore" column.
+export const footerLinks = [
+  { href: '/platform', label: 'Platform' },
+  { href: '/#how-it-works', label: 'How it works' },
+  { href: '/platform#teams', label: 'Teams' },
+  { href: '/platform#security', label: 'Security' },
 ];
 
 /*
@@ -53,7 +60,7 @@ export const hero = {
   titleB: 'Your team runs the business.',
   text: 'Every inquiry answered in seconds, on WhatsApp, phone, email and web. Bookings made, records updated and follow-ups sent inside the systems you already use, with your approval on what matters.',
   primary: 'Book a demo',
-  secondary: 'See how it works',
+  secondary: 'See it in action',
 };
 
 // Hero film: the same request flow on four channels (illustrative scenarios,
@@ -186,11 +193,34 @@ export const heroFilm = {
 const PHOTOS = '/img/photos/';
 const srcSet = (name, widths) => widths.map((w) => PHOTOS + name + '-' + w + '.webp ' + w + 'w').join(', ');
 
+// Home hero visual: a real-life moment with Aurora's work arriving as a live feed (PhotoStage.jsx).
+export const heroStage = {
+  photo: {
+    src: PHOTOS + 'moment-1600.webp',
+    srcSet: srcSet('moment', [960, 1600, 2400]),
+    mobileSrcSet: srcSet('moment-sq', [720, 1080]),
+    alt: 'Three colleagues laughing together on the grass in a sunny park while one of them checks her phone',
+    lqip: 'data:image/webp;base64,UklGRuAAAABXRUJQVlA4INQAAADQBQCdASogABIAPu1gp02ppSMiMAgBMB2JbACnFYzkwPdGaIVPx6SF4vHdd1qolZ+4nr0YX0gAAP7cS9Qqm7G8thbNxuhg2tlt7P7RgzcsgCup7vxO5U1z4SNgACCwo21XEhr/Pi2yda1plwtGeOvac9dho1g6gER9FjwAZ9frjlFl5FV0d23UscS3T7sMK+kem1ni3ifbpRtrAoKkuSvM70BR/OvI3kmB+HC1zB0UaT7hsAYvmptb/rzgyL+DoDG7fXRwE9CbjUjvEP6RtML474AAAA==',
+    lqipMobile: 'data:image/webp;base64,UklGRgwBAABXRUJQVlA4IAABAAAwBgCdASoYABgAPu1qqFAppiOiqA1RMB2JbACdM1dv/i2Jy3mtDQMkSdbjqqQ9YVDlTVem/S38U02AAP6pt7IVuSi5Xq+Mlgx9vN6z0N/jHvGDk4P9B2ST0yGvjBqJ5YQ3OEvmijKbKwmGHYcqNP20icTqPYMiVKeHnVPRgyr/lNapqTrCGqIjtwqkwO7n8k3CjJgNA0zuEX96MdrwX7ZP7pMCmt919zvVxZs/ZnvZVk3stI84ogLjPMPN/jlt8YduOVvtSKh4F5QwSvJBKomI427dSB/iRD96q+UZid6FKp6/0tmO5EE795LWjOIO8e1TlJ9B2HemyHEBqF7LAAAA',
+  },
+  // Illustrative live activity shown over the photo (examples, not customer data).
+  events: [
+    { icon: 'calendar', title: 'Viewing booked', detail: 'Sat 11:00 · 42 Maple St' },
+    { icon: 'message', title: 'New lead answered', detail: 'WhatsApp · 2BR inquiry' },
+    { icon: 'qualified', title: 'Lead qualified', detail: 'Budget, timeline, area' },
+    { icon: 'send', title: 'Follow-up sent', detail: 'Quote · Unit 4B' },
+    { icon: 'service', title: 'Request resolved', detail: 'Appointment moved to Thu' },
+    { icon: 'approval', title: 'Invoice approved', detail: 'Routed to Dana · Finance' },
+    { icon: 'crm', title: 'CRM updated', detail: 'Notes logged after the call' },
+  ],
+};
+
 export const platform = {
   eyebrow: 'Platform',
-  titleA: 'Most AI talks.',
-  titleB: 'Aurora works.',
-  text: 'Aurora is an AI operating layer between the channels your customers use and the systems your team relies on. It understands each request, applies your rules and carries the work through to done.',
+  titleA: 'One operating layer.',
+  titleB: 'Between your customers and your systems.',
+  text: 'Aurora sits between the channels your customers use and the systems your team relies on. It understands each request, applies your rules and carries the work through to done.',
+  link: 'Explore the platform',
   channels: ['Web chat', 'WhatsApp', 'Voice', 'SMS', 'Email'],
   layers: [
     { name: 'Understand', detail: 'Intent, context and history' },
@@ -208,6 +238,78 @@ export const platform = {
     ['One context, every channel', 'A conversation that starts on WhatsApp and continues by phone stays one conversation, with its full history.'],
     ['Your rules on every decision', 'Policies, limits and exceptions are applied the same way at 3 pm and at 3 am.'],
     ['Real actions in real systems', 'Aurora updates the CRM, books the slot and creates the task, instead of leaving a summary for someone else.'],
+  ],
+};
+
+// Platform page: what Aurora does, in three capabilities (Capabilities.jsx).
+export const capabilities = [
+  {
+    key: 'understand',
+    index: '01',
+    title: 'Understands the business',
+    text: 'Aurora learns how your company actually operates: what you sell, how a lead becomes a customer, the policies that apply and the exceptions nobody wrote down. Then it shows you the processes it will run.',
+    points: ['Processes', 'Knowledge', 'Rules', 'Systems', 'Exceptions'],
+  },
+  {
+    key: 'work',
+    index: '02',
+    title: 'Does the work',
+    text: 'It answers, qualifies, books, updates records and follows up until the task is closed, inside the tools your team already uses. Real work completed, not summaries handed back to a person.',
+    points: ['Answers', 'Qualifies', 'Books', 'Updates systems', 'Follows up', 'Executes actions'],
+  },
+  {
+    key: 'control',
+    index: '03',
+    title: 'Operates with control',
+    text: 'You decide what Aurora handles alone and what needs a person. Approvals, hand-offs, permissions and limits are built in, and every action is visible and on record.',
+    points: ['Human approvals', 'Hand-offs', 'Permissions', 'Auditability', 'Limits'],
+  },
+];
+
+export const understandVisual = {
+  sources: [
+    { name: 'Price book', kind: 'PDF' },
+    { name: 'Service policies', kind: 'DOC' },
+    { name: 'Website and FAQs', kind: 'WEB' },
+    { name: 'CRM fields', kind: 'CRM' },
+  ],
+  rules: [
+    { kind: 'Rule', text: 'Never quote a final price. Offer a viewing instead.' },
+    { kind: 'Process', text: 'New lead → qualify → book → follow up' },
+    { kind: 'Approval', text: 'Discounts above 5% need a manager' },
+    { kind: 'Exception', text: 'Returning clients skip qualification' },
+    { kind: 'Escalation', text: 'Complaints reach a person within the hour' },
+  ],
+};
+
+export const workVisual = [
+  { t: '09:14', ch: 'WhatsApp', text: 'Answered a question about parking' },
+  { t: '09:14', ch: 'CRM', text: 'Qualified lead · budget, timeline, area' },
+  { t: '09:15', ch: 'Calendar', text: 'Booked a viewing · Sat 11:00 with Dana' },
+  { t: '09:15', ch: 'SMS', text: 'Sent confirmation and directions' },
+  { t: '09:15', ch: 'Tasks', text: 'Created a follow-up · Fri 18:00' },
+  { t: '09:21', ch: 'Voice', text: 'Moved a showing to Monday 10:30' },
+  { t: '09:22', ch: 'CRM', text: 'Logged call notes to the record' },
+  { t: '09:30', ch: 'Email', text: 'Sent the application link' },
+  { t: '09:34', ch: 'Team', text: 'Handed a complaint to Dana with full context' },
+];
+
+export const controlVisual = {
+  title: 'Approval required',
+  item: 'Refund of $340 · Order 4821',
+  reason: 'Above the $250 limit you set',
+  requester: 'Requested by Aurora',
+  approver: 'Dana K. · Operations',
+  permissions: [
+    ['Book and reschedule appointments', 'Allowed'],
+    ['Refunds up to $250', 'Allowed'],
+    ['Refunds above $250', 'Needs approval'],
+    ['Change prices', 'Not allowed'],
+  ],
+  audit: [
+    ['14:12', 'Refund requested', 'Aurora'],
+    ['14:14', 'Approved', 'Dana K.'],
+    ['14:14', 'Refund issued · Order 4821', 'Aurora'],
   ],
 };
 
@@ -326,6 +428,20 @@ export const closing = {
   titleA: 'See Aurora run',
   titleB: 'on your business.',
   text: 'Bring one real process. We describe it together, and you watch the system configure itself.',
+};
+
+// Platform page (/platform): the product in depth. The product film lives here only.
+export const platformPage = {
+  meta: {
+    title: 'Aurora platform · AI agents that do the work | Divine Tech AI',
+    description:
+      'See Aurora work: one conversation on WhatsApp, voice, web chat or email becomes a booked appointment, an updated CRM and a follow-up, with people approving what matters and every step on record.',
+  },
+  eyebrow: 'Platform',
+  titleA: 'Most AI talks.',
+  titleB: 'Aurora works.',
+  text: 'Answers are where the job starts, not where it ends. Aurora books the appointment, updates the record, sends the follow-up and brings in a person when the moment calls for one. Watch one request go from first message to done.',
+  note: 'Scripted demo built from typical flows. Names, times and prices are examples.',
 };
 
 export const footer = {

@@ -3,7 +3,9 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { BookOpen, CalendarDays, Database, ListChecks, Mail, MessageCircle, MessageSquare, Phone, Smartphone, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { brand, platform } from '@/data/site';
+import { useNavigate } from 'react-router-dom';
 import SectionHeader from './primitives/SectionHeader';
+import CTAButton from './primitives/CTAButton';
 import { Reveal, RevealGroup, RevealItem } from './primitives/MotionReveal';
 import { useInViewport, usePageVisible } from './hooks';
 import { EASE } from './motion';
@@ -94,6 +96,12 @@ function Node({ icon: Icon, label, detail = undefined, active = false, className
 }
 
 export default function Platform() {
+  const navigate = useNavigate();
+  const goTo = (e, to) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
+    e.preventDefault();
+    navigate(to);
+  };
   const ref = useRef(null);
   const reduce = useReducedMotion();
   const visible = usePageVisible();
@@ -211,6 +219,13 @@ export default function Platform() {
             </RevealGroup>
           </div>
         </Reveal>
+        {platform.link ? (
+          <Reveal className="mt-8 flex justify-center">
+            <CTAButton href="/platform" variant="primary" size="lg" onClick={(e) => goTo(e, '/platform')}>
+              {platform.link}
+            </CTAButton>
+          </Reveal>
+        ) : null}
       </div>
     </section>
   );
