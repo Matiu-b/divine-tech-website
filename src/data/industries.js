@@ -70,7 +70,7 @@ export const industries = [
         srcSet: srcSet('re-viewing', [640, 960, 1376]),
         alt: 'A real-estate agent holding keys and a tablet, showing a young couple around a bright, newly staged apartment',
         // keep the agent and the couple in frame when the photo is cropped tall on phones
-        position: 'object-[30%_45%]',
+        position: 'object-[15%_45%]',
       },
     },
     control: {
