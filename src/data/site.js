@@ -57,8 +57,8 @@ export const media = {
 export const hero = {
   // Category headline under a small "Aurora AI OS" lockup (centered, in the spirit of wonderful.ai).
   lockup: 'AI OS',
-  titleA: 'The AI operating system',
-  titleB: 'for modern business',
+  titleA: 'The AI operating system for modern business',
+  titleB: undefined,
   text: 'AI agents that do the work, inside the tools you already use.',
   primary: 'Book a demo',
   secondary: 'See it in action',
