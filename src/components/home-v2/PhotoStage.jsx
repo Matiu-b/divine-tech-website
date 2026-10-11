@@ -101,14 +101,15 @@ export default function PhotoStage({ photo, events, caption = undefined, classNa
   const inView = useInViewport(ref, { threshold: 0.2 });
   const wide = useMediaQuery('(min-width: 640px)');
   const width = useWidth(ref);
-  // New cards arrive on top and push the earlier ones down: three where there is room, two on small phones.
-  const slots = width === 0 || width >= 360 ? 3 : 2;
+  // New cards arrive on top and push the earlier ones down: three on wide photos, two on phones
+  // (so the people and the caption stay visible).
+  const slots = width === 0 || width >= 600 ? 3 : 2;
 
   return (
     <Reveal y={40} amount={0.05} className={className}>
       <figure
         ref={ref}
-        className="canvas relative m-0 aspect-[4/4.4] bg-cover bg-center sm:aspect-[4/3] lg:aspect-[16/8.6]"
+        className="canvas relative m-0 aspect-[4/5] bg-cover bg-center sm:aspect-[4/3] lg:aspect-[16/8.6]"
         style={photo.lqip ? { backgroundImage: 'url(' + (wide || !photo.lqipMobile ? photo.lqip : photo.lqipMobile) + ')' } : undefined}
       >
         <picture>
