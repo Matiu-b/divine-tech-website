@@ -224,9 +224,9 @@ export default function MappingScene({ t, className = undefined }) {
 
       {/* label for the AI agent */}
       <g className="transition-opacity duration-500" opacity={t > 0 ? 1 : 0}>
-        <rect x="196" y="282" width="148" height="26" rx="13" fill="#fff" stroke={INK} strokeOpacity="0.08" />
-        <circle cx="212" cy="295" r="4" fill="#14A36B" />
-        <text x="222" y="299" fontSize="10.5" fill={INK} fontFamily="inherit">AI agent mapping along</text>
+        <rect x="166" y="281" width="208" height="28" rx="14" fill="#fff" stroke={INK} strokeOpacity="0.08" />
+        <circle cx="183" cy="295" r="4" fill="#14A36B" />
+        <text x="194" y="299" fontSize="10.5" fill={INK} fontFamily="inherit" textLength="166" lengthAdjust="spacing">AI agent mapping along</text>
       </g>
     </svg>
   );
