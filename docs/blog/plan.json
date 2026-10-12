@@ -25,17 +25,6 @@
   "queue": [
     {
       "status": "queued",
-      "cluster": "ai-os",
-      "type": "support",
-      "topic": "AI agents vs chatbots vs RPA: what each one actually does in a business",
-      "angle": "Architecture-level comparison: memory, decisions, actions in systems, failure modes. Diagram-style table.",
-      "link_to": [
-        "/blog/ai-operating-system-for-business",
-        "/platform"
-      ]
-    },
-    {
-      "status": "queued",
       "cluster": "trends",
       "type": "trend",
       "topic": "When your customer's AI agent calls your business: getting ready for agent-to-agent service",
@@ -43,6 +32,17 @@
       "link_to": [
         "/platform",
         "/blog/ai-operating-system-for-business"
+      ]
+    },
+    {
+      "status": "queued",
+      "cluster": "ai-os",
+      "type": "support",
+      "topic": "AI agents vs chatbots vs RPA: what each one actually does in a business",
+      "angle": "Architecture-level comparison: memory, decisions, actions in systems, failure modes. Diagram-style table.",
+      "link_to": [
+        "/blog/ai-operating-system-for-business",
+        "/platform"
       ]
     },
     {
