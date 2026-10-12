@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useReducedMotion } from 'framer-motion';
-import { BookOpen, CalendarDays, Database, Hash, ListChecks, Mail, MessageCircle, MessageSquare, Phone, Smartphone, Users } from 'lucide-react';
+import { motion, useReducedMotion } from 'framer-motion';
+import { BookOpen, CalendarDays, Check, Database, Hash, ListChecks, Mail, MessageCircle, MessageSquare, Phone, Smartphone, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { brand, platform } from '@/data/site';
 import { useNavigate } from 'react-router-dom';
@@ -8,6 +8,7 @@ import SectionHeader from './primitives/SectionHeader';
 import CTAButton from './primitives/CTAButton';
 import { Reveal, RevealGroup, RevealItem } from './primitives/MotionReveal';
 import { useInViewport, usePageVisible } from './hooks';
+import { EASE } from './motion';
 
 const CH_ICONS = [Phone, Smartphone, MessageSquare, Mail, MessageCircle, Hash];
 const SYS_ICONS = [Database, CalendarDays, ListChecks, BookOpen, Users];
@@ -202,172 +203,122 @@ export default function Platform() {
   );
 }
 
-
-/*
- * Phone and tablet view: Aurora as the operating system of the company. Its core sits in the
- * middle with the departments around it. A request arrives, from a customer or from your own
- * team; the core's three cut arcs light in turn (understand, decide, act) and a ray reaches into
- * the department that owns the work, like the rays in the Aurora symbol. Then the result.
- */
-const VB = { w: 320, h: 250 };
-const C = { x: 160, y: 122 };
-const DEPT_AT = [-90, -18, 54, 126, 198].map((deg) => {
-  const r = (deg * Math.PI) / 180;
-  return { x: C.x + 104 * Math.cos(r), y: C.y + 90 * Math.sin(r), deg };
-});
-const CORE_ARCS = [
-  [-80, -10],
-  [40, 110],
-  [160, 230],
-];
-const polar = (deg, r) => [C.x + r * Math.cos((deg * Math.PI) / 180), C.y + r * Math.sin((deg * Math.PI) / 180)];
-const arcPath = (from, to, r) => {
-  const [x1, y1] = polar(from, r);
-  const [x2, y2] = polar(to, r);
-  return `M${x1.toFixed(1)} ${y1.toFixed(1)} A${r} ${r} 0 0 1 ${x2.toFixed(1)} ${y2.toFixed(1)}`;
-};
-const PHASE_TEXT = ['', 'Understanding', 'Deciding', 'Acting', 'Done', 'Done'];
-const PHASES = 6; // 0 request · 1 understand · 2 decide · 3 act · 4-5 done
-
-/** @param {{ phase: number, dept: number, still: boolean }} props */
-function OrgMap({ phase, dept, still }) {
-  const layer = phase >= 1 && phase <= 3 ? phase - 1 : phase >= 4 ? 3 : -1;
-  const reaching = phase >= 3;
-  const target = DEPT_AT[dept];
-  const [rx, ry] = polar(target.deg, 55);
+/** A short vertical link with a pulse travelling down it. */
+function Link({ on }) {
+  const reduce = useReducedMotion();
   return (
-    <svg viewBox={`0 0 ${VB.w} ${VB.h}`} className="block h-auto w-full" role="img" aria-label="Aurora at the centre of the company, working inside sales, service, operations, finance and people">
-      <defs>
-        <radialGradient id="org-core" cx="0.38" cy="0.32" r="0.8">
-          <stop offset="0" stopColor="#FFD98A" />
-          <stop offset="0.55" stopColor="#FF9F45" />
-          <stop offset="1" stopColor="#F25C2A" />
-        </radialGradient>
-        <linearGradient id="org-ray" gradientUnits="userSpaceOnUse" x1={rx} y1={ry} x2={target.x} y2={target.y}>
-          <stop offset="0" stopColor="#FF9F45" />
-          <stop offset="1" stopColor="#F25C2A" />
-        </linearGradient>
-      </defs>
-
-      {/* quiet spokes: Aurora is present in every department */}
-      {DEPT_AT.map((d, i) => {
-        const [sx, sy] = polar(d.deg, 55);
-        return <line key={i} x1={sx} y1={sy} x2={d.x} y2={d.y} stroke="#0A0F0E" strokeOpacity="0.08" strokeWidth="1" strokeDasharray="2 4" />;
-      })}
-
-      {/* the ray reaching into the department doing the work */}
-      <line
-        key={dept + '-' + reaching}
-        x1={rx}
-        y1={ry}
-        x2={target.x}
-        y2={target.y}
-        stroke="url(#org-ray)"
-        strokeWidth="3"
-        strokeLinecap="round"
-        pathLength={1}
-        strokeDasharray="1 1"
-        strokeDashoffset={reaching ? 0 : 1}
-        style={{ transition: still ? undefined : 'stroke-dashoffset 600ms cubic-bezier(0.22,1,0.36,1)' }}
-      />
-
-      {/* departments */}
-      {DEPT_AT.map((d, i) => {
-        const on = i === dept && reaching;
-        const top = d.y < C.y - 40;
-        return (
-          <g key={i}>
-            <circle cx={d.x} cy={d.y} r={on ? 7 : 5} fill={on ? '#F25C2A' : '#fff'} stroke={on ? '#F25C2A' : '#0A0F0E'} strokeOpacity={on ? 1 : 0.25} strokeWidth="1.5" style={{ transition: 'all 400ms ease' }} />
-            <text
-              x={d.x}
-              y={top ? d.y - 14 : d.y + 23}
-              textAnchor="middle"
-              fontSize="12.5"
-              fontFamily="inherit"
-              fontWeight={on ? 500 : 400}
-              fill="#0A0F0E"
-              fillOpacity={on ? 1 : 0.5}
-              style={{ transition: 'fill-opacity 400ms ease' }}
-            >
-              {platform.departments[i]}
-            </text>
-          </g>
-        );
-      })}
-
-      {/* Aurora's core: sun, ring, and the outer ring cut into three (understand, decide, act) */}
-      <circle cx={C.x} cy={C.y} r="27" fill="url(#org-core)" />
-      <circle cx={C.x} cy={C.y} r="37" fill="none" stroke="#FF9F45" strokeOpacity="0.7" strokeWidth="2" />
-      {CORE_ARCS.map(([from, to], i) => {
-        const on = i === layer;
-        const lit = i <= layer;
-        return (
-          <path
-            key={i}
-            d={arcPath(from, to, 48)}
-            fill="none"
-            stroke={lit ? '#F25C2A' : '#FFC857'}
-            strokeOpacity={lit ? 1 : 0.55}
-            strokeWidth={on ? 6 : 3}
-            strokeLinecap="round"
-            style={{ transition: 'stroke 400ms ease, stroke-width 400ms ease, stroke-opacity 400ms ease' }}
-          />
-        );
-      })}
-      <text x={C.x} y={C.y + 3.5} textAnchor="middle" fontSize="10" fontWeight="500" fontFamily="inherit" fill="#fff">
-        {brand.product}
-      </text>
-      <text x={C.x} y={C.y + 72} textAnchor="middle" fontSize="10.5" fontFamily="inherit" fill="#9A5A1E" style={{ opacity: PHASE_TEXT[phase] ? 1 : 0, transition: 'opacity 300ms ease' }}>
-        {PHASE_TEXT[phase] || ' '}
-      </text>
-    </svg>
+    <span aria-hidden="true" className="relative mx-auto my-1.5 block h-5 w-px overflow-hidden bg-ink/10">
+      {!reduce && on ? (
+        <motion.span
+          className="absolute left-0 top-0 block h-3 w-px bg-brand"
+          initial={{ y: -12 }}
+          animate={{ y: 20 }}
+          transition={{ duration: 0.7, repeat: Infinity, ease: EASE, repeatDelay: 0.3 }}
+        />
+      ) : null}
+    </span>
   );
 }
 
+/** A row of icon tiles; the one in use is dark. @param {any} props */
+function IconRow({ label, items, icons, active }) {
+  return (
+    <div>
+      <p className="text-center text-[11.5px] font-medium text-slate">{label}</p>
+      <ul className="mt-2 flex justify-center gap-1.5 xs:gap-2">
+        {items.map((name, i) => {
+          const Icon = icons[i];
+          const on = i === active;
+          return (
+            <li
+              key={name}
+              title={name}
+              className={cn(
+                'flex h-10 w-10 items-center justify-center rounded-[12px] border transition-colors duration-500 xs:h-11 xs:w-11',
+                on ? 'border-ink bg-ink text-white' : 'border-ink/[0.08] bg-paper text-ink/70'
+              )}
+            >
+              <Icon className="h-4 w-4" strokeWidth={1.8} aria-hidden="true" />
+              <span className="sr-only">{name}</span>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+/**
+ * The platform story for phones and tablets, sized to fit one screen: a request arrives on a
+ * channel, Aurora understands, decides and acts, and the work lands in one of your systems.
+ */
 function StoryCompact() {
   const ref = useRef(null);
   const reduce = useReducedMotion();
   const visible = usePageVisible();
   const inView = useInViewport(ref, { threshold: 0.3 });
   const [step, setStep] = useState(0);
+  const PHASES = 5; // 0 ask · 1 understand · 2 decide · 3 act · 4 done
   useEffect(() => {
     if (reduce || !inView || !visible) return undefined;
-    const id = window.setInterval(() => setStep((n) => n + 1), 950);
+    const id = window.setInterval(() => setStep((n) => n + 1), 900);
     return () => window.clearInterval(id);
   }, [reduce, inView, visible]);
-  const n = Math.floor(step / PHASES) % platform.examples.length;
-  const ex = platform.examples[n];
+  const ex = platform.examples[Math.floor(step / PHASES) % platform.examples.length];
   const phase = reduce ? 4 : step % PHASES;
-  const Icon = CH_ICONS[ex.ch];
-  const team = ex.from !== 'Customer';
-  const done = phase >= 4;
+  const layer = phase >= 1 && phase <= 3 ? phase - 1 : -1;
+  const sysName = platform.systems[ex.sys].name;
   return (
-    <div ref={ref} className="mx-auto max-w-[400px]">
-      {/* the request, from a customer or from your own team */}
-      <div className={cn('flex gap-3', team && 'flex-row-reverse text-right')}>
-        <span className={cn('mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full', team ? 'bg-ink text-white' : 'bg-paper text-ink')}>
-          <Icon className="h-3.5 w-3.5" strokeWidth={1.9} aria-hidden="true" />
-        </span>
-        <div className="min-w-0">
-          <p className="text-[11.5px] text-slate">
-            {ex.from}, by {platform.channels[ex.ch]}
-          </p>
-          <p key={n} className="mt-1 text-[15px] leading-snug text-ink">
-            {ex.ask}
-          </p>
-        </div>
-      </div>
+    <div ref={ref} className="mx-auto max-w-[440px]">
+      <IconRow label="Channels" items={platform.channels} icons={CH_ICONS} active={ex.ch} />
 
-      <div className="-mx-2 mt-2">
-        <OrgMap phase={phase} dept={ex.dept} still={!!reduce} />
-      </div>
-
-      {/* the result, in the system where it happened */}
-      <div className={cn('flex items-baseline justify-between gap-3 border-t pt-3 transition-colors duration-500', done ? 'border-[#F25C2A]/40' : 'border-ink/10')}>
-        <p className={cn('min-w-0 text-[14px] leading-snug transition-colors duration-500', done ? 'text-ink' : 'text-ink/35')}>
-          {done ? ex.done : 'Working on it'}
+      <div className="mt-3 rounded-[16px] rounded-bl-[6px] bg-paper px-3.5 py-2.5">
+        <p className="flex justify-between gap-3 text-[11px] text-slate">
+          <span>
+            {ex.from} · {platform.channels[ex.ch]}
+          </span>
+          <span className="text-ink/70">{ex.dept}</span>
         </p>
-        <p className="shrink-0 text-[11.5px] text-slate">{ex.sys}</p>
+        <p className="mt-0.5 text-[13.5px] leading-snug text-ink">{ex.ask}</p>
+      </div>
+
+      <Link on={phase >= 1} />
+
+      <div className="relative overflow-hidden rounded-[18px] bg-ink px-4 py-3.5 text-white">
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(90%_70%_at_50%_0%,rgba(60,224,154,0.18),rgba(60,224,154,0)_70%)]" />
+        <div className="relative flex items-baseline justify-between gap-3">
+          <p className="text-[17px] leading-none tracking-[-0.02em]">{brand.product}</p>
+          <p className="text-[11px] text-white/45">AI operating system</p>
+        </div>
+        <ol className="relative mt-3 grid grid-cols-3 gap-1.5">
+          {platform.layers.map((l, i) => (
+            <li
+              key={l.name}
+              className={cn(
+                'rounded-[10px] border px-1 py-2 text-center text-[11px] font-medium tracking-[-0.01em] transition-colors duration-500 xs:text-[12px]',
+                i === layer ? 'border-brand-glow/50 bg-brand-glow/15 text-white' : i < layer || phase === 4 ? 'border-white/[0.08] bg-white/[0.06] text-white/70' : 'border-white/[0.06] bg-transparent text-white/40'
+              )}
+            >
+              {l.name}
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      <Link on={phase >= 3} />
+
+      <IconRow label="Your systems" items={platform.systems.map((x) => x.name)} icons={SYS_ICONS} active={phase >= 3 ? ex.sys : -1} />
+
+      <div
+        className={cn(
+          'mt-3 flex items-center gap-2.5 rounded-[14px] border px-3.5 py-2.5 transition-colors duration-500',
+          phase === 4 ? 'border-brand/25 bg-brand-mint text-brand-ink' : 'border-ink/[0.06] bg-paper/60 text-slate'
+        )}
+      >
+        <span className={cn('flex h-5 w-5 shrink-0 items-center justify-center rounded-full transition-colors duration-500', phase === 4 ? 'bg-brand text-white' : 'bg-ink/10 text-transparent')}>
+          <Check className="h-3 w-3" strokeWidth={3.2} aria-hidden="true" />
+        </span>
+        <span className="min-w-0 truncate text-[12.5px] font-medium">{["New request…", 'Understanding the request…', 'Checking your rules…', 'Working in ' + sysName + '…', ex.done][phase]}</span>
       </div>
     </div>
   );
