@@ -7,18 +7,22 @@ import { openConsentSettings } from '@/lib/consent';
 import Logo from './primitives/Logo';
 import SmartLink from './primitives/SmartLink';
 import { scrollToHash } from './hooks';
+import SocialLinks from './SocialLinks';
 
 export default function Footer() {
   useLocation(); // re-render on navigation so SmartLink picks the right behaviour
   const linkClass = 'text-[14px] text-white/75 transition-colors hover:text-white';
   return (
-    <footer data-nav-theme="dark" className="on-dark relative bg-ink text-white">
-      <div className="shell">
+    <footer data-nav-theme="dark" className="on-dark relative overflow-hidden bg-ink text-white">
+      {/* Aurora dawn light rising from the bottom edge, as in the platform glass core */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-[520px] bg-[radial-gradient(60%_55%_at_82%_118%,rgba(242,92,42,0.4),rgba(242,92,42,0)_70%),radial-gradient(30%_45%_at_58%_125%,rgba(255,159,69,0.22),rgba(255,159,69,0)_70%),radial-gradient(26%_40%_at_96%_100%,rgba(255,200,87,0.16),rgba(255,200,87,0)_70%)]" />
+      <div className="shell relative">
         <div className="hairline" />
-        <div className="grid gap-12 py-16 md:grid-cols-12 md:gap-8 md:py-20">
+        <div className="grid gap-12 py-14 md:grid-cols-12 md:gap-8 md:py-20">
           <div className="md:col-span-4">
             <Logo tone="light" height={30} />
             <p className="mt-6 max-w-[36ch] text-[15px] leading-relaxed text-white/55">{footer.tagline}</p>
+            <SocialLinks className="mt-7" />
           </div>
 
           <nav aria-label="Footer" className="grid grid-cols-2 gap-8 md:col-span-4 md:col-start-6">
@@ -64,6 +68,12 @@ export default function Footer() {
           </div>
         </div>
 
+        <p
+          aria-hidden="true"
+          className="pointer-events-none select-none bg-[linear-gradient(180deg,rgba(255,255,255,0.22),rgba(255,200,150,0.04))] bg-clip-text pb-2 text-center text-[clamp(96px,24vw,260px)] font-semibold leading-[0.9] tracking-[-0.05em] text-transparent"
+        >
+          Aurora
+        </p>
         <div className="flex flex-col gap-4 border-t border-white/10 py-7 text-[13px] text-white/40 sm:flex-row sm:items-center sm:justify-between">
           <p>
             © {new Date().getFullYear()} {brand.company}. All rights reserved.

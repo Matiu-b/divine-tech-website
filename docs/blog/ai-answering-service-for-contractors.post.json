@@ -1,0 +1,96 @@
+{
+  "slug": "ai-answering-service-for-contractors",
+  "title": "AI answering service for contractors: from missed call to paid job",
+  "titleTag": "AI Answering Service for Contractors: Calls to Booked Jobs",
+  "description": "What an AI answering service for contractors should do: answer every call, triage urgency, quote your price book, book the tech, invoice and follow up.",
+  "dek": "How an AI dispatcher handles emergencies, quoting, booking and the invoice for HVAC, plumbing, electrical, cleaning and roofing companies.",
+  "category": "Industries",
+  "date": "2026-10-12",
+  "updated": "2026-10-12",
+  "author": "Divine Tech AI",
+  "image": {
+    "base": "/img/blog/ai-answering-service-for-contractors",
+    "alt": "Soft blurred forest green, mustard and burnt orange gradient with the headline Dispatch, without the dispatcher and the Divine Tech AI logo",
+    "og": "/img/blog/ai-answering-service-for-contractors-og.jpg"
+  },
+  "bodyHtml": "<p><strong>An AI answering service for contractors picks up every call your crew can't, works out what the job is and how urgent it is, gives a price from your own price book, and books the right technician into the schedule.</strong> The better ones also send the confirmation, invoice and follow-up, so a job can go from first ring to paid without the office touching it.</p>\n\n<p>Most products sold under this name do the first part well and stop there. This guide is for HVAC, plumbing, electrical, cleaning and roofing companies deciding how far they want the AI to go. It covers emergency calls, quoting, dispatch and what happens after the job, with one call followed from start to finish.</p>\n\n<h2>What does an AI answering service for contractors do?</h2>\n\n<p>An AI answering service for contractors is software that answers your business line with a voice agent, holds a normal conversation with the caller, and acts on what it hears. A traditional answering service takes a message. An AI dispatcher finishes the booking. Here is the full set of jobs to look for, in the order a call needs them:</p>\n\n<ol>\n<li><strong>Answer.</strong> Every call, on the first ring, including nights, weekends and the five calls that land while the whole crew is on a roof.</li>\n<li><strong>Capture the job and its urgency.</strong> Name, address, the problem in the customer's words, equipment details, photos by text, and whether this is an emergency.</li>\n<li><strong>Quote from your price book.</strong> Diagnostic fees, flat-rate repairs and service-area rules, exactly as you priced them.</li>\n<li><strong>Book the technician.</strong> The right skill, the right zone, a real arrival window from the live schedule.</li>\n<li><strong>Keep the customer updated.</strong> Confirmation, reminder and an on-the-way text.</li>\n<li><strong>Invoice and follow up.</strong> Send the invoice with a payment link, then the warranty details, a review request and the next maintenance reminder.</li>\n</ol>\n\n<p>Steps 1 and 2 are table stakes now. Steps 3 to 6 are where vendors differ, and where the time savings come from.</p>\n\n<h2>Why do contractors miss so many calls?</h2>\n\n<p>Contractors miss calls because the people who could answer are doing billable work. A technician under a sink or in an attic can't stop to take a new customer's details, and small shops often have nobody else.</p>\n\n<p>The trades also run outside office hours. The U.S. Bureau of Labor Statistics says <a href=\"https://www.bls.gov/ooh/construction-and-extraction/plumbers-pipefitters-and-steamfitters.htm\">plumbers often work nights and weekends and are often on call for emergencies</a>, and that <a href=\"https://www.bls.gov/ooh/installation-maintenance-and-repair/heating-air-conditioning-and-refrigeration-mechanics-and-installers.htm\">HVAC technicians may be on call and work irregular hours during peak heating and cooling seasons</a>. Demand isn't shrinking either: BLS projects HVAC mechanic and installer jobs to grow 11 percent from 2025 to 2035, and <a href=\"https://www.bls.gov/ooh/construction-and-extraction/electricians.htm\">electrician jobs 9 percent</a> over the same period.</p>\n\n<p>The usual fix is a receptionist. BLS puts the <a href=\"https://www.bls.gov/ooh/office-and-administrative-support/receptionists.htm\">median receptionist wage at $38,010 a year</a> (May 2025). That buys one person, one line at a time, during business hours. It doesn't cover the 9 p.m. no-heat call or three calls arriving at once on the first hot Monday of summer.</p>\n\n<h2>How does an AI answering service handle emergency calls?</h2>\n\n<p>An AI answering service handles emergencies by sorting every call against urgency rules you write, then acting on the level it finds. You decide what counts as an emergency for your trade. The AI applies those rules the same way at 2 a.m. as at 2 p.m.</p>\n\n<table>\n<thead><tr><th>Urgency</th><th>Example calls</th><th>What the AI does</th></tr></thead>\n<tbody>\n<tr><td>Safety emergency</td><td>Gas smell, sparking panel, burning smell from the furnace</td><td>Reads your approved safety steps, tells the caller to contact the utility or 911 where your script says so, alerts the on-call tech at once</td></tr>\n<tr><td>Urgent today</td><td>Active leak, no heat in winter, no AC in a heat wave, roof leaking into the house</td><td>Offers the next same-day slot or after-hours rate, pages on-call if nothing is open</td></tr>\n<tr><td>Soon</td><td>Water heater not keeping up, breaker that keeps tripping, missing shingles after a storm</td><td>Books the first regular slot that matches the skill and zone</td></tr>\n<tr><td>Routine</td><td>Tune-up, estimate for a new system, recurring cleaning, gutter cleaning</td><td>Books at the customer's preferred time, sends prep notes</td></tr>\n</tbody>\n</table>\n\n<p>Safety scripts should come from an authority, not from the AI. For a gas smell, Connecticut's utility regulator advises people to <a href=\"https://portal.ct.gov/pura/gas-pipeline-safety/what-to-do-if--you-smell-natural-gas\">leave the building if the odor is strong, avoid light switches and phones in the area, and call the gas company from outside</a>. Load wording like that, approved by you, and the AI repeats it word for word instead of improvising.</p>\n\n<h2>Can an AI answering service quote prices from your price book?</h2>\n\n<p>Yes, an AI answering service can quote prices if it's connected to your price book and given clear rules about what it may price. Price is one of the first things a caller asks about. A clear answer on the call can win a job that an end-of-day callback would lose.</p>\n\n<p>Before you switch quoting on, write down:</p>\n\n<ul>\n<li>Your diagnostic or trip fee, and whether it's credited toward the repair.</li>\n<li>Flat-rate items the AI may quote as fixed prices, such as a drain clearing or a standard tune-up.</li>\n<li>Items it may only quote as a range, such as a water heater swap, with the condition that a tech confirms on site.</li>\n<li>After-hours, weekend and emergency rates.</li>\n<li>Your service area by ZIP code, and any travel charges.</li>\n<li>Jobs it never prices on the phone: full system replacements, roof replacements, anything needing an inspection.</li>\n</ul>\n\n<p>Discounts and anything outside the price book should go to a person before the customer hears a number. Same-day slots in a full week can follow the same rule, so dispatch approves them with one tap.</p>\n\n<h2>How does booking and dispatch work with an AI dispatcher?</h2>\n\n<p>An AI dispatcher books from the live schedule in your field service software or calendar, so it only offers windows that actually exist. Good booking checks three things on every job: the skill needed (a commercial refrigeration call isn't a job for an apprentice), the zone the tech is working in that day, and the time the job type usually takes.</p>\n\n<p>After booking, the customer gets a confirmation by text with the arrival window, a reminder the day before, and an on-the-way message when the tech leaves the previous job. If a job runs long, the AI can tell the next customer and offer a new window instead of leaving them waiting.</p>\n\n<h2>What happens after the job: invoices, reviews and follow-ups</h2>\n\n<p>The work after the visit is where many shops lose money quietly. Invoices go out days late, nobody asks for the review, and the maintenance plan offer never gets made. An AI that is connected to your systems can handle all of it once the tech closes the job:</p>\n\n<ul>\n<li>Issue the invoice from the job record and text the payment link.</li>\n<li>Send a follow-up email with the work done, photos from the tech, warranty terms and next steps.</li>\n<li>Ask for a review a few hours later, once the customer has seen the result.</li>\n<li>Schedule the next tune-up or cleaning reminder from the service date.</li>\n</ul>\n\n<p>One legal point for outbound calls. In 2024 the FCC ruled that <a href=\"https://www.fcc.gov/document/fcc-makes-ai-generated-voices-robocalls-illegal\">calls made with AI-generated voices count as \"artificial\" under the Telephone Consumer Protection Act</a>. That ruling is about calls the AI places, not calls it answers. Before an AI voice calls past customers about tune-ups, check your consent records with counsel.</p>\n\n<h2>One call from start to finish (illustrative example)</h2>\n\n<p>Ridgeline Plumbing &amp; Heating is a fictional eight-tech shop used here to show the flow. The numbers are examples, not results.</p>\n\n<table>\n<thead><tr><th>Time</th><th>What happens</th></tr></thead>\n<tbody>\n<tr><td>7:42 p.m.</td><td>A homeowner calls: water is pooling under the water heater. All techs are off shift.</td></tr>\n<tr><td>7:43 p.m.</td><td>The AI asks about the tank's age and whether water is still running, then reads the approved steps for shutting off the cold supply.</td></tr>\n<tr><td>7:45 p.m.</td><td>It classifies the call as \"urgent today\", quotes the after-hours diagnostic fee from the price book and gives a range for replacement, pending the tech's inspection.</td></tr>\n<tr><td>7:46 p.m.</td><td>The customer picks 8:00 tomorrow morning over an after-hours visit. The AI books the first tech with water heater experience in that zone and texts a confirmation.</td></tr>\n<tr><td>8:05 a.m.</td><td>An on-the-way text goes out with the tech's name.</td></tr>\n<tr><td>11:30 a.m.</td><td>The tech closes the job. The AI sends the invoice with a payment link and a follow-up email with photos and warranty details.</td></tr>\n<tr><td>Next day</td><td>A review request goes out. A flush reminder is scheduled for twelve months later.</td></tr>\n</tbody>\n</table>\n\n<p>Nobody in the office touched that job until the tech arrived. The owner could see each step, and could have stepped in at any point.</p>\n\n<h2>AI answering service vs. live answering service vs. voicemail</h2>\n\n<table>\n<thead><tr><th>What you need</th><th>Voicemail</th><th>Live answering service</th><th>AI answering service with dispatch</th></tr></thead>\n<tbody>\n<tr><td>Answers every call, any hour</td><td>No</td><td>Yes, during contracted hours</td><td>Yes</td></tr>\n<tr><td>Several calls at once</td><td>Callers leave messages, or hang up</td><td>Depends on staffing</td><td>Yes</td></tr>\n<tr><td>Quotes from your price book</td><td>No</td><td>Rarely, from a script</td><td>Yes, within your rules</td></tr>\n<tr><td>Books into the live schedule</td><td>No</td><td>Sometimes</td><td>Yes</td></tr>\n<tr><td>Sends invoices and follow-ups</td><td>No</td><td>No</td><td>Yes, when connected to your systems</td></tr>\n<tr><td>Handles unusual or upset callers</td><td>No</td><td>Yes, a person is on the line</td><td>Transfers to your team by rule</td></tr>\n</tbody>\n</table>\n\n<p>A live service still has a place for some shops. If most of your calls are complex commercial bids, a human may be the better first voice. For high volumes of residential service calls, the AI does more of the work.</p>\n\n<h2>How to choose an AI answering service for your trade</h2>\n\n<p>Run any vendor through these questions before you sign:</p>\n\n<ol>\n<li>Can I write my own urgency rules and safety scripts, and will it read them word for word?</li>\n<li>Does it quote from my price book, and can I mark items as fixed, range-only or never quoted?</li>\n<li>Does it book into my field service software or calendar directly, or just send me a message to re-enter?</li>\n<li>Which actions need my approval, and how fast can dispatch approve them from a phone?</li>\n<li>Does it send invoices, follow-ups and review requests, or do I need another tool for that?</li>\n<li>Can I read every call transcript and see why it made each decision?</li>\n<li>Can my staff ask it things too, such as \"what's on Luis's schedule tomorrow?\"</li>\n</ol>\n\n<p>The last question is where a single answering tool and a full <a href=\"/blog/ai-operating-system-for-business\">AI operating system for business</a> part ways. One serves callers. The other also runs the office work behind them.</p>\n\n<h2>Frequently asked questions</h2>\n\n<h3>Will callers know they are talking to an AI?</h3>\n<p>Callers should know. We recommend the AI says it is an AI assistant for your company at the start of the call. Saying so up front sets expectations, and your rules can send any caller who asks for a person straight to your team.</p>\n\n<h3>Does an AI answering service replace my field service software?</h3>\n<p>No. An AI answering service works inside the field service software, CRM and calendars you already use. Jobs, customers and invoices stay where your team keeps them today.</p>\n\n<h3>Is an AI answering service useful for cleaning and roofing companies?</h3>\n<p>Yes. Cleaning and roofing companies get fewer emergencies but many estimate requests and recurring bookings. The AI collects the property details and photos, books the estimate visit, and schedules recurring cleanings or post-storm inspections.</p>\n\n<h2>See Aurora answer your calls</h2>\n\n<p>Aurora, the AI operating system from Divine Tech AI, answers calls and messages for home service companies, quotes from your price book, books the technician and sends the invoice and follow-up, with dispatch approving the exceptions. See <a href=\"/industries/home-services\">how Aurora works for home services</a>, read about <a href=\"/platform\">the Aurora platform</a>, or <a href=\"/#how-it-works\">see how setup works</a>. When you're ready, book a demo and our experts will map your call flow with you.</p>\n",
+  "schema": [
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "AI answering service for contractors: from missed call to paid job",
+      "description": "What an AI answering service for contractors should do: answer every call, triage urgency, quote your price book, book the tech, invoice and follow up.",
+      "image": "https://divine-tech.ai/img/blog/ai-answering-service-for-contractors-og.jpg",
+      "datePublished": "2026-10-12",
+      "dateModified": "2026-10-12",
+      "author": {
+        "@type": "Organization",
+        "name": "Divine Tech AI",
+        "url": "https://divine-tech.ai"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Divine Tech AI",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://divine-tech.ai/icon-512.png"
+        }
+      },
+      "mainEntityOfPage": "https://divine-tech.ai/blog/ai-answering-service-for-contractors"
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://divine-tech.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Blog",
+          "item": "https://divine-tech.ai/blog"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "AI answering service for contractors: from missed call to paid job",
+          "item": "https://divine-tech.ai/blog/ai-answering-service-for-contractors"
+        }
+      ]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Will callers know they are talking to an AI?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Callers should know. We recommend the AI says it is an AI assistant for your company at the start of the call. Saying so up front sets expectations, and your rules can send any caller who asks for a person straight to your team."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does an AI answering service replace my field service software?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. An AI answering service works inside the field service software, CRM and calendars you already use. Jobs, customers and invoices stay where your team keeps them today."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is an AI answering service useful for cleaning and roofing companies?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Cleaning and roofing companies get fewer emergencies but many estimate requests and recurring bookings. The AI collects the property details and photos, books the estimate visit, and schedules recurring cleanings or post-storm inspections."
+          }
+        }
+      ]
+    }
+  ]
+}

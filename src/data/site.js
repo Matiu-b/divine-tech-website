@@ -17,6 +17,14 @@ export const brand = {
   address: '1441 Broadway, New York, NY 10018, USA',
 };
 
+// Company profiles: shown in the footer and published as sameAs in the Organization structured data.
+export const social = [
+  { key: 'linkedin', label: 'LinkedIn', href: 'https://www.linkedin.com/company/divine-tech-ai/' },
+  { key: 'x', label: 'X', href: 'https://x.com/DivineTechAI' },
+  { key: 'instagram', label: 'Instagram', href: 'https://www.instagram.com/divinetech.ai/' },
+  { key: 'facebook', label: 'Facebook', href: 'https://www.facebook.com/profile.php?id=61594900263896' },
+];
+
 // Legal entity details used by the privacy policy and cookie banner.
 export const legal = {
   entity: 'Divine Tech AI, Inc.',
@@ -587,6 +595,10 @@ export const homeFaq = [
   [
     'How does Aurora stay under our control?',
     'You decide what Aurora may do on its own, what needs a person’s approval and what it never does. Every action is recorded with the request, the rule that applied and who approved it, access is set per role, and your data is never used to train shared models.',
+  ],
+  [
+    'How much does Aurora cost?',
+    'Pricing is set for each business. It depends on which departments and processes Aurora takes on, the channels it covers and the systems it connects to. We map your processes with you first, then send a proposal based on that plan.',
   ],
   [
     'Does Aurora replace our staff?',
