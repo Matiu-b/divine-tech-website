@@ -181,7 +181,7 @@ function GoLiveVisual() {
         <span className="grid gap-1.5">
           <span>Yes, I have 2 options:</span>
           {T.options.map((o, i) => (
-            <span key={o.addr} className="grid grid-cols-[auto_1fr] gap-x-2 rounded-[12px] bg-white px-2.5 py-1.5">
+            <span key={o.addr} className="grid grid-cols-[auto_1fr] gap-x-2 rounded-[12px] bg-white/80 px-2.5 py-1.5">
               <span className="text-ink/40">{i + 1}</span>
               <span>
                 {o.addr} · {o.price}
@@ -214,7 +214,7 @@ function GoLiveVisual() {
   const bubble = 'max-w-[84%] w-fit px-3.5 py-2 text-[13px] leading-snug';
   const styles = {
     customer: cn(bubble, 'rounded-[20px] rounded-bl-[6px] bg-white text-ink shadow-[0_1px_2px_rgba(10,15,14,0.06)]'),
-    aurora: cn(bubble, 'ml-auto rounded-[20px] rounded-br-[6px] bg-[#FFEEDA] text-ink shadow-[0_1px_2px_rgba(120,60,10,0.08)] ring-1 ring-[#F5C99A]/40'),
+    aurora: cn(bubble, 'ml-auto rounded-[20px] rounded-br-[6px] bg-[linear-gradient(160deg,rgba(235,236,238,0.75),rgba(214,216,220,0.55))] text-ink ring-1 ring-white/70 shadow-[inset_0_1px_0_rgba(255,255,255,0.8),0_6px_16px_-10px_rgba(10,15,14,0.35)] backdrop-blur-md'),
   };
   const enter = reduce ? {} : { initial: { opacity: 0, y: 10, scale: 0.98 }, animate: { opacity: 1, y: 0, scale: 1 }, exit: { opacity: 0 }, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } };
 
