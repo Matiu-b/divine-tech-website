@@ -287,6 +287,16 @@ export const platform = {
     { name: 'Knowledge', detail: 'Policies and answers' },
     { name: 'Your team', detail: 'Hand-offs and approvals' },
   ],
+  // Phone view of the diagram: one request at a time, from a channel through Aurora into a system.
+  // ch = index in channels, sys = index in systems.
+  examples: [
+    { ch: 0, ask: 'I want to book a viewing for Saturday.', sys: 1, done: 'Viewing booked · Sat 10:30' },
+    { ch: 1, ask: 'Can I move my appointment to Thursday?', sys: 1, done: 'Moved to Thu 11:00' },
+    { ch: 2, ask: 'Do you have a 2-bedroom under $3,000?', sys: 3, done: 'Two matches sent' },
+    { ch: 3, ask: 'Please send me the March invoice.', sys: 2, done: 'Invoice sent · follow-up set' },
+    { ch: 4, ask: "I'm interested in the downtown listing.", sys: 0, done: 'New lead added · qualified' },
+    { ch: 5, ask: 'Refund $340 on order 4821?', sys: 4, done: 'Sent to Dana for approval' },
+  ],
   notes: [
     ['One context, every channel', 'A conversation that starts in web chat and continues by phone stays one conversation, with its full history.'],
     ['Your rules on every decision', 'Policies, limits and exceptions are applied the same way at 3 pm and at 3 am.'],

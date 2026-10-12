@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { BookOpen, CalendarDays, Database, Hash, ListChecks, Mail, MessageCircle, MessageSquare, Phone, Smartphone, Users } from 'lucide-react';
+import { BookOpen, CalendarDays, Check, Database, Hash, ListChecks, Mail, MessageCircle, MessageSquare, Phone, Smartphone, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { brand, platform } from '@/data/site';
 import { useNavigate } from 'react-router-dom';
@@ -116,7 +116,7 @@ export default function Platform() {
         <SectionHeader id="platform-title" eyebrow={platform.eyebrow} titleA={platform.titleA} titleB={platform.titleB} text={platform.text} layout="split" />
 
         <Reveal y={40} className="mt-14 md:mt-20">
-          <div ref={ref} className="rounded-[clamp(24px,3vw,40px)] bg-white p-5 shadow-[0_0_0_1px_rgba(10,15,14,0.04),0_30px_80px_-50px_rgba(10,15,14,0.3)] xs:p-6 md:p-10 lg:p-14">
+          <div ref={ref} className="rounded-[clamp(24px,3vw,40px)] bg-white p-4 shadow-[0_0_0_1px_rgba(10,15,14,0.04),0_30px_80px_-50px_rgba(10,15,14,0.3)] xs:p-6 md:p-10 lg:p-14">
             {/* Desktop architecture */}
             <div className="relative hidden xl:block" style={{ aspectRatio: W + ' / ' + H }}>
               <svg className="absolute inset-0 h-full w-full" viewBox={'0 0 ' + W + ' ' + H} preserveAspectRatio="none" aria-hidden="true">
@@ -176,40 +176,12 @@ export default function Platform() {
               ))}
             </div>
 
-            {/* Mobile / tablet architecture */}
-            <div className="flex flex-col items-center xl:hidden">
-              <p className="text-[12.5px] font-medium text-slate">Channels</p>
-              <ul className="mt-3 flex flex-wrap justify-center gap-2">
-                {platform.channels.map((c, i) => {
-                  const Icon = CH_ICONS[i];
-                  return (
-                    <li key={c} className={cn('flex items-center gap-2 rounded-full border px-3 py-2 text-[13.5px] font-medium transition-colors duration-500', i === active ? 'border-ink bg-ink text-white' : 'border-ink/[0.08] bg-paper text-ink')}>
-                      <Icon className="h-3.5 w-3.5" strokeWidth={1.8} aria-hidden="true" />
-                      {c}
-                    </li>
-                  );
-                })}
-              </ul>
-              <Connector />
-              <div className="w-full max-w-[420px]">
-                <Core active={active} compact />
-              </div>
-              <Connector />
-              <p className="text-[12.5px] font-medium text-slate">Your systems</p>
-              <ul className="mt-3 flex flex-wrap justify-center gap-2">
-                {platform.systems.map((s, i) => {
-                  const Icon = SYS_ICONS[i];
-                  return (
-                    <li key={s.name} className={cn('flex items-center gap-2 rounded-full border px-3 py-2 text-[13.5px] font-medium transition-colors duration-500', i === active % ROWS.length ? 'border-ink bg-ink text-white' : 'border-ink/[0.08] bg-paper text-ink')}>
-                      <Icon className="h-3.5 w-3.5" strokeWidth={1.8} aria-hidden="true" />
-                      {s.name}
-                    </li>
-                  );
-                })}
-              </ul>
+            {/* Phone / tablet: the same story in one screen, one request at a time */}
+            <div className="xl:hidden">
+              <StoryCompact />
             </div>
 
-            <RevealGroup className="mt-12 grid gap-8 border-t border-ink/[0.07] pt-10 md:mt-14 md:grid-cols-3 md:gap-10">
+            <RevealGroup className="mt-12 hidden gap-8 border-t border-ink/[0.07] pt-10 md:mt-14 md:grid md:grid-cols-3 md:gap-10">
               {platform.notes.map(([title, text]) => (
                 <RevealItem key={title}>
                   <h3 className="t-h4">{title}</h3>
@@ -231,18 +203,118 @@ export default function Platform() {
   );
 }
 
-function Connector() {
+/** A short vertical link with a pulse travelling down it. */
+function Link({ on }) {
   const reduce = useReducedMotion();
   return (
-    <span aria-hidden="true" className="relative my-4 block h-12 w-px overflow-hidden bg-ink/10">
-      {!reduce ? (
+    <span aria-hidden="true" className="relative mx-auto my-1.5 block h-5 w-px overflow-hidden bg-ink/10">
+      {!reduce && on ? (
         <motion.span
-          className="absolute left-0 top-0 block h-5 w-px bg-gradient-to-b from-transparent via-brand to-transparent"
-          initial={{ y: -20 }}
-          animate={{ y: 52 }}
-          transition={{ duration: 1.6, repeat: Infinity, ease: EASE, repeatDelay: 0.4 }}
+          className="absolute left-0 top-0 block h-3 w-px bg-brand"
+          initial={{ y: -12 }}
+          animate={{ y: 20 }}
+          transition={{ duration: 0.7, repeat: Infinity, ease: EASE, repeatDelay: 0.3 }}
         />
       ) : null}
     </span>
+  );
+}
+
+/** A row of icon tiles; the one in use is dark. @param {any} props */
+function IconRow({ label, items, icons, active }) {
+  return (
+    <div>
+      <p className="text-center text-[11.5px] font-medium text-slate">{label}</p>
+      <ul className="mt-2 flex justify-center gap-1.5 xs:gap-2">
+        {items.map((name, i) => {
+          const Icon = icons[i];
+          const on = i === active;
+          return (
+            <li
+              key={name}
+              title={name}
+              className={cn(
+                'flex h-10 w-10 items-center justify-center rounded-[12px] border transition-colors duration-500 xs:h-11 xs:w-11',
+                on ? 'border-ink bg-ink text-white' : 'border-ink/[0.08] bg-paper text-ink/70'
+              )}
+            >
+              <Icon className="h-4 w-4" strokeWidth={1.8} aria-hidden="true" />
+              <span className="sr-only">{name}</span>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+/**
+ * The platform story for phones and tablets, sized to fit one screen: a request arrives on a
+ * channel, Aurora understands, decides and acts, and the work lands in one of your systems.
+ */
+function StoryCompact() {
+  const ref = useRef(null);
+  const reduce = useReducedMotion();
+  const visible = usePageVisible();
+  const inView = useInViewport(ref, { threshold: 0.3 });
+  const [step, setStep] = useState(0);
+  const PHASES = 5; // 0 ask · 1 understand · 2 decide · 3 act · 4 done
+  useEffect(() => {
+    if (reduce || !inView || !visible) return undefined;
+    const id = window.setInterval(() => setStep((n) => n + 1), 900);
+    return () => window.clearInterval(id);
+  }, [reduce, inView, visible]);
+  const ex = platform.examples[Math.floor(step / PHASES) % platform.examples.length];
+  const phase = reduce ? 4 : step % PHASES;
+  const layer = phase >= 1 && phase <= 3 ? phase - 1 : -1;
+  const sysName = platform.systems[ex.sys].name;
+  return (
+    <div ref={ref} className="mx-auto max-w-[440px]">
+      <IconRow label="Channels" items={platform.channels} icons={CH_ICONS} active={ex.ch} />
+
+      <div className="mt-3 rounded-[16px] rounded-bl-[6px] bg-paper px-3.5 py-2.5">
+        <p className="text-[11px] text-slate">{platform.channels[ex.ch]}</p>
+        <p className="mt-0.5 text-[13.5px] leading-snug text-ink">{ex.ask}</p>
+      </div>
+
+      <Link on={phase >= 1} />
+
+      <div className="relative overflow-hidden rounded-[18px] bg-ink px-4 py-3.5 text-white">
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(90%_70%_at_50%_0%,rgba(60,224,154,0.18),rgba(60,224,154,0)_70%)]" />
+        <div className="relative flex items-baseline justify-between gap-3">
+          <p className="text-[17px] leading-none tracking-[-0.02em]">{brand.product}</p>
+          <p className="text-[11px] text-white/45">AI operating system</p>
+        </div>
+        <ol className="relative mt-3 grid grid-cols-3 gap-1.5">
+          {platform.layers.map((l, i) => (
+            <li
+              key={l.name}
+              className={cn(
+                'rounded-[10px] border px-2 py-2 text-center text-[12px] font-medium transition-colors duration-500',
+                i === layer ? 'border-brand-glow/50 bg-brand-glow/15 text-white' : i < layer || phase === 4 ? 'border-white/[0.08] bg-white/[0.06] text-white/70' : 'border-white/[0.06] bg-transparent text-white/40'
+              )}
+            >
+              {l.name}
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      <Link on={phase >= 3} />
+
+      <IconRow label="Your systems" items={platform.systems.map((x) => x.name)} icons={SYS_ICONS} active={phase >= 3 ? ex.sys : -1} />
+
+      <div
+        className={cn(
+          'mt-3 flex items-center gap-2.5 rounded-[14px] border px-3.5 py-2.5 transition-colors duration-500',
+          phase === 4 ? 'border-brand/25 bg-brand-mint text-brand-ink' : 'border-ink/[0.06] bg-paper/60 text-slate'
+        )}
+      >
+        <span className={cn('flex h-5 w-5 shrink-0 items-center justify-center rounded-full transition-colors duration-500', phase === 4 ? 'bg-brand text-white' : 'bg-ink/10 text-transparent')}>
+          <Check className="h-3 w-3" strokeWidth={3.2} aria-hidden="true" />
+        </span>
+        <span className="min-w-0 truncate text-[12.5px] font-medium">{["New request…", 'Understanding the request…', 'Checking your rules…', 'Working in ' + sysName + '…', ex.done][phase]}</span>
+      </div>
+    </div>
   );
 }
