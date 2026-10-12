@@ -31,6 +31,7 @@ export const nav = [
   { href: '/platform', label: 'Platform' },
   { label: 'Industries', children: 'industries' },
   { href: '/#how-it-works', label: 'How it works' },
+  { href: '/blog', label: 'Blog' },
 ];
 
 // Footer "Explore" column.
@@ -39,6 +40,7 @@ export const footerLinks = [
   { href: '/#how-it-works', label: 'How it works' },
   { href: '/platform#teams', label: 'Teams' },
   { href: '/platform#security', label: 'Security' },
+  { href: '/blog', label: 'Blog' },
 ];
 
 /*

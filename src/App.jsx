@@ -11,6 +11,8 @@ import Home from '@/pages/Home';
 import PrivacyPolicy from '@/pages/PrivacyPolicy';
 import IndustryPage from '@/pages/IndustryPage';
 import PlatformPage from '@/pages/PlatformPage';
+import Blog from '@/pages/Blog';
+import BlogPost from '@/pages/BlogPost';
 
 // Meta PageView on first load and on every client-side route change.
 function MetaPageViews() {
@@ -31,6 +33,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/platform" element={<PlatformPage />} />
           <Route path="/industries/:slug" element={<IndustryPage />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
