@@ -9,6 +9,7 @@ import CTAButton from './primitives/CTAButton';
 import { Reveal, RevealGroup, RevealItem } from './primitives/MotionReveal';
 import { useInViewport, usePageVisible } from './hooks';
 import { EASE } from './motion';
+import LiquidGlass from './primitives/LiquidGlass';
 
 const CH_ICONS = [Phone, Smartphone, MessageSquare, Mail, MessageCircle, Hash];
 const SYS_ICONS = [Database, CalendarDays, ListChecks, BookOpen, Users];
@@ -28,43 +29,60 @@ const leftPath = (y) =>
 const rightPath = (y) =>
   'M' + (CORE.x + CORE.w) + ',' + squeeze(y) + ' C' + (CORE.x + CORE.w + 110) + ',' + squeeze(y) + ' ' + (RIGHT_X - 120) + ',' + y + ' ' + RIGHT_X + ',' + y;
 
-/** @param {any} props */
+/** Warm Aurora light behind the glass core, so the material has something to frost. */
+function DawnGlow({ className = '' }) {
+  const reduce = useReducedMotion();
+  return (
+    <div aria-hidden="true" className={cn('pointer-events-none absolute', className)}>
+      <div className={cn('absolute left-[2%] top-[4%] h-[52%] w-[70%] rounded-full bg-[radial-gradient(closest-side,rgba(242,92,42,0.75),rgba(242,92,42,0))] blur-2xl', !reduce && 'animate-drift')} />
+      <div className={cn('absolute bottom-[6%] right-[0%] h-[50%] w-[72%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.85),rgba(255,200,87,0))] blur-2xl', !reduce && 'animate-drift [animation-delay:-6s]')} />
+      <div className="absolute left-[18%] top-[38%] h-[38%] w-[64%] rounded-full bg-[radial-gradient(closest-side,rgba(255,159,69,0.7),rgba(255,159,69,0))] blur-2xl" />
+    </div>
+  );
+}
+
+/** Aurora's core as Liquid Glass over its own dawn light. @param {any} props */
 function Core({ active, compact = false }) {
   const layerIdx = active % 3;
   return (
-    <div className={cn('relative flex h-full flex-col overflow-hidden rounded-[26px] bg-ink p-5 text-white shadow-[0_30px_60px_-30px_rgba(10,15,14,0.55)] md:p-6', compact && 'w-full')}>
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(90%_55%_at_50%_0%,rgba(60,224,154,0.16),rgba(60,224,154,0)_70%)]" />
-      <div className="relative flex items-start justify-between">
+    <div className={cn('relative h-full', compact && 'w-full')}>
+      <DawnGlow className="-inset-6" />
+      <LiquidGlass
+        className="relative flex h-full flex-col rounded-[28px] p-5 md:p-6"
+        style={{ '--lg-tint-a': 'rgba(255,250,242,0.5)', '--lg-tint-b': 'rgba(255,246,229,0.18)', '--lg-sheen': 'rgba(255,240,215,0.7)' }}
+      >
         <div>
-          <p className="text-[22px] font-normal leading-none tracking-[-0.03em]">{brand.product}</p>
-          <p className="mt-1.5 text-[13px] text-white/50">AI operating system</p>
+          <p className="text-[22px] font-normal leading-none tracking-[-0.03em] text-ink">{brand.product}</p>
+          <p className="mt-1.5 text-[13px] text-ink/55">AI operating system</p>
         </div>
-      </div>
-      <ul className="relative mt-5 grid flex-1 content-center gap-2.5">
-        {platform.layers.map((l, i) => (
-          <li
-            key={l.name}
-            className={cn(
-              'relative overflow-hidden rounded-[18px] border px-4 py-3.5 transition-colors duration-700',
-              i === layerIdx ? 'border-white/[0.14] bg-white/[0.09]' : 'border-white/[0.06] bg-white/[0.03]'
-            )}
-          >
-            <span
-              aria-hidden="true"
-              className={cn('absolute bottom-3 left-0 top-3 w-[2px] rounded-full bg-brand-glow transition-opacity duration-700', i === layerIdx ? 'opacity-100' : 'opacity-0')}
-            />
-            <p className="text-[15px] font-medium tracking-[-0.015em]">{l.name}</p>
-            <p className="mt-0.5 text-[13px] text-white/55">{l.detail}</p>
-          </li>
-        ))}
-      </ul>
-      <div className="relative mt-5 flex flex-wrap gap-y-1.5 border-t border-white/[0.08] pt-4 text-[12px] text-white/55">
-        {['Policies', 'Approvals', 'Audit log'].map((t, i) => (
-          <span key={t} className={cn(i > 0 && 'ml-3 border-l border-white/15 pl-3')}>
-            {t}
-          </span>
-        ))}
-      </div>
+        <ul className="relative mt-5 grid flex-1 content-center gap-2.5">
+          {platform.layers.map((l, i) => (
+            <li
+              key={l.name}
+              className={cn(
+                'relative overflow-hidden rounded-[18px] border px-4 py-3.5 transition-[background-color,border-color,box-shadow] duration-700',
+                i === layerIdx
+                  ? 'border-white/80 bg-white/70 shadow-[0_10px_24px_-14px_rgba(120,50,10,0.45)]'
+                  : 'border-white/40 bg-white/25'
+              )}
+            >
+              <span
+                aria-hidden="true"
+                className={cn('absolute bottom-3 left-0 top-3 w-[3px] rounded-full bg-[#F25C2A] transition-opacity duration-700', i === layerIdx ? 'opacity-100' : 'opacity-0')}
+              />
+              <p className="text-[15px] font-medium tracking-[-0.015em] text-ink">{l.name}</p>
+              <p className="mt-0.5 text-[13px] text-ink/60">{l.detail}</p>
+            </li>
+          ))}
+        </ul>
+        <div className="relative mt-5 flex flex-wrap gap-y-1.5 border-t border-ink/10 pt-4 text-[12px] text-ink/55">
+          {['Policies', 'Approvals', 'Audit log'].map((t, i) => (
+            <span key={t} className={cn(i > 0 && 'ml-3 border-l border-ink/15 pl-3')}>
+              {t}
+            </span>
+          ))}
+        </div>
+      </LiquidGlass>
     </div>
   );
 }
@@ -284,25 +302,30 @@ function StoryCompact() {
 
       <Link on={phase >= 1} />
 
-      <div className="relative overflow-hidden rounded-[18px] bg-ink px-4 py-3.5 text-white">
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(90%_70%_at_50%_0%,rgba(60,224,154,0.18),rgba(60,224,154,0)_70%)]" />
-        <div className="relative flex items-baseline justify-between gap-3">
-          <p className="text-[17px] leading-none tracking-[-0.02em]">{brand.product}</p>
-          <p className="text-[11px] text-white/45">AI operating system</p>
-        </div>
-        <ol className="relative mt-3 grid grid-cols-3 gap-1.5">
-          {platform.layers.map((l, i) => (
-            <li
-              key={l.name}
-              className={cn(
-                'rounded-[10px] border px-1 py-2 text-center text-[11px] font-medium tracking-[-0.01em] transition-colors duration-500 xs:text-[12px]',
-                i === layer ? 'border-brand-glow/50 bg-brand-glow/15 text-white' : i < layer || phase === 4 ? 'border-white/[0.08] bg-white/[0.06] text-white/70' : 'border-white/[0.06] bg-transparent text-white/40'
-              )}
-            >
-              {l.name}
-            </li>
-          ))}
-        </ol>
+      <div className="relative">
+        <DawnGlow className="-inset-x-3 -inset-y-4" />
+        <LiquidGlass
+          className="relative rounded-[20px] px-4 py-3.5"
+          style={{ '--lg-tint-a': 'rgba(255,250,242,0.5)', '--lg-tint-b': 'rgba(255,246,229,0.18)', '--lg-sheen': 'rgba(255,240,215,0.7)' }}
+        >
+          <div className="relative flex items-baseline justify-between gap-3">
+            <p className="text-[17px] leading-none tracking-[-0.02em] text-ink">{brand.product}</p>
+            <p className="text-[11px] text-ink/55">AI operating system</p>
+          </div>
+          <ol className="relative mt-3 grid grid-cols-3 gap-1.5">
+            {platform.layers.map((l, i) => (
+              <li
+                key={l.name}
+                className={cn(
+                  'rounded-[10px] border px-1 py-2 text-center text-[11px] font-medium tracking-[-0.01em] transition-colors duration-500 xs:text-[12px]',
+                  i === layer ? 'border-white/80 bg-white/75 text-ink' : i < layer || phase === 4 ? 'border-white/50 bg-white/35 text-ink/70' : 'border-white/30 bg-white/10 text-ink/45'
+                )}
+              >
+                {l.name}
+              </li>
+            ))}
+          </ol>
+        </LiquidGlass>
       </div>
 
       <Link on={phase >= 3} />
