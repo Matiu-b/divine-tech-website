@@ -214,7 +214,7 @@ function GoLiveVisual() {
   const bubble = 'max-w-[84%] w-fit px-3.5 py-2 text-[13px] leading-snug';
   const styles = {
     customer: cn(bubble, 'rounded-[20px] rounded-bl-[6px] bg-white text-ink shadow-[0_1px_2px_rgba(10,15,14,0.06)]'),
-    aurora: cn(bubble, 'ml-auto rounded-[20px] rounded-br-[6px] bg-[linear-gradient(160deg,rgba(235,236,238,0.75),rgba(214,216,220,0.55))] text-ink ring-1 ring-white/70 shadow-[inset_0_1px_0_rgba(255,255,255,0.8),0_6px_16px_-10px_rgba(10,15,14,0.35)] backdrop-blur-md'),
+    aurora: cn(bubble, 'ml-auto rounded-[20px] rounded-br-[6px] bg-[linear-gradient(160deg,rgba(214,216,220,0.85),rgba(190,193,198,0.7))] text-ink ring-1 ring-white/70 shadow-[inset_0_1px_0_rgba(255,255,255,0.8),0_6px_16px_-10px_rgba(10,15,14,0.35)] backdrop-blur-md'),
   };
   const enter = reduce ? {} : { initial: { opacity: 0, y: 10, scale: 0.98 }, animate: { opacity: 1, y: 0, scale: 1 }, exit: { opacity: 0 }, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } };
 
