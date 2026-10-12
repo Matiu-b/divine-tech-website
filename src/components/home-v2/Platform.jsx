@@ -249,47 +249,70 @@ function IconRow({ label, items, icons, active }) {
 }
 
 /**
- * Aurora as a sunrise, in the brand's warm colours: a glowing core, a ring and an outer ring cut
- * into three that turns slowly, with rays reaching out (the agents going into each department).
- * It brightens while a request is being worked on. Not the logo itself, an illustration of it.
- * @param {{ busy: boolean, still: boolean, className?: string }} props
+ * Aurora's core, drawn from its own symbol ("dawn layers") as a supergraphic: a quarter sun in
+ * the corner, a full ring, and an outer ring cut into three. The three cuts are the three
+ * layers, Understand, Decide and Act, and each one lights up while Aurora is in that step.
+ * @param {{ layer: number, done: boolean }} props
  */
-function Sun({ busy, still, className = undefined }) {
-  const rays = Array.from({ length: 12 }, (_, i) => i * 30);
+const ARCS = [
+  { from: 6, to: 27, label: 'Understand', lx: 100, ly: 30 },
+  { from: 35, to: 56, label: 'Decide', lx: 76, ly: 80 },
+  { from: 64, to: 85, label: 'Act', lx: 34, ly: 117 },
+];
+const R = 84;
+const pt = (deg, r = R) => [r * Math.cos((deg * Math.PI) / 180), r * Math.sin((deg * Math.PI) / 180)];
+
+function Dawn({ layer, done }) {
   return (
-    <svg viewBox="-50 -50 100 100" className={className} aria-hidden="true">
-      <defs>
-        <radialGradient id="sun-core" cx="0.4" cy="0.35" r="0.75">
-          <stop offset="0" stopColor="#FFE7A8" />
-          <stop offset="0.45" stopColor="#FFC857" />
-          <stop offset="0.8" stopColor="#FF9F45" />
-          <stop offset="1" stopColor="#F25C2A" />
-        </radialGradient>
-        <radialGradient id="sun-glow">
-          <stop offset="0" stopColor="#FFC857" stopOpacity="0.55" />
-          <stop offset="1" stopColor="#FFC857" stopOpacity="0" />
-        </radialGradient>
-      </defs>
-      <circle r="48" fill="url(#sun-glow)" style={{ opacity: busy ? 1 : 0.55, transition: 'opacity 600ms ease' }} />
-      {/* rays: the agents reaching out */}
-      <g stroke="#FF9F45" strokeWidth="2.2" strokeLinecap="round" style={{ opacity: busy ? 0.9 : 0.45, transition: 'opacity 600ms ease' }}>
-        {still ? null : <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="40s" repeatCount="indefinite" />}
-        {rays.map((a, i) => (
-          <line key={a} x1="0" y1={i % 2 ? -34 : -33} x2="0" y2={i % 2 ? -39 : -44} transform={`rotate(${a})`} />
-        ))}
-      </g>
-      {/* outer ring, cut into three */}
-      <g fill="none" stroke="#F25C2A" strokeWidth="2.6" strokeLinecap="round">
-        {still ? null : <animateTransform attributeName="transform" type="rotate" from="0" to="-360" dur={busy ? '8s' : '22s'} repeatCount="indefinite" />}
-        {[0, 120, 240].map((a) => (
-          <path key={a} d="M0 -28 A28 28 0 0 1 24.2 -14" transform={`rotate(${a})`} />
-        ))}
-      </g>
-      <circle r="21" fill="none" stroke="#FF9F45" strokeOpacity="0.55" strokeWidth="1.6" />
-      <circle r="16" fill="url(#sun-core)">
-        {still ? null : <animate attributeName="r" values="15.5;17;15.5" dur={busy ? '1.6s' : '3.6s'} repeatCount="indefinite" />}
-      </circle>
-    </svg>
+    <div className="relative overflow-hidden rounded-[20px] border border-[#FF9F45]/30 bg-[#FFF6E5]">
+      <svg viewBox="0 0 340 128" className="block h-auto w-full" role="img" aria-label={`${brand.product}: understand, decide, act`}>
+        <defs>
+          <linearGradient id="dawn-sun" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stopColor="#F25C2A" />
+            <stop offset="1" stopColor="#FF9F45" />
+          </linearGradient>
+        </defs>
+        <circle cx="0" cy="0" r="44" fill="url(#dawn-sun)" />
+        <circle cx="0" cy="0" r="62" fill="none" stroke="#FF9F45" strokeWidth="3" />
+        {ARCS.map((a, i) => {
+          const [x1, y1] = pt(a.from);
+          const [x2, y2] = pt(a.to);
+          const on = i === layer;
+          const lit = on || done || i < layer;
+          return (
+            <g key={a.label}>
+              <path
+                d={`M${x1.toFixed(1)} ${y1.toFixed(1)} A${R} ${R} 0 0 1 ${x2.toFixed(1)} ${y2.toFixed(1)}`}
+                fill="none"
+                stroke={lit ? '#F25C2A' : '#FFC857'}
+                strokeOpacity={lit ? 1 : 0.6}
+                strokeWidth={on ? 7 : 3}
+                strokeLinecap="round"
+                style={{ transition: 'stroke 500ms ease, stroke-width 500ms ease, stroke-opacity 500ms ease' }}
+              />
+              <text
+                x={a.lx}
+                y={a.ly}
+                fontSize="12"
+                fontFamily="inherit"
+                fill="#0A0F0E"
+                fillOpacity={on ? 1 : lit ? 0.6 : 0.35}
+                fontWeight={on ? 500 : 400}
+                style={{ transition: 'fill-opacity 500ms ease' }}
+              >
+                {a.label}
+              </text>
+            </g>
+          );
+        })}
+        <text x="322" y="34" textAnchor="end" fontSize="18" fontFamily="inherit" fontWeight="500" fill="#0A0F0E" letterSpacing="-0.3">
+          {brand.product}
+        </text>
+        <text x="322" y="52" textAnchor="end" fontSize="11" fontFamily="inherit" fill="#9A5A1E">
+          AI operating system
+        </text>
+      </svg>
+    </div>
   );
 }
 
@@ -324,28 +347,7 @@ function StoryCompact() {
 
       <Link on={phase >= 1} />
 
-      <div className="relative flex items-center gap-4 overflow-hidden rounded-[20px] border border-[#FF9F45]/25 bg-[linear-gradient(135deg,#FFF6E5_0%,#FFEBD2_100%)] px-4 py-3.5">
-        <div aria-hidden="true" className="pointer-events-none absolute -left-10 -top-12 h-40 w-40 rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.55),rgba(255,200,87,0))]" />
-        <Sun busy={phase >= 1 && phase <= 3} still={!!reduce} className="relative h-[84px] w-[84px] shrink-0" />
-        <div className="relative min-w-0 flex-1">
-          <p className="text-[17px] leading-none tracking-[-0.02em] text-ink">{brand.product}</p>
-          <p className="mt-1 text-[11px] text-[#9A5A1E]/75">AI operating system</p>
-          <ol className="mt-2 grid gap-1">
-            {platform.layers.map((l, i) => {
-              const on = i === layer;
-              const past = i < layer || phase === 4;
-              return (
-                <li key={l.name} className="flex items-center gap-2.5">
-                  <span className="relative h-[3px] w-6 shrink-0 overflow-hidden rounded-full bg-[#F25C2A]/15">
-                    <span className={cn('absolute inset-y-0 left-0 rounded-full bg-[linear-gradient(90deg,#FFC857,#F25C2A)] transition-[width] duration-700 ease-out', on || past ? 'w-full' : 'w-0')} />
-                  </span>
-                  <span className={cn('text-[12.5px] leading-tight transition-colors duration-500', on ? 'font-medium text-ink' : past ? 'text-ink/60' : 'text-ink/35')}>{l.name}</span>
-                </li>
-              );
-            })}
-          </ol>
-        </div>
-      </div>
+      <Dawn layer={layer} done={phase === 4} />
 
       <Link on={phase >= 3} />
 
