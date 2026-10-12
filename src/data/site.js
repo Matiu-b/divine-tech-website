@@ -435,14 +435,14 @@ export const howItWorks = {
   test: {
     ask: 'Do you have a 2-bedroom under $3,000 with parking, near downtown?',
     source: 'Listings database',
-    filters: ['2 bedrooms', 'Up to $3,000', 'Parking', 'Downtown'],
     scanned: '1,248 listings',
-    results: [
-      ['42 Maple St', '$2,850', 'Parking'],
-      ['18 Cedar Ave', '$2,990', 'Parking'],
+    options: [
+      { addr: '42 Maple St', price: '$2,850', note: '5 min to downtown' },
+      { addr: '18 Cedar Ave', price: '$2,990', note: 'Downtown' },
     ],
-    reply: 'Two match: 42 Maple St at $2,850 and 18 Cedar Ave at $2,990, both with parking. Want the details?',
-    checks: ['Answer matches your data', 'Prices from the live database', 'Nothing promised outside policy'],
+    pick: 'Maple St please, it fits my budget better.',
+    photos: ['/img/chat/apt-living.webp', '/img/chat/apt-kitchen.webp', '/img/chat/apt-bedroom.webp'],
+    photosText: 'Here it is. Want to see it this week?',
     passed: '24 of 24 test cases passed',
   },
 };

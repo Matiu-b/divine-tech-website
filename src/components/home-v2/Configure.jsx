@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { brand, howItWorks as hiw } from '@/data/site';
@@ -151,69 +151,113 @@ function ConnectVisual() {
 /* ------------------------------------------------------------------ */
 /* 3. A test conversation, then the go-live switch                     */
 /* ------------------------------------------------------------------ */
+/** Three-dot typing indicator inside a bubble. */
+function Typing({ dark }) {
+  return (
+    <span className="flex items-center gap-1 py-1" aria-label="typing">
+      {[0, 1, 2].map((d) => (
+        <span key={d} className={cn('h-1.5 w-1.5 animate-blink rounded-full', dark ? 'bg-white/70' : 'bg-ink/40')} style={{ animationDelay: d * 0.18 + 's' }} />
+      ))}
+    </span>
+  );
+}
+
 function GoLiveVisual() {
   const ref = useRef(null);
   const T = hiw.test;
   const reduce = useReducedMotion();
-  // 1 question · 2 Aurora checks the data (typing) · 3 answer · 4 the listings · 5 test summary · 7 approved · pause
-  const t = useLoop(ref, { steps: 12, final: 8, ms: 900 });
-  const show = (on) => (on ? 'translate-y-0 scale-100 opacity-100' : 'translate-y-2 scale-[0.98] opacity-0');
-  const bubble = 'max-w-[82%] w-fit px-3.5 py-2 text-[13px] leading-snug transition-all duration-500 ease-out origin-bottom';
-  const label = 'text-[10.5px] font-medium text-ink/45 transition-opacity duration-500';
-  const customer = cn(bubble, 'rounded-[20px] rounded-bl-[6px] bg-white text-ink shadow-[0_1px_2px_rgba(10,15,14,0.06)]');
-  const aurora = cn(bubble, 'ml-auto rounded-[20px] rounded-br-[6px] bg-ink text-white origin-bottom-right');
+  // The conversation plays inside a fixed window: older messages scroll up as new ones arrive.
+  // 1 ask · 2 typing · 3 two options · 5 customer picks · 6 typing · 7 photos · 9 test passed · 10 approved · pause
+  const t = useLoop(ref, { steps: 14, final: 11, ms: 1000 });
+
+  const msgs = [];
+  if (t >= 1) msgs.push({ id: 'ask', who: 'customer', body: T.ask });
+  if (t === 2) msgs.push({ id: 'typing1', who: 'aurora', typing: true });
+  if (t >= 3)
+    msgs.push({
+      id: 'options',
+      who: 'aurora',
+      body: (
+        <span className="grid gap-1.5">
+          <span>Yes, I have 2 options:</span>
+          {T.options.map((o, i) => (
+            <span key={o.addr} className="grid grid-cols-[auto_1fr] gap-x-2 rounded-[12px] bg-white/10 px-2.5 py-1.5">
+              <span className="text-white/50">{i + 1}</span>
+              <span>
+                {o.addr} · {o.price}
+                <span className="block text-[11.5px] text-white/60">{o.note}</span>
+              </span>
+            </span>
+          ))}
+          <span>Which one works better for you?</span>
+        </span>
+      ),
+    });
+  if (t >= 5) msgs.push({ id: 'pick', who: 'customer', body: T.pick });
+  if (t === 6) msgs.push({ id: 'typing2', who: 'aurora', typing: true });
+  if (t >= 7)
+    msgs.push({
+      id: 'photos',
+      who: 'aurora',
+      body: (
+        <span className="grid gap-1.5">
+          <span className="grid grid-cols-3 gap-1">
+            {T.photos.map((src, i) => (
+              <img key={src} src={src} alt={['Living room', 'Kitchen', 'Bedroom'][i] + ' at 42 Maple St'} loading="lazy" className="aspect-[4/3] w-full rounded-[8px] object-cover" />
+            ))}
+          </span>
+          <span>{T.photosText}</span>
+        </span>
+      ),
+    });
+
+  const bubble = 'max-w-[84%] w-fit px-3.5 py-2 text-[13px] leading-snug';
+  const styles = {
+    customer: cn(bubble, 'rounded-[20px] rounded-bl-[6px] bg-white text-ink shadow-[0_1px_2px_rgba(10,15,14,0.06)]'),
+    aurora: cn(bubble, 'ml-auto rounded-[20px] rounded-br-[6px] bg-ink text-white'),
+  };
+  const enter = reduce ? {} : { initial: { opacity: 0, y: 10, scale: 0.98 }, animate: { opacity: 1, y: 0, scale: 1 }, exit: { opacity: 0 }, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } };
+
   return (
     <div ref={ref}>
       <div className="canvas relative bg-[linear-gradient(160deg,#F3F1EC_0%,#E9E5DD_100%)] p-3 xs:p-4 md:p-5">
-        {/* warm Aurora light behind the glass */}
         <div aria-hidden="true" className="pointer-events-none absolute inset-0">
           <div className={cn('absolute -left-[10%] -top-[20%] h-[70%] w-[70%] rounded-full bg-[radial-gradient(closest-side,rgba(255,159,69,0.22),rgba(255,159,69,0))] blur-2xl', !reduce && 'animate-drift')} />
           <div className={cn('absolute -bottom-[20%] -right-[10%] h-[70%] w-[70%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.3),rgba(255,200,87,0))] blur-2xl', !reduce && 'animate-drift [animation-delay:-8s]')} />
         </div>
 
-        <LiquidGlass
-          className="relative overflow-hidden rounded-[26px]"
-          style={{ '--lg-tint-a': 'rgba(255,250,242,0.55)', '--lg-tint-b': 'rgba(255,246,229,0.25)' }}
-        >
-          <div className="flex min-h-[236px] flex-col gap-1.5 px-3.5 py-3.5">
-            {/* a customer asks */}
-            <p className={cn(label, 'pl-1', t >= 1 ? 'opacity-100' : 'opacity-0')}>Customer</p>
-            <p className={cn(customer, show(t >= 1))}>{T.ask}</p>
-
-            {/* Aurora looks it up, then answers */}
-            <p className={cn('my-1 text-center text-[10.5px] text-ink/50 transition-opacity duration-500', t >= 2 ? 'opacity-100' : 'opacity-0')}>
-              {t >= 3 ? `Found in your listings (${T.scanned} checked)` : 'Looking in your listings…'}
-            </p>
-            <p className={cn(label, 'pr-1 text-right', t >= 2 ? 'opacity-100' : 'opacity-0')}>{brand.product}, your AI agent</p>
-            {t === 2 && !reduce ? (
-              <span className={cn(aurora, 'flex items-center gap-1 py-3')} aria-hidden="true">
-                {[0, 1, 2].map((d) => (
-                  <span key={d} className="h-1.5 w-1.5 animate-blink rounded-full bg-white/70" style={{ animationDelay: d * 0.18 + 's' }} />
-                ))}
-              </span>
-            ) : null}
-            <p className={cn(aurora, show(t >= 3), t < 3 && 'hidden')}>Yes, two match.</p>
-            <div className={cn(aurora, show(t >= 4), t < 4 && 'hidden', 'grid gap-1')}>
-              {T.results.map(([addr, price]) => (
-                <span key={addr}>
-                  {addr}, <span className="text-white/70">{price}</span>
-                </span>
-              ))}
-              <span className="mt-0.5">Both have parking. Want the details?</span>
-            </div>
+        <LiquidGlass className="relative overflow-hidden rounded-[26px]" style={{ '--lg-tint-a': 'rgba(255,250,242,0.55)', '--lg-tint-b': 'rgba(255,246,229,0.25)' }}>
+          <div className="flex items-center justify-between border-b border-white/50 px-4 py-2 text-[10.5px] font-medium text-ink/45">
+            <span>Customer</span>
+            <span>{brand.product}, your AI agent</span>
           </div>
 
-          {/* your sign-off, as a quiet system line under the chat */}
-          <div className={cn('flex items-center justify-between gap-3 border-t border-white/50 px-4 py-2.5 transition-colors duration-500', t >= 7 ? 'bg-white/45' : 'bg-white/15')}>
-            <span className="min-w-0 text-[11.5px] leading-snug text-ink/70">{t >= 7 ? 'Approved. Customers now get these answers.' : t >= 5 ? 'Test passed: 24 of 24 answers correct' : 'Testing on real questions…'}</span>
+          {/* fixed-height window, anchored to the bottom like a chat app */}
+          <div className="relative h-[300px] overflow-hidden px-3.5 py-3">
+            <div className="absolute inset-x-3.5 bottom-3 flex flex-col gap-1.5">
+              <AnimatePresence initial={false}>
+                {msgs.map((m) => (
+                  <motion.div key={m.id} layout={!reduce} {...enter} className={cn('flex', m.who === 'aurora' ? 'justify-end' : 'justify-start')}>
+                    <div className={styles[m.who]}>{m.typing ? <Typing dark={m.who === 'aurora'} /> : m.body}</div>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+            <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-8 bg-gradient-to-b from-[#FBF7F0]/80 to-transparent" />
+          </div>
+
+          <div className={cn('flex items-center justify-between gap-3 border-t border-white/50 px-4 py-2.5 transition-colors duration-500', t >= 10 ? 'bg-white/45' : 'bg-white/15')}>
+            <span className="min-w-0 text-[11.5px] leading-snug text-ink/70">
+              {t >= 10 ? 'Approved. Customers now get these answers.' : t >= 9 ? 'Test passed: 24 of 24 answers correct' : 'Testing on real questions…'}
+            </span>
             <span
               className={cn(
                 'flex h-7 shrink-0 items-center gap-1.5 rounded-full px-3 text-[11.5px] font-medium transition-all duration-500',
-                t >= 7 ? 'bg-ink text-white' : t >= 5 ? 'bg-white text-ink shadow-[0_1px_2px_rgba(10,15,14,0.1)]' : 'bg-white/40 text-ink/40'
+                t >= 10 ? 'bg-ink text-white' : t >= 9 ? 'bg-white text-ink shadow-[0_1px_2px_rgba(10,15,14,0.1)]' : 'bg-white/40 text-ink/40'
               )}
             >
-              {t >= 7 ? <Check className="h-3.5 w-3.5" strokeWidth={2.6} aria-hidden="true" /> : null}
-              {t >= 7 ? 'Live' : 'Approve'}
+              {t >= 10 ? <Check className="h-3.5 w-3.5" strokeWidth={2.6} aria-hidden="true" /> : null}
+              {t >= 10 ? 'Live' : 'Approve'}
             </span>
           </div>
         </LiquidGlass>
