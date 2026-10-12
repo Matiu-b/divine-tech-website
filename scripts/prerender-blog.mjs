@@ -36,8 +36,10 @@ function setMeta(html, { title, description, url, image, type = 'website', jsonl
 
 const withBody = (html, body) => html.replace('<div id="root"></div>', `<div id="root">${body}</div>`);
 
+// Written as <path>.html, not <path>/index.html: Netlify serves /blog/x from blog/x.html as is,
+// while a folder index would 301 to a trailing-slash URL that no longer matches the canonical.
 function write(path, html) {
-  const file = join(dist, path, 'index.html');
+  const file = join(dist, `${path}.html`);
   mkdirSync(dirname(file), { recursive: true });
   writeFileSync(file, html);
   console.log('prerendered', path);
