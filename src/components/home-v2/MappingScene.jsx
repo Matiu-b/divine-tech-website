@@ -101,8 +101,8 @@ export default function MappingScene({ t, className = undefined }) {
       {/* the board */}
       <g>
         <rect x="336" y="22" width="356" height="224" rx="16" fill="#fff" stroke={INK} strokeOpacity="0.08" />
-        <text x="356" y="50" fontSize="11" fill="#6B716F" fontFamily="inherit">How Maple Realty works</text>
-        <text x="672" y="50" textAnchor="end" fontSize="11" fill="#0E7A50" fontFamily="inherit" className="transition-opacity duration-500" opacity={t > 0 ? 1 : 0}>AI agent mapping along</text>
+        <text x="356" y="43" fontSize="11" fill="#6B716F" fontFamily="inherit">How Maple Realty works</text>
+        <text x="356" y="59" fontSize="10" fill="#0E7A50" fontFamily="inherit" className="transition-opacity duration-500" opacity={t > 0 ? 1 : 0}>AI agent mapping along</text>
         {EDGES.map((e) => (
           <path
             key={e.d}
