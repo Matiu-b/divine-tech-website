@@ -291,7 +291,7 @@ function Dawn({ layer, done }) {
                 style={{ transition: 'stroke 500ms ease, stroke-width 500ms ease, stroke-opacity 500ms ease' }}
               />
               <text
-                x="186"
+                x="172"
                 y={76 + i * 20}
                 fontSize="12.5"
                 fontFamily="inherit"
@@ -305,10 +305,10 @@ function Dawn({ layer, done }) {
             </g>
           );
         })}
-        <text x="186" y="34" fontSize="18" fontFamily="inherit" fontWeight="500" fill="#0A0F0E" letterSpacing="-0.3">
+        <text x="172" y="34" fontSize="18" fontFamily="inherit" fontWeight="500" fill="#0A0F0E" letterSpacing="-0.3">
           {brand.product}
         </text>
-        <text x="186" y="50" fontSize="11" fontFamily="inherit" fill="#9A5A1E">
+        <text x="172" y="50" fontSize="11" fontFamily="inherit" fill="#9A5A1E">
           AI operating system
         </text>
       </svg>
