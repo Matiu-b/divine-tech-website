@@ -167,8 +167,9 @@ function GoLiveVisual() {
   const T = hiw.test;
   const reduce = useReducedMotion();
   // The conversation plays inside a fixed window: older messages scroll up as new ones arrive.
-  // 1 ask · 2 typing · 3 two options · 5 customer picks · 6 typing · 7 photos · 9 test passed · 10 approved · pause
-  const t = useLoop(ref, { steps: 14, final: 11, ms: 1000 });
+  // 1 ask · 2 typing · 3 two options · 5 customer picks · 6 typing · 7 photos · 9 asks for a time
+  // 10 Aurora checks Google Calendar · 11 booked + invite · 13 test passed · 14 approved · pause
+  const t = useLoop(ref, { steps: 18, final: 15, ms: 1000 });
 
   const msgs = [];
   if (t >= 1) msgs.push({ id: 'ask', who: 'customer', body: T.ask });
@@ -211,6 +212,37 @@ function GoLiveVisual() {
       ),
     });
 
+  if (t >= 9) msgs.push({ id: 'when', who: 'customer', body: T.when });
+  if (t === 10)
+    msgs.push({
+      id: 'checking',
+      who: 'aurora',
+      body: (
+        <span className="flex items-center gap-2 text-[12px] text-ink/70">
+          <GoogleCalendarMark className="h-4 w-4 shrink-0" />
+          Checking Google Calendar…
+        </span>
+      ),
+    });
+  if (t >= 11)
+    msgs.push({
+      id: 'booked',
+      who: 'aurora',
+      body: (
+        <span className="grid gap-1.5">
+          <span>{T.booked}</span>
+          <span className="flex items-center gap-2.5 rounded-[12px] bg-white/80 px-2.5 py-2">
+            <GoogleCalendarMark className="h-7 w-7 shrink-0" />
+            <span className="min-w-0">
+              <span className="block truncate text-[12.5px] font-medium">{T.invite.title}</span>
+              <span className="block text-[11.5px] text-ink/60">{T.invite.time}</span>
+              <span className="block text-[11px] text-[#2F8F5B]">{T.invite.note}</span>
+            </span>
+          </span>
+        </span>
+      ),
+    });
+
   const bubble = 'max-w-[84%] w-fit px-3.5 py-2 text-[13px] leading-snug';
   const styles = {
     customer: cn(bubble, 'rounded-[20px] rounded-bl-[6px] bg-white text-ink shadow-[0_1px_2px_rgba(10,15,14,0.06)]'),
@@ -246,18 +278,18 @@ function GoLiveVisual() {
             <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-8 bg-gradient-to-b from-[#FBF7F0]/80 to-transparent" />
           </div>
 
-          <div className={cn('flex items-center justify-between gap-3 border-t border-white/50 px-4 py-2.5 transition-colors duration-500', t >= 10 ? 'bg-white/45' : 'bg-white/15')}>
+          <div className={cn('flex items-center justify-between gap-3 border-t border-white/50 px-4 py-2.5 transition-colors duration-500', t >= 14 ? 'bg-white/45' : 'bg-white/15')}>
             <span className="min-w-0 text-[11.5px] leading-snug text-ink/70">
-              {t >= 10 ? 'Approved. Customers now get these answers.' : t >= 9 ? 'Test passed: 24 of 24 answers correct' : 'Testing on real questions…'}
+              {t >= 14 ? 'Approved. Customers now get these answers.' : t >= 13 ? 'Test passed: 24 of 24 answers correct' : 'Testing on real questions…'}
             </span>
             <span
               className={cn(
                 'flex h-7 shrink-0 items-center gap-1.5 rounded-full px-3 text-[11.5px] font-medium transition-all duration-500',
-                t >= 10 ? 'bg-ink text-white' : t >= 9 ? 'bg-white text-ink shadow-[0_1px_2px_rgba(10,15,14,0.1)]' : 'bg-white/40 text-ink/40'
+                t >= 14 ? 'bg-ink text-white' : t >= 13 ? 'bg-white text-ink shadow-[0_1px_2px_rgba(10,15,14,0.1)]' : 'bg-white/40 text-ink/40'
               )}
             >
-              {t >= 10 ? <Check className="h-3.5 w-3.5" strokeWidth={2.6} aria-hidden="true" /> : null}
-              {t >= 10 ? 'Live' : 'Approve'}
+              {t >= 14 ? <Check className="h-3.5 w-3.5" strokeWidth={2.6} aria-hidden="true" /> : null}
+              {t >= 14 ? 'Live' : 'Approve'}
             </span>
           </div>
         </LiquidGlass>

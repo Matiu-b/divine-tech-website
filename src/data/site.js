@@ -443,6 +443,9 @@ export const howItWorks = {
     pick: 'Maple St please, it fits my budget better.',
     photos: ['/img/chat/apt-living.webp', '/img/chat/apt-kitchen.webp', '/img/chat/apt-bedroom.webp'],
     photosText: 'Here it is. Want to see it this week?',
+    when: 'Yes! Can I come Thursday after 5?',
+    booked: 'Thursday at 5:30 works. I booked it and sent you the invite.',
+    invite: { title: 'Viewing · 42 Maple St', time: 'Thu · 5:30 – 6:00 PM', note: 'Invite sent to your email' },
     passed: '24 of 24 test cases passed',
   },
 };
