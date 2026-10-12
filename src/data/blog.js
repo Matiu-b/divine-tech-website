@@ -1,5 +1,5 @@
 // Blog posts. Plain ESM with no imports, so the post-build prerender script
-// (scripts/prerender-blog.mjs) can read it in Node and write static HTML for crawlers.
+// (scripts/prerender.mjs) can read it in Node and write static HTML for crawlers.
 // Each post was written with the seo-geo-article-writer workflow; the full package
 // (keywords, competitor notes, quality gate) lives in docs/blog/<slug>.json.
 export const SITE_URL = 'https://divine-tech.ai';

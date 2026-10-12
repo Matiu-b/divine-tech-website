@@ -1,37 +1,33 @@
-import { useLocation } from 'react-router-dom';
+import React from 'react';
+import SiteLayout from '@/components/home-v2/SiteLayout';
+import SmartLink from '@/components/home-v2/primitives/SmartLink';
 
+const meta = { title: 'Page not found · Divine Tech AI', description: 'This page does not exist on divine-tech.ai.' };
+
+// Shown for any path the router does not know. Netlify serves it from 404.html with a real 404 status.
 export default function PageNotFound() {
-    const location = useLocation();
-    const pageName = location.pathname.substring(1);
-
-    return (
-        <div className="min-h-screen flex items-center justify-center p-6 bg-slate-50">
-            <div className="max-w-md w-full">
-                <div className="text-center space-y-6">
-                    <div className="space-y-2">
-                        <h1 className="text-7xl font-light text-slate-300">404</h1>
-                        <div className="h-0.5 w-16 bg-slate-200 mx-auto"></div>
-                    </div>
-
-                    <div className="space-y-3">
-                        <h2 className="text-2xl font-medium text-slate-800">
-                            Page Not Found
-                        </h2>
-                        <p className="text-slate-600 leading-relaxed">
-                            The page <span className="font-medium text-slate-700">"{pageName}"</span> could not be found.
-                        </p>
-                    </div>
-
-                    <div className="pt-6">
-                        <a
-                            href="/"
-                            className="inline-flex items-center px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 hover:border-slate-300 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500"
-                        >
-                            Go Home
-                        </a>
-                    </div>
-                </div>
-            </div>
+  return (
+    <SiteLayout meta={meta}>
+      <section data-nav-theme="light" className="section">
+        <div className="shell max-w-[720px] pt-16 md:pt-24">
+          <p className="eyebrow">404</p>
+          <h1 className="t-h2 mt-4">This page does not exist.</h1>
+          <p className="mt-4 text-[15px] leading-relaxed text-graphite">The link may be old or mistyped. These pages are a good place to start:</p>
+          <ul className="mt-8 grid gap-3 text-[15px]">
+            {[
+              ['/', 'Home'],
+              ['/platform', 'The Aurora platform'],
+              ['/blog', 'Blog'],
+            ].map(([href, label]) => (
+              <li key={href}>
+                <SmartLink href={href} className="font-medium text-ink underline underline-offset-4 hover:no-underline">
+                  {label}
+                </SmartLink>
+              </li>
+            ))}
+          </ul>
         </div>
-    )
+      </section>
+    </SiteLayout>
+  );
 }

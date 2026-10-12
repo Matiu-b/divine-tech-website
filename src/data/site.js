@@ -544,3 +544,52 @@ export const industriesSection = {
 
 // Must match the industry options in public/__forms.html (Netlify Forms).
 export const leadIndustries = ['Real Estate', 'Wellness & Healthcare', 'Home Services', 'Other'];
+
+// Search and link-preview metadata for pages that are not driven by another data file.
+// The post-build prerender (scripts/prerender.mjs) writes these into each page's static HTML.
+export const homeMeta = {
+  title: 'Aurora · AI operating system for business | Divine Tech AI',
+  description:
+    'Aurora by Divine Tech AI is the AI operating system for business: AI agents that answer customers, work in your CRM and calendar, and ask before what matters.',
+};
+
+export const privacyMeta = {
+  title: 'Privacy Policy · Divine Tech AI',
+  description:
+    'How Divine Tech AI, Inc. collects, uses, shares and protects personal information on divine-tech.ai and in demo requests, and the privacy rights you have.',
+};
+
+// Tools Aurora is connected to during setup, named in the FAQ and in llms.txt.
+export const integrations = {
+  crm: ['HubSpot', 'Salesforce'],
+  calendars: ['Google Calendar', 'Microsoft Outlook'],
+  channels: ['phone', 'SMS', 'web chat', 'email', 'WhatsApp', 'Slack'],
+};
+
+// Home page FAQ (also published as FAQPage structured data).
+export const homeFaq = [
+  [
+    'What is Aurora?',
+    'Aurora is the AI operating system for business, built by Divine Tech AI. It runs AI agents across sales, customer service and internal operations: they answer customers and employees on any channel, do the work inside the systems you already use, and ask a person to approve anything above the limits you set.',
+  ],
+  [
+    'Who is Aurora for?',
+    'Businesses and organizations whose teams spend their day on routine requests: answering leads, booking appointments, updating the CRM, sending invoices and following up. Aurora has ready-made setups for real estate, wellness and healthcare, and home services, and it works for any team with repeatable processes.',
+  ],
+  [
+    'How long does setup take?',
+    'Aurora goes live within hours. Our experts and AI agents map your business with you and turn it into an action plan. Aurora sets itself up from that plan, is tested on real questions from your own data, and goes live only after you approve. There is no technical project on your side.',
+  ],
+  [
+    'Which tools does Aurora work with?',
+    'Aurora works inside the tools your team already uses, including CRMs such as HubSpot and Salesforce, Google Calendar and Microsoft Outlook calendars, email, your phone system, payments, and messaging channels such as SMS, WhatsApp and Slack. Nothing needs to be replaced.',
+  ],
+  [
+    'How does Aurora stay under our control?',
+    'You decide what Aurora may do on its own, what needs a person’s approval and what it never does. Every action is recorded with the request, the rule that applied and who approved it, access is set per role, and your data is never used to train shared models.',
+  ],
+  [
+    'Does Aurora replace our staff?',
+    'No. Aurora takes the repetitive work off each department so your people spend their time on customers and decisions. It brings in a person whenever a request needs judgment or approval.',
+  ],
+];

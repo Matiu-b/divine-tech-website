@@ -1,25 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+import { useLocation } from 'react-router-dom';
+import usePageMeta from '@/lib/usePageMeta';
 import { LeadProvider } from './LeadDrawer';
 import SafeBoundary from './primitives/SafeBoundary';
 import Nav from './Nav';
 import Footer from './Footer';
-
-const DEFAULT_TITLE = 'Divine Tech AI · Aurora runs the work. Your team runs the business.';
-
-/** Sets the document title and meta description for the current page, restoring the defaults on leave. */
-function usePageMeta(meta) {
-  useEffect(() => {
-    if (!meta) return undefined;
-    const desc = document.querySelector('meta[name="description"]');
-    const prevDesc = desc ? desc.getAttribute('content') : null;
-    document.title = meta.title;
-    if (desc && meta.description) desc.setAttribute('content', meta.description);
-    return () => {
-      document.title = DEFAULT_TITLE;
-      if (desc && prevDesc !== null) desc.setAttribute('content', prevDesc);
-    };
-  }, [meta]);
-}
 
 /**
  * Shared shell for marketing pages: skip link, nav, main, footer and the demo drawer.
@@ -27,7 +12,8 @@ function usePageMeta(meta) {
  * @param {any} props
  */
 export default function SiteLayout({ children, industry = '', meta = undefined }) {
-  usePageMeta(meta);
+  const { pathname } = useLocation();
+  usePageMeta(meta, pathname);
   return (
     <LeadProvider industry={industry}>
       <a href="#main" className="skip-link">

@@ -6,12 +6,10 @@
   # Vite 8 needs a current Node LTS.
   NODE_VERSION = "22"
 
-# Single-page app: let React Router handle every path.
-# Real files (assets, /__forms.html) are served first; this only catches the rest.
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+# No SPA catch-all: every route is a prerendered file (scripts/prerender.mjs writes
+# index.html, platform.html, industries/*.html, blog/*.html, privacy.html), served by
+# Netlify's pretty URLs. Any other path gets 404.html with a real 404 status, and the
+# app shows its not-found page.
 
 [[headers]]
   for = "/*"

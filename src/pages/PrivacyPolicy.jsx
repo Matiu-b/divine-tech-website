@@ -1,13 +1,14 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+import usePageMeta from '@/lib/usePageMeta';
 import { ArrowLeft } from 'lucide-react';
 import { LeadProvider } from '@/components/home-v2/LeadDrawer';
 import SafeBoundary from '@/components/home-v2/primitives/SafeBoundary';
 import Logo from '@/components/home-v2/primitives/Logo';
 import Footer from '@/components/home-v2/Footer';
 import { openConsentSettings } from '@/lib/consent';
-import { brand, legal } from '@/data/site';
+import { brand, legal, privacyMeta } from '@/data/site';
 
-const UPDATED = 'October 11, 2026';
+const UPDATED = 'October 12, 2026';
 
 const TOC = [
   ['scope', 'Who we are and what this policy covers'],
@@ -49,13 +50,7 @@ const CookieSettingsLink = () => (
 const Email = () => <a href={'mailto:' + brand.email}>{brand.email}</a>;
 
 export default function PrivacyPolicy() {
-  useEffect(() => {
-    const prev = document.title;
-    document.title = 'Privacy Policy · Divine Tech AI';
-    return () => {
-      document.title = prev;
-    };
-  }, []);
+  usePageMeta(privacyMeta, '/privacy');
 
   return (
     <LeadProvider>
@@ -121,7 +116,7 @@ export default function PrivacyPolicy() {
               <Section id="what-we-collect">
                 <p>
                   <strong>Information you give us.</strong> When you book a demo or contact us, we collect what you enter
-                  in the form: your name, company, work email, phone number (optional), industry and message, together
+                  in the form: your name, company, work email, phone number, industry and message, together
                   with the page you sent it from. We also keep the emails, messages and call details you exchange with us.
                 </p>
                 <p>

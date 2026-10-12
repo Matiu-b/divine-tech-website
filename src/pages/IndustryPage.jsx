@@ -1,11 +1,12 @@
 import React from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
-import { ArrowRight, ArrowUpRight, Check, Plus, ShieldCheck } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Check, ShieldCheck } from 'lucide-react';
 import { brand } from '@/data/site';
 import { industries, industryBySlug, industryPath } from '@/data/industries';
 import SiteLayout from '@/components/home-v2/SiteLayout';
 import FinalCTA from '@/components/home-v2/FinalCTA';
+import Faq from '@/components/home-v2/Faq';
 import PhotoStage from '@/components/home-v2/PhotoStage';
 import CTAButton from '@/components/home-v2/primitives/CTAButton';
 import SafeBoundary from '@/components/home-v2/primitives/SafeBoundary';
@@ -195,31 +196,6 @@ function GoLive({ it }) {
   );
 }
 
-function Faq({ it }) {
-  return (
-    <section data-nav-theme="light" aria-labelledby="ind-faq-title" className="section relative pt-0">
-      <div className="shell grid gap-10 lg:grid-cols-12">
-        <div className="lg:col-span-4">
-          <SectionHeader id="ind-faq-title" eyebrow="Questions" titleA="Good to know." size="t-h2" />
-        </div>
-        <Reveal className="lg:col-span-8">
-          <div className="border-b border-ink/10">
-            {it.faq.map(([q, a]) => (
-              <details key={q} className="group border-t border-ink/10">
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-6 text-[15px] font-medium text-ink [&::-webkit-details-marker]:hidden">
-                  {q}
-                  <Plus className="h-4 w-4 shrink-0 text-ink/50 transition-transform duration-300 group-open:rotate-45" strokeWidth={1.8} aria-hidden="true" />
-                </summary>
-                <p className="max-w-[62ch] pb-6 text-[14px] leading-relaxed text-graphite">{a}</p>
-              </details>
-            ))}
-          </div>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
 function OtherIndustries({ it }) {
   const others = industries.filter((o) => o.slug !== it.slug);
   return (
@@ -261,7 +237,7 @@ export default function IndustryPage() {
       <How it={it} />
       <ControlAndValue it={it} />
       <GoLive it={it} />
-      <Faq it={it} />
+      <Faq id="ind-faq-title" items={it.faq} className="pt-0" />
       <OtherIndustries it={it} />
       <FinalCTA industry={it.leadIndustry} />
     </SiteLayout>
