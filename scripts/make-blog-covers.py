@@ -1,8 +1,10 @@
 """Render blog cover images from a text-free background plus editable type.
 
-Backgrounds live in design/blog-covers/<slug>-bg.webp (generated without any text).
-Titles live in design/blog-covers/covers.json, so a headline can be changed and the
-cover re-rendered without generating a new image:
+Backgrounds live in design/blog-covers/<slug>-bg.webp and never contain text. A cover entry
+in design/blog-covers/covers.json that has a "palette" (3 to 5 hex colours, darkest first) and
+no background file yet gets one drawn here: soft out-of-focus light on film grain, the same
+look as the existing covers, with no image service needed. Titles live in covers.json too,
+so a headline can be changed and the cover re-rendered without a new background:
 
     python3 scripts/make-blog-covers.py            # all covers
     python3 scripts/make-blog-covers.py <slug>     # one cover
@@ -10,7 +12,8 @@ cover re-rendered without generating a new image:
 Writes public/img/blog/<slug>-1600.webp, -800.webp and -og.jpg (1200x675).
 Needs Python Playwright with Chromium and Pillow. Runs locally, not in the Netlify build.
 """
-import base64, html, json, sys, io
+import base64, hashlib, html, json, sys, io
+import numpy as np
 from pathlib import Path
 from PIL import Image
 from playwright.sync_api import sync_playwright
@@ -34,8 +37,40 @@ h1 {{ position: absolute; left: 160px; right: 160px; top: 50%; transform: transl
 img {{ position: absolute; left: 64px; bottom: 56px; height: 30px; }}
 </style></head><body><h1>{title}</h1><img src="{logo}"></body></html>"""
 
+def hex_rgb(h):
+    h = h.lstrip('#')
+    return np.array([int(h[i:i + 2], 16) for i in (0, 2, 4)], dtype=np.float32)
+
+def draw_background(cover, path):
+    """Blurred colour field: a base colour with large soft glows of the other palette colours."""
+    seed = int(hashlib.sha1(cover.get('seed', cover['slug']).encode()).hexdigest()[:8], 16)
+    rng = np.random.default_rng(seed)
+    W, H = 1600, 900
+    yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
+    pal = [hex_rgb(c) for c in cover['palette']]
+    img = np.zeros((H, W, 3), np.float32) + pal[0]
+    # a gentle diagonal tilt toward the second colour keeps the field from looking flat
+    t = ((xx / W) * rng.uniform(0.3, 0.7) + (yy / H) * rng.uniform(0.3, 0.7))[..., None]
+    img = img * (1 - 0.35 * t) + pal[1] * (0.35 * t)
+    for col in pal[1:]:
+        cx, cy = rng.uniform(0.0, 1.0) * W, rng.uniform(0.0, 1.0) * H
+        rx, ry = rng.uniform(0.22, 0.42) * W, rng.uniform(0.35, 0.65) * H
+        g = np.exp(-(((xx - cx) / rx) ** 2 + ((yy - cy) / ry) ** 2))[..., None] * rng.uniform(0.85, 1.0)
+        img = img * (1 - g) + col * g
+    # lift saturation a little so the glows read as light, not mud
+    grey = img.mean(axis=2, keepdims=True)
+    img = grey + (img - grey) * 1.25
+    img += rng.normal(0, 7, (H, W, 1)).astype(np.float32)  # film grain
+    Image.fromarray(np.clip(img, 0, 255).astype(np.uint8)).save(path, quality=90)
+    print('drew background', cover['slug'])
+
 def render(page, cover):
     slug, dark = cover['slug'], cover.get('tone', 'dark') == 'dark'
+    bg = DESIGN / f'{slug}-bg.webp'
+    if not bg.exists():
+        if 'palette' not in cover:
+            sys.exit(f'{slug}: no background file and no palette in covers.json')
+        draw_background(cover, bg)
     logo = ROOT / 'public' / 'brand' / ('divine-logo-horizontal-color-dark.svg' if dark else 'divine-logo-horizontal-color.svg')
     page.set_content(PAGE.format(
         font=data_uri(FONT_FILE, 'font/woff'),
