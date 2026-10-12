@@ -64,8 +64,10 @@ export default function Outcomes() {
   }, [active, touched, inView, visible, reduce, items.length]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <section id="outcomes" data-nav-theme="light" aria-labelledby="outcomes-title" className="section relative">
+    <section id="outcomes" data-nav-theme="light" aria-labelledby="outcomes-title" className="section relative !pt-0">
       <div className="shell">
+        {/* a rule closes the platform section above, instead of two stacked section paddings */}
+        <div aria-hidden="true" className="hairline mb-[clamp(56px,7vw,104px)]" />
         <SectionHeader id="outcomes-title" titleA={outcomes.titleA} text={outcomes.text} layout="split" />
 
         <div
