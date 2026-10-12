@@ -75,9 +75,11 @@ const breadcrumbs = (trail) => ({
   itemListElement: trail.map(([name, path], i) => ({ '@type': 'ListItem', position: i + 1, name, item: abs(path) })),
 });
 
+const og = (key) => `${SITE_URL}/img/og/${key}.jpg`;
+
 const graph = (...nodes) => ({ '@context': 'https://schema.org', '@graph': [organization, ...nodes] });
 
-function setMeta(html, { title, description, path, image, type = 'website', jsonld = [], noindex = false }) {
+function setMeta(html, { title, description, path, image, imageHeight = 630, type = 'website', jsonld = [], noindex = false }) {
   const url = abs(path);
   let out = html
     .replace(/<title>[\s\S]*?<\/title>/, `<title>${esc(title)}</title>`)
@@ -90,7 +92,7 @@ function setMeta(html, { title, description, path, image, type = 'website', json
     out = out
       .replace(/<meta property="og:image" content="[^"]*" \/>/, `<meta property="og:image" content="${image}" />`)
       .replace(/<meta name="twitter:image" content="[^"]*" \/>/, `<meta name="twitter:image" content="${image}" />`)
-      .replace(/<meta property="og:image:height" content="[^"]*" \/>/, '<meta property="og:image:height" content="675" />');
+      .replace(/<meta property="og:image:height" content="[^"]*" \/>/, `<meta property="og:image:height" content="${imageHeight}" />`);
   }
   const head = noindex ? ['<meta name="robots" content="noindex" />'] : [`<link rel="canonical" href="${url}" />`];
   const extra = [...head, ...jsonld.map(ld)].join('\n    ');
@@ -142,7 +144,7 @@ function render(path, meta, main) {
     faqHtml(s.homeFaq, 'Questions about Aurora'),
     `<section id="contact"><h2>${esc(s.closing.titleA)} ${esc(s.closing.titleB)}</h2><p>${esc(s.closing.text)}</p></section>`,
   ].join('');
-  render('/', { ...s.homeMeta, jsonld: [graph(website, software, faqPage(s.homeFaq, SITE_URL + '/'))] }, main);
+  render('/', { ...s.homeMeta, image: og('home'), jsonld: [graph(website, software, faqPage(s.homeFaq, SITE_URL + '/'))] }, main);
 }
 
 // Platform
@@ -160,7 +162,7 @@ function render(path, meta, main) {
     )}, and channels including ${esc(s.integrations.channels.join(', '))}.</p></section>`,
     `<section id="contact"><h2>${esc(s.closing.titleA)} ${esc(s.closing.titleB)}</h2><p>${esc(s.closing.text)}</p></section>`,
   ].join('');
-  render('/platform', { ...p.meta, jsonld: [graph(software, breadcrumbs([['Home', '/'], ['Platform', '/platform']]))] }, main);
+  render('/platform', { ...p.meta, image: og('platform'), jsonld: [graph(software, breadcrumbs([['Home', '/'], ['Platform', '/platform']]))] }, main);
 }
 
 // Industry pages
@@ -178,7 +180,7 @@ for (const it of industries) {
       .map((o) => `<li><a href="${industryPath(o.slug)}">${esc(o.label)}</a>: ${esc(o.short)}</li>`)
       .join('')}</ul></section>`,
   ].join('');
-  render(path, { ...it.meta, jsonld: [graph(breadcrumbs([['Home', '/'], [it.label, path]]), faqPage(it.faq, abs(path)))] }, main);
+  render(path, { ...it.meta, image: og(it.slug), jsonld: [graph(breadcrumbs([['Home', '/'], [it.label, path]]), faqPage(it.faq, abs(path)))] }, main);
 }
 
 // Privacy: the policy text lives in JSX, so turn that markup into plain HTML here.
@@ -224,6 +226,7 @@ render(
   {
     title: blog.metaTitle,
     description: blog.metaDescription,
+    image: og('home'),
     jsonld: [graph({ '@type': 'Blog', name: 'Divine Tech AI Blog', url: abs('/blog'), publisher: { '@id': ORG_ID }, blogPost: posts.map((p) => ({ '@type': 'BlogPosting', headline: p.title, url: abs(postPath(p.slug)), datePublished: p.date })) })],
   },
   `<h1>${esc(blog.title)}</h1><p>${esc(blog.intro)}</p><ul>${posts
@@ -236,7 +239,7 @@ for (const p of posts) {
   const path = postPath(p.slug);
   render(
     path,
-    { title: p.titleTag, description: p.description, image: SITE_URL + p.image.og, type: 'article', jsonld: p.schema },
+    { title: p.titleTag, description: p.description, image: SITE_URL + p.image.og, imageHeight: 675, type: 'article', jsonld: p.schema },
     `<article><p><a href="/blog">Blog</a> · ${esc(p.category)}</p><h1>${esc(p.title)}</h1><p>${esc(p.dek)}</p><p>${esc(p.author)} · <time datetime="${p.date}">${fmt(p.date)}</time></p><img src="${p.image.base}-1600.webp" alt="${esc(p.image.alt)}" width="1600" height="900" />${p.bodyHtml}</article>`
   );
 }
@@ -297,3 +300,21 @@ ${site.homeFaq.map(([q, a]) => `### ${q}\n\n${a}`).join('\n\n')}
 `;
 writeFileSync(join(dist, 'llms.txt'), llms);
 console.log('wrote sitemap.xml, robots.txt and llms.txt');
+
+// IndexNow: on production deploys only, tell Bing (and the engines that share IndexNow, which also
+// feeds ChatGPT search and Copilot) which URLs exist, so new and changed pages are crawled right away.
+// The key file public/e747df91f8dc7308857fda06c15a8e41.txt proves the site owns the key. A failure never fails the build.
+const INDEXNOW_KEY = 'e747df91f8dc7308857fda06c15a8e41';
+if (process.env.CONTEXT === 'production') {
+  try {
+    const res = await fetch('https://api.indexnow.org/indexnow', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
+      body: JSON.stringify({ host: new URL(SITE_URL).host, key: INDEXNOW_KEY, keyLocation: `${SITE_URL}/${INDEXNOW_KEY}.txt`, urlList: urls.map(([u]) => abs(u)) }),
+      signal: AbortSignal.timeout(10000),
+    });
+    console.log('IndexNow:', res.status);
+  } catch (e) {
+    console.log('IndexNow skipped:', e.message);
+  }
+}
