@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useReducedMotion } from 'framer-motion';
-import { Check, Database } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { brand, howItWorks as hiw } from '@/data/site';
 import SectionHeader from './primitives/SectionHeader';
@@ -24,6 +24,7 @@ import {
   WhatsAppMark,
 } from './BrandMarks';
 import ProcessBoard from './ProcessBoard';
+import LiquidGlass from './primitives/LiquidGlass';
 
 // Who does each phase decides its colour on the rail: ink = our experts with you, green = Aurora.
 const TONE = { you: 'bg-ink', aurora: 'bg-brand' };
@@ -153,32 +154,79 @@ function ConnectVisual() {
 function GoLiveVisual() {
   const ref = useRef(null);
   const T = hiw.test;
-  // 1 question · 2 lookup · 3 results · 4 reply · 5-7 checks · 8 approved · pause
-  const t = useLoop(ref, { steps: 13, final: 9, ms: 850 });
-  const appear = (on) => (on ? 'translate-y-0 opacity-100' : 'translate-y-1 opacity-0');
+  const reduce = useReducedMotion();
+  // 1 question · 2 Aurora checks the data (typing) · 3 answer · 4 the listings · 5 test summary · 7 approved · pause
+  const t = useLoop(ref, { steps: 12, final: 8, ms: 900 });
+  const show = (on) => (on ? 'translate-y-0 scale-100 opacity-100' : 'translate-y-2 scale-[0.98] opacity-0');
+  const bubble = 'max-w-[82%] w-fit px-3.5 py-2 text-[13px] leading-snug transition-all duration-500 ease-out origin-bottom';
+  const them = cn(bubble, 'rounded-[20px] rounded-bl-[6px] bg-white/80 text-ink shadow-[0_1px_1px_rgba(10,15,14,0.04)]');
+  const me = cn(bubble, 'ml-auto rounded-[20px] rounded-br-[6px] bg-[linear-gradient(160deg,#FFB86A,#FF9F45)] text-ink origin-bottom-right');
   return (
     <div ref={ref}>
-      <Stage tone="mint">
-        {/* one compact card with the whole test: question, lookup, answer, your approval */}
-        <div className="ui-card overflow-hidden">
-          <div className="grid gap-2 px-3.5 py-3.5">
-            <p className={cn('max-w-[92%] rounded-[16px] rounded-bl-[5px] bg-paper px-3 py-2 text-[12.5px] leading-snug text-ink transition-all duration-500', appear(t >= 1))}>{T.ask}</p>
-            <p className={cn('flex items-center gap-1.5 px-1 text-[11px] text-slate transition-opacity duration-500', t >= 2 ? 'opacity-100' : 'opacity-0')}>
-              <Database className="h-3 w-3 shrink-0" strokeWidth={2} aria-hidden="true" />
-              {t >= 3 ? T.source + ' · ' + T.results.length + ' matches' : 'Searching ' + T.scanned + '…'}
-            </p>
-            <p className={cn('ml-auto max-w-[92%] rounded-[16px] rounded-br-[5px] bg-ink px-3 py-2 text-[12.5px] leading-snug text-white transition-all duration-500', appear(t >= 4))}>{T.reply}</p>
-          </div>
-          <div className={cn('flex items-center gap-2.5 border-t px-3.5 py-2.5 transition-colors duration-500', t >= 8 ? 'border-brand/20 bg-brand-mint text-brand-ink' : 'border-ink/[0.07] bg-paper/60 text-slate')}>
-            <span className={cn('flex h-5 w-5 shrink-0 items-center justify-center rounded-full transition-colors duration-500', t >= 8 ? 'bg-brand text-white' : 'bg-ink/10 text-transparent')}>
-              <Check className="h-3 w-3" strokeWidth={3.2} aria-hidden="true" />
-            </span>
-            <span className="text-[12px] font-medium leading-tight">
-              {t >= 8 ? 'You approved · live' : t >= 5 ? 'Checks passed · waiting for your approval' : 'Running test cases…'}
-            </span>
-          </div>
+      <div className="canvas relative bg-[linear-gradient(160deg,#FFF6E5_0%,#FCEBD0_100%)] p-3 xs:p-4 md:p-5">
+        {/* warm Aurora light behind the glass */}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+          <div className={cn('absolute -left-[10%] -top-[20%] h-[70%] w-[70%] rounded-full bg-[radial-gradient(closest-side,rgba(242,92,42,0.55),rgba(242,92,42,0))] blur-2xl', !reduce && 'animate-drift')} />
+          <div className={cn('absolute -bottom-[20%] -right-[10%] h-[70%] w-[70%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.8),rgba(255,200,87,0))] blur-2xl', !reduce && 'animate-drift [animation-delay:-8s]')} />
         </div>
-      </Stage>
+
+        <LiquidGlass
+          className="relative overflow-hidden rounded-[26px]"
+          style={{ '--lg-tint-a': 'rgba(255,250,242,0.55)', '--lg-tint-b': 'rgba(255,246,229,0.25)' }}
+        >
+          {/* conversation header, as on a phone */}
+          <div className="flex flex-col items-center gap-1 border-b border-white/50 px-4 pb-2.5 pt-3">
+            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white shadow-[0_1px_2px_rgba(10,15,14,0.08)]">
+              <img src="/brand/aurora-symbol-color.svg" alt="" className="h-5 w-5" />
+            </span>
+            <p className="text-[12px] font-medium leading-none text-ink">Maple Realty</p>
+            <p className="text-[10.5px] leading-none text-ink/50">Test run · answered by {brand.product}</p>
+          </div>
+
+          <div className="flex min-h-[236px] flex-col gap-1.5 px-3.5 py-3.5">
+            {/* the customer (this phone's owner) asks */}
+            <p className={cn(me, show(t >= 1))}>{T.ask}</p>
+
+            {/* Aurora looks it up, then answers */}
+            <p className={cn('my-1 text-center text-[10.5px] text-ink/50 transition-opacity duration-500', t >= 2 ? 'opacity-100' : 'opacity-0')}>
+              {t >= 3 ? `Checked ${T.scanned} in the ${T.source.toLowerCase()}` : `Checking the ${T.source.toLowerCase()}…`}
+            </p>
+            {t === 2 && !reduce ? (
+              <span className={cn(them, 'flex items-center gap-1 py-3')} aria-hidden="true">
+                {[0, 1, 2].map((d) => (
+                  <span key={d} className="h-1.5 w-1.5 animate-blink rounded-full bg-ink/40" style={{ animationDelay: d * 0.18 + 's' }} />
+                ))}
+              </span>
+            ) : null}
+            <p className={cn(them, show(t >= 3), t < 3 && 'hidden')}>Yes, two match.</p>
+            <div className={cn(them, show(t >= 4), t < 4 && 'hidden', 'grid gap-1')}>
+              {T.results.map(([addr, price, extra]) => (
+                <span key={addr} className="flex items-baseline justify-between gap-4">
+                  <span>{addr}</span>
+                  <span className="text-ink/60">
+                    {price} · {extra}
+                  </span>
+                </span>
+              ))}
+              <span className="mt-0.5">Want the details?</span>
+            </div>
+          </div>
+
+          {/* your sign-off, as a quiet system line under the chat */}
+          <div className={cn('flex items-center justify-between gap-3 border-t border-white/50 px-4 py-2.5 transition-colors duration-500', t >= 7 ? 'bg-white/45' : 'bg-white/15')}>
+            <span className="min-w-0 text-[11.5px] leading-snug text-ink/70">{t >= 5 ? T.passed : 'Running test questions…'}</span>
+            <span
+              className={cn(
+                'flex h-7 shrink-0 items-center gap-1.5 rounded-full px-3 text-[11.5px] font-medium transition-all duration-500',
+                t >= 7 ? 'bg-ink text-white' : t >= 5 ? 'bg-white text-ink shadow-[0_1px_2px_rgba(10,15,14,0.1)]' : 'bg-white/40 text-ink/40'
+              )}
+            >
+              {t >= 7 ? <Check className="h-3.5 w-3.5" strokeWidth={2.6} aria-hidden="true" /> : null}
+              {t >= 7 ? 'Live' : 'Approve'}
+            </span>
+          </div>
+        </LiquidGlass>
+      </div>
     </div>
   );
 }
