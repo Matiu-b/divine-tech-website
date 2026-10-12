@@ -65,7 +65,7 @@ export const industries = [
         ['Books the viewing', 'Into the right agent’s calendar, with the confirmation and address sent to the client.'],
         ['Follows up', 'A reminder the day before and a next step after the viewing, until the deal moves.'],
       ],
-      chips: ['New lead · 2BR Maple St', 'Viewing booked · Sat 11:00', 'Follow-up · Fri 18:00'],
+      chips: ['New lead · 2BR Maple St', 'Qualified · $3k, May, Downtown', 'Viewing booked · Sat 11:00', 'Follow-up · Fri 18:00'],
       photo: {
         src: PHOTOS + 're-agent-960.webp',
         srcSet: srcSet('re-agent', [640, 960, 1440]),
@@ -139,7 +139,7 @@ export const industries = [
         ['Confirms and reminds', 'Confirmations and reminders before every visit, and a new time offered when plans change.'],
         ['Hands off what is sensitive', 'Urgent or sensitive cases go to your staff at once, with the whole conversation attached.'],
       ],
-      chips: ['Appointment moved · Thu 2:10 pm', 'Reminder scheduled · SMS', 'Urgent case → front desk'],
+      chips: ['Call answered · 9:42 pm', 'Appointment moved · Thu 2:10 pm', 'Reminder scheduled · SMS', 'Urgent case → front desk'],
       photo: {
         src: PHOTOS + 'clinic-desk-960.webp',
         srcSet: srcSet('clinic-desk', [640, 960, 1440]),
@@ -212,7 +212,7 @@ export const industries = [
         ['Books and dispatches', 'Into the right technician’s schedule, with an arrival window the customer can rely on.'],
         ['Keeps customers updated', 'Confirmations, an on-the-way text and a review request after the job.'],
       ],
-      chips: ['Job captured · AC not cooling', 'Technician · today 3–5 pm', 'Review request queued'],
+      chips: ['Job captured · AC not cooling', 'Quote sent · from your price book', 'Technician · today 3–5 pm', 'Review request queued'],
       photo: {
         src: PHOTOS + 'tech-hvac-960.webp',
         srcSet: srcSet('tech-hvac', [640, 960, 1440]),

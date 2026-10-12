@@ -15,7 +15,7 @@ export default function Footer() {
   return (
     <footer data-nav-theme="dark" className="on-dark relative overflow-hidden bg-ink text-white">
       {/* Aurora dawn light rising from the bottom edge, as in the platform glass core */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-[520px] bg-[radial-gradient(38%_55%_at_82%_118%,rgba(242,92,42,0.32),rgba(242,92,42,0)_70%),radial-gradient(30%_45%_at_58%_125%,rgba(255,159,69,0.22),rgba(255,159,69,0)_70%),radial-gradient(26%_40%_at_96%_100%,rgba(255,200,87,0.16),rgba(255,200,87,0)_70%)]" />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-[520px] bg-[radial-gradient(60%_55%_at_82%_118%,rgba(242,92,42,0.4),rgba(242,92,42,0)_70%),radial-gradient(30%_45%_at_58%_125%,rgba(255,159,69,0.22),rgba(255,159,69,0)_70%),radial-gradient(26%_40%_at_96%_100%,rgba(255,200,87,0.16),rgba(255,200,87,0)_70%)]" />
       <div className="shell relative">
         <div className="hairline" />
         <div className="grid gap-12 py-14 md:grid-cols-12 md:gap-8 md:py-20">
@@ -70,7 +70,7 @@ export default function Footer() {
 
         <p
           aria-hidden="true"
-          className="pointer-events-none select-none bg-[linear-gradient(180deg,rgba(255,255,255,0.14),rgba(255,255,255,0.02))] bg-clip-text pb-2 text-center text-[clamp(56px,15.5vw,240px)] font-semibold leading-[0.9] tracking-[-0.05em] text-transparent"
+          className="pointer-events-none select-none bg-[linear-gradient(180deg,rgba(255,255,255,0.22),rgba(255,200,150,0.04))] bg-clip-text pb-2 text-center text-[clamp(96px,24vw,260px)] font-semibold leading-[0.9] tracking-[-0.05em] text-transparent"
         >
           Aurora
         </p>
