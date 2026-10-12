@@ -2,6 +2,7 @@ import React from 'react';
 import SiteLayout from '@/components/home-v2/SiteLayout';
 import Hero from '@/components/home-v2/Hero';
 import Platform from '@/components/home-v2/Platform';
+import Outcomes from '@/components/home-v2/Outcomes';
 import Configure from '@/components/home-v2/Configure';
 import IndustryCards from '@/components/home-v2/IndustryCards';
 import FinalCTA from '@/components/home-v2/FinalCTA';
@@ -15,6 +16,7 @@ export default function Home() {
     <SiteLayout>
       <Hero />
       <Platform />
+      <Outcomes />
       <Configure />
       <IndustryCards />
       <FinalCTA />

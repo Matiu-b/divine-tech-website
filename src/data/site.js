@@ -59,7 +59,7 @@ export const hero = {
   lockup: 'AI OS',
   titleA: 'The AI operating system for modern business',
   titleB: undefined,
-  text: 'AI agents that do the work, inside the tools you already use.',
+  text: 'AI agents that do the work and cut the cost of running it, inside the tools you already use.',
   primary: 'Book a demo',
   secondary: 'See it in action',
 };
@@ -360,13 +360,42 @@ export const controlVisual = {
   ],
 };
 
+// Outcomes (home page): what the business gets. Deliberately no percentages until there is
+// pilot data to back them (US advertising claims need substantiation).
+export const outcomes = {
+  titleA: 'Same team. More output.',
+  text: 'Aurora takes the repetitive work off every department, so costs go down, capacity goes up and more of every dollar reaches the bottom line.',
+  items: [
+    {
+      key: 'cost',
+      label: 'Savings',
+      title: 'Lower cost per task',
+      text: 'Calls, follow-ups, scheduling and data entry run on Aurora around the clock, without adding headcount.',
+    },
+    {
+      key: 'speed',
+      label: 'Efficiency',
+      title: 'Every department moves faster',
+      text: 'Sales answers in seconds, service resolves on first contact and operations closes the loop without chasing.',
+      departments: ['Sales', 'Service', 'Operations'],
+    },
+    {
+      key: 'margin',
+      label: 'Profitability',
+      title: 'Revenue grows faster than costs',
+      text: 'More leads converted and fewer hours spent on routine work. The difference shows up in your margins.',
+    },
+  ],
+  note: 'Every action plan starts from your numbers: where the hours go today and what each step should change.',
+};
+
 // How it works (home page): three plain steps from the customer's side, each saying who does it.
 export const howItWorks = {
   eyebrow: 'How it works',
   titleA: 'Live in hours.',
   text: 'No technical project on your side. Nothing goes live until you approve it.',
   steps: [
-    { who: 'Our experts, with you', tone: 'you', name: 'We map your business', text: 'Together with our AI agents, into an action plan.' },
+    { who: 'Our experts, with you', tone: 'you', name: 'We map your business', text: 'Together with our AI agents, into an action plan with the impact each step should bring.' },
     { who: 'Aurora', tone: 'aurora', name: 'Aurora sets itself up', text: 'It connects your channels and systems from the plan.' },
     { who: 'You approve', tone: 'you', name: 'Test it, go live', text: 'Real questions, answered from your own data. You approve, it goes live.' },
   ],
@@ -375,10 +404,10 @@ export const howItWorks = {
     company: 'Maple Realty',
     people: ['Our expert', 'You', 'AI agent'],
     rows: [
-      { process: 'New lead → qualify → book a viewing', channels: 'Phone · Text · Web', owner: 'Aurora' },
-      { process: 'Viewing reminders', channels: 'Text · Email', owner: 'Aurora' },
-      { process: 'Discounts above 5%', channels: 'Slack', owner: 'Manager approves' },
-      { process: 'Weekly pipeline report', channels: 'Email', owner: 'Aurora' },
+      { process: 'New lead → qualify → book a viewing', channels: 'Phone · Text · Web', owner: 'Aurora', impact: 'More viewings booked' },
+      { process: 'Viewing reminders', channels: 'Text · Email', owner: 'Aurora', impact: 'Fewer no-shows' },
+      { process: 'Discounts above 5%', channels: 'Slack', owner: 'Manager approves', impact: 'Margin protected' },
+      { process: 'Weekly pipeline report', channels: 'Email', owner: 'Aurora', impact: 'Hours back for the team' },
     ],
   },
   connect: [

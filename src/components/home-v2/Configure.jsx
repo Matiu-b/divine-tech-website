@@ -103,7 +103,10 @@ function PlanVisual() {
                     <span className={cn('flex h-4 w-4 shrink-0 items-center justify-center rounded-[5px] border transition-colors duration-500', approved ? 'border-brand bg-brand text-white' : 'border-ink/20 text-transparent')}>
                       <Check className="h-2.5 w-2.5" strokeWidth={3.2} aria-hidden="true" />
                     </span>
-                    <span className="leading-snug sm:truncate">{r.process}</span>
+                    <span className="min-w-0">
+                      <span className="block leading-snug sm:truncate">{r.process}</span>
+                      {r.impact ? <span className="block text-[11px] leading-snug text-brand-ink/80">{r.impact}</span> : null}
+                    </span>
                   </span>
                   <span className={cn('text-right text-[11.5px] font-medium', r.owner === 'Aurora' ? 'text-brand-ink' : 'text-[#8A5A12]')}>{r.owner}</span>
                 </li>
