@@ -35,5 +35,27 @@
       "#E8643B",
       "#F2B84B"
     ]
+  },
+  {
+    "slug": "sample-schematic-teal",
+    "title": "Rules before autonomy",
+    "tone": "dark",
+    "bg_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261012_153347_a0a7f004-2fbc-4e9b-887a-b4f9af714b95.png",
+    "palette": [
+      "#0D3B3A",
+      "#E0338F",
+      "#C8E64A"
+    ]
+  },
+  {
+    "slug": "sample-orbits-ultramarine",
+    "title": "One conversation, every channel",
+    "tone": "dark",
+    "bg_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261012_153348_66fd8cd5-1f7a-4a39-95a5-71f89eb5515f.png",
+    "palette": [
+      "#1A2A9C",
+      "#F6B38A",
+      "#8FE3C0"
+    ]
   }
 ]
