@@ -68,12 +68,6 @@ export default function Footer() {
           </div>
         </div>
 
-        <p
-          aria-hidden="true"
-          className="pointer-events-none select-none bg-[linear-gradient(180deg,rgba(255,255,255,0.22),rgba(255,200,150,0.04))] bg-clip-text pb-2 text-center text-[clamp(96px,24vw,260px)] font-semibold leading-[0.9] tracking-[-0.05em] text-transparent"
-        >
-          Aurora
-        </p>
         <div className="flex flex-col gap-4 border-t border-white/10 py-7 text-[13px] text-white/40 sm:flex-row sm:items-center sm:justify-between">
           <p>
             © {new Date().getFullYear()} {brand.company}. All rights reserved.
