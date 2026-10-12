@@ -52,8 +52,8 @@ function Core({ active, compact = false }) {
         style={{ '--lg-tint-a': 'rgba(255,250,242,0.5)', '--lg-tint-b': 'rgba(255,246,229,0.18)', '--lg-sheen': 'rgba(255,240,215,0.7)' }}
       >
         <div>
-          <p className="text-[22px] font-normal leading-none tracking-[-0.03em] text-ink">{brand.product}</p>
-          <p className="mt-1.5 text-[13px] text-ink/55">AI operating system</p>
+          <img src="/brand/aurora-logo-horizontal-color.svg" alt={brand.product} width="124" height="32" className="h-8 w-auto" />
+          <p className="mt-2 text-[13px] text-ink/55">AI operating system</p>
         </div>
         <ul className="relative mt-5 grid flex-1 content-center gap-2.5">
           {platform.layers.map((l, i) => (
@@ -308,8 +308,8 @@ function StoryCompact() {
           className="relative rounded-[20px] px-4 py-3.5"
           style={{ '--lg-tint-a': 'rgba(255,250,242,0.5)', '--lg-tint-b': 'rgba(255,246,229,0.18)', '--lg-sheen': 'rgba(255,240,215,0.7)' }}
         >
-          <div className="relative flex items-baseline justify-between gap-3">
-            <p className="text-[17px] leading-none tracking-[-0.02em] text-ink">{brand.product}</p>
+          <div className="relative flex items-center justify-between gap-3">
+            <img src="/brand/aurora-logo-horizontal-color.svg" alt={brand.product} width="93" height="24" className="h-6 w-auto" />
             <p className="text-[11px] text-ink/55">AI operating system</p>
           </div>
           <ol className="relative mt-3 grid grid-cols-3 gap-1.5">
