@@ -159,50 +159,44 @@ function GoLiveVisual() {
   const t = useLoop(ref, { steps: 12, final: 8, ms: 900 });
   const show = (on) => (on ? 'translate-y-0 scale-100 opacity-100' : 'translate-y-2 scale-[0.98] opacity-0');
   const bubble = 'max-w-[82%] w-fit px-3.5 py-2 text-[13px] leading-snug transition-all duration-500 ease-out origin-bottom';
-  const them = cn(bubble, 'rounded-[20px] rounded-bl-[6px] bg-white/80 text-ink shadow-[0_1px_1px_rgba(10,15,14,0.04)]');
-  const me = cn(bubble, 'ml-auto rounded-[20px] rounded-br-[6px] bg-[linear-gradient(160deg,#FFB86A,#FF9F45)] text-ink origin-bottom-right');
+  const label = 'text-[10.5px] font-medium text-ink/45 transition-opacity duration-500';
+  const customer = cn(bubble, 'rounded-[20px] rounded-bl-[6px] bg-white text-ink shadow-[0_1px_2px_rgba(10,15,14,0.06)]');
+  const aurora = cn(bubble, 'ml-auto rounded-[20px] rounded-br-[6px] bg-ink text-white origin-bottom-right');
   return (
     <div ref={ref}>
-      <div className="canvas relative bg-[linear-gradient(160deg,#FFF6E5_0%,#FCEBD0_100%)] p-3 xs:p-4 md:p-5">
+      <div className="canvas relative bg-[linear-gradient(160deg,#F3F1EC_0%,#E9E5DD_100%)] p-3 xs:p-4 md:p-5">
         {/* warm Aurora light behind the glass */}
         <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-          <div className={cn('absolute -left-[10%] -top-[20%] h-[70%] w-[70%] rounded-full bg-[radial-gradient(closest-side,rgba(242,92,42,0.55),rgba(242,92,42,0))] blur-2xl', !reduce && 'animate-drift')} />
-          <div className={cn('absolute -bottom-[20%] -right-[10%] h-[70%] w-[70%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.8),rgba(255,200,87,0))] blur-2xl', !reduce && 'animate-drift [animation-delay:-8s]')} />
+          <div className={cn('absolute -left-[10%] -top-[20%] h-[70%] w-[70%] rounded-full bg-[radial-gradient(closest-side,rgba(255,159,69,0.22),rgba(255,159,69,0))] blur-2xl', !reduce && 'animate-drift')} />
+          <div className={cn('absolute -bottom-[20%] -right-[10%] h-[70%] w-[70%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.3),rgba(255,200,87,0))] blur-2xl', !reduce && 'animate-drift [animation-delay:-8s]')} />
         </div>
 
         <LiquidGlass
           className="relative overflow-hidden rounded-[26px]"
           style={{ '--lg-tint-a': 'rgba(255,250,242,0.55)', '--lg-tint-b': 'rgba(255,246,229,0.25)' }}
         >
-          {/* conversation header, as on a phone */}
-          <div className="flex flex-col items-center gap-1 border-b border-white/50 px-4 pb-2.5 pt-3">
-            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white shadow-[0_1px_2px_rgba(10,15,14,0.08)]">
-              <img src="/brand/aurora-symbol-color.svg" alt="" className="h-5 w-5" />
-            </span>
-            <p className="text-[12px] font-medium leading-none text-ink">Maple Realty</p>
-            <p className="text-[10.5px] leading-none text-ink/50">Test run · answered by {brand.product}</p>
-          </div>
-
           <div className="flex min-h-[236px] flex-col gap-1.5 px-3.5 py-3.5">
-            {/* the customer (this phone's owner) asks */}
-            <p className={cn(me, show(t >= 1))}>{T.ask}</p>
+            {/* a customer asks */}
+            <p className={cn(label, 'pl-1', t >= 1 ? 'opacity-100' : 'opacity-0')}>Customer</p>
+            <p className={cn(customer, show(t >= 1))}>{T.ask}</p>
 
             {/* Aurora looks it up, then answers */}
             <p className={cn('my-1 text-center text-[10.5px] text-ink/50 transition-opacity duration-500', t >= 2 ? 'opacity-100' : 'opacity-0')}>
-              {t >= 3 ? `Checked ${T.scanned}` : 'Checking your listings…'}
+              {t >= 3 ? `Found in your listings (${T.scanned} checked)` : 'Looking in your listings…'}
             </p>
+            <p className={cn(label, 'pr-1 text-right', t >= 2 ? 'opacity-100' : 'opacity-0')}>{brand.product}, your AI agent</p>
             {t === 2 && !reduce ? (
-              <span className={cn(them, 'flex items-center gap-1 py-3')} aria-hidden="true">
+              <span className={cn(aurora, 'flex items-center gap-1 py-3')} aria-hidden="true">
                 {[0, 1, 2].map((d) => (
-                  <span key={d} className="h-1.5 w-1.5 animate-blink rounded-full bg-ink/40" style={{ animationDelay: d * 0.18 + 's' }} />
+                  <span key={d} className="h-1.5 w-1.5 animate-blink rounded-full bg-white/70" style={{ animationDelay: d * 0.18 + 's' }} />
                 ))}
               </span>
             ) : null}
-            <p className={cn(them, show(t >= 3), t < 3 && 'hidden')}>Yes, two match.</p>
-            <div className={cn(them, show(t >= 4), t < 4 && 'hidden', 'grid gap-1')}>
+            <p className={cn(aurora, show(t >= 3), t < 3 && 'hidden')}>Yes, two match.</p>
+            <div className={cn(aurora, show(t >= 4), t < 4 && 'hidden', 'grid gap-1')}>
               {T.results.map(([addr, price]) => (
                 <span key={addr}>
-                  {addr}, <span className="text-ink/60">{price}</span>
+                  {addr}, <span className="text-white/70">{price}</span>
                 </span>
               ))}
               <span className="mt-0.5">Both have parking. Want the details?</span>
@@ -211,7 +205,7 @@ function GoLiveVisual() {
 
           {/* your sign-off, as a quiet system line under the chat */}
           <div className={cn('flex items-center justify-between gap-3 border-t border-white/50 px-4 py-2.5 transition-colors duration-500', t >= 7 ? 'bg-white/45' : 'bg-white/15')}>
-            <span className="min-w-0 text-[11.5px] leading-snug text-ink/70">{t >= 5 ? T.passed : 'Running test questions…'}</span>
+            <span className="min-w-0 text-[11.5px] leading-snug text-ink/70">{t >= 7 ? 'Approved. Customers now get these answers.' : t >= 5 ? 'Test passed: 24 of 24 answers correct' : 'Testing on real questions…'}</span>
             <span
               className={cn(
                 'flex h-7 shrink-0 items-center gap-1.5 rounded-full px-3 text-[11.5px] font-medium transition-all duration-500',
