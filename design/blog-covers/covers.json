@@ -1,5 +1,39 @@
 [
-  { "slug": "ai-for-real-estate-lead-follow-up", "title": "The brokerage, on autopilot", "tone": "dark" },
-  { "slug": "ai-receptionist-for-clinics", "title": "The front desk that never sleeps", "tone": "light" },
-  { "slug": "ai-answering-service-for-contractors", "title": "Dispatch, without the dispatcher", "tone": "dark" }
+  {
+    "slug": "ai-for-real-estate-lead-follow-up",
+    "title": "The brokerage, on autopilot",
+    "tone": "dark"
+  },
+  {
+    "slug": "ai-receptionist-for-clinics",
+    "title": "The front desk that never sleeps",
+    "tone": "light"
+  },
+  {
+    "slug": "ai-answering-service-for-contractors",
+    "title": "Dispatch, without the dispatcher",
+    "tone": "dark"
+  },
+  {
+    "slug": "sample-lines-indigo",
+    "title": "Rules before autonomy",
+    "tone": "dark",
+    "bg_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261012_145747_c6310834-a1b4-4af8-9777-b5dad2eef72f.png",
+    "palette": [
+      "#140D2A",
+      "#6B3FD6",
+      "#21C7B5"
+    ]
+  },
+  {
+    "slug": "sample-lines-coral",
+    "title": "One conversation, every channel",
+    "tone": "dark",
+    "bg_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261012_145745_d2dda6f9-5840-4526-aa7d-2578b28c7062.png",
+    "palette": [
+      "#2A0F2E",
+      "#E8643B",
+      "#F2B84B"
+    ]
+  }
 ]
