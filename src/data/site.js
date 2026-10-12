@@ -355,6 +355,14 @@ export const workVisual = [
 ];
 
 export const controlVisual = {
+  // The refund case shown on the platform page, start to finish.
+  story: {
+    ask: 'Hi, can I get a refund on order 4821? It was $340.',
+    rule: 'Refunds above $250 need a manager',
+    hold: "I've asked our manager to approve it. You'll hear back shortly.",
+    manager: 'Dana K. · Operations',
+    done: 'Good news: your $340 refund is on its way.',
+  },
   title: 'Approval required',
   item: 'Refund of $340 · Order 4821',
   reason: 'Above the $250 limit you set',

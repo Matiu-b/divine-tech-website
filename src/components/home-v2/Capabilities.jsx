@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { Check, FileText, Globe, Database, Lock, UserRound } from 'lucide-react';
+import { Check, FileText, Globe, Database, Lock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { brand, capabilities, controlVisual, understandVisual, workVisual } from '@/data/site';
 import LiquidGlass from './primitives/LiquidGlass';
@@ -166,111 +166,99 @@ function ControlVisual() {
   const reduce = useReducedMotion();
   const visible = usePageVisible();
   const inView = useInViewport(ref, { threshold: 0.35 });
-  const [approved, setApproved] = useState(!!reduce);
-
+  const [t, setT] = useState(reduce ? 8 : 0);
+  // One real case, start to finish:
+  // 1 customer asks for a $340 refund · 2 the rule applies · 3 Aurora tells the customer
+  // 4 the manager gets the request · 6 approves · 7 Aurora confirms to the customer · pause
   useEffect(() => {
     if (reduce || !inView || !visible) return undefined;
-    let t2 = 0;
-    const cycle = () => {
-      setApproved(false);
-      t2 = window.setTimeout(() => setApproved(true), 2600);
-    };
-    cycle();
-    const id = window.setInterval(cycle, 8200);
-    return () => {
-      window.clearInterval(id);
-      window.clearTimeout(t2);
-    };
+    const id = window.setInterval(() => setT((n) => (n + 1) % 12), 1100);
+    return () => window.clearInterval(id);
   }, [reduce, inView, visible]);
 
-  const audit = approved ? controlVisual.audit : controlVisual.audit.slice(0, 1);
-  const tone = { Allowed: 'text-brand-glow', 'Needs approval': 'text-[#F2B45A]', 'Not allowed': 'text-white/40' };
+  const C = controlVisual;
+  const approved = t >= 6;
+  const logged = t >= 7 ? 3 : t >= 6 ? 2 : t >= 1 ? 1 : 0;
 
-  return (
-    <div ref={ref} className="canvas on-dark bg-[linear-gradient(160deg,#121918_0%,#0A0F0E_100%)] p-4 text-white xs:p-6 md:p-10">
-      <div aria-hidden="true" className="orb left-[20%] top-[-40%] h-[90%] w-[70%] animate-breathe bg-[radial-gradient(closest-side,rgba(60,224,154,0.22),rgba(60,224,154,0))]" />
-      <div aria-hidden="true" className="orb bottom-[-40%] right-[-10%] h-[80%] w-[50%] bg-[radial-gradient(closest-side,rgba(19,168,156,0.2),rgba(19,168,156,0))]" />
-      <div className="relative grid gap-3 md:grid-cols-[1.1fr_0.9fr] md:gap-4 lg:grid-cols-1 xl:grid-cols-[1.1fr_0.9fr]">
-        <LiquidGlass tone="dark" className="rounded-[22px] p-4 md:p-5">
-          <div className="flex items-center justify-between">
-            <span className="flex items-center gap-2 text-[12px] font-medium text-white">
-              <Lock className="h-3.5 w-3.5 text-white/70" strokeWidth={1.8} aria-hidden="true" />
-              {controlVisual.title}
-            </span>
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.span
-                key={approved ? 'ok' : 'wait'}
-                initial={{ opacity: 0, y: 4 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.35 }}
-                className={cn('ui-chip', approved ? 'bg-brand-glow/15 text-brand-glow' : 'bg-[#F2B45A]/15 text-[#F2B45A]')}
-              >
-                {approved ? 'Approved' : 'Waiting'}
-              </motion.span>
-            </AnimatePresence>
-          </div>
-          <p className="mt-4 text-[17px] font-medium tracking-[-0.02em] text-white">{controlVisual.item}</p>
-          <p className="mt-1 text-[13px] text-white/55">{controlVisual.reason}</p>
-          <div className="mt-4 flex items-center gap-2.5 rounded-[14px] bg-white/[0.05] px-3 py-2.5">
-            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/10 text-[11px] font-medium">DK</span>
-            <div className="min-w-0 text-[12px] leading-tight">
-              <p className="truncate text-white/85">{controlVisual.approver}</p>
-              <p className="truncate text-white/45">{controlVisual.requester}</p>
+  const bubble = 'max-w-[84%] w-fit px-3.5 py-2 text-[13px] leading-snug';
+  const customer = cn(bubble, 'rounded-[20px] rounded-bl-[6px] bg-white text-ink shadow-[0_1px_2px_rgba(10,15,14,0.06)]');
+  const aurora = cn(bubble, 'ml-auto rounded-[20px] rounded-br-[6px] bg-[linear-gradient(160deg,rgba(214,216,220,0.85),rgba(190,193,198,0.7))] text-ink ring-1 ring-white/70 shadow-[inset_0_1px_0_rgba(255,255,255,0.8),0_6px_16px_-10px_rgba(10,15,14,0.35)] backdrop-blur-md');
+  const enter = reduce ? {} : { initial: { opacity: 0, y: 10, scale: 0.98 }, animate: { opacity: 1, y: 0, scale: 1 }, exit: { opacity: 0 }, transition: { duration: 0.45, ease: EASE } };
+
+  const items = [];
+  if (t >= 1) items.push({ id: 'ask', side: 'left', el: <div className={customer}>{C.story.ask}</div> });
+  if (t >= 2)
+    items.push({
+      id: 'rule',
+      side: 'center',
+      el: (
+        <p className="flex items-center justify-center gap-1.5 text-center text-[11px] text-ink/55">
+          <Lock className="h-3 w-3" strokeWidth={2} aria-hidden="true" />
+          {C.story.rule}
+        </p>
+      ),
+    });
+  if (t >= 3) items.push({ id: 'hold', side: 'right', el: <div className={aurora}>{C.story.hold}</div> });
+  if (t >= 4)
+    items.push({
+      id: 'approval',
+      side: 'center',
+      el: (
+        <div className="mx-auto w-full max-w-[300px] rounded-[18px] bg-white p-3 shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_12px_28px_-16px_rgba(10,15,14,0.35)]">
+          <div className="flex items-center gap-2">
+            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-paper-2 text-[10.5px] font-medium text-ink">DK</span>
+            <div className="min-w-0 text-[11.5px] leading-tight">
+              <p className="font-medium text-ink">{C.story.manager}</p>
+              <p className="text-ink/50">Approval request from {brand.product}</p>
             </div>
           </div>
-          <div className="mt-4 grid grid-cols-2 gap-2">
-            <span className="flex h-10 items-center justify-center rounded-full bg-white/[0.06] text-[13px] font-medium text-white/70">Decline</span>
-            <span
-              className={cn(
-                'flex h-10 items-center justify-center gap-1.5 rounded-full text-[13px] font-medium transition-all duration-500',
-                approved ? 'scale-[0.97] bg-brand-glow text-ink' : 'bg-white text-ink'
-              )}
-            >
-              {approved ? <Check className="h-3.5 w-3.5" strokeWidth={3} aria-hidden="true" /> : null}
-              {approved ? 'Approved' : 'Approve'}
-            </span>
-          </div>
-        </LiquidGlass>
-
-        <div className="grid gap-3 md:gap-4">
-          <LiquidGlass tone="dark" className="rounded-[22px] p-4">
-            <p className="text-[12px] font-medium text-white">Permissions</p>
-            <ul className="mt-2.5 grid gap-2">
-              {controlVisual.permissions.map(([what, rule]) => (
-                <li key={what} className="flex items-center justify-between gap-3 text-[12px]">
-                  <span className="min-w-0 truncate text-white/70">{what}</span>
-                  <span className={cn('shrink-0 font-medium', tone[rule])}>{rule}</span>
-                </li>
-              ))}
-            </ul>
-          </LiquidGlass>
-          <LiquidGlass tone="dark" className="rounded-[22px] p-4">
-            <p className="text-[12px] font-medium text-white">Audit trail</p>
-            <ul className="mt-2.5 grid gap-1.5">
-              <AnimatePresence initial={false}>
-                {audit.map(([t, what, who]) => (
-                  <motion.li
-                    key={t + what}
-                    initial={{ opacity: 0, x: -6 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.45, ease: EASE }}
-                    className="flex items-center gap-2.5 text-[12px]"
-                  >
-                    <span className="t-data text-white/40">{t}</span>
-                    <span className="min-w-0 flex-1 truncate text-white/75">{what}</span>
-                    <span className="flex shrink-0 items-center gap-1 text-white/45">
-                      <UserRound className="h-3 w-3" strokeWidth={1.8} aria-hidden="true" />
-                      {who}
-                    </span>
-                  </motion.li>
-                ))}
-              </AnimatePresence>
-            </ul>
-          </LiquidGlass>
+          <p className="mt-2 text-[13px] font-medium text-ink">{C.item}</p>
+          {approved ? (
+            <p className="mt-2.5 flex h-8 items-center justify-center gap-1 rounded-full bg-[#E4F3EA] text-[12px] font-medium text-[#2F8F5B]">
+              <Check className="h-3.5 w-3.5" strokeWidth={2.8} aria-hidden="true" />
+              Approved by Dana
+            </p>
+          ) : (
+            <div className="mt-2.5 grid grid-cols-2 gap-1.5">
+              <span className="flex h-8 items-center justify-center rounded-full bg-paper-2 text-[12px] font-medium text-ink/60">Decline</span>
+              <span className={cn('relative flex h-8 items-center justify-center rounded-full bg-ink text-[12px] font-medium text-white', t === 5 && !reduce && 'halo')}>Approve</span>
+            </div>
+          )}
         </div>
+      ),
+    });
+  if (t >= 7) items.push({ id: 'done', side: 'right', el: <div className={aurora}>{C.story.done}</div> });
+
+  return (
+    <div ref={ref} className="canvas relative bg-[linear-gradient(160deg,#F3F1EC_0%,#E9E5DD_100%)] p-3 xs:p-4 md:p-6">
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+        <div className={cn('absolute -left-[10%] -top-[20%] h-[70%] w-[70%] rounded-full bg-[radial-gradient(closest-side,rgba(255,159,69,0.22),rgba(255,159,69,0))] blur-2xl', !reduce && 'animate-drift')} />
+        <div className={cn('absolute -bottom-[20%] -right-[10%] h-[70%] w-[70%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.3),rgba(255,200,87,0))] blur-2xl', !reduce && 'animate-drift [animation-delay:-8s]')} />
       </div>
+      <LiquidGlass className="relative overflow-hidden rounded-[26px]" style={{ '--lg-tint-a': 'rgba(255,250,242,0.55)', '--lg-tint-b': 'rgba(255,246,229,0.25)' }}>
+        <div className="flex items-center justify-between border-b border-white/50 px-4 py-2 text-[10.5px] font-medium text-ink/45">
+          <span>Customer</span>
+          <span>{brand.product}, your AI agent</span>
+        </div>
+        <div className="relative h-[340px] overflow-hidden px-3.5 py-3">
+          <div className="absolute inset-x-3.5 bottom-3 flex flex-col gap-2">
+            <AnimatePresence initial={false}>
+              {items.map((m) => (
+                <motion.div key={m.id} layout={!reduce} {...enter} className={cn('flex', m.side === 'right' ? 'justify-end' : m.side === 'left' ? 'justify-start' : 'justify-center')}>
+                  {m.el}
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+          <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-8 bg-gradient-to-b from-[#FBF7F0]/80 to-transparent" />
+        </div>
+        <div className="flex items-center justify-between gap-3 border-t border-white/50 bg-white/20 px-4 py-2.5 text-[11.5px] text-ink/70">
+          <span>Every step is on record</span>
+          <span className="font-medium text-ink">
+            Audit log · {logged} {logged === 1 ? 'entry' : 'entries'}
+          </span>
+        </div>
+      </LiquidGlass>
     </div>
   );
 }
