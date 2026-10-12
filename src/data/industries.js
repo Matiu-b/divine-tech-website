@@ -20,6 +20,7 @@ const FAQ_LIVE = [
 export const industries = [
   {
     slug: 'real-estate',
+    article: 'ai-for-real-estate-lead-follow-up', // the industry guide on the blog
     key: 're',
     label: 'Real estate',
     leadIndustry: 'Real Estate',
@@ -93,6 +94,7 @@ export const industries = [
   },
   {
     slug: 'wellness-healthcare',
+    article: 'ai-receptionist-for-clinics', // the industry guide on the blog
     key: 'hc',
     label: 'Wellness & Healthcare',
     leadIndustry: 'Wellness & Healthcare',
@@ -165,6 +167,7 @@ export const industries = [
   },
   {
     slug: 'home-services',
+    article: 'ai-answering-service-for-contractors', // the industry guide on the blog
     key: 'hs',
     label: 'Home services',
     leadIndustry: 'Home Services',

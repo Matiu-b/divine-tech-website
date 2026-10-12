@@ -41,6 +41,7 @@ const organization = {
     postalCode: '10018',
     addressCountry: 'US',
   },
+  sameAs: site.social.map((s) => s.href),
   contactPoint: brand.phones.map((p) => ({ '@type': 'ContactPoint', telephone: p.display, contactType: 'sales', areaServed: p.label === 'US' ? 'US' : 'IL', availableLanguage: ['English'] })),
 };
 
@@ -105,7 +106,7 @@ const header = `<header><a href="/">${esc(brand.company)}</a><nav aria-label="Ma
   .join(' ')} <a href="/#how-it-works">How it works</a> <a href="/blog">Blog</a></nav></header>`;
 const footerHtml = `<footer><p>${esc(site.footer.tagline)}</p><p>${esc(legal.entity)} · ${esc(legal.address)} · <a href="mailto:${brand.email}">${brand.email}</a> · ${brand.phones
   .map((p) => `<a href="tel:${p.tel}">${esc(p.display)}</a>`)
-  .join(' · ')}</p><p><a href="/privacy">Privacy Policy</a></p></footer>`;
+  .join(' · ')}</p><p>${site.social.map((s) => `<a href="${s.href}" rel="noopener">${esc(s.label)}</a>`).join(' · ')}</p><p><a href="/privacy">Privacy Policy</a></p></footer>`;
 
 const page = (main) => `${header}<main id="main">${main}</main>${footerHtml}`;
 const withBody = (html, body) => html.replace('<div id="root"></div>', `<div id="root">${body}</div>`);
@@ -175,6 +176,7 @@ for (const it of industries) {
     `<section><h2>${esc(it.control.title)}</h2><p>${esc(it.control.text)}</p></section>`,
     `<section><h2>What changes</h2>${pairs(it.value)}<p>${esc(it.success)}</p><p>Works with: ${esc(it.systems.join(', '))}.</p></section>`,
     faqHtml(it.faq),
+    ...posts.filter((p) => p.slug === it.article).map((p) => `<section><h2>From the blog</h2><p><a href="${postPath(p.slug)}">${esc(p.title)}</a>: ${esc(p.dek)}</p></section>`),
     `<section><h2>Aurora in other industries</h2><ul>${industries
       .filter((o) => o.slug !== it.slug)
       .map((o) => `<li><a href="${industryPath(o.slug)}">${esc(o.label)}</a>: ${esc(o.short)}</li>`)
@@ -283,6 +285,7 @@ ${brand.product} works across sales, customer service and internal operations. C
 - Legal name: ${legal.entity}
 - Address: ${legal.address}
 - Email: ${brand.email}
+- Profiles: ${site.social.map((s) => `[${s.label}](${s.href})`).join(', ')}
 - Phone: ${brand.phones.map((p) => `${p.display} (${p.label})`).join(', ')}
 
 ## Pages
