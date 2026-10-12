@@ -921,3 +921,6 @@
   .prose-blog table { display: table; }
   .prose-blog th, .prose-blog td { min-width: 0; }
 }
+
+/* Carousel pager: the active bar fills while the slide waits to move on */
+@keyframes outcomes-fill { from { width: 0; } to { width: 100%; } }
