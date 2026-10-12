@@ -255,11 +255,11 @@ function IconRow({ label, items, icons, active }) {
  * @param {{ layer: number, done: boolean }} props
  */
 const ARCS = [
-  { from: 6, to: 27, label: 'Understand', lx: 100, ly: 30 },
-  { from: 35, to: 56, label: 'Decide', lx: 76, ly: 80 },
-  { from: 64, to: 85, label: 'Act', lx: 34, ly: 117 },
+  { from: 5, to: 27, label: 'Understand' },
+  { from: 34, to: 56, label: 'Decide' },
+  { from: 63, to: 85, label: 'Act' },
 ];
-const R = 84;
+const R = 98;
 const pt = (deg, r = R) => [r * Math.cos((deg * Math.PI) / 180), r * Math.sin((deg * Math.PI) / 180)];
 
 function Dawn({ layer, done }) {
@@ -272,8 +272,8 @@ function Dawn({ layer, done }) {
             <stop offset="1" stopColor="#FF9F45" />
           </linearGradient>
         </defs>
-        <circle cx="0" cy="0" r="44" fill="url(#dawn-sun)" />
-        <circle cx="0" cy="0" r="62" fill="none" stroke="#FF9F45" strokeWidth="3" />
+        <circle cx="0" cy="0" r="52" fill="url(#dawn-sun)" />
+        <circle cx="0" cy="0" r="74" fill="none" stroke="#FF9F45" strokeWidth="3" />
         {ARCS.map((a, i) => {
           const [x1, y1] = pt(a.from);
           const [x2, y2] = pt(a.to);
@@ -291,24 +291,24 @@ function Dawn({ layer, done }) {
                 style={{ transition: 'stroke 500ms ease, stroke-width 500ms ease, stroke-opacity 500ms ease' }}
               />
               <text
-                x={a.lx}
-                y={a.ly}
-                fontSize="12"
+                x="186"
+                y={76 + i * 20}
+                fontSize="12.5"
                 fontFamily="inherit"
-                fill="#0A0F0E"
-                fillOpacity={on ? 1 : lit ? 0.6 : 0.35}
+                fill={on ? '#C2410C' : '#0A0F0E'}
+                fillOpacity={on ? 1 : lit ? 0.55 : 0.3}
                 fontWeight={on ? 500 : 400}
-                style={{ transition: 'fill-opacity 500ms ease' }}
+                style={{ transition: 'fill 500ms ease, fill-opacity 500ms ease' }}
               >
                 {a.label}
               </text>
             </g>
           );
         })}
-        <text x="322" y="34" textAnchor="end" fontSize="18" fontFamily="inherit" fontWeight="500" fill="#0A0F0E" letterSpacing="-0.3">
+        <text x="186" y="34" fontSize="18" fontFamily="inherit" fontWeight="500" fill="#0A0F0E" letterSpacing="-0.3">
           {brand.product}
         </text>
-        <text x="322" y="52" textAnchor="end" fontSize="11" fontFamily="inherit" fill="#9A5A1E">
+        <text x="186" y="50" fontSize="11" fontFamily="inherit" fill="#9A5A1E">
           AI operating system
         </text>
       </svg>
