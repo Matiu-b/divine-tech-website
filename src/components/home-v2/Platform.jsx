@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { BookOpen, CalendarDays, Check, Database, Hash, ListChecks, Mail, MessageCircle, MessageSquare, Phone, Smartphone, Users } from 'lucide-react';
+import { BookOpen, CalendarDays, Check, Database, ScrollText, ShieldCheck, UserCheck, Hash, ListChecks, Mail, MessageCircle, MessageSquare, Phone, Smartphone, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { brand, platform } from '@/data/site';
 import { useNavigate } from 'react-router-dom';
@@ -75,13 +75,19 @@ function Core({ active, compact = false }) {
             </li>
           ))}
         </ul>
-        <div className="relative mt-5 flex flex-wrap gap-y-1.5 border-t border-ink/10 pt-4 text-[12px] text-ink/55">
-          {['Policies', 'Approvals', 'Audit log'].map((t, i) => (
-            <span key={t} className={cn(i > 0 && 'ml-3 border-l border-ink/15 pl-3')}>
-              {t}
-            </span>
+        {/* built-in controls: three equal columns, so the row never wraps mid-way */}
+        <ul className="relative mt-5 grid grid-cols-3 divide-x divide-ink/10 border-t border-ink/10 pt-4">
+          {[
+            [ShieldCheck, 'Policies'],
+            [UserCheck, 'Approvals'],
+            [ScrollText, 'Audit log'],
+          ].map(([Icon, t]) => (
+            <li key={t} className="flex flex-col items-center gap-1.5 px-1 text-center">
+              <Icon className="h-4 w-4 text-[#C2410C]" strokeWidth={1.8} aria-hidden="true" />
+              <span className="whitespace-nowrap text-[11.5px] leading-none text-ink/65">{t}</span>
+            </li>
           ))}
-        </div>
+        </ul>
       </LiquidGlass>
     </div>
   );
