@@ -287,15 +287,16 @@ export const platform = {
     { name: 'Knowledge', detail: 'Policies and answers' },
     { name: 'Your team', detail: 'Hand-offs and approvals' },
   ],
-  // Phone view of the diagram: one request at a time, from a channel through Aurora into a system.
-  // ch = index in channels, sys = index in systems.
+  // Phone view: one request at a time, from a customer or from your own team, handled by
+  // Aurora inside the department it belongs to. ch = index in channels.
+  departments: ['Sales', 'Service', 'Operations', 'Finance', 'People'],
   examples: [
-    { ch: 0, ask: 'I want to book a viewing for Saturday.', sys: 1, done: 'Viewing booked · Sat 10:30' },
-    { ch: 1, ask: 'Can I move my appointment to Thursday?', sys: 1, done: 'Moved to Thu 11:00' },
-    { ch: 2, ask: 'Do you have a 2-bedroom under $3,000?', sys: 3, done: 'Two matches sent' },
-    { ch: 3, ask: 'Please send me the March invoice.', sys: 2, done: 'Invoice sent · follow-up set' },
-    { ch: 4, ask: "I'm interested in the downtown listing.", sys: 0, done: 'New lead added · qualified' },
-    { ch: 5, ask: 'Refund $340 on order 4821?', sys: 4, done: 'Sent to Dana for approval' },
+    { from: 'Customer', ch: 0, dept: 0, ask: 'I want to book a viewing for Saturday.', sys: 'Calendar', done: 'Viewing booked for Sat 10:30' },
+    { from: 'Your team', ch: 5, dept: 3, ask: 'Send Acme the March invoice and chase it on Friday.', sys: 'Invoicing', done: 'Invoice sent, reminder set for Fri' },
+    { from: 'Customer', ch: 1, dept: 1, ask: 'Can I move my appointment to Thursday?', sys: 'Calendar', done: 'Moved to Thu 11:00' },
+    { from: 'Your team', ch: 5, dept: 2, ask: 'Which deals had no follow-up this week?', sys: 'CRM', done: '6 deals flagged, tasks assigned' },
+    { from: 'Customer', ch: 2, dept: 0, ask: 'Do you have a 2-bedroom under $3,000?', sys: 'Listings', done: 'Two matches sent' },
+    { from: 'Your team', ch: 3, dept: 4, ask: 'Maya starts Monday. Set up her accounts.', sys: 'HR system', done: 'Onboarding started for Maya' },
   ],
   notes: [
     ['One context, every channel', 'A conversation that starts in web chat and continues by phone stays one conversation, with its full history.'],
