@@ -328,11 +328,9 @@ function StoryCompact() {
         <div aria-hidden="true" className="pointer-events-none absolute -left-10 -top-12 h-40 w-40 rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.55),rgba(255,200,87,0))]" />
         <Sun busy={phase >= 1 && phase <= 3} still={!!reduce} className="relative h-[84px] w-[84px] shrink-0" />
         <div className="relative min-w-0 flex-1">
-          <p className="text-[17px] leading-none tracking-[-0.02em] text-ink">
-            {brand.product}
-            <span className="ml-2 text-[11px] tracking-normal text-[#9A5A1E]/70">AI operating system</span>
-          </p>
-          <ol className="mt-2.5 grid gap-1">
+          <p className="text-[17px] leading-none tracking-[-0.02em] text-ink">{brand.product}</p>
+          <p className="mt-1 text-[11px] text-[#9A5A1E]/75">AI operating system</p>
+          <ol className="mt-2 grid gap-1">
             {platform.layers.map((l, i) => {
               const on = i === layer;
               const past = i < layer || phase === 4;
