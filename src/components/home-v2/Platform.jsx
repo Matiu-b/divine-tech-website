@@ -234,7 +234,7 @@ function OrgMap({ phase, dept, still }) {
   const layer = phase >= 1 && phase <= 3 ? phase - 1 : phase >= 4 ? 3 : -1;
   const reaching = phase >= 3;
   const target = DEPT_AT[dept];
-  const [rx, ry] = polar(target.deg, 50);
+  const [rx, ry] = polar(target.deg, 55);
   return (
     <svg viewBox={`0 0 ${VB.w} ${VB.h}`} className="block h-auto w-full" role="img" aria-label="Aurora at the centre of the company, working inside sales, service, operations, finance and people">
       <defs>
@@ -251,7 +251,7 @@ function OrgMap({ phase, dept, still }) {
 
       {/* quiet spokes: Aurora is present in every department */}
       {DEPT_AT.map((d, i) => {
-        const [sx, sy] = polar(d.deg, 50);
+        const [sx, sy] = polar(d.deg, 55);
         return <line key={i} x1={sx} y1={sy} x2={d.x} y2={d.y} stroke="#0A0F0E" strokeOpacity="0.08" strokeWidth="1" strokeDasharray="2 4" />;
       })}
 
@@ -296,15 +296,15 @@ function OrgMap({ phase, dept, still }) {
       })}
 
       {/* Aurora's core: sun, ring, and the outer ring cut into three (understand, decide, act) */}
-      <circle cx={C.x} cy={C.y} r="24" fill="url(#org-core)" />
-      <circle cx={C.x} cy={C.y} r="33" fill="none" stroke="#FF9F45" strokeOpacity="0.7" strokeWidth="2" />
+      <circle cx={C.x} cy={C.y} r="27" fill="url(#org-core)" />
+      <circle cx={C.x} cy={C.y} r="37" fill="none" stroke="#FF9F45" strokeOpacity="0.7" strokeWidth="2" />
       {CORE_ARCS.map(([from, to], i) => {
         const on = i === layer;
         const lit = i <= layer;
         return (
           <path
             key={i}
-            d={arcPath(from, to, 43)}
+            d={arcPath(from, to, 48)}
             fill="none"
             stroke={lit ? '#F25C2A' : '#FFC857'}
             strokeOpacity={lit ? 1 : 0.55}
@@ -314,10 +314,10 @@ function OrgMap({ phase, dept, still }) {
           />
         );
       })}
-      <text x={C.x} y={C.y + 3.5} textAnchor="middle" fontSize="9.5" fontWeight="500" fontFamily="inherit" fill="#fff">
+      <text x={C.x} y={C.y + 3.5} textAnchor="middle" fontSize="10" fontWeight="500" fontFamily="inherit" fill="#fff">
         {brand.product}
       </text>
-      <text x={C.x} y={C.y + 66} textAnchor="middle" fontSize="10.5" fontFamily="inherit" fill="#9A5A1E" style={{ opacity: PHASE_TEXT[phase] ? 1 : 0, transition: 'opacity 300ms ease' }}>
+      <text x={C.x} y={C.y + 72} textAnchor="middle" fontSize="10.5" fontFamily="inherit" fill="#9A5A1E" style={{ opacity: PHASE_TEXT[phase] ? 1 : 0, transition: 'opacity 300ms ease' }}>
         {PHASE_TEXT[phase] || ' '}
       </text>
     </svg>
