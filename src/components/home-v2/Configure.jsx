@@ -234,7 +234,7 @@ function GoLiveVisual() {
           <span className="flex items-center gap-2.5 rounded-[12px] bg-white/80 px-2.5 py-2">
             <GoogleCalendarMark className="h-7 w-7 shrink-0" />
             <span className="min-w-0">
-              <span className="block truncate text-[12.5px] font-medium">{T.invite.title}</span>
+              <span className="block text-[12.5px] font-medium leading-snug">{T.invite.title}</span>
               <span className="block text-[11.5px] text-ink/60">{T.invite.time}</span>
               <span className="block text-[11px] text-[#2F8F5B]">{T.invite.note}</span>
             </span>
