@@ -48,19 +48,19 @@ function Core({ active, compact = false }) {
     <div className={cn('relative h-full', compact && 'w-full')}>
       <DawnGlow className="-inset-6" />
       <LiquidGlass
-        className="relative flex h-full flex-col rounded-[28px] p-5 md:p-6"
+        className="relative flex h-full flex-col rounded-[28px] p-4 2xl:p-6"
         style={{ '--lg-tint-a': 'rgba(255,250,242,0.5)', '--lg-tint-b': 'rgba(255,246,229,0.18)', '--lg-sheen': 'rgba(255,240,215,0.7)' }}
       >
         <div>
-          <img src="/brand/aurora-logo-horizontal-color.svg" alt={brand.product} width="124" height="32" className="h-8 w-auto" />
-          <p className="mt-2 text-[13px] text-ink/55">AI operating system</p>
+          <img src="/brand/aurora-logo-horizontal-color.svg" alt={brand.product} width="124" height="32" className="h-7 w-auto 2xl:h-8" />
+          <p className="mt-1.5 text-[12.5px] text-ink/55">AI operating system</p>
         </div>
-        <ul className="relative mt-5 grid flex-1 content-center gap-2.5">
+        <ul className="relative mt-4 grid flex-1 content-center gap-2 2xl:mt-5 2xl:gap-2.5">
           {platform.layers.map((l, i) => (
             <li
               key={l.name}
               className={cn(
-                'relative overflow-hidden rounded-[18px] border px-4 py-3.5 transition-[background-color,border-color,box-shadow] duration-700',
+                'relative overflow-hidden rounded-[16px] border px-3.5 py-2.5 transition-[background-color,border-color,box-shadow] duration-700 2xl:rounded-[18px] 2xl:px-4 2xl:py-3.5',
                 i === layerIdx
                   ? 'border-white/80 bg-white/70 shadow-[0_10px_24px_-14px_rgba(120,50,10,0.45)]'
                   : 'border-white/40 bg-white/25'
@@ -70,13 +70,13 @@ function Core({ active, compact = false }) {
                 aria-hidden="true"
                 className={cn('absolute bottom-3 left-0 top-3 w-[3px] rounded-full bg-[#F25C2A] transition-opacity duration-700', i === layerIdx ? 'opacity-100' : 'opacity-0')}
               />
-              <p className="text-[15px] font-medium tracking-[-0.015em] text-ink">{l.name}</p>
-              <p className="mt-0.5 text-[13px] text-ink/60">{l.detail}</p>
+              <p className="text-[14px] font-medium tracking-[-0.015em] text-ink 2xl:text-[15px]">{l.name}</p>
+              <p className="mt-0.5 text-[12px] leading-snug text-ink/60 2xl:text-[13px]">{l.detail}</p>
             </li>
           ))}
         </ul>
         {/* built-in controls: three equal columns, so the row never wraps mid-way */}
-        <ul className="relative mt-5 grid grid-cols-3 divide-x divide-ink/10 border-t border-ink/10 pt-4">
+        <ul className="relative mt-4 grid grid-cols-3 divide-x divide-ink/10 border-t border-ink/10 pt-3 2xl:mt-5 2xl:pt-4">
           {[
             [ShieldCheck, 'Policies'],
             [UserCheck, 'Approvals'],
