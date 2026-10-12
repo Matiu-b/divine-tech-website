@@ -574,34 +574,45 @@ export const integrations = {
   channels: ['phone', 'SMS', 'web chat', 'email', 'WhatsApp', 'Slack'],
 };
 
-// Home page FAQ (also published as FAQPage structured data).
+// Home page FAQ (also published as FAQPage structured data and in llms.txt).
+// Written for search and AI answer engines: each question is phrased the way people
+// search, the first sentence answers it on its own, and every answer names Aurora
+// instead of "it", so any single answer still makes sense when quoted alone.
 export const homeFaq = [
   [
-    'What is Aurora?',
-    'Aurora is the AI operating system for business, built by Divine Tech AI. It runs AI agents across sales, customer service and internal operations: they answer customers and employees on any channel, do the work inside the systems you already use, and ask a person to approve anything above the limits you set.',
+    'What is Aurora by Divine Tech AI?',
+    'Aurora is an AI operating system for business, built by Divine Tech AI, Inc. Aurora runs AI agents across sales, customer service and internal operations. The agents answer customers and employees on any channel, do the work inside the systems the business already uses, and ask a person to approve anything above the limits the business sets.',
+  ],
+  [
+    'What is an AI operating system for business?',
+    'An AI operating system for business is one layer of AI agents that works across a company’s departments, channels and software, instead of a separate chatbot or tool for each task. It understands each request, applies the company’s rules and approval limits, and takes real actions such as booking, updating records and following up. Aurora is the AI operating system built by Divine Tech AI.',
+  ],
+  [
+    'How is Aurora different from a chatbot?',
+    'Aurora completes the task, while a typical chatbot only replies. Aurora books the appointment, updates the CRM record, sends the invoice and follows up until the request is closed, inside the systems the business already uses. Aurora also works for the company’s own employees, not only for customers, and applies the company’s rules and approval limits to every action.',
   ],
   [
     'Who is Aurora for?',
-    'Businesses and organizations whose teams spend their day on routine requests: answering leads, booking appointments, updating the CRM, sending invoices and following up. Aurora has ready-made setups for real estate, wellness and healthcare, and home services, and it works for any team with repeatable processes.',
+    'Aurora is for businesses whose teams spend much of the day on routine requests: answering leads, booking appointments, updating the CRM, sending invoices and following up. Aurora has ready-made setups for real estate, wellness and healthcare, and home services, and it fits any team with repeatable processes in sales, service or operations.',
   ],
   [
-    'How long does setup take?',
-    'Aurora goes live within hours. Our experts and AI agents map your business with you and turn it into an action plan. Aurora sets itself up from that plan, is tested on real questions from your own data, and goes live only after you approve. There is no technical project on your side.',
+    'Which channels and tools does Aurora work with?',
+    'Aurora answers on phone calls, SMS, web chat, email, WhatsApp and Slack, and works inside the tools a business already uses: CRMs such as HubSpot and Salesforce, Google Calendar and Microsoft Outlook calendars, email, the phone system and payments. The business keeps its current software; nothing needs to be replaced.',
   ],
   [
-    'Which tools does Aurora work with?',
-    'Aurora works inside the tools your team already uses, including CRMs such as HubSpot and Salesforce, Google Calendar and Microsoft Outlook calendars, email, your phone system, payments, and messaging channels such as SMS, WhatsApp and Slack. Nothing needs to be replaced.',
+    'How long does it take to set up Aurora?',
+    'Aurora goes live within hours. Divine Tech AI’s experts and AI agents map the business together with the team and turn it into an action plan. Aurora sets itself up from that plan, is tested on real questions from the business’s own data, and goes live only after the business approves. There is no technical project on the customer’s side.',
   ],
   [
-    'How does Aurora stay under our control?',
-    'You decide what Aurora may do on its own, what needs a person’s approval and what it never does. Every action is recorded with the request, the rule that applied and who approved it, access is set per role, and your data is never used to train shared models.',
+    'How does a business stay in control of Aurora?',
+    'The business decides what Aurora may do on its own, what needs a person’s approval and what Aurora never does. Every action Aurora takes is recorded with the request, the rule that applied and who approved it. Access is set per role, and the business’s data is never used to train shared AI models.',
   ],
   [
     'How much does Aurora cost?',
-    'Pricing is set for each business. It depends on which departments and processes Aurora takes on, the channels it covers and the systems it connects to. We map your processes with you first, then send a proposal based on that plan.',
+    'Aurora is priced for each business. The price depends on which departments and processes Aurora takes on, the channels it covers and the systems it connects to. Divine Tech AI maps the business’s processes first, then sends a proposal based on that plan.',
   ],
   [
-    'Does Aurora replace our staff?',
-    'No. Aurora takes the repetitive work off each department so your people spend their time on customers and decisions. It brings in a person whenever a request needs judgment or approval.',
+    'Does Aurora replace employees?',
+    'Aurora does not replace a company’s staff. Aurora takes the repetitive work off each department so people spend their time on customers and decisions, and it brings in a person whenever a request needs judgment or approval.',
   ],
 ];
