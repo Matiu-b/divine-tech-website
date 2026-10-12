@@ -23,7 +23,7 @@ import {
   ThreeCXMark,
   WhatsAppMark,
 } from './BrandMarks';
-import MappingScene from './MappingScene';
+import ProcessBoard from './ProcessBoard';
 
 // Who does each phase decides its colour on the rail: ink = our experts with you, green = Aurora.
 const TONE = { you: 'bg-ink', aurora: 'bg-brand' };
@@ -74,7 +74,7 @@ function PlanVisual() {
   return (
     <div ref={ref}>
       <Stage tone="sage">
-        <MappingScene t={t} />
+        <ProcessBoard t={t} />
         <div className="ui-card relative mt-2 overflow-hidden">
           <div className="flex items-center gap-3 border-b border-ink/[0.07] px-4 py-3">
             <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[9px] bg-paper text-ink/70">
