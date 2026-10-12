@@ -272,7 +272,7 @@ export const platform = {
   eyebrow: 'Platform',
   titleA: 'One AI operating system',
   titleB: 'for your whole business.',
-  text: 'Aurora connects your channels to the systems you run on, and carries every request through to done.',
+  text: 'Aurora answers your customers on any channel, then does the work in the systems you already run on.',
   link: 'Explore the platform',
   channels: ['Voice', 'SMS', 'Web chat', 'Email', 'WhatsApp', 'Slack'],
   layers: [
