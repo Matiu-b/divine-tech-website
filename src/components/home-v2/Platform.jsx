@@ -210,7 +210,7 @@ function Link({ on }) {
     <span aria-hidden="true" className="relative mx-auto my-1.5 block h-5 w-px overflow-hidden bg-ink/10">
       {!reduce && on ? (
         <motion.span
-          className="absolute left-0 top-0 block h-3 w-px bg-brand"
+          className="absolute left-0 top-0 block h-3 w-px bg-[#FF9F45]"
           initial={{ y: -12 }}
           animate={{ y: 20 }}
           transition={{ duration: 0.7, repeat: Infinity, ease: EASE, repeatDelay: 0.3 }}
@@ -249,6 +249,51 @@ function IconRow({ label, items, icons, active }) {
 }
 
 /**
+ * Aurora as a sunrise, in the brand's warm colours: a glowing core, a ring and an outer ring cut
+ * into three that turns slowly, with rays reaching out (the agents going into each department).
+ * It brightens while a request is being worked on. Not the logo itself, an illustration of it.
+ * @param {{ busy: boolean, still: boolean, className?: string }} props
+ */
+function Sun({ busy, still, className = undefined }) {
+  const rays = Array.from({ length: 12 }, (_, i) => i * 30);
+  return (
+    <svg viewBox="-50 -50 100 100" className={className} aria-hidden="true">
+      <defs>
+        <radialGradient id="sun-core" cx="0.4" cy="0.35" r="0.75">
+          <stop offset="0" stopColor="#FFE7A8" />
+          <stop offset="0.45" stopColor="#FFC857" />
+          <stop offset="0.8" stopColor="#FF9F45" />
+          <stop offset="1" stopColor="#F25C2A" />
+        </radialGradient>
+        <radialGradient id="sun-glow">
+          <stop offset="0" stopColor="#FFC857" stopOpacity="0.55" />
+          <stop offset="1" stopColor="#FFC857" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <circle r="48" fill="url(#sun-glow)" style={{ opacity: busy ? 1 : 0.55, transition: 'opacity 600ms ease' }} />
+      {/* rays: the agents reaching out */}
+      <g stroke="#FF9F45" strokeWidth="2.2" strokeLinecap="round" style={{ opacity: busy ? 0.9 : 0.45, transition: 'opacity 600ms ease' }}>
+        {still ? null : <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="40s" repeatCount="indefinite" />}
+        {rays.map((a, i) => (
+          <line key={a} x1="0" y1={i % 2 ? -34 : -33} x2="0" y2={i % 2 ? -39 : -44} transform={`rotate(${a})`} />
+        ))}
+      </g>
+      {/* outer ring, cut into three */}
+      <g fill="none" stroke="#F25C2A" strokeWidth="2.6" strokeLinecap="round">
+        {still ? null : <animateTransform attributeName="transform" type="rotate" from="0" to="-360" dur={busy ? '8s' : '22s'} repeatCount="indefinite" />}
+        {[0, 120, 240].map((a) => (
+          <path key={a} d="M0 -28 A28 28 0 0 1 24.2 -14" transform={`rotate(${a})`} />
+        ))}
+      </g>
+      <circle r="21" fill="none" stroke="#FF9F45" strokeOpacity="0.55" strokeWidth="1.6" />
+      <circle r="16" fill="url(#sun-core)">
+        {still ? null : <animate attributeName="r" values="15.5;17;15.5" dur={busy ? '1.6s' : '3.6s'} repeatCount="indefinite" />}
+      </circle>
+    </svg>
+  );
+}
+
+/**
  * The platform story for phones and tablets, sized to fit one screen: a request arrives on a
  * channel, Aurora understands, decides and acts, and the work lands in one of your systems.
  */
@@ -279,25 +324,29 @@ function StoryCompact() {
 
       <Link on={phase >= 1} />
 
-      <div className="relative overflow-hidden rounded-[18px] bg-ink px-4 py-3.5 text-white">
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(90%_70%_at_50%_0%,rgba(60,224,154,0.18),rgba(60,224,154,0)_70%)]" />
-        <div className="relative flex items-baseline justify-between gap-3">
-          <p className="text-[17px] leading-none tracking-[-0.02em]">{brand.product}</p>
-          <p className="text-[11px] text-white/45">AI operating system</p>
+      <div className="relative flex items-center gap-4 overflow-hidden rounded-[20px] border border-[#FF9F45]/25 bg-[linear-gradient(135deg,#FFF6E5_0%,#FFEBD2_100%)] px-4 py-3.5">
+        <div aria-hidden="true" className="pointer-events-none absolute -left-10 -top-12 h-40 w-40 rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.55),rgba(255,200,87,0))]" />
+        <Sun busy={phase >= 1 && phase <= 3} still={!!reduce} className="relative h-[84px] w-[84px] shrink-0" />
+        <div className="relative min-w-0 flex-1">
+          <p className="text-[17px] leading-none tracking-[-0.02em] text-ink">
+            {brand.product}
+            <span className="ml-2 text-[11px] tracking-normal text-[#9A5A1E]/70">AI operating system</span>
+          </p>
+          <ol className="mt-2.5 grid gap-1">
+            {platform.layers.map((l, i) => {
+              const on = i === layer;
+              const past = i < layer || phase === 4;
+              return (
+                <li key={l.name} className="flex items-center gap-2.5">
+                  <span className="relative h-[3px] w-6 shrink-0 overflow-hidden rounded-full bg-[#F25C2A]/15">
+                    <span className={cn('absolute inset-y-0 left-0 rounded-full bg-[linear-gradient(90deg,#FFC857,#F25C2A)] transition-[width] duration-700 ease-out', on || past ? 'w-full' : 'w-0')} />
+                  </span>
+                  <span className={cn('text-[12.5px] leading-tight transition-colors duration-500', on ? 'font-medium text-ink' : past ? 'text-ink/60' : 'text-ink/35')}>{l.name}</span>
+                </li>
+              );
+            })}
+          </ol>
         </div>
-        <ol className="relative mt-3 grid grid-cols-3 gap-1.5">
-          {platform.layers.map((l, i) => (
-            <li
-              key={l.name}
-              className={cn(
-                'rounded-[10px] border px-1 py-2 text-center text-[11px] font-medium tracking-[-0.01em] transition-colors duration-500 xs:text-[12px]',
-                i === layer ? 'border-brand-glow/50 bg-brand-glow/15 text-white' : i < layer || phase === 4 ? 'border-white/[0.08] bg-white/[0.06] text-white/70' : 'border-white/[0.06] bg-transparent text-white/40'
-              )}
-            >
-              {l.name}
-            </li>
-          ))}
-        </ol>
       </div>
 
       <Link on={phase >= 3} />
