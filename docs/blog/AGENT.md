@@ -89,12 +89,24 @@ editable. Never ask an image model for text in the image.
    Choose a palette clearly different from the last three covers: a deep base colour plus 2 or 3
    bright, saturated accents.
 2. **Background with Higgsfield.** Use `generate_image` with model `nano_banana_2_1` and
-   `aspect_ratio` 16:9. Prompt pattern (fill in the colours):
-   > Minimal 16:9 editorial background for a technology company blog. Full-bleed soft
-   > out-of-focus gradient field, like light through frosted glass: <base colour> melting into
-   > <second colour>, with one or two large blurred glows of <accent colours>, fine film grain,
-   > no hard shapes. Completely empty: no text, no letters, no logos, no icons, no people, no UI,
-   > no watermark.
+   `aspect_ratio` 16:9. The house style has two layers:
+   - **Colour:** a soft out-of-focus field with an unexpected combination. Use a deep base plus
+     two or three glows that do not usually go together, for example deep teal + hot magenta +
+     acid lime + peach, or ultramarine + apricot + mint + lavender.
+   - **Line art:** a rich but thin layer of crisp white hairline technical drawing that matches
+     the topic. Examples: node networks with right-angle routing for agents and workflows,
+     orbits, wireframe spheres and perspective grids for channels and scale, schematic tables and
+     bar outlines for ROI and data, concentric rings and checkpoints for rules and approvals.
+
+   Prompt pattern (fill in the colours and drawing):
+   > 16:9 editorial background for a technology company blog. Full-bleed soft out-of-focus
+   > gradient field with an unexpected colour combination: <base> base, a large blurred glow of
+   > <accent 1> on the <side>, a smaller glow of <accent 2> at the <corner>, a touch of
+   > <accent 3> in between, fine film grain. Over it, a richer layer of thin crisp white hairline
+   > technical drawings: <drawing for this topic>, small junction markers, dotted guide lines,
+   > tiny tick-mark rulers and a light dot grid. The drawing covers much of the frame but stays
+   > thin and elegant, leaving a calmer horizontal band through the center. Completely free of
+   > text, letters, numbers, logos, icons, people and UI. No watermark.
 3. Wait for the job with `jobs_wait`. Copy its `result_url`. Do not try to download it from this
    session: the cloud network cannot reach the image host, and GitHub is the hand-off point.
    If the result shows text or shapes, **do not retry paid generations**. Leave out `bg_url` and
