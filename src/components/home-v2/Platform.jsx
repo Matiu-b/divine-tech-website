@@ -290,7 +290,7 @@ function StoryCompact() {
             <li
               key={l.name}
               className={cn(
-                'rounded-[10px] border px-2 py-2 text-center text-[12px] font-medium transition-colors duration-500',
+                'rounded-[10px] border px-1 py-2 text-center text-[11px] font-medium tracking-[-0.01em] transition-colors duration-500 xs:text-[12px]',
                 i === layer ? 'border-brand-glow/50 bg-brand-glow/15 text-white' : i < layer || phase === 4 ? 'border-white/[0.08] bg-white/[0.06] text-white/70' : 'border-white/[0.06] bg-transparent text-white/40'
               )}
             >
