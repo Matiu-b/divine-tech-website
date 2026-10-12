@@ -189,7 +189,7 @@ function GoLiveVisual() {
 
             {/* Aurora looks it up, then answers */}
             <p className={cn('my-1 text-center text-[10.5px] text-ink/50 transition-opacity duration-500', t >= 2 ? 'opacity-100' : 'opacity-0')}>
-              {t >= 3 ? `Checked ${T.scanned} in the ${T.source.toLowerCase()}` : `Checking the ${T.source.toLowerCase()}…`}
+              {t >= 3 ? `Checked ${T.scanned}` : 'Checking your listings…'}
             </p>
             {t === 2 && !reduce ? (
               <span className={cn(them, 'flex items-center gap-1 py-3')} aria-hidden="true">
@@ -200,15 +200,12 @@ function GoLiveVisual() {
             ) : null}
             <p className={cn(them, show(t >= 3), t < 3 && 'hidden')}>Yes, two match.</p>
             <div className={cn(them, show(t >= 4), t < 4 && 'hidden', 'grid gap-1')}>
-              {T.results.map(([addr, price, extra]) => (
-                <span key={addr} className="flex items-baseline justify-between gap-4">
-                  <span>{addr}</span>
-                  <span className="text-ink/60">
-                    {price} · {extra}
-                  </span>
+              {T.results.map(([addr, price]) => (
+                <span key={addr}>
+                  {addr}, <span className="text-ink/60">{price}</span>
                 </span>
               ))}
-              <span className="mt-0.5">Want the details?</span>
+              <span className="mt-0.5">Both have parking. Want the details?</span>
             </div>
           </div>
 
