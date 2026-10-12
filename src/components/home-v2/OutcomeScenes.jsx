@@ -195,10 +195,10 @@ function ProfitScene({ still }) {
       })}
       {/* the trend arrow */}
       <g stroke={GREEN} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" fill="none">
-        <path d="M134 80 L170 62 L196 66 L250 26" pathLength="1" strokeDasharray="1 1" strokeDashoffset={still ? 0 : 1}>
+        <path d="M134 72 L166 58 L196 54 L250 16" pathLength="1" strokeDasharray="1 1" strokeDashoffset={still ? 0 : 1}>
           {still ? null : <animate attributeName="stroke-dashoffset" values="1;0;0;1" keyTimes="0;0.4;0.85;1" dur="5s" repeatCount="indefinite" />}
         </path>
-        <path d="M238 25 L251 25 L250 38" opacity={still ? 1 : 0}>
+        <path d="M238 14 L251 15 L250 28" opacity={still ? 1 : 0}>
           {still ? null : <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.36;0.42;0.85;1" dur="5s" repeatCount="indefinite" />}
         </path>
       </g>
