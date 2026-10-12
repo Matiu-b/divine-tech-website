@@ -45,7 +45,7 @@ const AI_AT = [
   [420, 240],
   [598, 172],
   [600, 244],
-  [520, 100],
+  [600, 92],
 ];
 
 /** A whiteboard cursor with a name tag. @param {any} props */
@@ -171,8 +171,8 @@ export default function ProcessBoard({ t, className = undefined }) {
       </g>
 
       {/* cursors: our expert and the client wander; the AI agent follows the newest step */}
-      <g transform={still ? 'translate(470 96)' : undefined}>
-        <Wander points={[[470, 96], [560, 104], [500, 186], [430, 112]]} dur="9s" still={still} />
+      <g transform={still ? 'translate(430 92)' : undefined}>
+        <Wander points={[[430, 92], [480, 100], [420, 186], [396, 104]]} dur="9s" still={still} />
         <Cursor color="#1F3B4D" name="Our expert" width={70} />
       </g>
       <g transform={still ? 'translate(250 236)' : undefined}>
