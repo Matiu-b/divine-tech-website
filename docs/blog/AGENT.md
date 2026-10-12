@@ -46,6 +46,32 @@ Then sync the queue. Move every `in_review` item in `plan.json` whose slug is al
   `queued`, or remove it if the PR comments say to drop it.
 - Read any review comments on recently merged blog PRs. They are style feedback for this run.
 
+## 1b. Trend scan (every run, about 10 minutes)
+
+The blog must track what is happening in AI right now, not repeat generic explainers.
+
+1. Search the news from the last 30 days, using several of these searches:
+   - AI agents enterprise;
+   - agent protocols (MCP, A2A, agent payments, personal agents);
+   - AI voice agents and regulation;
+   - new model or agent launches from OpenAI, Anthropic, Google and Microsoft;
+   - AI agent security, audits and certification;
+   - AI customer service funding and acquisitions;
+   - state and federal AI rules in the US.
+
+   Prefer primary sources: the company announcement, the spec, the regulator.
+2. Add 2 to 4 new lines to `docs/blog/trends.md` (newest first) for developments that matter to
+   businesses running AI agents. Skip anything already logged.
+3. Use the trends:
+   - **Every new article** gets a short, sourced "What changed recently" angle. It can be a
+     paragraph or a section, tied to a logged trend when one fits the topic. Mark that trend as
+     used in the log.
+   - **Queue items with `"type": "trend"`** are trend-led articles. Before writing, re-check that
+     the news is still current. If something bigger and more relevant happened this month, write
+     about that instead. Add it to the queue as a trend item and say why in the PR.
+   - **Fridays (refresh):** update the article with the latest developments from the log.
+4. Trends must be real and dated, with a link. No speculation presented as news. No hype words.
+
 ## 2a. New article
 
 1. Take the first item in `plan.json` → `queue` with `status: "queued"`.

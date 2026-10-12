@@ -1,23 +1,201 @@
 {
   "_about": "Editorial queue for the scheduled blog agent (docs/blog/AGENT.md). Work top to bottom. status: queued | in_review | published. Edit freely: reorder, add, remove or change angles.",
   "published": [
-    { "slug": "ai-operating-system-for-business", "cluster": "ai-os", "type": "pillar" },
-    { "slug": "ai-for-real-estate-lead-follow-up", "cluster": "industries", "type": "support" },
-    { "slug": "ai-receptionist-for-clinics", "cluster": "industries", "type": "support" },
-    { "slug": "ai-answering-service-for-contractors", "cluster": "industries", "type": "support" }
+    {
+      "slug": "ai-operating-system-for-business",
+      "cluster": "ai-os",
+      "type": "pillar"
+    },
+    {
+      "slug": "ai-for-real-estate-lead-follow-up",
+      "cluster": "industries",
+      "type": "support"
+    },
+    {
+      "slug": "ai-receptionist-for-clinics",
+      "cluster": "industries",
+      "type": "support"
+    },
+    {
+      "slug": "ai-answering-service-for-contractors",
+      "cluster": "industries",
+      "type": "support"
+    }
   ],
   "queue": [
-    { "status": "queued", "cluster": "ai-os", "type": "support", "topic": "AI agents vs chatbots vs RPA: what each one actually does in a business", "angle": "Architecture-level comparison: memory, decisions, actions in systems, failure modes. Diagram-style table.", "link_to": ["/blog/ai-operating-system-for-business", "/platform"] },
-    { "status": "queued", "cluster": "customer-service", "type": "pillar", "topic": "AI customer service agents: how they work end to end", "angle": "From the first message to a resolved ticket: intent, context, knowledge, action, handoff, record. Technical but readable.", "link_to": ["/platform", "/blog/ai-operating-system-for-business"] },
-    { "status": "queued", "cluster": "ai-os", "type": "support", "topic": "Approval rules for AI agents: how to decide what an agent may do alone", "angle": "Allowed / needs approval / never, thresholds, roles, a policy template readers can copy.", "link_to": ["/platform", "/blog/ai-operating-system-for-business"] },
-    { "status": "queued", "cluster": "internal-ops", "type": "pillar", "topic": "AI agents for internal operations: finance, HR and ops requests from Slack", "angle": "Employees as users of the AI OS: invoice follow-up, onboarding, reporting, with the same rules as customer work.", "link_to": ["/platform", "/blog/ai-operating-system-for-business"] },
-    { "status": "queued", "cluster": "customer-service", "type": "support", "topic": "AI voice agents on the phone: what changes when the customer is live on the line", "angle": "Latency, interruptions, identity checks, handoff to a person mid-call, call recording consent.", "link_to": ["/blog/ai-customer-service-agents", "/platform"] },
-    { "status": "queued", "cluster": "ai-os", "type": "support", "topic": "What an AI agent audit log should record (and why it matters)", "angle": "Fields to log, who reviews it, how it supports compliance and debugging. Reference frameworks such as NIST AI RMF.", "link_to": ["/platform", "/blog/ai-operating-system-for-business"] },
-    { "status": "queued", "cluster": "customer-service", "type": "support", "topic": "Omnichannel AI: keeping one conversation across phone, SMS, WhatsApp and email", "angle": "Identity resolution, shared history, channel-specific rules (consent, opt-out), what breaks without it.", "link_to": ["/platform"] },
-    { "status": "queued", "cluster": "integrations", "type": "support", "topic": "Connecting an AI agent to your CRM: what it should read, write and never touch", "angle": "Field-level permissions, deduplication, logging every write. HubSpot and Salesforce as examples, without claiming specific integrations beyond what the site states.", "link_to": ["/platform", "/#how-it-works"] },
-    { "status": "queued", "cluster": "internal-ops", "type": "support", "topic": "Automating invoice follow-up with an AI agent, step by step", "angle": "Reminder cadence, tone, escalation, payment links, when finance must approve.", "link_to": ["/blog/ai-agents-for-internal-operations", "/platform"] },
-    { "status": "queued", "cluster": "integrations", "type": "support", "topic": "AI scheduling with Google Calendar and Outlook: how agents avoid double bookings", "angle": "Free/busy, buffers, time zones, holds and confirmations, rescheduling rules.", "link_to": ["/platform", "/industries/wellness-healthcare"] },
-    { "status": "queued", "cluster": "ai-os", "type": "support", "topic": "How to measure the ROI of AI agents: the numbers to track before and after", "angle": "Baseline, cost per handled request, time to first response, hours returned, conversion. Worksheet table.", "link_to": ["/blog/ai-operating-system-for-business", "/#how-it-works"] },
-    { "status": "queued", "cluster": "internal-ops", "type": "support", "topic": "Onboarding new hires with an AI agent: what can be set up before day one", "angle": "Accounts, equipment requests, schedules, checklists, approvals from IT and HR.", "link_to": ["/blog/ai-agents-for-internal-operations"] }
+    {
+      "status": "queued",
+      "cluster": "ai-os",
+      "type": "support",
+      "topic": "AI agents vs chatbots vs RPA: what each one actually does in a business",
+      "angle": "Architecture-level comparison: memory, decisions, actions in systems, failure modes. Diagram-style table.",
+      "link_to": [
+        "/blog/ai-operating-system-for-business",
+        "/platform"
+      ]
+    },
+    {
+      "status": "queued",
+      "cluster": "trends",
+      "type": "trend",
+      "topic": "When your customer's AI agent calls your business: getting ready for agent-to-agent service",
+      "angle": "Consumer-side personal agents (for example Sierra's Personal Agent Protocol draft, Oct 2026) will book, cancel and negotiate for people. What a business needs: identity checks, rules for agent callers, structured answers. Verify the current state of each protocol before writing.",
+      "link_to": [
+        "/platform",
+        "/blog/ai-operating-system-for-business"
+      ]
+    },
+    {
+      "status": "queued",
+      "cluster": "customer-service",
+      "type": "pillar",
+      "topic": "AI customer service agents: how they work end to end",
+      "angle": "From the first message to a resolved ticket: intent, context, knowledge, action, handoff, record. Technical but readable.",
+      "link_to": [
+        "/platform",
+        "/blog/ai-operating-system-for-business"
+      ]
+    },
+    {
+      "status": "queued",
+      "cluster": "trends",
+      "type": "trend",
+      "topic": "MCP, A2A and the agent protocol stack in 2026: what it means for a business, not a developer",
+      "angle": "Plain-language map of the protocols that let agents use tools and talk to each other, what is settled vs still moving, and what to ask a vendor. Cite the specs and recent releases.",
+      "link_to": [
+        "/platform",
+        "/blog/ai-operating-system-for-business"
+      ]
+    },
+    {
+      "status": "queued",
+      "cluster": "ai-os",
+      "type": "support",
+      "topic": "Approval rules for AI agents: how to decide what an agent may do alone",
+      "angle": "Allowed / needs approval / never, thresholds, roles, a policy template readers can copy.",
+      "link_to": [
+        "/platform",
+        "/blog/ai-operating-system-for-business"
+      ]
+    },
+    {
+      "status": "queued",
+      "cluster": "trends",
+      "type": "trend",
+      "topic": "AI voice agents and the law in 2026: disclosure, caller ID and consent",
+      "angle": "FCC TCPA ruling on AI voices, newer proposals and state disclosure laws, AI caller ID efforts. Practical checklist for inbound vs outbound calls. Not legal advice; cite primary sources.",
+      "link_to": [
+        "/industries/home-services",
+        "/platform"
+      ]
+    },
+    {
+      "status": "queued",
+      "cluster": "internal-ops",
+      "type": "pillar",
+      "topic": "AI agents for internal operations: finance, HR and ops requests from Slack",
+      "angle": "Employees as users of the AI OS: invoice follow-up, onboarding, reporting, with the same rules as customer work.",
+      "link_to": [
+        "/platform",
+        "/blog/ai-operating-system-for-business"
+      ]
+    },
+    {
+      "status": "queued",
+      "cluster": "trends",
+      "type": "trend",
+      "topic": "AI agent certifications and audits: what buyers should ask for in 2026",
+      "angle": "New agent-specific standards (for example AIUC-1), SOC 2 and ISO 42001, what each covers and what it does not. Buyer checklist. Make no certification claims about Aurora.",
+      "link_to": [
+        "/platform",
+        "/blog/ai-operating-system-for-business"
+      ]
+    },
+    {
+      "status": "queued",
+      "cluster": "customer-service",
+      "type": "support",
+      "topic": "AI voice agents on the phone: what changes when the customer is live on the line",
+      "angle": "Latency, interruptions, identity checks, handoff to a person mid-call, call recording consent.",
+      "link_to": [
+        "/blog/ai-customer-service-agents",
+        "/platform"
+      ]
+    },
+    {
+      "status": "queued",
+      "cluster": "ai-os",
+      "type": "support",
+      "topic": "What an AI agent audit log should record (and why it matters)",
+      "angle": "Fields to log, who reviews it, how it supports compliance and debugging. Reference frameworks such as NIST AI RMF.",
+      "link_to": [
+        "/platform",
+        "/blog/ai-operating-system-for-business"
+      ]
+    },
+    {
+      "status": "queued",
+      "cluster": "customer-service",
+      "type": "support",
+      "topic": "Omnichannel AI: keeping one conversation across phone, SMS, WhatsApp and email",
+      "angle": "Identity resolution, shared history, channel-specific rules (consent, opt-out), what breaks without it.",
+      "link_to": [
+        "/platform"
+      ]
+    },
+    {
+      "status": "queued",
+      "cluster": "integrations",
+      "type": "support",
+      "topic": "Connecting an AI agent to your CRM: what it should read, write and never touch",
+      "angle": "Field-level permissions, deduplication, logging every write. HubSpot and Salesforce as examples, without claiming specific integrations beyond what the site states.",
+      "link_to": [
+        "/platform",
+        "/#how-it-works"
+      ]
+    },
+    {
+      "status": "queued",
+      "cluster": "internal-ops",
+      "type": "support",
+      "topic": "Automating invoice follow-up with an AI agent, step by step",
+      "angle": "Reminder cadence, tone, escalation, payment links, when finance must approve.",
+      "link_to": [
+        "/blog/ai-agents-for-internal-operations",
+        "/platform"
+      ]
+    },
+    {
+      "status": "queued",
+      "cluster": "integrations",
+      "type": "support",
+      "topic": "AI scheduling with Google Calendar and Outlook: how agents avoid double bookings",
+      "angle": "Free/busy, buffers, time zones, holds and confirmations, rescheduling rules.",
+      "link_to": [
+        "/platform",
+        "/industries/wellness-healthcare"
+      ]
+    },
+    {
+      "status": "queued",
+      "cluster": "ai-os",
+      "type": "support",
+      "topic": "How to measure the ROI of AI agents: the numbers to track before and after",
+      "angle": "Baseline, cost per handled request, time to first response, hours returned, conversion. Worksheet table.",
+      "link_to": [
+        "/blog/ai-operating-system-for-business",
+        "/#how-it-works"
+      ]
+    },
+    {
+      "status": "queued",
+      "cluster": "internal-ops",
+      "type": "support",
+      "topic": "Onboarding new hires with an AI agent: what can be set up before day one",
+      "angle": "Accounts, equipment requests, schedules, checklists, approvals from IT and HR.",
+      "link_to": [
+        "/blog/ai-agents-for-internal-operations"
+      ]
+    }
   ]
 }
