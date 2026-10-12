@@ -82,26 +82,40 @@ Then sync the queue. Move every `in_review` item in `plan.json` whose slug is al
 ## 3. Cover image (new articles)
 
 Covers are a text-free background plus a headline rendered in the brand font, so titles stay
-editable. Do not generate covers with text baked in.
+editable. Never ask an image model for text in the image.
 
-1. Add an entry to `design/blog-covers/covers.json`:
+1. Choose a short technical headline of 2 to 6 words, not the article title. Examples:
+   "The brokerage, on autopilot", "Dispatch, without the dispatcher", "Rules before autonomy".
+   Choose a palette clearly different from the last three covers: a deep base colour plus 2 or 3
+   bright, saturated accents.
+2. **Background with Higgsfield.** Use `generate_image` with model `nano_banana_2_1` and
+   `aspect_ratio` 16:9. Prompt pattern (fill in the colours):
+   > Minimal 16:9 editorial background for a technology company blog. Full-bleed soft
+   > out-of-focus gradient field, like light through frosted glass: <base colour> melting into
+   > <second colour>, with one or two large blurred glows of <accent colours>, fine film grain,
+   > no hard shapes. Completely empty: no text, no letters, no logos, no icons, no people, no UI,
+   > no watermark.
+3. Wait for the job with `jobs_wait`, then download `result_url` into
+   `design/blog-covers/<slug>-bg.webp`. Use `curl -sfL -o /tmp/bg.png "<result_url>"`, convert it
+   with Pillow, crop it to 16:9 and save it at 1600x900.
+   - If the image contains any text or shapes, or the download is blocked by the network,
+     **do not retry paid generations**.
+   - Instead, add the palette to the cover entry. The script then draws the background itself
+     (step 4).
+   - Say in the PR which path was used.
+4. Add the entry to `design/blog-covers/covers.json`:
    ```json
-   { "slug": "<slug>", "title": "<2 to 6 word technical headline, not the article title>", "tone": "dark", "palette": ["#0B1640", "#1E4BD8", "#E8743B", "#F2C9A0"] }
+   { "slug": "<slug>", "title": "<headline>", "tone": "dark", "palette": ["#0B1640", "#1E4BD8", "#E8743B", "#F2C9A0"] }
    ```
-   - The palette has 3 to 5 hex colours. Put a deep base colour first, then 2 or 3 bright,
-     saturated accents.
-   - Make it clearly different from the last three covers.
-   - Use `"tone": "light"` (dark text) only for pale palettes.
-   - Headline examples: "The brokerage, on autopilot", "Dispatch, without the dispatcher",
-     "Rules before autonomy".
-2. Run `python3 scripts/make-blog-covers.py <slug>`.
-   - The script draws `design/blog-covers/<slug>-bg.webp` from the palette.
-   - It then writes `public/img/blog/<slug>-1600.webp`, `-800.webp` and `-og.jpg`.
-3. Open `public/img/blog/<slug>-800.webp` with Read and check two things:
+   - Use `"tone": "light"` (dark text) only for pale backgrounds.
+   - The palette is only used when no `-bg.webp` file exists.
+5. Run `python3 scripts/make-blog-covers.py <slug>`. It writes
+   `public/img/blog/<slug>-1600.webp`, `-800.webp` and `-og.jpg`.
+6. Open `public/img/blog/<slug>-800.webp` with Read and check:
    - the headline is spelled correctly and readable;
+   - there is no stray text in the background;
    - the colours look like soft light, not mud.
-   If needed, adjust the palette or add a `"seed"`, delete the `-bg.webp` and re-run.
-4. Set `image.alt` to describe the cover: colours, headline, logo.
+7. Set `image.alt` to describe the cover: colours, headline, logo.
 
 ## 4. Validate
 
