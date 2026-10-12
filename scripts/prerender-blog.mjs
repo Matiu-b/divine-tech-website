@@ -27,7 +27,8 @@ function setMeta(html, { title, description, url, image, type = 'website', jsonl
   if (image) {
     out = out
       .replace(/<meta property="og:image" content="[^"]*" \/>/, `<meta property="og:image" content="${image}" />`)
-      .replace(/<meta name="twitter:image" content="[^"]*" \/>/, `<meta name="twitter:image" content="${image}" />`);
+      .replace(/<meta name="twitter:image" content="[^"]*" \/>/, `<meta name="twitter:image" content="${image}" />`)
+      .replace(/<meta property="og:image:height" content="[^"]*" \/>/, '<meta property="og:image:height" content="675" />');
   }
   const extra = [`<link rel="canonical" href="${url}" />`, ...jsonld.map((j) => `<script type="application/ld+json">${JSON.stringify(j).replace(/</g, '\\u003c')}</script>`)].join('\n    ');
   return out.replace('</head>', `    ${extra}\n  </head>`);
