@@ -101,10 +101,10 @@ export default function Outcomes() {
             <Reveal
               key={o.key}
               delay={i * 0.08}
-              className={cn('flex flex-col gap-5 py-8 md:py-10', i > 0 && 'border-t border-ink/10 md:border-l md:border-t-0 md:pl-8 lg:pl-10', i < 2 && 'md:pr-8 lg:pr-10')}
+              className={cn('flex flex-col gap-4 py-7 md:gap-5 md:py-10', i > 0 && 'border-t border-ink/10 md:border-l md:border-t-0 md:pl-8 lg:pl-10', i < 2 && 'md:pr-8 lg:pr-10')}
             >
               <p className="text-[13px] font-medium uppercase tracking-[0.08em] text-brand-ink">{o.label}</p>
-              <div className="max-w-[300px]">
+              <div className="max-w-[220px] md:max-w-[300px]">
                 <Trend kind={o.key} on={on} />
                 <div className="mt-2 flex h-4 flex-wrap gap-x-4 text-[11.5px] text-slate">
                   {o.departments
