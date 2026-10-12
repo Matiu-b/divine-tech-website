@@ -1,20 +1,24 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { BookOpen, CalendarDays, Database, ListChecks, Mail, MessageCircle, MessageSquare, Phone, Smartphone, Users } from 'lucide-react';
+import { BookOpen, CalendarDays, Check, Database, ScrollText, ShieldCheck, UserCheck, Hash, ListChecks, Mail, MessageCircle, MessageSquare, Phone, Smartphone, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { brand, platform } from '@/data/site';
+import { useNavigate } from 'react-router-dom';
 import SectionHeader from './primitives/SectionHeader';
+import CTAButton from './primitives/CTAButton';
 import { Reveal, RevealGroup, RevealItem } from './primitives/MotionReveal';
 import { useInViewport, usePageVisible } from './hooks';
 import { EASE } from './motion';
+import LiquidGlass from './primitives/LiquidGlass';
 
-const CH_ICONS = [MessageSquare, MessageCircle, Phone, Smartphone, Mail];
+const CH_ICONS = [Phone, Smartphone, MessageSquare, Mail, MessageCircle, Hash];
 const SYS_ICONS = [Database, CalendarDays, ListChecks, BookOpen, Users];
 
 // Diagram geometry (desktop), in a 1200 × 600 frame.
 const W = 1200;
 const H = 600;
-const ROWS = [108, 204, 300, 396, 492];
+const ROWS = [108, 204, 300, 396, 492]; // systems (right)
+const CH_ROWS = [92, 175, 258, 342, 425, 508]; // channels (left): six, incl. Slack for internal requests
 const CORE = { x: 450, y: 56, w: 300, h: 488 };
 const LEFT_X = 232;
 const RIGHT_X = 968;
@@ -25,48 +29,66 @@ const leftPath = (y) =>
 const rightPath = (y) =>
   'M' + (CORE.x + CORE.w) + ',' + squeeze(y) + ' C' + (CORE.x + CORE.w + 110) + ',' + squeeze(y) + ' ' + (RIGHT_X - 120) + ',' + y + ' ' + RIGHT_X + ',' + y;
 
-/** @param {any} props */
+/** Warm Aurora light behind the glass core, so the material has something to frost. */
+function DawnGlow({ className = '' }) {
+  const reduce = useReducedMotion();
+  return (
+    <div aria-hidden="true" className={cn('pointer-events-none absolute', className)}>
+      <div className={cn('absolute left-[2%] top-[4%] h-[52%] w-[70%] rounded-full bg-[radial-gradient(closest-side,rgba(242,92,42,0.75),rgba(242,92,42,0))] blur-2xl', !reduce && 'animate-drift')} />
+      <div className={cn('absolute bottom-[6%] right-[0%] h-[50%] w-[72%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.85),rgba(255,200,87,0))] blur-2xl', !reduce && 'animate-drift [animation-delay:-6s]')} />
+      <div className="absolute left-[18%] top-[38%] h-[38%] w-[64%] rounded-full bg-[radial-gradient(closest-side,rgba(255,159,69,0.7),rgba(255,159,69,0))] blur-2xl" />
+    </div>
+  );
+}
+
+/** Aurora's core as Liquid Glass over its own dawn light. @param {any} props */
 function Core({ active, compact = false }) {
   const layerIdx = active % 3;
   return (
-    <div className={cn('relative flex h-full flex-col overflow-hidden rounded-[26px] bg-ink p-5 text-white shadow-[0_30px_60px_-30px_rgba(10,15,14,0.55)] md:p-6', compact && 'w-full')}>
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(90%_55%_at_50%_0%,rgba(60,224,154,0.16),rgba(60,224,154,0)_70%)]" />
-      <div className="relative flex items-start justify-between">
+    <div className={cn('relative h-full', compact && 'w-full')}>
+      <DawnGlow className="-inset-6" />
+      <LiquidGlass
+        className="relative flex h-full flex-col rounded-[28px] p-4 2xl:p-6"
+        style={{ '--lg-tint-a': 'rgba(255,250,242,0.5)', '--lg-tint-b': 'rgba(255,246,229,0.18)', '--lg-sheen': 'rgba(255,240,215,0.7)' }}
+      >
         <div>
-          <p className="text-[22px] font-[480] leading-none tracking-[-0.03em]">{brand.product}</p>
-          <p className="mt-1.5 text-[13px] text-white/50">Operating layer</p>
+          <img src="/brand/aurora-logo-horizontal-color.svg" alt={brand.product} width="124" height="32" className="h-7 w-auto 2xl:h-8" />
+          <p className="mt-1.5 text-[12.5px] text-ink/55">AI operating system</p>
         </div>
-        <span className="flex items-center gap-1.5 rounded-full bg-white/[0.07] px-2.5 py-1 text-[11.5px] font-medium text-white/75">
-          <span className="h-1.5 w-1.5 animate-pulse-soft rounded-full bg-brand-glow" />
-          Live
-        </span>
-      </div>
-      <ul className="relative mt-5 grid flex-1 content-center gap-2.5">
-        {platform.layers.map((l, i) => (
-          <li
-            key={l.name}
-            className={cn(
-              'relative overflow-hidden rounded-[18px] border px-4 py-3.5 transition-colors duration-700',
-              i === layerIdx ? 'border-white/[0.14] bg-white/[0.09]' : 'border-white/[0.06] bg-white/[0.03]'
-            )}
-          >
-            <span
-              aria-hidden="true"
-              className={cn('absolute bottom-3 left-0 top-3 w-[2px] rounded-full bg-brand-glow transition-opacity duration-700', i === layerIdx ? 'opacity-100' : 'opacity-0')}
-            />
-            <p className="text-[15px] font-medium tracking-[-0.015em]">{l.name}</p>
-            <p className="mt-0.5 text-[13px] text-white/55">{l.detail}</p>
-          </li>
-        ))}
-      </ul>
-      <div className="relative mt-5 flex flex-wrap gap-x-4 gap-y-1.5 border-t border-white/[0.08] pt-4 text-[12px] text-white/55">
-        {['Policies', 'Approvals', 'Audit log'].map((t) => (
-          <span key={t} className="flex items-center gap-1.5">
-            <span className="h-1 w-1 rounded-full bg-white/40" />
-            {t}
-          </span>
-        ))}
-      </div>
+        <ul className="relative mt-4 grid flex-1 content-center gap-2 2xl:mt-5 2xl:gap-2.5">
+          {platform.layers.map((l, i) => (
+            <li
+              key={l.name}
+              className={cn(
+                'relative overflow-hidden rounded-[16px] border px-3.5 py-2.5 transition-[background-color,border-color,box-shadow] duration-700 2xl:rounded-[18px] 2xl:px-4 2xl:py-3.5',
+                i === layerIdx
+                  ? 'border-white/80 bg-white/70 shadow-[0_10px_24px_-14px_rgba(120,50,10,0.45)]'
+                  : 'border-white/40 bg-white/25'
+              )}
+            >
+              <span
+                aria-hidden="true"
+                className={cn('absolute bottom-3 left-0 top-3 w-[3px] rounded-full bg-[#F25C2A] transition-opacity duration-700', i === layerIdx ? 'opacity-100' : 'opacity-0')}
+              />
+              <p className="text-[14px] font-medium tracking-[-0.015em] text-ink 2xl:text-[15px]">{l.name}</p>
+              <p className="mt-0.5 text-[12px] leading-snug text-ink/60 2xl:text-[13px]">{l.detail}</p>
+            </li>
+          ))}
+        </ul>
+        {/* built-in controls: three equal columns, so the row never wraps mid-way */}
+        <ul className="relative mt-4 grid grid-cols-3 divide-x divide-ink/10 border-t border-ink/10 pt-3 2xl:mt-5 2xl:pt-4">
+          {[
+            [ShieldCheck, 'Policies'],
+            [UserCheck, 'Approvals'],
+            [ScrollText, 'Audit log'],
+          ].map(([Icon, t]) => (
+            <li key={t} className="flex flex-col items-center gap-1.5 px-1 text-center">
+              <Icon className="h-4 w-4 text-[#C2410C]" strokeWidth={1.8} aria-hidden="true" />
+              <span className="whitespace-nowrap text-[11.5px] leading-none text-ink/65">{t}</span>
+            </li>
+          ))}
+        </ul>
+      </LiquidGlass>
     </div>
   );
 }
@@ -94,6 +116,12 @@ function Node({ icon: Icon, label, detail = undefined, active = false, className
 }
 
 export default function Platform() {
+  const navigate = useNavigate();
+  const goTo = (e, to) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
+    e.preventDefault();
+    navigate(to);
+  };
   const ref = useRef(null);
   const reduce = useReducedMotion();
   const visible = usePageVisible();
@@ -102,7 +130,7 @@ export default function Platform() {
 
   useEffect(() => {
     if (reduce || !inView || !visible) return undefined;
-    const id = window.setInterval(() => setActive((a) => (a + 1) % ROWS.length), 2600);
+    const id = window.setInterval(() => setActive((a) => (a + 1) % CH_ROWS.length), 2600);
     return () => window.clearInterval(id);
   }, [reduce, inView, visible]);
 
@@ -112,7 +140,7 @@ export default function Platform() {
         <SectionHeader id="platform-title" eyebrow={platform.eyebrow} titleA={platform.titleA} titleB={platform.titleB} text={platform.text} layout="split" />
 
         <Reveal y={40} className="mt-14 md:mt-20">
-          <div ref={ref} className="rounded-[clamp(24px,3vw,40px)] bg-white p-5 shadow-[0_0_0_1px_rgba(10,15,14,0.04),0_30px_80px_-50px_rgba(10,15,14,0.3)] xs:p-6 md:p-10 lg:p-14">
+          <div ref={ref} className="rounded-[clamp(24px,3vw,40px)] bg-white p-4 shadow-[0_0_0_1px_rgba(10,15,14,0.04),0_30px_80px_-50px_rgba(10,15,14,0.3)] xs:p-6 md:p-10 lg:p-14">
             {/* Desktop architecture */}
             <div className="relative hidden xl:block" style={{ aspectRatio: W + ' / ' + H }}>
               <svg className="absolute inset-0 h-full w-full" viewBox={'0 0 ' + W + ' ' + H} preserveAspectRatio="none" aria-hidden="true">
@@ -123,21 +151,25 @@ export default function Platform() {
                     <stop offset="1" stopColor="#13A89C" stopOpacity="0.3" />
                   </linearGradient>
                 </defs>
-                {ROWS.map((y, i) => (
-                  <g key={y}>
+                {CH_ROWS.map((y, i) => (
+                  <g key={'c' + y}>
                     <path d={leftPath(y)} fill="none" stroke={i === active ? 'rgba(10,15,14,0.32)' : 'rgba(10,15,14,0.1)'} strokeWidth="1" vectorEffect="non-scaling-stroke" style={{ transition: 'stroke 0.6s ease' }} />
-                    <path d={rightPath(y)} fill="none" stroke={i === active ? 'rgba(10,15,14,0.32)' : 'rgba(10,15,14,0.1)'} strokeWidth="1" vectorEffect="non-scaling-stroke" style={{ transition: 'stroke 0.6s ease' }} />
                     {!reduce && i === active ? (
-                      <>
-                        <path key={'l' + active} d={leftPath(y)} fill="none" stroke="url(#pf-pulse)" strokeWidth="2.25" strokeLinecap="round" vectorEffect="non-scaling-stroke" pathLength={1} className="flow-pulse" style={{ animationDuration: '1.3s', animationIterationCount: 1, animationFillMode: 'both' }} />
-                        <path key={'r' + active} d={rightPath(y)} fill="none" stroke="url(#pf-pulse)" strokeWidth="2.25" strokeLinecap="round" vectorEffect="non-scaling-stroke" pathLength={1} className="flow-pulse" style={{ animationDuration: '1.3s', animationDelay: '1.1s', animationIterationCount: 1, animationFillMode: 'both' }} />
-                      </>
+                      <path key={'l' + active} d={leftPath(y)} fill="none" stroke="url(#pf-pulse)" strokeWidth="2.25" strokeLinecap="round" vectorEffect="non-scaling-stroke" pathLength={1} className="flow-pulse" style={{ animationDuration: '1.3s', animationIterationCount: 1, animationFillMode: 'both' }} />
+                    ) : null}
+                  </g>
+                ))}
+                {ROWS.map((y, i) => (
+                  <g key={'s' + y}>
+                    <path d={rightPath(y)} fill="none" stroke={i === active % ROWS.length ? 'rgba(10,15,14,0.32)' : 'rgba(10,15,14,0.1)'} strokeWidth="1" vectorEffect="non-scaling-stroke" style={{ transition: 'stroke 0.6s ease' }} />
+                    {!reduce && i === active % ROWS.length ? (
+                      <path key={'r' + active} d={rightPath(y)} fill="none" stroke="url(#pf-pulse)" strokeWidth="2.25" strokeLinecap="round" vectorEffect="non-scaling-stroke" pathLength={1} className="flow-pulse" style={{ animationDuration: '1.3s', animationDelay: '1.1s', animationIterationCount: 1, animationFillMode: 'both' }} />
                     ) : null}
                   </g>
                 ))}
               </svg>
 
-              <p className="absolute left-0 top-0 text-[12.5px] font-medium text-slate">Customer channels</p>
+              <p className="absolute left-0 top-0 text-[12.5px] font-medium text-slate">Channels</p>
               <p className="absolute right-0 top-0 text-[12.5px] font-medium text-slate">Your systems</p>
 
               {platform.channels.map((c, i) => (
@@ -147,7 +179,7 @@ export default function Platform() {
                   label={c}
                   active={i === active}
                   className="absolute h-[8.8%]"
-                  style={{ left: 0, top: pct(ROWS[i] - 26, H), width: pct(LEFT_X, W) }}
+                  style={{ left: 0, top: pct(CH_ROWS[i] - 26, H), width: pct(LEFT_X, W) }}
                 />
               ))}
 
@@ -161,47 +193,19 @@ export default function Platform() {
                   icon={SYS_ICONS[i]}
                   label={s.name}
                   detail={s.detail}
-                  active={i === active}
+                  active={i === active % ROWS.length}
                   className="absolute h-[10.6%]"
                   style={{ left: pct(RIGHT_X, W), top: pct(ROWS[i] - 32, H), width: pct(W - RIGHT_X, W) }}
                 />
               ))}
             </div>
 
-            {/* Mobile / tablet architecture */}
-            <div className="flex flex-col items-center xl:hidden">
-              <p className="text-[12.5px] font-medium text-slate">Customer channels</p>
-              <ul className="mt-3 flex flex-wrap justify-center gap-2">
-                {platform.channels.map((c, i) => {
-                  const Icon = CH_ICONS[i];
-                  return (
-                    <li key={c} className={cn('flex items-center gap-2 rounded-full border px-3 py-2 text-[13.5px] font-medium transition-colors duration-500', i === active ? 'border-ink bg-ink text-white' : 'border-ink/[0.08] bg-paper text-ink')}>
-                      <Icon className="h-3.5 w-3.5" strokeWidth={1.8} aria-hidden="true" />
-                      {c}
-                    </li>
-                  );
-                })}
-              </ul>
-              <Connector />
-              <div className="w-full max-w-[420px]">
-                <Core active={active} compact />
-              </div>
-              <Connector />
-              <p className="text-[12.5px] font-medium text-slate">Your systems</p>
-              <ul className="mt-3 flex flex-wrap justify-center gap-2">
-                {platform.systems.map((s, i) => {
-                  const Icon = SYS_ICONS[i];
-                  return (
-                    <li key={s.name} className={cn('flex items-center gap-2 rounded-full border px-3 py-2 text-[13.5px] font-medium transition-colors duration-500', i === active ? 'border-ink bg-ink text-white' : 'border-ink/[0.08] bg-paper text-ink')}>
-                      <Icon className="h-3.5 w-3.5" strokeWidth={1.8} aria-hidden="true" />
-                      {s.name}
-                    </li>
-                  );
-                })}
-              </ul>
+            {/* Phone / tablet: the same story in one screen, one request at a time */}
+            <div className="xl:hidden">
+              <StoryCompact />
             </div>
 
-            <RevealGroup className="mt-12 grid gap-8 border-t border-ink/[0.07] pt-10 md:mt-14 md:grid-cols-3 md:gap-10">
+            <RevealGroup className="mt-12 hidden gap-8 border-t border-ink/[0.07] pt-10 md:mt-14 md:grid md:grid-cols-3 md:gap-10">
               {platform.notes.map(([title, text]) => (
                 <RevealItem key={title}>
                   <h3 className="t-h4">{title}</h3>
@@ -211,23 +215,140 @@ export default function Platform() {
             </RevealGroup>
           </div>
         </Reveal>
+        {platform.link ? (
+          <Reveal className="mt-8 flex justify-center">
+            <CTAButton href="/platform" variant="primary" size="lg" onClick={(e) => goTo(e, '/platform')}>
+              {platform.link}
+            </CTAButton>
+          </Reveal>
+        ) : null}
       </div>
     </section>
   );
 }
 
-function Connector() {
+/** A short vertical link with a pulse travelling down it. */
+function Link({ on }) {
   const reduce = useReducedMotion();
   return (
-    <span aria-hidden="true" className="relative my-4 block h-12 w-px overflow-hidden bg-ink/10">
-      {!reduce ? (
+    <span aria-hidden="true" className="relative mx-auto my-1.5 block h-5 w-px overflow-hidden bg-ink/10">
+      {!reduce && on ? (
         <motion.span
-          className="absolute left-0 top-0 block h-5 w-px bg-gradient-to-b from-transparent via-brand to-transparent"
-          initial={{ y: -20 }}
-          animate={{ y: 52 }}
-          transition={{ duration: 1.6, repeat: Infinity, ease: EASE, repeatDelay: 0.4 }}
+          className="absolute left-0 top-0 block h-3 w-px bg-brand"
+          initial={{ y: -12 }}
+          animate={{ y: 20 }}
+          transition={{ duration: 0.7, repeat: Infinity, ease: EASE, repeatDelay: 0.3 }}
         />
       ) : null}
     </span>
+  );
+}
+
+/** A row of icon tiles; the one in use is dark. @param {any} props */
+function IconRow({ label, items, icons, active }) {
+  return (
+    <div>
+      <p className="text-center text-[11.5px] font-medium text-slate">{label}</p>
+      <ul className="mt-2 flex justify-center gap-1.5 xs:gap-2">
+        {items.map((name, i) => {
+          const Icon = icons[i];
+          const on = i === active;
+          return (
+            <li
+              key={name}
+              title={name}
+              className={cn(
+                'flex h-10 w-10 items-center justify-center rounded-[12px] border transition-colors duration-500 xs:h-11 xs:w-11',
+                on ? 'border-ink bg-ink text-white' : 'border-ink/[0.08] bg-paper text-ink/70'
+              )}
+            >
+              <Icon className="h-4 w-4" strokeWidth={1.8} aria-hidden="true" />
+              <span className="sr-only">{name}</span>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+/**
+ * The platform story for phones and tablets, sized to fit one screen: a request arrives on a
+ * channel, Aurora understands, decides and acts, and the work lands in one of your systems.
+ */
+function StoryCompact() {
+  const ref = useRef(null);
+  const reduce = useReducedMotion();
+  const visible = usePageVisible();
+  const inView = useInViewport(ref, { threshold: 0.3 });
+  const [step, setStep] = useState(0);
+  const PHASES = 5; // 0 ask · 1 understand · 2 decide · 3 act · 4 done
+  useEffect(() => {
+    if (reduce || !inView || !visible) return undefined;
+    const id = window.setInterval(() => setStep((n) => n + 1), 900);
+    return () => window.clearInterval(id);
+  }, [reduce, inView, visible]);
+  const ex = platform.examples[Math.floor(step / PHASES) % platform.examples.length];
+  const phase = reduce ? 4 : step % PHASES;
+  const layer = phase >= 1 && phase <= 3 ? phase - 1 : -1;
+  const sysName = platform.systems[ex.sys].name;
+  return (
+    <div ref={ref} className="mx-auto max-w-[440px]">
+      <IconRow label="Channels" items={platform.channels} icons={CH_ICONS} active={ex.ch} />
+
+      <div className="mt-3 rounded-[16px] rounded-bl-[6px] bg-paper px-3.5 py-2.5">
+        <p className="flex justify-between gap-3 text-[11px] text-slate">
+          <span>
+            {ex.from} · {platform.channels[ex.ch]}
+          </span>
+          <span className="text-ink/70">{ex.dept}</span>
+        </p>
+        <p className="mt-0.5 text-[13.5px] leading-snug text-ink">{ex.ask}</p>
+      </div>
+
+      <Link on={phase >= 1} />
+
+      <div className="relative">
+        <DawnGlow className="-inset-x-3 -inset-y-4" />
+        <LiquidGlass
+          className="relative rounded-[20px] px-4 py-3.5"
+          style={{ '--lg-tint-a': 'rgba(255,250,242,0.5)', '--lg-tint-b': 'rgba(255,246,229,0.18)', '--lg-sheen': 'rgba(255,240,215,0.7)' }}
+        >
+          <div className="relative flex items-center justify-between gap-3">
+            <img src="/brand/aurora-logo-horizontal-color.svg" alt={brand.product} width="93" height="24" className="h-6 w-auto" />
+            <p className="text-[11px] text-ink/55">AI operating system</p>
+          </div>
+          <ol className="relative mt-3 grid grid-cols-3 gap-1.5">
+            {platform.layers.map((l, i) => (
+              <li
+                key={l.name}
+                className={cn(
+                  'rounded-[10px] border px-1 py-2 text-center text-[11px] font-medium tracking-[-0.01em] transition-colors duration-500 xs:text-[12px]',
+                  i === layer ? 'border-white/80 bg-white/75 text-ink' : i < layer || phase === 4 ? 'border-white/50 bg-white/35 text-ink/70' : 'border-white/30 bg-white/10 text-ink/45'
+                )}
+              >
+                {l.name}
+              </li>
+            ))}
+          </ol>
+        </LiquidGlass>
+      </div>
+
+      <Link on={phase >= 3} />
+
+      <IconRow label="Your systems" items={platform.systems.map((x) => x.name)} icons={SYS_ICONS} active={phase >= 3 ? ex.sys : -1} />
+
+      <div
+        className={cn(
+          'mt-3 flex items-center gap-2.5 rounded-[14px] border px-3.5 py-2.5 transition-colors duration-500',
+          phase === 4 ? 'border-brand/25 bg-brand-mint text-brand-ink' : 'border-ink/[0.06] bg-paper/60 text-slate'
+        )}
+      >
+        <span className={cn('flex h-5 w-5 shrink-0 items-center justify-center rounded-full transition-colors duration-500', phase === 4 ? 'bg-brand text-white' : 'bg-ink/10 text-transparent')}>
+          <Check className="h-3 w-3" strokeWidth={3.2} aria-hidden="true" />
+        </span>
+        <span className="min-w-0 truncate text-[12.5px] font-medium">{["New request…", 'Understanding the request…', 'Checking your rules…', 'Working in ' + sysName + '…', ex.done][phase]}</span>
+      </div>
+    </div>
   );
 }

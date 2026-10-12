@@ -2,14 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Google Sans Flex (SIL OFL 1.1), self-hosted variable font (weight + optical size axes), Latin subset (~120 KB, preloaded in index.html) */
+/* Unbounded (SIL OFL 1.1), the only brand typeface. Self-hosted variable font (wght 200–900), Latin subset.
+   Medium 500 for headlines, Regular 400 for body (brand guidelines, Oct 2026). */
 @font-face {
-  font-family: 'Google Sans Flex';
+  font-family: 'Unbounded';
   font-style: normal;
-  font-weight: 300 700;
+  font-weight: 200 900;
   font-display: swap;
-  src: url('/fonts/google-sans-flex-latin-opsz.woff2') format('woff2-variations'), url('/fonts/google-sans-flex-latin-opsz.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  src: url('/fonts/unbounded-latin-wght.woff') format('woff-variations'), url('/fonts/unbounded-latin-wght.woff') format('woff');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2190-2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 /* ==========================================================================
@@ -80,7 +81,7 @@
     --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
 
     /* Type */
-    --font-sans: 'Google Sans Flex', 'Google Sans', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --font-sans: 'Unbounded', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     --font-mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
 
     /* Material texture (static noise, ~1 KB) */
@@ -106,8 +107,10 @@
     background-color: var(--dt-paper);
     color: var(--dt-text);
     font-family: var(--font-sans);
-    font-size: 16px;
+    font-size: 15px;
     line-height: 1.6;
+    letter-spacing: -0.01em;
+    font-weight: 400;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
@@ -158,45 +161,46 @@
     padding-block: var(--section-y);
   }
 
+  /* Unbounded is a wide face: sizes are set smaller than a regular sans would need. */
   .t-display {
-    font-size: clamp(2.6rem, 1.2rem + 4.6vw, 5.75rem);
-    line-height: 0.98;
-    letter-spacing: -0.04em;
-    font-weight: 430;
+    font-size: clamp(2.05rem, 1rem + 3.5vw, 4.3rem);
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    font-weight: 500;
   }
 
   .t-h1 {
-    font-size: clamp(2.25rem, 1.15rem + 3.4vw, 4.5rem);
-    line-height: 1.02;
-    letter-spacing: -0.037em;
-    font-weight: 430;
+    font-size: clamp(1.75rem, 1rem + 2.4vw, 3.25rem);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    font-weight: 500;
   }
 
   .t-h2 {
-    font-size: clamp(1.85rem, 1.15rem + 2.1vw, 3.1rem);
-    line-height: 1.06;
-    letter-spacing: -0.035em;
-    font-weight: 440;
+    font-size: clamp(1.5rem, 1rem + 1.5vw, 2.35rem);
+    line-height: 1.12;
+    letter-spacing: -0.015em;
+    font-weight: 500;
   }
 
   .t-h3 {
-    font-size: clamp(1.4rem, 1.1rem + 0.9vw, 1.9rem);
-    line-height: 1.15;
-    letter-spacing: -0.026em;
-    font-weight: 460;
+    font-size: clamp(1.18rem, 1rem + 0.55vw, 1.5rem);
+    line-height: 1.22;
+    letter-spacing: -0.01em;
+    font-weight: 500;
   }
 
   .t-h4 {
-    font-size: clamp(1.1rem, 1.02rem + 0.3vw, 1.3rem);
-    line-height: 1.3;
-    letter-spacing: -0.018em;
+    font-size: clamp(1rem, 0.95rem + 0.2vw, 1.12rem);
+    line-height: 1.38;
+    letter-spacing: -0.01em;
     font-weight: 500;
   }
 
   .t-lead {
-    font-size: clamp(1.08rem, 1rem + 0.32vw, 1.3rem);
-    line-height: 1.52;
-    letter-spacing: -0.012em;
+    font-size: clamp(1rem, 0.94rem + 0.22vw, 1.12rem);
+    line-height: 1.62;
+    letter-spacing: -0.01em;
     color: var(--dt-text-2);
   }
 
@@ -227,33 +231,20 @@
     text-wrap: pretty;
   }
 
+  /* Small plain-text label, used only where it carries information (e.g. which industry). */
   .eyebrow {
     display: inline-flex;
     align-items: center;
-    gap: 0.6rem;
     font-size: 0.875rem;
     font-weight: 500;
     letter-spacing: -0.005em;
     color: var(--dt-text-2);
   }
 
-  .eyebrow::before {
-    content: '';
-    width: 6px;
-    height: 6px;
-    border-radius: 999px;
-    background: var(--dt-green);
-    box-shadow: 0 0 0 4px rgba(20, 163, 107, 0.12);
-  }
-
   .on-dark .eyebrow {
     color: rgba(255, 255, 255, 0.72);
   }
 
-  .on-dark .eyebrow::before {
-    background: var(--dt-green-glow);
-    box-shadow: 0 0 0 4px rgba(60, 224, 154, 0.14);
-  }
 
   .hairline {
     height: 1px;
@@ -541,7 +532,7 @@
   /* Form fields */
   .field {
     width: 100%;
-    height: 50px;
+    height: 46px;
     padding: 0 1rem;
     border-radius: 14px;
     font-size: 16px;
@@ -556,7 +547,7 @@
 
   textarea.field {
     height: auto;
-    min-height: 96px;
+    min-height: 72px;
     padding: 0.85rem 1rem;
     line-height: 1.5;
     resize: vertical;
@@ -873,3 +864,63 @@
     cursor: pointer;
   }
 }
+
+/* Blog article body: one readable column, Unbounded throughout (brand rule), tables scroll on phones. */
+.prose-blog {
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  color: var(--dt-text-2);
+  letter-spacing: -0.005em;
+}
+.prose-blog > * + * { margin-top: 1.15em; }
+.prose-blog h2 {
+  margin-top: 2.4em;
+  font-size: clamp(1.35rem, 1.1rem + 0.9vw, 1.75rem);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  font-weight: 500;
+  color: var(--dt-text);
+  text-wrap: balance;
+}
+.prose-blog h3 {
+  margin-top: 1.9em;
+  font-size: 1.12rem;
+  line-height: 1.35;
+  font-weight: 500;
+  color: var(--dt-text);
+}
+.prose-blog h2 + *, .prose-blog h3 + * { margin-top: 0.7em; }
+.prose-blog strong { font-weight: 500; color: var(--dt-text); }
+.prose-blog a { color: var(--dt-text); text-decoration: underline; text-decoration-color: rgba(20, 163, 107, 0.5); text-underline-offset: 4px; text-decoration-thickness: 1.5px; }
+.prose-blog a:hover { text-decoration-color: #14A36B; }
+.prose-blog ul, .prose-blog ol { padding-left: 1.25em; }
+.prose-blog ul { list-style: disc; }
+.prose-blog ol { list-style: decimal; }
+.prose-blog li + li { margin-top: 0.5em; }
+.prose-blog li::marker { color: var(--dt-mute); }
+.prose-blog > p:first-child { font-size: 1.18rem; line-height: 1.65; color: var(--dt-text); }
+.prose-blog table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin-top: 1.8em;
+  margin-bottom: 0.6em;
+}
+.prose-blog th, .prose-blog td {
+  min-width: 9.5rem;
+  padding: 0.8em 1em 0.8em 0;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid rgba(10, 15, 14, 0.1);
+}
+.prose-blog th { font-weight: 500; color: var(--dt-text); border-bottom-color: rgba(10, 15, 14, 0.25); }
+@media (min-width: 768px) {
+  .prose-blog table { display: table; }
+  .prose-blog th, .prose-blog td { min-width: 0; }
+}
+
+/* Carousel pager: the active bar fills while the slide waits to move on */
+@keyframes outcomes-fill { from { width: 0; } to { width: 100%; } }

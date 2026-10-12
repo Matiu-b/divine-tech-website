@@ -1,10 +1,9 @@
 import React from 'react';
-import { Check } from 'lucide-react';
 import { teams } from '@/data/site';
 import LiquidGlass from './primitives/LiquidGlass';
 import SectionHeader from './primitives/SectionHeader';
 import { RevealGroup, RevealItem } from './primitives/MotionReveal';
-import { EVENT_ICONS } from './Moment';
+import { EVENT_ICONS } from './eventIcons';
 
 /**
  * One team, one agent. The photo and its glass status chip share a canvas, so
@@ -15,7 +14,7 @@ function TeamCard({ t }) {
   const Icon = EVENT_ICONS[t.chip.icon];
   return (
     <RevealItem as="article" y={28} className="flex flex-col">
-      <div className="canvas relative aspect-[4/3] bg-cover bg-center" style={{ backgroundImage: 'url(' + t.photo.lqip + ')' }}>
+      <div className="canvas relative aspect-[4/3] bg-cover bg-center" style={t.photo.lqip ? { backgroundImage: 'url(' + t.photo.lqip + ')' } : undefined}>
         <img
           src={t.photo.src}
           srcSet={t.photo.srcSet}
@@ -31,7 +30,7 @@ function TeamCard({ t }) {
           </span>
           <span className="min-w-0 flex-1">
             <span className="block truncate text-[11px] font-medium text-slate">{t.agent}</span>
-            <span className="block truncate text-[13px] font-semibold leading-tight tracking-[-0.01em] text-ink">{t.chip.title}</span>
+            <span className="block truncate text-[13px] font-medium leading-tight tracking-[-0.01em] text-ink">{t.chip.title}</span>
           </span>
           <span className="shrink-0 text-[11.5px] text-graphite lg:hidden xl:inline">{t.chip.detail}</span>
         </LiquidGlass>
@@ -40,34 +39,14 @@ function TeamCard({ t }) {
       <div className="flex flex-1 flex-col pt-6 md:pt-7">
         <p className="eyebrow">{t.label}</p>
         <h3 className="t-h3 balance mt-3">{t.title}</h3>
-        <p className="mt-3 text-[15px] leading-relaxed text-graphite">
-          <span className="font-medium text-ink">Who it helps: </span>
-          {t.who}
-        </p>
-        <ul className="mt-5 grid gap-3 border-t border-ink/10 pt-5">
-          {t.does.map((d) => (
-            <li key={d} className="flex gap-3 text-[15px] leading-relaxed text-graphite">
-              <span className="mt-[3px] flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full bg-brand/[0.12] text-brand-ink">
-                <Check className="h-3 w-3" strokeWidth={2.6} aria-hidden="true" />
-              </span>
-              <span>{d}</span>
+        <p className="mt-3 max-w-[40ch] text-[15px] leading-relaxed text-graphite">{t.line}</p>
+        <ul className="mt-5 flex flex-wrap gap-1.5" aria-label="KPIs it owns">
+          {t.kpis.map((k) => (
+            <li key={k} className="rounded-full bg-paper-2 px-2.5 py-1 text-[12px] font-medium text-graphite">
+              {k}
             </li>
           ))}
         </ul>
-        <div className="mt-auto pt-6">
-          <div className="rounded-[18px] bg-white p-4 shadow-[0_0_0_1px_rgba(10,15,14,0.05),0_12px_28px_-18px_rgba(10,15,14,0.3)] md:p-5">
-            <p className="text-[12px] font-medium text-brand-ink">How the team gains</p>
-            <p className="mt-1.5 text-[15px] leading-relaxed text-ink">{t.gain}</p>
-            <p className="mt-4 border-t border-ink/[0.07] pt-3 text-[12px] font-medium text-slate">KPIs it owns</p>
-            <ul className="mt-2 flex flex-wrap gap-1.5">
-              {t.kpis.map((k) => (
-                <li key={k} className="rounded-full bg-paper-2 px-2.5 py-1 text-[12px] font-medium text-graphite">
-                  {k}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
       </div>
     </RevealItem>
   );

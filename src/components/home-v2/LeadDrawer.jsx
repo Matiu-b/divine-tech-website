@@ -11,7 +11,7 @@ const LeadCtx = createContext({ open: () => {}, close: () => {}, isOpen: false }
 export const useLead = () => useContext(LeadCtx);
 
 /** @param {any} props */
-export function LeadProvider({ children }) {
+export function LeadProvider({ children, industry = '' }) {
   const [isOpen, setOpen] = useState(false);
   const returnFocus = useRef(null);
   const open = useCallback(() => {
@@ -30,7 +30,7 @@ export function LeadProvider({ children }) {
   return (
     <LeadCtx.Provider value={value}>
       {children}
-      <LeadSheet isOpen={isOpen} onClose={close} />
+      <LeadSheet isOpen={isOpen} onClose={close} industry={industry} />
     </LeadCtx.Provider>
   );
 }
@@ -38,7 +38,7 @@ export function LeadProvider({ children }) {
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 /** @param {any} props */
-function Field({ id, label, optional = false, error = undefined, dark = false, children }) {
+function Field({ id, label, optional = false, hint = undefined, error = undefined, dark = false, children }) {
   return (
     <div className="grid gap-1.5">
       <label htmlFor={id} className={cn('text-[13.5px] font-medium tracking-[-0.005em]', dark ? 'text-white/80' : 'text-graphite')}>
@@ -46,6 +46,11 @@ function Field({ id, label, optional = false, error = undefined, dark = false, c
         {optional ? <span className={cn('ml-1.5 font-normal', dark ? 'text-white/40' : 'text-slate')}>Optional</span> : null}
       </label>
       {children}
+      {hint && !error ? (
+        <p id={id + '-hint'} className={cn('text-[12.5px] leading-snug', dark ? 'text-white/55' : 'text-slate')}>
+          {hint}
+        </p>
+      ) : null}
       {error ? (
         <p id={id + '-error'} className={cn('text-[13px]', dark ? 'text-[#FF9C93]' : 'text-[#B3372F]')}>
           {error}
@@ -63,7 +68,7 @@ const LEAD_FORM_NAME = 'lead';
  * Netlify dashboard and trigger the email notifications configured there.
  * @param {any} props
  */
-export function LeadForm({ dark = false, columns = 1, onDone = undefined, autoFocus = false }) {
+export function LeadForm({ dark = false, columns = 1, wide = false, onDone = undefined, autoFocus = false, industry = '' }) {
   const uid = useId().replace(/:/g, '');
   const ids = {
     name: 'lf-name-' + uid,
@@ -102,6 +107,8 @@ export function LeadForm({ dark = false, columns = 1, onDone = undefined, autoFo
     if (!d.name) next.name = 'Please enter your name.';
     if (!d.email) next.email = 'Please enter your work email.';
     else if (!EMAIL_RE.test(d.email)) next.email = 'Please enter a valid email address.';
+    if (!d.phone) next.phone = 'Please enter your phone number, so Aurora can call you.';
+    else if ((d.phone.match(/\d/g) || []).length < 7) next.phone = 'Please enter a full phone number, with the country code.';
     if (!d.industry) next.industry = 'Please choose an industry.';
     setErrors(next);
     const firstKey = Object.keys(next)[0];
@@ -119,7 +126,7 @@ export function LeadForm({ dark = false, columns = 1, onDone = undefined, autoFo
         name: d.name,
         company: d.company || '',
         email: d.email,
-        phone: d.phone || '',
+        phone: d.phone,
         industry: d.industry,
         message: d.message || '',
         source: 'divine-tech.ai landing',
@@ -151,104 +158,158 @@ export function LeadForm({ dark = false, columns = 1, onDone = undefined, autoFo
         <span className={cn('flex h-12 w-12 items-center justify-center rounded-full', dark ? 'bg-brand-glow/15 text-brand-glow' : 'bg-brand-mint text-brand-ink')}>
           <Check className="h-5 w-5" strokeWidth={2.2} aria-hidden="true" />
         </span>
-        <h3 className={cn('t-h3 mt-5', dark && 'text-white')}>Request received</h3>
+        <h3 className={cn('t-h3 mt-5', dark && 'text-white')}>Aurora is calling you now</h3>
         <p className={cn('mt-2 text-[15px] leading-relaxed', dark ? 'text-white/65' : 'text-graphite')}>
-          Thank you. We reply within one business day from {brand.email}.
+          Keep your phone close. Aurora, our AI agent, will call you in a moment to hear about your business and book your demo.
+          This is the same agent your customers would talk to.
         </p>
       </div>
     );
   }
 
-  const grid = columns === 2 ? 'grid gap-4 sm:grid-cols-2' : 'grid gap-4';
+  const grid = columns === 2 ? 'grid gap-3.5 sm:grid-cols-2' : 'grid gap-3.5';
+
+  const nameField = (
+    <Field id={ids.name} label="Name" error={errors.name} dark={dark}>
+      <input
+        ref={firstRef}
+        id={ids.name}
+        name="name"
+        autoComplete="name"
+        className="field"
+        aria-invalid={errors.name ? 'true' : 'false'}
+        aria-describedby={errors.name ? ids.name + '-error' : undefined}
+        required
+      />
+    </Field>
+  );
+  const companyField = (
+    <Field id={ids.company} label="Company" optional dark={dark}>
+      <input id={ids.company} name="company" autoComplete="organization" className="field" />
+    </Field>
+  );
+  const emailField = (
+    <Field id={ids.email} label="Work email" error={errors.email} dark={dark}>
+      <input
+        id={ids.email}
+        name="email"
+        type="email"
+        inputMode="email"
+        autoComplete="email"
+        className="field"
+        aria-invalid={errors.email ? 'true' : 'false'}
+        aria-describedby={errors.email ? ids.email + '-error' : undefined}
+        required
+      />
+    </Field>
+  );
+  const phoneField = (
+    <Field id={ids.phone} label="Phone" error={errors.phone} dark={dark}>
+      <input
+        id={ids.phone}
+        name="phone"
+        type="tel"
+        inputMode="tel"
+        autoComplete="tel"
+        placeholder="+1 212 555 0100"
+        className="field"
+        aria-invalid={errors.phone ? 'true' : 'false'}
+        aria-describedby={errors.phone ? ids.phone + '-error' : undefined}
+        required
+      />
+    </Field>
+  );
+  const industryField = (
+    <Field id={ids.industry} label="Industry" error={errors.industry} dark={dark}>
+      <div className={cn('select-wrap', dark ? 'text-white' : 'text-ink')}>
+        <select
+          id={ids.industry}
+          name="industry"
+          defaultValue={leadIndustries.includes(industry) ? industry : ''}
+          className="field pr-11"
+          aria-invalid={errors.industry ? 'true' : 'false'}
+          aria-describedby={errors.industry ? ids.industry + '-error' : undefined}
+          required
+        >
+          <option value="" disabled>
+            Choose your industry
+          </option>
+          {leadIndustries.map((i) => (
+            <option key={i} value={i}>
+              {i}
+            </option>
+          ))}
+        </select>
+      </div>
+    </Field>
+  );
+  const messageField = wide ? (
+    <Field id={ids.message} label="Which process should we start with?" optional dark={dark}>
+      <input id={ids.message} name="message" placeholder="E.g. inbound calls and web leads" className="field" />
+    </Field>
+  ) : (
+    <Field id={ids.message} label="Which process should we start with?" optional dark={dark}>
+      <textarea id={ids.message} name="message" rows={2} placeholder="For example: inbound calls and leads from our website" className="field" />
+    </Field>
+  );
+  const submitButton = (
+    <button
+      type="submit"
+      disabled={state === 'sending'}
+      className={cn('btn w-full disabled:cursor-progress disabled:opacity-70', wide ? 'h-[46px]' : 'btn-lg mt-0.5', dark ? 'btn-light' : 'btn-primary')}
+    >
+      <span>{state === 'sending' ? 'Sending…' : 'Book a demo'}</span>
+      {state === 'sending' ? null : <ArrowRight aria-hidden="true" className="btn-arrow h-4 w-4" strokeWidth={1.9} />}
+    </button>
+  );
+  const consent = (
+    <p
+      role={failure ? 'alert' : undefined}
+      className={cn('min-h-[1.4em] text-[12.5px] leading-snug', failure ? (dark ? 'text-[#FF9C93]' : 'text-[#B3372F]') : dark ? 'text-white/45' : 'text-slate')}
+    >
+      {failure || 'By sending, you agree that Aurora, our AI agent, may call and text you about this request.'}
+    </p>
+  );
 
   return (
-    <form onSubmit={submit} noValidate className={cn('grid gap-4', dark && 'on-dark')} aria-label="Book a demo">
-      <div className={grid}>
-        <Field id={ids.name} label="Name" error={errors.name} dark={dark}>
-          <input
-            ref={firstRef}
-            id={ids.name}
-            name="name"
-            autoComplete="name"
-            className="field"
-            aria-invalid={errors.name ? 'true' : 'false'}
-            aria-describedby={errors.name ? ids.name + '-error' : undefined}
-            required
-          />
-        </Field>
-        <Field id={ids.company} label="Company" optional dark={dark}>
-          <input id={ids.company} name="company" autoComplete="organization" className="field" />
-        </Field>
-      </div>
-      <div className={grid}>
-        <Field id={ids.email} label="Work email" error={errors.email} dark={dark}>
-          <input
-            id={ids.email}
-            name="email"
-            type="email"
-            inputMode="email"
-            autoComplete="email"
-            className="field"
-            aria-invalid={errors.email ? 'true' : 'false'}
-            aria-describedby={errors.email ? ids.email + '-error' : undefined}
-            required
-          />
-        </Field>
-        <Field id={ids.phone} label="Phone" optional dark={dark}>
-          <input id={ids.phone} name="phone" type="tel" autoComplete="tel" className="field" />
-        </Field>
-      </div>
-      <Field id={ids.industry} label="Industry" error={errors.industry} dark={dark}>
-        <div className={cn('select-wrap', dark ? 'text-white' : 'text-ink')}>
-          <select
-            id={ids.industry}
-            name="industry"
-            defaultValue=""
-            className="field pr-11"
-            aria-invalid={errors.industry ? 'true' : 'false'}
-            aria-describedby={errors.industry ? ids.industry + '-error' : undefined}
-            required
-          >
-            <option value="" disabled>
-              Choose your industry
-            </option>
-            {leadIndustries.map((i) => (
-              <option key={i} value={i}>
-                {i}
-              </option>
-            ))}
-          </select>
-        </div>
-      </Field>
-      <Field id={ids.message} label="Which process should we start with?" optional dark={dark}>
-        <textarea
-          id={ids.message}
-          name="message"
-          rows={3}
-          placeholder="For example: inbound leads from our website and WhatsApp"
-          className="field"
-        />
-      </Field>
+    <form onSubmit={submit} noValidate className={cn('grid gap-3.5', dark && 'on-dark')} aria-label="Book a demo">
+      {wide ? (
+        <>
+          {/* Wide screens: two rows across. Phones and tablets: one field under another. */}
+          <div className="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
+            {nameField}
+            {emailField}
+            {phoneField}
+            {industryField}
+          </div>
+          <div className="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-4 lg:items-end">
+            {companyField}
+            <div className="lg:col-span-2">{messageField}</div>
+            <div className="sm:col-span-2 lg:col-span-1">{submitButton}</div>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className={grid}>
+            {nameField}
+            {companyField}
+          </div>
+          <div className={grid}>
+            {emailField}
+            {phoneField}
+          </div>
+          {industryField}
+          {messageField}
+        </>
+      )}
       <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
         <label>
           Website
           <input type="text" name="website" tabIndex={-1} autoComplete="off" />
         </label>
       </div>
-      <button
-        type="submit"
-        disabled={state === 'sending'}
-        className={cn('btn btn-lg mt-1 w-full disabled:cursor-progress disabled:opacity-70', dark ? 'btn-light' : 'btn-primary')}
-      >
-        <span>{state === 'sending' ? 'Sending…' : 'Book a demo'}</span>
-        {state === 'sending' ? null : <ArrowRight aria-hidden="true" className="btn-arrow h-4 w-4" strokeWidth={1.9} />}
-      </button>
-      <p
-        role={failure ? 'alert' : undefined}
-        className={cn('min-h-[1.4em] text-[13.5px]', failure ? (dark ? 'text-[#FF9C93]' : 'text-[#B3372F]') : dark ? 'text-white/45' : 'text-slate')}
-      >
-        {failure || 'No commitment. We reply within one business day.'}
-      </p>
+      {wide ? null : submitButton}
+      {consent}
     </form>
   );
 }
@@ -270,7 +331,7 @@ function trapTab(e, root) {
 }
 
 /** @param {any} props */
-function LeadSheet({ isOpen, onClose }) {
+function LeadSheet({ isOpen, onClose, industry }) {
   const reduce = useReducedMotion();
   const wide = useMediaQuery('(min-width: 640px)', true);
   const panelRef = useRef(null);
@@ -310,7 +371,7 @@ function LeadSheet({ isOpen, onClose }) {
             className={cn(
               'lg lg-solid absolute flex flex-col overflow-hidden text-ink',
               wide
-                ? 'bottom-3 right-3 top-3 w-[min(480px,calc(100%-24px))] rounded-[30px]'
+                ? 'bottom-3 right-3 top-3 w-[min(540px,calc(100%-24px))] rounded-[30px]'
                 : 'inset-x-0 bottom-0 max-h-[92dvh] rounded-t-[28px]'
             )}
           >
@@ -321,7 +382,7 @@ function LeadSheet({ isOpen, onClose }) {
                   See {brand.product} run on your business
                 </h2>
                 <p className="mt-2 text-[15px] leading-relaxed text-graphite">
-                  Bring one real process. We describe it together, and you watch the system configure itself.
+                  Leave your details and {brand.product}, our AI agent, will call you right away to hear about your business.
                 </p>
               </div>
               <button
@@ -333,19 +394,8 @@ function LeadSheet({ isOpen, onClose }) {
                 <X className="h-[18px] w-[18px]" strokeWidth={1.8} aria-hidden="true" />
               </button>
             </div>
-            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-6 pb-6 pt-4 sm:px-8 sm:pb-8">
-              <LeadForm autoFocus={wide} />
-              <div className="mt-6 grid gap-1 border-t border-ink/10 pt-5 text-[14px] text-graphite">
-                <a className="w-fit hover:text-ink" href={'mailto:' + brand.email}>
-                  {brand.email}
-                </a>
-                {brand.phones.map((p) => (
-                  <a key={p.tel} className="w-fit hover:text-ink" href={'tel:' + p.tel}>
-                    {p.display} <span className="text-slate">({p.label})</span>
-                  </a>
-                ))}
-                <span>{brand.address}</span>
-              </div>
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-6 pb-6 pt-4 sm:px-8 sm:pb-7">
+              <LeadForm autoFocus={wide} columns={2} industry={industry} />
             </div>
           </motion.div>
         </motion.div>

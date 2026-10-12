@@ -1,13 +1,14 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+import usePageMeta from '@/lib/usePageMeta';
 import { ArrowLeft } from 'lucide-react';
 import { LeadProvider } from '@/components/home-v2/LeadDrawer';
 import SafeBoundary from '@/components/home-v2/primitives/SafeBoundary';
 import Logo from '@/components/home-v2/primitives/Logo';
 import Footer from '@/components/home-v2/Footer';
 import { openConsentSettings } from '@/lib/consent';
-import { brand, legal } from '@/data/site';
+import { brand, legal, privacyMeta } from '@/data/site';
 
-const UPDATED = 'October 8, 2026';
+const UPDATED = 'October 12, 2026';
 
 const TOC = [
   ['scope', 'Who we are and what this policy covers'],
@@ -49,13 +50,7 @@ const CookieSettingsLink = () => (
 const Email = () => <a href={'mailto:' + brand.email}>{brand.email}</a>;
 
 export default function PrivacyPolicy() {
-  useEffect(() => {
-    const prev = document.title;
-    document.title = 'Privacy Policy · Divine Tech AI';
-    return () => {
-      document.title = prev;
-    };
-  }, []);
+  usePageMeta(privacyMeta, '/privacy');
 
   return (
     <LeadProvider>
@@ -65,7 +60,7 @@ export default function PrivacyPolicy() {
       <div className="min-h-screen bg-paper text-ink">
         <header className="shell flex items-center justify-between py-6">
           <a href="/" aria-label={brand.company + ' home'}>
-            <Logo tone="dark" height={30} />
+            <Logo tone="dark" height={24} />
           </a>
           <a href="/" className="flex items-center gap-1.5 text-[14px] text-graphite transition-colors hover:text-ink">
             <ArrowLeft className="h-4 w-4" strokeWidth={1.8} aria-hidden="true" />
@@ -121,7 +116,7 @@ export default function PrivacyPolicy() {
               <Section id="what-we-collect">
                 <p>
                   <strong>Information you give us.</strong> When you book a demo or contact us, we collect what you enter
-                  in the form: your name, company, work email, phone number (optional), industry and message, together
+                  in the form: your name, company, work email, phone number, industry and message, together
                   with the page you sent it from. We also keep the emails, messages and call details you exchange with us.
                 </p>
                 <p>
@@ -168,6 +163,12 @@ export default function PrivacyPolicy() {
                   route your inquiry, and AI tools may transcribe or summarize our calls with you. When an AI assistant is
                   talking to you, we will let you know where the law requires it, and a person on our team is available
                   if you prefer.
+                </p>
+                <p>
+                  When you request a demo through the Site, {brand.product}, our AI agent, calls the phone number you
+                  give us right away, using an AI-generated voice, and may follow up by text message. By sending the form
+                  you agree to these calls and messages about your request. The call may be recorded and transcribed to
+                  prepare your demo. You can ask for a person at any time, or tell us to stop calling you.
                 </p>
                 <p>
                   We use third-party AI providers under business terms that do not allow them to use your information to

@@ -9,6 +9,7 @@ const TAGS = {
   span: motion.span,
   li: motion.li,
   ul: motion.ul,
+  ol: motion.ol,
   figure: motion.figure,
   article: motion.article,
 };
