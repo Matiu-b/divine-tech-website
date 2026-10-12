@@ -22,7 +22,6 @@ export default function IndustryCards() {
   const track = useRef(null);
   const [active, setActive] = useState(0);
   const [touched, setTouched] = useState(false);
-  const autoAt = useRef(0);
   const reduce = useReducedMotion();
   const inView = useInViewport(track, { threshold: 0.4 });
   const visible = usePageVisible();
@@ -34,16 +33,25 @@ export default function IndustryCards() {
     const onScroll = () => {
       const w = el.firstElementChild ? el.firstElementChild.getBoundingClientRect().width : el.clientWidth;
       setActive(Math.max(0, Math.min(n - 1, Math.round(el.scrollLeft / (w + GAP)))));
-      if (Date.now() - autoAt.current > 1000) setTouched(true);
+    };
+    // Only a real swipe stops the auto-advance: a touch on the track, or a sideways wheel/trackpad gesture.
+    const onTouch = () => setTouched(true);
+    const onWheel = (e) => {
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) setTouched(true);
     };
     el.addEventListener('scroll', onScroll, { passive: true });
-    return () => el.removeEventListener('scroll', onScroll);
+    el.addEventListener('touchstart', onTouch, { passive: true });
+    el.addEventListener('wheel', onWheel, { passive: true });
+    return () => {
+      el.removeEventListener('scroll', onScroll);
+      el.removeEventListener('touchstart', onTouch);
+      el.removeEventListener('wheel', onWheel);
+    };
   }, [n]);
 
   const go = (i) => {
     const el = track.current;
     const card = el && el.children[i];
-    autoAt.current = Date.now();
     if (card) el.scrollTo({ left: i * (card.getBoundingClientRect().width + GAP), behavior: reduce ? 'auto' : 'smooth' });
   };
 
