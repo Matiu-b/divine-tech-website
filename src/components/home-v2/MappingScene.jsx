@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils';
  * maps along. `t` drives the drawing: the process map appears node by node, the connections draw in.
  */
 
-const SKIN = { a: '#E9B48C', b: '#B97A52', c: '#F3CDB0' };
+export const SKIN = { a: '#E9B48C', b: '#B97A52', c: '#F3CDB0' };
 const INK = '#0A0F0E';
 
 // The process map on the board.
@@ -32,7 +32,7 @@ const EDGES = [
  * Small SVG animations (SMIL), so they stay in the drawing's own coordinates.
  * Skipped entirely for reduced motion.
  */
-function Spin({ values, dur, begin = '0s', still }) {
+export function Spin({ values, dur, begin = '0s', still }) {
   if (still) return null;
   return <animateTransform attributeName="transform" type="rotate" values={values} dur={dur} begin={begin} repeatCount="indefinite" calcMode="spline" keySplines={values.split(';').slice(1).map(() => '0.45 0 0.55 1').join(';')} />;
 }
@@ -51,7 +51,7 @@ function Eyes({ look = 0, delay = '0s', still }) {
 }
 
 /** A seated or standing person, drawn flat, with a simple friendly face. @param {any} props */
-function Person({ x, y, scale = 1, skin, hair, top, hairStyle = 'short', arm = null, extend = 0, look = 0, nod = null, talk = false, blinkDelay = '0s', still }) {
+export function Person({ x, y, scale = 1, skin, hair, top, hairStyle = 'short', arm = null, extend = 0, look = 0, nod = null, talk = false, blinkDelay = '0s', still }) {
   return (
     <g transform={`translate(${x} ${y}) scale(${scale})`}>
       {/* torso (extended down behind the table when seated) */}
