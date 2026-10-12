@@ -95,22 +95,26 @@ editable. Never ask an image model for text in the image.
    > <second colour>, with one or two large blurred glows of <accent colours>, fine film grain,
    > no hard shapes. Completely empty: no text, no letters, no logos, no icons, no people, no UI,
    > no watermark.
-3. Wait for the job with `jobs_wait`, then download `result_url` into
-   `design/blog-covers/<slug>-bg.webp`. Use `curl -sfL -o /tmp/bg.png "<result_url>"`, convert it
-   with Pillow, crop it to 16:9 and save it at 1600x900.
-   - If the image contains any text or shapes, or the download is blocked by the network,
-     **do not retry paid generations**.
-   - Instead, add the palette to the cover entry. The script then draws the background itself
-     (step 4).
-   - Say in the PR which path was used.
+3. Wait for the job with `jobs_wait`. Copy its `result_url`. Do not try to download it from this
+   session: the cloud network cannot reach the image host, and GitHub is the hand-off point.
+   If the result shows text or shapes, **do not retry paid generations**. Leave out `bg_url` and
+   the palette fallback is used.
 4. Add the entry to `design/blog-covers/covers.json`:
    ```json
-   { "slug": "<slug>", "title": "<headline>", "tone": "dark", "palette": ["#0B1640", "#1E4BD8", "#E8743B", "#F2C9A0"] }
+   { "slug": "<slug>", "title": "<headline>", "tone": "dark", "bg_url": "<result_url>", "palette": ["#0B1640", "#1E4BD8", "#E8743B", "#F2C9A0"] }
    ```
    - Use `"tone": "light"` (dark text) only for pale backgrounds.
-   - The palette is only used when no `-bg.webp` file exists.
-5. Run `python3 scripts/make-blog-covers.py <slug>`. It writes
-   `public/img/blog/<slug>-1600.webp`, `-800.webp` and `-og.jpg`.
+   - The palette is a fallback, used if `bg_url` cannot be downloaded.
+5. Commit and push the branch **without** running the cover script locally.
+   - The **Blog covers** GitHub Action (`.github/workflows/blog-covers.yml`) runs on the push.
+     It downloads `bg_url`, renders `public/img/blog/<slug>-1600.webp`, `-800.webp` and
+     `-og.jpg`, and commits them back to the branch.
+   - Wait for it to finish. Check with
+     `gh api "repos/Matiu-b/divine-tech-website/actions/runs?branch=<branch>&per_page=1"` until
+     `status` is `completed`, then `git pull`.
+   - If the Action fails or does not run within 10 minutes, run
+     `python3 scripts/make-blog-covers.py <slug>` locally. It falls back to the palette.
+     Commit the result and say so in the PR.
 6. Open `public/img/blog/<slug>-800.webp` with Read and check:
    - the headline is spelled correctly and readable;
    - there is no stray text in the background;

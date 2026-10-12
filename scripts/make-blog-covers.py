@@ -8,11 +8,17 @@ so a headline can be changed and the cover re-rendered without a new background:
 
     python3 scripts/make-blog-covers.py            # all covers
     python3 scripts/make-blog-covers.py <slug>     # one cover
+    python3 scripts/make-blog-covers.py --missing  # only covers whose images do not exist yet
+
+A cover entry can also carry "bg_url": a background made with an image service such as
+Higgsfield. When the -bg.webp file is missing, the script downloads that URL first. Sessions
+that cannot reach the image host just push covers.json; the "Blog covers" GitHub Action
+(.github/workflows/blog-covers.yml) then downloads, renders and commits the images on the branch.
 
 Writes public/img/blog/<slug>-1600.webp, -800.webp and -og.jpg (1200x675).
-Needs Python Playwright with Chromium and Pillow. Runs locally, not in the Netlify build.
+Needs Python Playwright with Chromium, Pillow and numpy. Not part of the Netlify build.
 """
-import base64, hashlib, html, json, sys, io
+import base64, hashlib, html, json, os, sys, io, urllib.request
 import numpy as np
 from pathlib import Path
 from PIL import Image
@@ -64,12 +70,30 @@ def draw_background(cover, path):
     Image.fromarray(np.clip(img, 0, 255).astype(np.uint8)).save(path, quality=90)
     print('drew background', cover['slug'])
 
+def download_background(cover, path):
+    """Fetch a generated background, crop it to 16:9 and store it at 1600x900."""
+    req = urllib.request.Request(cover['bg_url'], headers={'User-Agent': 'divine-blog-covers'})
+    with urllib.request.urlopen(req, timeout=60) as r:
+        im = Image.open(io.BytesIO(r.read())).convert('RGB')
+    W, H = im.size
+    if W / H > 16 / 9:
+        w = round(H * 16 / 9); im = im.crop(((W - w) // 2, 0, (W - w) // 2 + w, H))
+    else:
+        h = round(W * 9 / 16); im = im.crop((0, (H - h) // 2, W, (H - h) // 2 + h))
+    im.resize((1600, 900), Image.LANCZOS).save(path, quality=90)
+    print('downloaded background', cover['slug'])
+
 def render(page, cover):
     slug, dark = cover['slug'], cover.get('tone', 'dark') == 'dark'
     bg = DESIGN / f'{slug}-bg.webp'
+    if not bg.exists() and cover.get('bg_url'):
+        try:
+            download_background(cover, bg)
+        except Exception as e:  # unreachable host: fall back to the palette if there is one
+            print(f'{slug}: could not download bg_url ({e})')
     if not bg.exists():
         if 'palette' not in cover:
-            sys.exit(f'{slug}: no background file and no palette in covers.json')
+            sys.exit(f'{slug}: no background file, no reachable bg_url and no palette in covers.json')
         draw_background(cover, bg)
     logo = ROOT / 'public' / 'brand' / ('divine-logo-horizontal-color-dark.svg' if dark else 'divine-logo-horizontal-color.svg')
     page.set_content(PAGE.format(
@@ -90,9 +114,14 @@ def render(page, cover):
 
 if __name__ == '__main__':
     covers = json.loads((DESIGN / 'covers.json').read_text())
-    only = sys.argv[1:]
+    args = sys.argv[1:]
+    missing = '--missing' in args
+    only = [a for a in args if not a.startswith('--')]
+    if missing:
+        covers = [c for c in covers if not (OUT / f"{c['slug']}-og.jpg").exists()]
+    exe = os.environ.get('CHROMIUM_PATH') or ('/opt/pw-browsers/chromium-1194/chrome-linux/chrome' if Path('/opt/pw-browsers/chromium-1194/chrome-linux/chrome').exists() else None)
     with sync_playwright() as p:
-        b = p.chromium.launch(executable_path='/opt/pw-browsers/chromium-1194/chrome-linux/chrome')
+        b = p.chromium.launch(**({'executable_path': exe} if exe else {}))
         page = b.new_page(viewport={'width': 1600, 'height': 900})
         for c in covers:
             if not only or c['slug'] in only:
