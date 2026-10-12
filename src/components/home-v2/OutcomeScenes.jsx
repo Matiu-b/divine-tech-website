@@ -15,11 +15,12 @@ const WOOD = '#C9B596';
 const WOOD_DARK = '#B9A384';
 const LAPTOP = '#2B3332';
 
-function Desk({ x, w, y = 112 }) {
+function Desk({ x, w, y = 112, legs = [x + 10, x + w - 17] }) {
   return (
     <g>
-      <rect x={x + 10} y={y + 8} width="7" height={150 - y - 10} rx="3" fill={WOOD_DARK} />
-      <rect x={x + w - 17} y={y + 8} width="7" height={150 - y - 10} rx="3" fill={WOOD_DARK} />
+      {legs.map((lx) => (
+        <rect key={lx} x={lx} y={y + 8} width="7" height={150 - y - 10} rx="3" fill={WOOD_DARK} />
+      ))}
       <rect x={x} y={y} width={w} height="9" rx="4" fill={WOOD} />
     </g>
   );
@@ -143,7 +144,7 @@ function EfficiencyScene({ still }) {
           nod={{ values: '0 0 8;4 0 8;0 0 8;0 0 8', dur: '3.6s', begin: `${i * 0.6 + 0.3}s` }}
         />
       ))}
-      <Desk x={12} w={256} />
+      <Desk x={12} w={256} legs={[94, 179]} />
       {TEAM.map((p) => (
         <path key={p.label} d={`M${p.x - 19} 112 L${p.x - 15} 94 H${p.x + 15} L${p.x + 19} 112 Z`} fill={LAPTOP} />
       ))}
@@ -197,7 +198,9 @@ function ProfitScene({ still }) {
         <path d="M134 80 L170 62 L196 66 L250 26" pathLength="1" strokeDasharray="1 1" strokeDashoffset={still ? 0 : 1}>
           {still ? null : <animate attributeName="stroke-dashoffset" values="1;0;0;1" keyTimes="0;0.4;0.85;1" dur="5s" repeatCount="indefinite" />}
         </path>
-        <path d="M238 25 L251 25 L250 38" />
+        <path d="M238 25 L251 25 L250 38" opacity={still ? 1 : 0}>
+          {still ? null : <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.36;0.42;0.85;1" dur="5s" repeatCount="indefinite" />}
+        </path>
       </g>
       {/* the person presenting it */}
       <rect x="57" y="104" width="12" height="42" rx="5.5" fill="#2A3640" />
