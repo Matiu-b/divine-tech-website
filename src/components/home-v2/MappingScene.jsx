@@ -102,7 +102,6 @@ export default function MappingScene({ t, className = undefined }) {
       <g>
         <rect x="336" y="22" width="356" height="224" rx="16" fill="#fff" stroke={INK} strokeOpacity="0.08" />
         <text x="356" y="50" fontSize="11" fill="#6B716F" fontFamily="inherit">How Maple Realty works</text>
-        <circle cx="672" cy="46" r="4" fill="#14A36B" opacity={t > 0 ? 1 : 0.2} className="transition-opacity duration-500" />
         {EDGES.map((e) => (
           <path
             key={e.d}
@@ -222,12 +221,8 @@ export default function MappingScene({ t, className = undefined }) {
       <rect x="128" y="244" width="46" height="8" rx="2" fill="#fff" transform="rotate(-3 151 248)" />
       <rect x="360" y="236" width="18" height="16" rx="4" fill="#fff" stroke={INK} strokeOpacity="0.1" />
 
-      {/* label for the AI agent */}
-      <g className="transition-opacity duration-500" opacity={t > 0 ? 1 : 0}>
-        <rect x="166" y="281" width="208" height="28" rx="14" fill="#fff" stroke={INK} strokeOpacity="0.08" />
-        <circle cx="183" cy="295" r="4" fill="#14A36B" />
-        <text x="194" y="299" fontSize="10.5" fill={INK} fontFamily="inherit" textLength="166" lengthAdjust="spacing">AI agent mapping along</text>
-      </g>
+      {/* caption for the AI agent: plain text, no frame */}
+      <text x="270" y="292" textAnchor="middle" fontSize="11" fill="#6B716F" fontFamily="inherit" className="transition-opacity duration-500" opacity={t > 0 ? 1 : 0}>AI agent, mapping along</text>
     </svg>
   );
 }

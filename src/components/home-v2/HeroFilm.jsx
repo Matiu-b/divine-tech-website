@@ -262,15 +262,6 @@ function Status({ state, size = 16 }) {
   return <span className="block shrink-0 rounded-full border-[1.5px] border-ink/15" style={{ width: size, height: size }} />;
 }
 
-function LiveDot({ className = '' }) {
-  return (
-    <span className={cn('relative flex h-2 w-2 shrink-0', className)}>
-      <span className="absolute inset-0 animate-pulse-soft rounded-full bg-brand/50" />
-      <span className="relative h-2 w-2 rounded-full bg-brand" />
-    </span>
-  );
-}
-
 /** Abstract activity ring: spins while Aurora works. */
 /** @param {any} props */
 function Ring({ active, done, small = false }) {
@@ -377,7 +368,6 @@ function PanelFooter({ scene, phone, takeover, onTakeover }) {
   return (
     <div className={cn('flex items-center justify-between gap-3 border-t border-ink/[0.07]', phone ? 'px-3.5 py-1.5' : 'px-4 py-2.5')}>
       <span className={cn('flex min-w-0 items-center gap-2 text-graphite', phone ? 'text-[10.5px]' : 'text-[11.5px]')}>
-        {takeover ? <span className="h-2 w-2 shrink-0 rounded-full bg-ink" /> : <LiveDot />}
         <span className="truncate">{takeover ? 'You are in the conversation' : brand.product + (scene.mode === 'voice' ? ' is on the call' : ' is handling this')}</span>
       </span>
       <button
@@ -897,15 +887,10 @@ function ChapterBar({ time, chapter, playing, onToggle, onSeek, phone, reduce })
 }
 
 /** @param {any} props */
-function LivePill({ scene, playing, takeover, reduce }) {
-  const label = takeover ? 'You are in control' : playing || reduce ? 'Live' : 'Paused';
+function LivePill({ scene }) {
   return (
     <div className="flex items-center gap-2">
       <span className="hidden rounded-full bg-white/55 px-3 py-1.5 text-[12px] font-medium text-graphite backdrop-blur-sm sm:inline-flex">{scene.industry}</span>
-      <LiquidGlass className="flex h-8 items-center gap-2 rounded-full px-3 text-[12px] font-medium text-ink">
-        {playing && !takeover ? <LiveDot /> : <span className="h-2 w-2 rounded-full bg-ink/30" />}
-        {brand.product} · {label}
-      </LiquidGlass>
     </div>
   );
 }

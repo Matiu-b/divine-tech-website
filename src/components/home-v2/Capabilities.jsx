@@ -122,10 +122,6 @@ function WorkVisual() {
             <p className="text-[12.5px] font-medium text-ink">Activity</p>
             <p className="text-[11.5px] text-slate">Completed by {brand.product}, in your tools</p>
           </div>
-          <span className="ui-chip bg-brand-mint text-brand-ink">
-            <span className="h-1.5 w-1.5 animate-pulse-soft rounded-full bg-brand" />
-            Live
-          </span>
         </div>
         <ul className="relative px-2 py-2" aria-hidden="true">
           {/* popLayout: the leaving row is lifted out of the flow, so the card never changes height */}

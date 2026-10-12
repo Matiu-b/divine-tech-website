@@ -39,10 +39,6 @@ function Core({ active, compact = false }) {
           <p className="text-[22px] font-normal leading-none tracking-[-0.03em]">{brand.product}</p>
           <p className="mt-1.5 text-[13px] text-white/50">AI operating system</p>
         </div>
-        <span className="flex items-center gap-1.5 rounded-full bg-white/[0.07] px-2.5 py-1 text-[11.5px] font-medium text-white/75">
-          <span className="h-1.5 w-1.5 animate-pulse-soft rounded-full bg-brand-glow" />
-          Live
-        </span>
       </div>
       <ul className="relative mt-5 grid flex-1 content-center gap-2.5">
         {platform.layers.map((l, i) => (
@@ -62,10 +58,9 @@ function Core({ active, compact = false }) {
           </li>
         ))}
       </ul>
-      <div className="relative mt-5 flex flex-wrap gap-x-4 gap-y-1.5 border-t border-white/[0.08] pt-4 text-[12px] text-white/55">
-        {['Policies', 'Approvals', 'Audit log'].map((t) => (
-          <span key={t} className="flex items-center gap-1.5">
-            <span className="h-1 w-1 rounded-full bg-white/40" />
+      <div className="relative mt-5 flex flex-wrap gap-y-1.5 border-t border-white/[0.08] pt-4 text-[12px] text-white/55">
+        {['Policies', 'Approvals', 'Audit log'].map((t, i) => (
+          <span key={t} className={cn(i > 0 && 'ml-3 border-l border-white/15 pl-3')}>
             {t}
           </span>
         ))}

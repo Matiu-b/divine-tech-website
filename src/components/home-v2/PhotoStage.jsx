@@ -186,10 +186,6 @@ export default function PhotoStage({ photo, events, caption = undefined, tasks =
           </>
         ) : null}
         <div className="absolute left-4 right-4 top-4 xs:left-auto xs:w-[288px] sm:right-5 sm:top-5 md:right-6 md:top-6 md:w-[300px]">
-          <LiquidGlass className="mb-2 hidden items-center gap-2 rounded-full px-3 py-1.5 md:inline-flex">
-            <span className={cn('h-2 w-2 rounded-full bg-brand', !reduce && 'animate-blink')} aria-hidden="true" />
-            <span className="text-[11.5px] font-medium text-ink">{brand.product} · working</span>
-          </LiquidGlass>
           <LiveFeed events={feed} slots={slots} running={inView && visible} still={!!reduce} />
         </div>
       </figure>
