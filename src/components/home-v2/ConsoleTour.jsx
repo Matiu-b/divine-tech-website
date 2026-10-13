@@ -13,8 +13,8 @@ const GAP = 16;
 /* Stage: each screen is drawn at a fixed size and scaled to its card,  */
 /* so the crop looks the same on a phone and on a wide screen.          */
 /* ------------------------------------------------------------------ */
-const BASE_W = 400;
-const BASE_H = 320;
+const BASE_W = 330;
+const BASE_H = 264;
 
 const TONES = {
   cream: 'linear-gradient(160deg,#FFF7EE 0%,#FBEADA 100%)',
@@ -36,7 +36,7 @@ function Stage({ tone, children }) {
     return () => ro.disconnect();
   }, []);
   return (
-    <div ref={ref} aria-hidden="true" className="relative aspect-[400/320] overflow-hidden rounded-[22px]" style={{ background: TONES[tone] }}>
+    <div ref={ref} aria-hidden="true" className="relative aspect-[330/264] overflow-hidden rounded-[22px]" style={{ background: TONES[tone] }}>
       <div className="absolute left-0 top-0 origin-top-left" style={{ width: BASE_W, height: BASE_H, transform: `scale(${scale})` }}>
         {children}
       </div>
@@ -88,7 +88,7 @@ function DashboardScreen() {
   ];
   const bars = [46, 62, 54, 78, 70, 38, 30];
   return (
-    <Win className="left-[26px] top-[28px] w-[430px] p-4" style={{ height: 330 }}>
+    <Win className="left-[22px] top-[24px] w-[360px] p-4" style={{ height: 300 }}>
       <div className="flex items-center justify-between">
         <img src="/brand/aurora-logo-horizontal-color.svg" alt="" className="h-[15px] w-auto" />
         <div className="flex items-center gap-2 text-ink/50">
@@ -103,7 +103,7 @@ function DashboardScreen() {
       <p className="mt-1 text-[8.5px] text-graphite">
         Here is what is happening in <span className="font-medium text-ink">Maple Realty</span> right now.
       </p>
-      <div className="mt-3.5 grid grid-cols-3 gap-2" style={{ width: 340 }}>
+      <div className="mt-3.5 grid grid-cols-3 gap-2" style={{ width: 296 }}>
         {stats.map(([l, v, s]) => (
           <div key={l} className="rounded-[10px] bg-white p-2.5 shadow-[0_0_0_1px_rgba(10,15,14,0.07)]">
             <p className="text-[7px] text-graphite">{l}</p>
@@ -112,7 +112,7 @@ function DashboardScreen() {
           </div>
         ))}
       </div>
-      <div className="mt-2.5 rounded-[10px] p-3 shadow-[0_0_0_1px_rgba(10,15,14,0.07)]" style={{ width: 340 }}>
+      <div className="mt-2.5 rounded-[10px] p-3 shadow-[0_0_0_1px_rgba(10,15,14,0.07)]" style={{ width: 296 }}>
         <div className="flex items-baseline justify-between">
           <p className="text-[9px] font-medium text-ink">Weekly activity</p>
           <p className="text-[7px] text-slate">Conversations per day</p>
@@ -139,7 +139,7 @@ function InboxScreen() {
     ['LB', Globe, 'Lena B.', 'Asked for a callback after 5 pm', [['open', 'Unresolved'], ['bad', 'Callback · Today']]],
   ];
   return (
-    <Win className="left-[26px] top-[28px] w-[300px] px-3 pb-3 pt-3" style={{ height: 320 }}>
+    <Win className="left-[22px] top-[24px] w-[286px] px-3 pb-3 pt-3" style={{ height: 300 }}>
       <div className="flex h-[22px] items-center gap-1.5 rounded-full px-2.5 text-[8px] text-ink/45 shadow-[0_0_0_1px_rgba(10,15,14,0.09)]">
         <Search className="h-2.5 w-2.5" strokeWidth={2} /> Search name, phone or email
       </div>
@@ -175,11 +175,6 @@ function InboxScreen() {
           </li>
         ))}
       </ul>
-      <Win className="left-[236px] top-[196px] w-[150px] p-2.5">
-        <p className="text-[7px] text-slate">Waiting for a human</p>
-        <p className="mt-1 text-[15px] font-medium leading-none text-ink">2</p>
-        <p className="mt-1.5 text-[6.5px] text-graphite">Oldest waiting 3 min</p>
-      </Win>
     </Win>
   );
 }
@@ -194,7 +189,7 @@ function ActionScreen() {
     ['approved_by', '"Dana K."'],
   ];
   return (
-    <Win className="left-[26px] top-[28px] w-[400px] p-3" style={{ height: 320 }}>
+    <Win className="left-[22px] top-[24px] w-[290px] p-3" style={{ height: 300 }}>
       <div className="flex items-center justify-between">
         <p className="text-[9.5px] font-medium text-ink">Fee waiver request · REQ-2048</p>
         <Tag t="ok">Approval · Approved</Tag>
@@ -221,7 +216,7 @@ function ActionScreen() {
 
 function HandoffScreen() {
   return (
-    <Win className="left-[26px] top-[28px] w-[420px] p-3" style={{ height: 320 }}>
+    <Win className="left-[22px] top-[24px] w-[380px] p-3" style={{ height: 300 }}>
       <div className="flex items-start gap-2">
         <Avatar s="SK" />
         <div>
@@ -250,7 +245,7 @@ function HandoffScreen() {
           </span>
         </span>
       </div>
-      <div className="mt-3 grid gap-1.5 rounded-[12px] bg-[#FBF7F1] p-2.5" style={{ width: 330 }}>
+      <div className="mt-3 grid gap-1.5 rounded-[12px] bg-[#FBF7F1] p-2.5" style={{ width: 286 }}>
         <p className="max-w-[72%] rounded-[10px] rounded-bl-[3px] bg-white px-2.5 py-1.5 text-[8px] text-ink shadow-[0_0_0_1px_rgba(10,15,14,0.05)]">Is there an application fee?</p>
         <div className="ml-auto max-w-[76%]">
           <p className="mb-0.5 text-right text-[6.5px] font-medium text-[#D9481C]">Aurora</p>
@@ -275,7 +270,7 @@ function ChannelsScreen() {
   ];
   return (
     <>
-      <Win className="left-[26px] top-[28px] w-[300px] p-3" style={{ height: 320 }}>
+      <Win className="left-[22px] top-[24px] w-[250px] p-3" style={{ height: 300 }}>
         <p className="text-[10px] font-medium text-ink">Communication channels</p>
         <p className="mt-0.5 text-[7.5px] text-graphite">Performance per channel · last 7 days</p>
         <div className="mt-2.5 grid gap-1.5">
@@ -298,7 +293,7 @@ function ChannelsScreen() {
           ))}
         </div>
       </Win>
-      <Win className="left-[250px] top-[54px] w-[132px] p-2.5">
+      <Win className="left-[200px] top-[44px] w-[120px] p-2.5">
         <p className="text-[7px] text-slate">Handled by AI</p>
         <p className="mt-1 text-[17px] font-medium leading-none text-ink">91%</p>
         <svg viewBox="0 0 100 34" className="mt-2 h-[30px] w-full" aria-hidden="true">
@@ -323,7 +318,7 @@ function CustomerScreen() {
     ['Application fee waived on REQ-2048.', 'Aurora · Oct 11'],
   ];
   return (
-    <Win className="left-[26px] top-[28px] w-[250px] p-3" style={{ height: 320 }}>
+    <Win className="left-[22px] top-[24px] w-[214px] p-3" style={{ height: 300 }}>
       <p className="text-[10px] font-medium text-ink">Customer</p>
       <p className="mt-0.5 text-[7px] text-graphite">sarah.k@example.com</p>
       <div className="mt-3 flex items-center gap-2.5">
@@ -362,7 +357,7 @@ function CustomerScreen() {
           </React.Fragment>
         ))}
       </dl>
-      <Win className="left-[232px] top-[40px] w-[150px] p-2.5">
+      <Win className="left-[180px] top-[36px] w-[134px] p-2.5">
         <p className="text-[7px] text-slate">Past requests</p>
         {[
           ['Viewing booked', 'Sat 11:00'],
