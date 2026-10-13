@@ -587,31 +587,13 @@ export const platformPage = {
     eyebrow: 'Security and trust',
     titleA: 'Autonomy you set.',
     titleB: 'Every step on record.',
-    text: 'You decide what Aurora does on its own, what waits for a person and what it never does. Every action is logged with the rule that applied and who approved it.',
-    // Product view of the rules: try moving a row. Illustrative rules, matching the hero film scenarios.
-    policy: {
-      title: 'Rules for your agents',
-      hint: 'Tap a setting to change it',
-      rows: [
-        { action: 'Answer questions', mode: 'auto' },
-        { action: 'Book and move visits', mode: 'auto', phone: false },
-        { action: 'Waive application fees', mode: 'approval', who: 'Leasing manager' },
-        { action: 'Refunds over $200', mode: 'approval', who: 'Finance' },
-        { action: 'Discounts over 10%', mode: 'approval', who: 'Sales manager', phone: false },
-        { action: 'Change prices or terms', mode: 'never' },
-      ],
-      note: 'Limits apply the same way at 3 pm and at 3 am.',
-    },
-    audit: {
-      title: 'Audit log',
-      entries: [
-        { time: '10:42', what: 'Refund $240', ref: 'BIL-311', by: 'Approved by Alex · Finance' },
-        { time: '10:31', what: 'Discount 15%', ref: 'Q-1042', by: 'Approved by Daniel · Sales' },
-        { time: '10:18', what: 'Fee waived', ref: 'REQ-2048', by: 'Approved by Dana · Leasing' },
-        { time: '10:05', what: 'Technician booked', ref: 'JOB-1186', by: 'Automatic · within rules' },
-      ],
-      note: 'Each entry keeps the original request next to the action.',
-    },
+    text: 'You choose what Aurora does on its own, what waits for a person and what it never does. Every action is logged.',
+    // Three levels, two illustrative examples each.
+    tiers: [
+      { mode: 'auto', label: 'On its own', examples: ['Answer questions', 'Book visits'] },
+      { mode: 'approval', label: 'Waits for a person', examples: ['Refunds over $200', 'Discounts over 10%'] },
+      { mode: 'never', label: 'Never', examples: ['Change prices', 'Sign contracts'] },
+    ],
     items: [
       { icon: 'roles', title: 'Access per role', text: 'Each agent only sees and does what its job needs.' },
       { icon: 'handoff', title: 'A person can step in', text: 'Take over any conversation, with the full history.' },
