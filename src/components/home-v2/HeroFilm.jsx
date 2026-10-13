@@ -632,18 +632,25 @@ function Panel({ scene, st, phone, reduce, callTime, takeover, onTakeover, appro
   );
 }
 
-/** What Aurora is doing right now, behind the scenes (phones): one item at a time, outside the chat. */
+/**
+ * What Aurora is doing behind the scenes (phones). Three calm beats instead of a ticker:
+ * the request understood, then one item for all the system updates, then the approval.
+ */
 function backstageNow(scene, st) {
   if (st.approval !== 'none') return { key: 'approval', approval: true };
-  for (let i = st.actions.length - 1; i >= 0; i -= 1) {
-    if (st.actions[i] !== 'idle') {
-      const a = scene.actions[i];
-      return { key: 'a' + i, sys: a.sys, title: a.title, detail: a.detail, state: st.actions[i], n: i + 1, of: scene.actions.length };
-    }
+  if (st.actions.some((x) => x !== 'idle')) {
+    const done = st.actions.filter((x) => x === 'done').length;
+    const all = done === scene.actions.length;
+    return {
+      key: 'work',
+      title: all ? 'Updated ' + done + ' systems' : 'Updating your systems',
+      detail: scene.actions.map((a) => a.sys).join(' · '),
+      state: all ? 'done' : 'run',
+      n: done,
+      of: scene.actions.length,
+    };
   }
-  for (let i = st.steps.length - 1; i >= 0; i -= 1) {
-    if (st.steps[i] !== 'idle') return { key: 's' + i, title: scene.steps[i].title, detail: scene.steps[i].detail, state: st.steps[i] };
-  }
+  if (st.steps[0] !== 'idle') return { key: 'understood', title: scene.steps[0].title, detail: scene.steps[0].detail, state: st.steps[0] === 'done' ? 'done' : 'run' };
   return { key: 'idle', idle: true };
 }
 
@@ -658,7 +665,7 @@ function PhoneBackstage({ scene, st, approvedBy, onApprove, btnRef }) {
           <span className="h-1.5 w-1.5 rounded-full bg-[#F25C2A]" aria-hidden="true" />
           Behind the scenes
         </span>
-        <span className="text-[10px] text-slate">{now.of ? 'System ' + now.n + ' of ' + now.of : 'Only your team sees this'}</span>
+        <span className="text-[10px] text-slate">{now.of ? now.n + ' of ' + now.of + ' done' : 'Only your team sees this'}</span>
       </div>
       <div className="relative h-[66px]">
         <AnimatePresence initial={false} mode="wait">
@@ -682,7 +689,7 @@ function PhoneBackstage({ scene, st, approvedBy, onApprove, btnRef }) {
                 <span className="min-w-0 flex-1">
                   <span className="flex items-center gap-1.5 text-[12px] font-medium leading-tight text-ink">
                     {Icon ? <Icon className="h-3.5 w-3.5 shrink-0 text-[#B4471A]" strokeWidth={1.9} aria-hidden="true" /> : null}
-                    <span className="truncate">{now.sys ? now.sys + ' · ' + now.title : now.title}</span>
+                    <span className="truncate">{now.title}</span>
                   </span>
                   <span className="mt-0.5 block truncate text-[10.5px] leading-tight text-graphite">{now.detail}</span>
                 </span>
