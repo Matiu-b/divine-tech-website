@@ -94,6 +94,7 @@ function AuditLog() {
           </li>
         ))}
       </ol>
+      {A.note && <p className="mt-3 text-[11.5px] leading-relaxed text-slate lg:mt-auto lg:pt-3">{A.note}</p>}
     </div>
   );
 }

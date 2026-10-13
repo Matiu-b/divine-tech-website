@@ -607,9 +607,10 @@ export const platformPage = {
       entries: [
         { time: '10:42', what: 'Refund $240', ref: 'BIL-311', by: 'Approved by Alex · Finance' },
         { time: '10:31', what: 'Discount 15%', ref: 'Q-1042', by: 'Approved by Daniel · Sales' },
-        { time: '10:18', what: 'Application fee waived', ref: 'REQ-2048', by: 'Approved by Dana · Leasing' },
+        { time: '10:18', what: 'Fee waived', ref: 'REQ-2048', by: 'Approved by Dana · Leasing' },
         { time: '10:05', what: 'Technician booked', ref: 'JOB-1186', by: 'Automatic · within rules' },
       ],
+      note: 'Each entry links to the conversation, the rule that applied and the change made in your systems.',
     },
     items: [
       { icon: 'roles', title: 'Access per role', text: 'Each agent only sees and does what its job needs.' },
