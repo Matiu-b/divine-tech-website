@@ -121,11 +121,11 @@ export const heroFilm = {
       // One recorded call (ElevenLabs Eleven v4 dialogue: Aurora and the caller). Line timings live in HeroFilm (T_VOICE).
       audio: '/audio/hero-voice-call.mp3',
       lines: [
-        { who: 'customer', text: 'Hi, our water heater is leaking into the basement. Can someone come out today?' },
-        { who: 'aurora', text: 'Oh no, I’m sorry to hear that. I can have Luis there today between 2 and 4. In the meantime, please close the cold-water valve on top of the tank.' },
+        { who: 'customer', text: 'Hi… yeah, so our water heater’s leaking into the basement. Any chance someone can come out today?' },
+        { who: 'aurora', text: 'Oh, I’m sorry, that’s no fun at all. We can definitely help. I can have Luis there today, between 2 and 4. In the meantime, could you close the cold-water valve on top of the tank?' },
         { who: 'customer', text: 'Okay… done. Two to four works.' },
-        { who: 'aurora', text: 'Great, you’re booked. Same-day visits just need a quick sign-off from dispatch. One moment.' },
-        { who: 'aurora', text: 'All set. Luis will be there between 2 and 4, and you’ll get a text when he’s on his way.' },
+        { who: 'aurora', text: 'Perfect, you’re booked. Same-day visits just need a quick sign-off from dispatch… one moment.' },
+        { who: 'aurora', text: 'All set! Luis will be there between 2 and 4, and you’ll get a text when he’s on his way.' },
       ],
       steps: [
         { title: 'Urgency detected', detail: 'Active leak · same day' },
