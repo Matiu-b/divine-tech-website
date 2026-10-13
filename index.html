@@ -33,12 +33,17 @@
       } catch (e) {}
     </script>
     <!-- Google Tag Manager (production domain only: Netlify deploy previews and
-         localhost must not send analytics or show up as extra domains in Google) -->
+         localhost must not send analytics or show up as extra domains in Google).
+         gtm.js is fetched once the page has loaded and the browser is idle (at most
+         2 s after load), so the tags don't compete with the page itself; anything
+         pushed to dataLayer before then is processed when GTM starts. -->
     <script>if (/^(www\.)?divine-tech\.ai$/.test(location.hostname)) {
     (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    new Date().getTime(),event:'gtm.js'});var load=function(){var f=d.getElementsByTagName(s)[0],
     j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);};
+    var idle=function(){w.requestIdleCallback?w.requestIdleCallback(load,{timeout:2000}):setTimeout(load,0);};
+    d.readyState==='complete'?idle():w.addEventListener('load',idle,{once:true});
     })(window,document,'script','dataLayer','GTM-KGSKS6PM');
     }</script>
     <!-- End Google Tag Manager -->
@@ -61,7 +66,7 @@
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content="https://divine-tech.ai/brand/divine-og-1200x630.png" />
-    <link rel="preload" href="/fonts/unbounded-latin-wght.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/unbounded-latin-wght.woff2" as="font" type="font/woff2" crossorigin />
   </head>
   <body>
     <!-- Google Tag Manager (noscript) -->

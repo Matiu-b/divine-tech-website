@@ -7,7 +7,7 @@ import Grow from './primitives/Grow';
 import LiquidGlass from './primitives/LiquidGlass';
 import MediaSlot from './primitives/MediaSlot';
 import { EASE, EASE_IN_OUT } from './motion';
-import { useInViewport, useMediaQuery, usePageVisible } from './hooks';
+import { useInViewport, useMediaQuery, usePageLoaded, usePageVisible } from './hooks';
 
 /*
  * Hero film: a scripted, interactive product sequence.
@@ -1324,6 +1324,8 @@ export default function HeroFilm({ startScene = undefined }) {
   const [playing, setPlaying] = useState(true);
   const [takeover, setTakeover] = useState(false);
   const [approvedBy, setApprovedBy] = useState(null);
+  // The call recording is fetched after the page has loaded, ready before anyone presses play.
+  const pageLoaded = usePageLoaded();
   const [introDone, setIntroDone] = useState(reduce);
   const [sweep, setSweep] = useState(0);
   const [scale, setScale] = useState(1);
@@ -1680,7 +1682,7 @@ export default function HeroFilm({ startScene = undefined }) {
       {hasAudio ? <audio
           ref={audioRef}
           src={scene.audio}
-          preload="auto"
+          preload={pageLoaded ? 'auto' : 'none'}
           onPlaying={() => setAudioReady(true)}
           onWaiting={() => setAudioReady(false)}
           onEnded={() => setSound(false)}
