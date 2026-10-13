@@ -566,7 +566,7 @@ export const platformPage = {
     titleA: 'Autonomy you set.',
     titleB: 'Every step on record.',
     items: [
-      { icon: 'rules', title: 'Rules before autonomy', text: 'You decide what Aurora does alone, what waits for a person and what it never does. Limits apply the same way at 3 pm and at 3 am.' },
+      { icon: 'rules', title: 'Rules and approvals', text: 'You decide what Aurora does alone, what needs a person’s approval and what it never does, with limits such as refund or discount amounts. When a request crosses a limit, Aurora asks the right person and waits.' },
       { icon: 'roles', title: 'Access per role', text: 'Permissions are set per role, team and channel, so each agent only sees and does what its job needs.' },
       { icon: 'audit', title: 'A full audit log', text: 'Every action is recorded with the request, the rule that applied and who approved it.' },
       { icon: 'handoff', title: 'A person can step in', text: 'Your team can take over any conversation at any moment, and Aurora hands off with the full history.' },
@@ -576,9 +576,7 @@ export const platformPage = {
   },
   faq: [
     ['What is an AI agent platform?', 'An AI agent platform runs AI agents that answer requests and do work inside your business systems. Aurora is built as an AI operating system: every agent shares one memory of each customer and employee, one set of rules and one audit log, across sales, service and internal operations.'],
-    ['How is Aurora different from a chatbot?', 'A chatbot answers questions in one channel. Aurora understands the request, applies your rules, does the work in your CRM, calendar and other systems, follows up until the task is closed and asks a person to approve anything above the limits you set.'],
-    ['Which channels does Aurora work on?', 'Phone, text message, web chat, email and WhatsApp with customers, and Slack and email for your own team. A conversation that moves between channels stays one conversation, with its full history.'],
-    ['Which systems does Aurora connect to?', 'Aurora works inside the tools you already use, including CRMs such as HubSpot and Salesforce, Google Calendar and Microsoft Outlook calendars, email, messaging, your phone system and payment tools. Nothing needs to be replaced.'],
+    ['What happens when a customer switches channels?', 'The conversation stays one conversation. A request that starts in web chat and continues by phone or email keeps its full history, so neither Aurora nor your team asks the customer to repeat themselves.'],
     ['How does Aurora decide what it can do on its own?', 'You set the rules. Each action is allowed, needs approval or is never allowed, with limits such as refund or discount amounts. When a request crosses a limit, Aurora asks the right person and continues once they decide.'],
     ['Can my team take over a conversation?', 'Yes. Anyone with access can step into a conversation at any moment. Aurora hands off with the full history and picks up again when your team is done.'],
     ['Is our data used to train AI models?', 'No. Your data is never used to train shared models. Access is set per role and every action is recorded in the audit log.'],

@@ -3,7 +3,6 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { platformPage } from '@/data/site';
 import SiteLayout from '@/components/home-v2/SiteLayout';
 import HeroFilm from '@/components/home-v2/HeroFilm';
-import Capabilities from '@/components/home-v2/Capabilities';
 import Teams from '@/components/home-v2/Teams';
 import FinalCTA from '@/components/home-v2/FinalCTA';
 import Faq from '@/components/home-v2/Faq';
@@ -45,13 +44,13 @@ function PlatformHero() {
             <CTAButton
               size="lg"
               variant="glass"
-              href="#capabilities"
+              href="#console"
               arrow={false}
-              onClick={(e) => onAnchorClick(e, '#capabilities')}
+              onClick={(e) => onAnchorClick(e, '#console')}
               motionProps={fade(0.48)}
               className="max-sm:h-12 max-sm:px-5 max-sm:text-[15px]"
             >
-              What it does
+              See the console
             </CTAButton>
           </motion.div>
         </div>
@@ -71,12 +70,9 @@ export default function PlatformPage() {
     <SiteLayout meta={platformPage.meta}>
       <PlatformHero />
       <ConsoleTour />
-      <div id="capabilities">
-        <Capabilities />
-      </div>
       <PlatformArchitecture />
-      <Teams />
       <PlatformSecurity />
+      <Teams />
       <Faq id="platform-faq-title" items={platformPage.faq} title="Questions about the platform." className="pt-0" />
       <FinalCTA />
     </SiteLayout>

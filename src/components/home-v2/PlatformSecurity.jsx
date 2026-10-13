@@ -10,7 +10,7 @@ const ICONS = { rules: ShieldCheck, roles: UsersRound, audit: ScrollText, handof
 /** Security and trust: the controls a buyer checks before letting agents act. Target of /platform#security. */
 export default function PlatformSecurity() {
   return (
-    <section id="security" data-nav-theme="light" aria-labelledby="security-title" className="section relative pt-0">
+    <section id="security" data-nav-theme="light" aria-labelledby="security-title" className="section relative pb-0 pt-0">
       <div className="shell grid gap-10 lg:grid-cols-12">
         <div className="lg:col-span-4">
           <SectionHeader id="security-title" eyebrow={S.eyebrow} titleA={S.titleA} titleB={S.titleB} size="t-h2" />

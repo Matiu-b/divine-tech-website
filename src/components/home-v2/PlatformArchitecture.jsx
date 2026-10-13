@@ -1,29 +1,19 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useReducedMotion } from 'framer-motion';
+import React from 'react';
 import { ArrowDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { brand, platformPage } from '@/data/site';
 import LiquidGlass from './primitives/LiquidGlass';
 import SectionHeader from './primitives/SectionHeader';
 import { Reveal } from './primitives/MotionReveal';
-import { useInViewport, usePageVisible } from './hooks';
 
 const A = platformPage.architecture;
 
-/** A hairline with a small light travelling along it: a request moving between columns. */
-function Beam({ vertical = false, delay = 0, reduce }) {
+/** A still hairline from one column to the next, with a small dot where it lands. */
+function Beam({ vertical = false }) {
   return (
     <span aria-hidden="true" className={cn('relative block', vertical ? 'mx-auto h-8 w-px' : 'h-px w-full')}>
-      <span className={cn('absolute bg-ink/15', vertical ? 'inset-y-0 left-0 w-px' : 'inset-x-0 top-0 h-px')} />
-      {reduce ? null : (
-        <span
-          className={cn(
-            'absolute h-1.5 w-1.5 rounded-full bg-[#F25C2A] shadow-[0_0_10px_2px_rgba(242,92,42,0.45)]',
-            vertical ? 'left-[-2.5px] animate-[beam-y_2.4s_linear_infinite]' : 'top-[-2.5px] animate-[beam-x_2.4s_linear_infinite]'
-          )}
-          style={{ animationDelay: delay + 's' }}
-        />
-      )}
+      <span className={cn('absolute bg-ink/20', vertical ? 'inset-y-0 left-0 w-px' : 'inset-x-0 top-0 h-px')} />
+      <span className={cn('absolute h-1.5 w-1.5 rounded-full bg-[#F25C2A]', vertical ? 'bottom-[-3px] left-[-2.5px]' : 'right-[-3px] top-[-2.5px]')} />
     </span>
   );
 }
@@ -38,39 +28,20 @@ function Column({ title, children, className = '' }) {
 }
 
 /**
- * How it's built: channels in, Aurora's three layers, your systems out. A light steps through
- * one channel, each layer and one system in turn, the way a single request travels.
+ * How it's built: channels in, Aurora's three layers, your systems out. Kept still on purpose:
+ * the hero film is the one moving piece on this page.
  */
 export default function PlatformArchitecture() {
-  const ref = useRef(null);
-  const reduce = useReducedMotion();
-  const visible = usePageVisible();
-  const inView = useInViewport(ref, { threshold: 0.25 });
-  const [tick, setTick] = useState(0);
-
-  useEffect(() => {
-    if (reduce || !inView || !visible) return undefined;
-    const id = window.setInterval(() => setTick((t) => t + 1), 900);
-    return () => window.clearInterval(id);
-  }, [reduce, inView, visible]);
-
-  // Each request takes 5 beats: channel, Understand, Decide, Act, system.
-  const run = Math.floor(tick / 5);
-  const beat = tick % 5;
-  const ch = run % A.channels.length;
-  const sys = (run * 2 + 1) % A.systems.length;
-  const layerOn = (i) => !reduce && beat === i + 1;
-
   return (
     <section id="how-it-is-built" data-nav-theme="light" aria-labelledby="arch-title" className="section relative">
       <div className="shell">
         <SectionHeader id="arch-title" eyebrow={A.eyebrow} titleA={A.titleA} titleB={A.titleB} text={A.text} layout="split" />
 
         <Reveal y={36}>
-          <div ref={ref} className="canvas canvas-grain relative mt-10 bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] p-4 xs:p-6 md:mt-16 md:p-10">
+          <div className="canvas canvas-grain relative mt-10 bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] p-4 xs:p-6 md:mt-16 md:p-10">
             <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-              <div className={cn('absolute left-[30%] top-[-10%] h-[70%] w-[45%] rounded-full bg-[radial-gradient(closest-side,rgba(242,92,42,0.32),rgba(242,92,42,0))] blur-2xl', !reduce && 'animate-drift')} />
-              <div className={cn('absolute bottom-[-20%] left-[40%] h-[70%] w-[45%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.5),rgba(255,200,87,0))] blur-2xl', !reduce && 'animate-drift [animation-delay:-8s]')} />
+              <div className={cn('absolute left-[30%] top-[-10%] h-[70%] w-[45%] rounded-full bg-[radial-gradient(closest-side,rgba(242,92,42,0.32),rgba(242,92,42,0))] blur-2xl')} />
+              <div className={cn('absolute bottom-[-20%] left-[40%] h-[70%] w-[45%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.5),rgba(255,200,87,0))] blur-2xl')} />
             </div>
 
             <div className="relative grid items-center gap-0 lg:grid-cols-[minmax(0,0.72fr)_40px_minmax(0,2fr)_40px_minmax(0,0.95fr)]">
@@ -81,8 +52,7 @@ export default function PlatformArchitecture() {
                     <li
                       key={c}
                       className={cn(
-                        'rounded-[12px] px-3 py-2 text-[13px] font-medium transition-colors duration-500',
-                        !reduce && beat === 0 && i === ch ? 'bg-[#FFF1E6] text-[#B4471A] ring-1 ring-[#F25C2A]/25' : 'bg-paper text-ink'
+                        'rounded-[12px] bg-paper px-3 py-2 text-[13px] font-medium text-ink'
                       )}
                     >
                       {c}
@@ -92,10 +62,10 @@ export default function PlatformArchitecture() {
               </Column>
 
               <div className="py-1 lg:hidden">
-                <Beam vertical reduce={reduce} />
+                <Beam vertical />
               </div>
               <div className="hidden lg:block">
-                <Beam reduce={reduce} />
+                <Beam />
               </div>
 
               {/* Aurora: three layers */}
@@ -112,18 +82,16 @@ export default function PlatformArchitecture() {
                     <li
                       key={l.name}
                       className={cn(
-                        'rounded-[18px] p-3.5 transition-[background-color,box-shadow] duration-500',
-                        layerOn(i) ? 'bg-white shadow-[0_10px_26px_-16px_rgba(242,92,42,0.7)] ring-1 ring-[#F25C2A]/25' : 'bg-white/55'
+                        'rounded-[18px] bg-white/70 p-3.5'
                       )}
                     >
                       <p className="flex items-center gap-2 text-[14px] font-medium text-ink">
-                        <span className={cn('h-2 w-2 rounded-full transition-colors duration-500', layerOn(i) ? 'bg-[#F25C2A]' : 'bg-ink/20')} />
+                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#FFF1E6] text-[10px] font-medium text-[#B4471A]">{i + 1}</span>
                         {l.name}
                       </p>
-                      {/* phones: the first point only, so the card never changes height */}
                       <ul className="mt-2 grid gap-1.5">
-                        {l.points.map((pt, j) => (
-                          <li key={pt} className={cn('text-[12.5px] leading-snug text-ink/70', j > 0 && 'hidden md:block')}>
+                        {l.points.map((pt) => (
+                          <li key={pt} className="text-[12.5px] leading-snug text-ink/70">
                             {pt}
                           </li>
                         ))}
@@ -134,10 +102,10 @@ export default function PlatformArchitecture() {
               </LiquidGlass>
 
               <div className="py-1 lg:hidden">
-                <Beam vertical delay={1.2} reduce={reduce} />
+                <Beam vertical />
               </div>
               <div className="hidden lg:block">
-                <Beam delay={1.2} reduce={reduce} />
+                <Beam />
               </div>
 
               {/* Systems */}
@@ -147,8 +115,7 @@ export default function PlatformArchitecture() {
                     <li
                       key={s.name}
                       className={cn(
-                        'rounded-[12px] px-3 py-2 transition-colors duration-500',
-                        !reduce && beat === 4 && i === sys ? 'bg-[#FFF1E6] ring-1 ring-[#F25C2A]/25' : 'bg-paper'
+                        'rounded-[12px] bg-paper px-3 py-2'
                       )}
                     >
                       <span className="block text-[13px] font-medium text-ink">{s.name}</span>
