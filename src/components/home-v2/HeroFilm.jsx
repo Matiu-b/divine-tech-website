@@ -88,8 +88,63 @@ function makeTimeline(T) {
 }
 const TL_BASE = makeTimeline(Object.fromEntries(Object.entries(T_BASE).map(([k, v]) => [k, pace(v)])));
 const TL_VOICE = makeTimeline(T_VOICE);
-/** The timeline a scene runs on: its recording's, or the shared one. */
-const tlOf = (scene) => (scene && scene.audio ? TL_VOICE : TL_BASE);
+
+/**
+ * Written conversations get a timeline built from their own script, so a longer chat with
+ * qualifying questions plays at reading pace: each message stays up for a time that grows
+ * with its length, Aurora types before she answers, and her reasoning, the system updates
+ * and the approval land right after the lines the scene names (stepsAfter, actionsAfter,
+ * approvalAfter), one calm beat at a time.
+ */
+function buildTextTimeline(scene) {
+  const T = { line: [], typing: [], stepRun: [], stepDone: [], actRun: [], actDone: [] };
+  let t = 700;
+  scene.lines.forEach((l, i) => {
+    if (i > 0) {
+      if (l.who === 'aurora') {
+        T.typing.push([t, t + 1100]);
+        t += 1100;
+      } else t += 800;
+    }
+    T.line.push(t);
+    t += Math.min(5200, Math.max(2200, 900 + l.text.length * 36));
+    if (i === scene.stepsAfter) {
+      for (let k = 0; k < 3; k += 1) {
+        T.stepRun.push(t);
+        t += 800;
+        T.stepDone.push(t);
+      }
+      t += 300;
+    }
+    if (i === scene.actionsAfter) {
+      for (let k = 0; k < 3; k += 1) {
+        T.actRun.push(t);
+        t += 900;
+        T.actDone.push(t);
+      }
+      t += 300;
+    }
+    if (i === scene.approvalAfter) {
+      T.approvalPending = t;
+      T.cursorIn = t + 2600;
+      T.cursorClick = t + 3550;
+      T.approvalDone = t + 3650;
+      t = T.approvalDone + 600;
+    }
+  });
+  T.end = t + 2600;
+  T.chapterAt = [0, T.stepRun[0], T.actRun[0], T.approvalPending];
+  return T;
+}
+const TL_TEXT = new Map();
+/** The timeline a scene runs on: its recording's, its own script's, or the shared one. */
+const tlOf = (scene) => {
+  if (!scene) return TL_BASE;
+  if (scene.audio) return TL_VOICE;
+  if (scene.stepsAfter === undefined) return TL_BASE;
+  if (!TL_TEXT.has(scene.key)) TL_TEXT.set(scene.key, makeTimeline(buildTextTimeline(scene)));
+  return TL_TEXT.get(scene.key);
+};
 
 // Which groups the camera favours in each chapter (others dim slightly).
 const FOCUS = [
@@ -172,12 +227,13 @@ const COMPS = {
 
 const CH = {
   chat: { icon: MessageCircle, chip: 'bg-[#FDEBDD] text-[#B4471A]' },
+  imessage: { icon: MessageCircle, chip: 'bg-[#E6F0FF] text-[#0B5FD8]' },
   voice: { icon: Phone, chip: 'bg-[#FFF1D6] text-[#8A5A12]' },
   web: { icon: MessagesSquare, chip: 'bg-[#ECEFF6] text-[#3B4A6B]' },
   email: { icon: Mail, chip: 'bg-[#F4EEE3] text-[#7A5A1E]' },
 };
 
-const SYS_ICON = { CRM: Database, Calendar: CalendarDays, Tasks: ListChecks, Quotes: FileText, Payments: CreditCard, Billing: Receipt };
+const SYS_ICON = { CRM: Database, Calendar: CalendarDays, Tasks: ListChecks, Quotes: FileText, Applications: FileText, Payments: CreditCard, Billing: Receipt };
 
 /* ------------------------------------------------------------------ */
 /* Clock + state                                                        */
@@ -460,11 +516,11 @@ function PanelFooter({ scene, phone, takeover, onTakeover }) {
   );
 }
 
-function TypingDots() {
+function TypingDots({ blue = false }) {
   return (
     <Grow>
       <div className="flex justify-end pt-2.5">
-        <span className="flex items-center gap-1 rounded-[16px] rounded-br-[6px] bg-ink px-3.5 py-3">
+        <span className={cn('flex items-center gap-1 rounded-[18px] rounded-br-[6px] px-3.5 py-3', blue ? 'bg-[#0A84FF]' : 'bg-ink')}>
           {[0, 1, 2].map((i) => (
             <span key={i} className="h-1.5 w-1.5 animate-blink rounded-full bg-white/80" style={{ animationDelay: i * 0.18 + 's' }} />
           ))}
@@ -490,7 +546,7 @@ function ChatBody({ scene, st, phone, reduce }) {
                   className={cn(
                     'max-w-[86%] px-3.5 py-2.5 leading-[1.45] tracking-[-0.005em]',
                     phone ? 'text-[12.5px]' : 'text-[13.5px]',
-                    mine ? 'rounded-[16px] rounded-br-[6px] bg-ink text-white' : 'rounded-[16px] rounded-bl-[6px] bg-[#F1EFE9] text-ink'
+                    mine ? cn('rounded-[18px] rounded-br-[6px] text-white', scene.mode === 'imessage' ? 'bg-[#0A84FF]' : 'bg-ink') : cn('rounded-[18px] rounded-bl-[6px] text-ink', scene.mode === 'imessage' ? 'bg-[#E9E9EB]' : 'bg-[#F1EFE9]')
                   )}
                 >
                   {mine && !reduce ? <Stream text={l.text} soft={!phone} /> : l.text}
@@ -499,7 +555,7 @@ function ChatBody({ scene, st, phone, reduce }) {
             </Grow>
           );
         })}
-        {st.typing ? <TypingDots key="typing" /> : null}
+        {st.typing ? <TypingDots key="typing" blue={scene.mode === 'imessage'} /> : null}
       </AnimatePresence>
     </div>
   );
@@ -970,7 +1026,7 @@ function FeedMessage({ scene, l, i, reduce }) {
       <span
         className={cn(
           'max-w-[86%] px-3.5 py-2.5 text-[12.5px] leading-[1.45] tracking-[-0.005em]',
-          mine ? 'rounded-[16px] rounded-br-[6px] bg-ink text-white' : 'rounded-[16px] rounded-bl-[6px] bg-[#F1EFE9] text-ink'
+          mine ? cn('rounded-[18px] rounded-br-[6px] text-white', scene.mode === 'imessage' ? 'bg-[#0A84FF]' : 'bg-ink') : cn('rounded-[18px] rounded-bl-[6px] text-ink', scene.mode === 'imessage' ? 'bg-[#E9E9EB]' : 'bg-[#F1EFE9]')
         )}
       >
         {mine && !reduce ? <Stream text={l.text} soft={false} /> : l.text}
@@ -1002,7 +1058,7 @@ function PhoneFeed({ scene, st, reduce }) {
             {items.map((it) => (
               <Grow key={scene.key + it.key}>{it.el}</Grow>
             ))}
-            {st.typing && !voice ? (scene.mode === 'email' ? null : <TypingDots key="typing" />) : null}
+            {st.typing && !voice ? (scene.mode === 'email' ? null : <TypingDots key="typing" blue={scene.mode === 'imessage'} />) : null}
           </AnimatePresence>
         </div>
       </div>
