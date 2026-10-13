@@ -6,13 +6,16 @@ import { heroStage } from '@/data/site';
 import LiquidGlass from './primitives/LiquidGlass';
 import { EVENT_ICONS } from './eventIcons';
 import { EASE } from './motion';
-import { useMediaQuery, usePageLoaded, usePageVisible } from './hooks';
+import { useHydrated, useMediaQuery, usePageLoaded, usePageVisible } from './hooks';
 
 /**
  * Home hero background: short clips that cross-fade in place (no sliding), one after another.
  * Phones get vertical versions, wider screens the 16:9 ones. Only the clip on screen plays; the
  * next one is fetched once it is running. The first clip waits for the page's load event, so the
  * poster, code and font come first. Reduced motion shows the first still only.
+ * The first still is also a <picture> under the clips, which picks the phone or wide version with a
+ * media query: the prerendered HTML can't know the screen, so the clips only get their posters
+ * once the page is hydrated, and the picture covers the first paint until then.
  * A small glass card says what Aurora did in each scene, and thin bars show the progress.
  */
 export default function HeroReel({ className = undefined }) {
@@ -23,6 +26,7 @@ export default function HeroReel({ className = undefined }) {
   const [active, setActive] = useState(0);
   const [progress, setProgress] = useState(0);
   const pageLoaded = usePageLoaded();
+  const hydrated = useHydrated();
   const [playing, setPlaying] = useState(-1);
   const refs = useRef([]);
   const next = (active + 1) % clips.length;
@@ -64,6 +68,17 @@ export default function HeroReel({ className = undefined }) {
 
   return (
     <div className={cn('absolute inset-0 overflow-hidden bg-ink', className)} aria-hidden="true">
+      {reduce ? null : (
+        <picture>
+          <source media="(max-aspect-ratio: 4/5)" srcSet={clips[0].posterTall} />
+          <img
+            src={clips[0].poster}
+            alt=""
+            fetchPriority="high"
+            className={cn('absolute inset-0 h-full w-full object-cover transition-opacity duration-[1400ms] ease-out', active === 0 ? 'opacity-100' : 'opacity-0')}
+          />
+        </picture>
+      )}
       {clips.map((c, i) => {
         const poster = tall ? c.posterTall : c.poster;
         if (reduce) {
@@ -80,7 +95,7 @@ export default function HeroReel({ className = undefined }) {
             }}
             className={cn('absolute inset-0 h-full w-full object-cover transition-opacity duration-[1400ms] ease-out', i === active ? 'opacity-100' : 'opacity-0')}
             src={load ? (tall ? c.tall : c.wide) : undefined}
-            poster={poster}
+            poster={hydrated ? poster : undefined}
             muted
             playsInline
             preload={load ? 'auto' : 'none'}

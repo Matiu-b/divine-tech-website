@@ -1,18 +1,36 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useSyncExternalStore } from 'react';
 
-export function useMediaQuery(query, initial = false) {
-  const [match, setMatch] = useState(() =>
-    typeof window !== 'undefined' && window.matchMedia ? window.matchMedia(query).matches : initial
+// Pages are prerendered to HTML (src/entry-server.jsx) and hydrated in the browser. Hooks that read
+// the browser use useSyncExternalStore, whose server value is also used while hydrating: the first
+// render matches the HTML, and React re-renders with the real value right after.
+
+const noSubscribe = () => () => {};
+
+/** False on the server and while hydrating, true once the page is running in the browser. */
+export function useHydrated() {
+  return useSyncExternalStore(
+    noSubscribe,
+    () => true,
+    () => false
   );
-  useEffect(() => {
-    if (!window.matchMedia) return undefined;
-    const mql = window.matchMedia(query);
-    const onChange = () => setMatch(mql.matches);
-    onChange();
-    mql.addEventListener('change', onChange);
-    return () => mql.removeEventListener('change', onChange);
-  }, [query]);
-  return match;
+}
+
+/** @param {string} query @param {boolean} [initial] value for the server and hydration */
+export function useMediaQuery(query, initial = false) {
+  const subscribe = useCallback(
+    (onChange) => {
+      if (!window.matchMedia) return () => {};
+      const mql = window.matchMedia(query);
+      mql.addEventListener('change', onChange);
+      return () => mql.removeEventListener('change', onChange);
+    },
+    [query]
+  );
+  return useSyncExternalStore(
+    subscribe,
+    () => (window.matchMedia ? window.matchMedia(query).matches : initial),
+    () => initial
+  );
 }
 
 /** True while the element intersects the viewport (or once, if `once`). */
@@ -41,16 +59,18 @@ export function useInViewport(ref, { rootMargin = '0px', threshold = 0, once = f
   return inView;
 }
 
+const subscribeLoad = (onChange) => {
+  window.addEventListener('load', onChange);
+  return () => window.removeEventListener('load', onChange);
+};
+
 /** True once the window's load event has fired, so heavy media can wait for the page itself. */
 export function usePageLoaded() {
-  const [loaded, setLoaded] = useState(() => typeof document !== 'undefined' && document.readyState === 'complete');
-  useEffect(() => {
-    if (loaded) return undefined;
-    const onLoad = () => setLoaded(true);
-    window.addEventListener('load', onLoad, { once: true });
-    return () => window.removeEventListener('load', onLoad);
-  }, [loaded]);
-  return loaded;
+  return useSyncExternalStore(
+    subscribeLoad,
+    () => document.readyState === 'complete',
+    () => false
+  );
 }
 
 export function usePageVisible() {

@@ -9,7 +9,7 @@ import { Page } from '@/pages/routes';
 
 // Animation features (including layout animations) load in their own chunk after the first render;
 // components use `m` from framer-motion, which needs them.
-const motionFeatures = () => import('@/lib/motionFeatures').then((mod) => mod.default);
+export const motionFeatures = () => import('@/lib/motionFeatures').then((mod) => mod.default);
 
 // Meta PageView on first load and on every client-side route change.
 function MetaPageViews() {
@@ -20,13 +20,13 @@ function MetaPageViews() {
   return null;
 }
 
-function App() {
+/** Everything inside the router. The browser wraps it in BrowserRouter, the prerender (src/entry-server.jsx) in StaticRouter. */
+export function AppRoutes() {
   return (
-    <LazyMotion features={motionFeatures} strict>
-      <Router>
-        <ScrollToTop />
-        <MetaPageViews />
-        <Suspense fallback={null}>
+    <>
+      <ScrollToTop />
+      <MetaPageViews />
+      <Suspense fallback={null}>
         <Routes>
           <Route path="/" element={<Page name="home" />} />
           <Route path="/platform" element={<Page name="platform" />} />
@@ -36,11 +36,20 @@ function App() {
           <Route path="/privacy" element={<Page name="privacy" />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
-        </Suspense>
-        <ConsentBanner />
+      </Suspense>
+      <ConsentBanner />
+    </>
+  );
+}
+
+function App() {
+  return (
+    <LazyMotion features={motionFeatures} strict>
+      <Router>
+        <AppRoutes />
       </Router>
     </LazyMotion>
-  )
+  );
 }
 
 export default App

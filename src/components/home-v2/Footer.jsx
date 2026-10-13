@@ -21,13 +21,13 @@ export default function Footer() {
         <div className="grid gap-12 py-14 md:grid-cols-12 md:gap-8 md:py-20">
           <div className="md:col-span-4">
             <Logo tone="light" height={30} />
-            <p className="mt-6 max-w-[36ch] text-[15px] leading-relaxed text-white/55">{footer.tagline}</p>
+            <p className="mt-6 max-w-[32.15em] text-[15px] leading-relaxed text-white/55">{footer.tagline}</p>
             <SocialLinks className="mt-7" />
           </div>
 
           <nav aria-label="Footer" className="grid grid-cols-2 gap-8 md:col-span-4 md:col-start-6">
             <div>
-              <p className="text-[12px] font-medium text-white/40">Explore</p>
+              <p className="text-[12px] font-medium text-white/55">Explore</p>
               <ul className="mt-4 grid gap-2.5">
                 {footerLinks.map((l) => (
                   <li key={l.href}>
@@ -39,7 +39,7 @@ export default function Footer() {
               </ul>
             </div>
             <div>
-              <p className="text-[12px] font-medium text-white/40">Industries</p>
+              <p className="text-[12px] font-medium text-white/55">Industries</p>
               <ul className="mt-4 grid gap-2.5">
                 {industries.map((i) => (
                   <li key={i.slug}>
@@ -53,14 +53,14 @@ export default function Footer() {
           </nav>
 
           <div className="md:col-span-3 md:col-start-10">
-            <p className="text-[12px] font-medium text-white/40">Contact</p>
+            <p className="text-[12px] font-medium text-white/55">Contact</p>
             <address className="mt-4 grid gap-2.5 text-[14px] not-italic text-white/75">
               <a href={'mailto:' + brand.email} className="w-fit transition-colors hover:text-white">
                 {brand.email}
               </a>
               {brand.phones.map((p) => (
                 <a key={p.tel} href={'tel:' + p.tel} className="w-fit transition-colors hover:text-white">
-                  {p.display} <span className="text-white/40">({p.label})</span>
+                  {p.display} <span className="text-white/55">({p.label})</span>
                 </a>
               ))}
               <span className="text-white/55">{brand.address}</span>
@@ -68,10 +68,9 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-4 border-t border-white/10 py-7 text-[13px] text-white/40 sm:flex-row sm:items-center sm:justify-between">
-          <p>
-            © {new Date().getFullYear()} {brand.company}. All rights reserved.
-          </p>
+        <div className="flex flex-col gap-4 border-t border-white/10 py-7 text-[13px] text-white/55 sm:flex-row sm:items-center sm:justify-between">
+          {/* The prerendered HTML carries the build year; the browser's year wins without a hydration error. */}
+          <p suppressHydrationWarning>{`© ${new Date().getFullYear()} ${brand.company}. All rights reserved.`}</p>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
             <Link to="/privacy" className="text-white/60 transition-colors hover:text-white">
               Privacy Policy

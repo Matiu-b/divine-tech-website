@@ -1,6 +1,5 @@
 import React from 'react';
 import { Navigate, useParams } from 'react-router-dom';
-import { m as motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight, ArrowUpRight, Check, ScrollText, ShieldCheck, UserCheck } from 'lucide-react';
 import { brand } from '@/data/site';
 import { industries, industryBySlug, industryPath } from '@/data/industries';
@@ -17,33 +16,26 @@ import SmartLink from '@/components/home-v2/primitives/SmartLink';
 import { Reveal, RevealGroup, RevealItem, RevealLines } from '@/components/home-v2/primitives/MotionReveal';
 import { useLead } from '@/components/home-v2/LeadDrawer';
 import { onAnchorClick } from '@/components/home-v2/hooks';
-import { EASE } from '@/components/home-v2/motion';
 
 /** @param {any} props */
 function IndustryHero({ it }) {
   const { open } = useLead();
-  const reduce = useReducedMotion();
-  const rise = (delay) =>
-    reduce ? {} : { initial: { opacity: 0, y: 16 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.9, delay, ease: EASE } };
-  const slide = (delay) => (reduce ? {} : { initial: { y: 16 }, animate: { y: 0 }, transition: { duration: 0.9, delay, ease: EASE } });
-  const fade = (delay) => (reduce ? undefined : { initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { duration: 0.9, delay, ease: EASE } });
+  // Entrances are CSS animations (.intro-* in index.css), so they run on the prerendered HTML's first paint.
 
   return (
     <section id="top" data-nav-theme="light" aria-labelledby="ind-hero-title" className="relative overflow-hidden pb-[clamp(64px,8vw,112px)] pt-[calc(var(--nav-h)+44px)] md:pt-[calc(var(--nav-h)+64px)]">
       <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[720px] bg-[radial-gradient(55%_55%_at_82%_0%,rgba(255,214,170,0.75),rgba(246,245,241,0)_70%),radial-gradient(40%_50%_at_10%_10%,rgba(240,232,218,0.7),rgba(246,245,241,0)_70%)]" />
       <div className="shell relative">
-        <motion.p className="eyebrow" {...rise(0)}>
-          {it.hero.eyebrow}
-        </motion.p>
-        <h1 id="ind-hero-title" className="t-display balance mt-5 max-w-[20ch] md:mt-7">
+        <p className="intro-rise eyebrow">{it.hero.eyebrow}</p>
+        <h1 id="ind-hero-title" className="t-display balance mt-5 max-w-[18.18em] md:mt-7">
           <RevealLines lines={[it.hero.titleA, it.hero.titleB]} lineClassNames={['', '']} immediate delay={0.08} stagger={0.14} />
         </h1>
         <div className="mt-7 grid gap-7 md:mt-9 lg:grid-cols-12 lg:items-end lg:gap-8">
-          <motion.p className="t-lead pretty max-w-[56ch] lg:col-span-7" {...slide(0.3)}>
+          <p className="intro-slide t-lead pretty max-w-[50.01em] lg:col-span-7" style={{ animationDelay: '0.3s' }}>
             {it.hero.text}
-          </motion.p>
-          <motion.div className="flex flex-wrap items-center gap-2.5 sm:gap-3 lg:col-span-5 lg:justify-end" {...slide(0.42)}>
-            <CTAButton size="lg" onClick={open} motionProps={fade(0.42)} className="max-sm:h-12 max-sm:px-5 max-sm:text-[15px]">
+          </p>
+          <div className="intro-slide flex flex-wrap items-center gap-2.5 sm:gap-3 lg:col-span-5 lg:justify-end" style={{ animationDelay: '0.42s' }}>
+            <CTAButton size="lg" onClick={open} style={{ animationDelay: '0.42s' }} className="intro-fade max-sm:h-12 max-sm:px-5 max-sm:text-[15px]">
               Book a demo
             </CTAButton>
             <CTAButton
@@ -52,12 +44,12 @@ function IndustryHero({ it }) {
               href="#how"
               arrow={false}
               onClick={(e) => onAnchorClick(e, '#how')}
-              motionProps={fade(0.48)}
-              className="max-sm:h-12 max-sm:px-5 max-sm:text-[15px]"
+              style={{ animationDelay: '0.48s' }}
+              className="intro-fade max-sm:h-12 max-sm:px-5 max-sm:text-[15px]"
             >
               How it works
             </CTAButton>
-          </motion.div>
+          </div>
         </div>
       </div>
       <div className="shell relative mt-10 md:mt-12">
@@ -82,7 +74,7 @@ function Problem({ it }) {
               <p className="pt-1 text-[12px] font-medium tabular-nums text-white/40">{'0' + (i + 1)}</p>
               <div>
                 <h3 className="text-[16px] font-medium text-white md:t-h4 md:mt-4">{title}</h3>
-                <p className="mt-1.5 max-w-[34ch] text-[13.5px] leading-relaxed text-white/60 md:mt-2 md:text-[14px]">{text}</p>
+                <p className="mt-1.5 max-w-[30.36em] text-[13.5px] leading-relaxed text-white/60 md:mt-2 md:text-[14px]">{text}</p>
               </div>
             </RevealItem>
           ))}
@@ -196,7 +188,7 @@ function GoLive({ it }) {
               <h2 id="ind-live-title" className="t-h3">
                 Live in hours.
               </h2>
-              <p className="mt-2 max-w-[52ch] text-[14px] leading-relaxed text-graphite">
+              <p className="mt-2 max-w-[46.44em] text-[14px] leading-relaxed text-graphite">
                 Our experts and AI agents map your business with you and build an action plan for {brand.product}. Then it sets itself up, connects and is tested. You only approve.
               </p>
               <p className="mt-5 text-[12px] font-medium text-slate">Works with</p>

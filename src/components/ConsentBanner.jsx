@@ -4,6 +4,7 @@ import { AnimatePresence, m as motion, useReducedMotion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { OPEN_CONSENT_EVENT, readConsent, saveConsent } from '@/lib/consent';
 import { EASE } from '@/components/home-v2/motion';
+import { useHydrated } from '@/components/home-v2/hooks';
 
 /** @param {any} props */
 function Toggle({ id, label, description, checked, onChange, disabled = false }) {
@@ -51,6 +52,12 @@ export default function ConsentBanner() {
   const [custom, setCustom] = useState(false);
   const [analytics, setAnalytics] = useState(() => readConsent()?.analytics ?? false);
   const [marketing, setMarketing] = useState(() => readConsent()?.marketing ?? false);
+  // The saved choice lives in this browser only, so the prerendered HTML always has the first-view
+  // banner, painted with the page rather than popping in later. index.html marks <html> with
+  // .dt-consented before the first paint when a choice is saved, and CSS hides the banner; once the
+  // page is hydrated, the saved choice decides.
+  const hydrated = useHydrated();
+  const show = hydrated ? open : true;
 
   useEffect(() => {
     const onOpen = () => {
@@ -75,13 +82,14 @@ export default function ConsentBanner() {
   const to = reduce ? { opacity: 1 } : { opacity: 1, y: 0 };
 
   return (
-    <AnimatePresence>
-      {open ? (
+    <AnimatePresence initial={false}>
+      {show ? (
         <motion.section
           key="consent"
           role="dialog"
           aria-modal="false"
           aria-labelledby={titleId}
+          data-consent-first-view={custom ? undefined : ''}
           initial={from}
           animate={to}
           exit={from}

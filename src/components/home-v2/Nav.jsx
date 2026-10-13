@@ -24,7 +24,9 @@ const NAV_PROBE_Y = 44;
  */
 function useNavTheme() {
   const { pathname } = useLocation();
-  const [dark, setDark] = useState(false);
+  // Start from the page's top section (only the home hero is dark), so the prerendered nav already
+  // has the right colours; the check below takes over once the page runs.
+  const [dark, setDark] = useState(() => pathname === '/');
   useEffect(() => {
     let raf = 0;
     const check = () => {

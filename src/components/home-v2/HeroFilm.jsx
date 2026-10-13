@@ -7,7 +7,7 @@ import Grow from './primitives/Grow';
 import LiquidGlass from './primitives/LiquidGlass';
 import MediaSlot from './primitives/MediaSlot';
 import { EASE, EASE_IN_OUT } from './motion';
-import { useInViewport, useMediaQuery, usePageLoaded, usePageVisible } from './hooks';
+import { useHydrated, useInViewport, useMediaQuery, usePageLoaded, usePageVisible } from './hooks';
 
 /*
  * Hero film: a scripted, interactive product sequence.
@@ -1304,9 +1304,25 @@ function Group({ p, index, dim = false, hide = false, children, className = unde
 
 /**
  * startScene: key of the scene to open on (e.g. 'voice' on the home-services page); the film then cycles as usual.
+ * The film lays itself out per screen size in JavaScript, which the prerendered HTML can't know.
+ * Until the page is hydrated it is an empty frame with the same size at each breakpoint (it fades
+ * in anyway), so nothing moves when the film mounts.
  * @param {any} props
  */
-export default function HeroFilm({ startScene = undefined }) {
+export default function HeroFilm(props) {
+  const hydrated = useHydrated();
+  if (!hydrated) {
+    return (
+      <figure className="relative m-0 max-sm:mx-auto max-sm:max-w-[440px]" aria-hidden="true">
+        <div className="aspect-[360/520] sm:aspect-[860/720] lg:aspect-[1200/680]" />
+      </figure>
+    );
+  }
+  return <Film {...props} />;
+}
+
+/** @param {any} props */
+function Film({ startScene = undefined }) {
   const reduce = !!useReducedMotion();
   const wideUp = useMediaQuery('(min-width: 1024px)');
   const tabletUp = useMediaQuery('(min-width: 640px)');

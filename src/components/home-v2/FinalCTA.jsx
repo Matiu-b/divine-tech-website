@@ -44,7 +44,7 @@ export default function FinalCTA({ industry = '', titleA = closing.titleA, title
             <RevealLines lines={[titleA, titleB]} lineClassNames={['', '']} />
           </h2>
           <Reveal delay={0.15} className="lg:col-span-5">
-            <p className="t-lead pretty max-w-[44ch] !text-white/65">{text}</p>
+            <p className="t-lead pretty max-w-[39.29em] !text-white/65">{text}</p>
           </Reveal>
         </div>
 

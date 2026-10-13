@@ -52,7 +52,7 @@ function TeamCard({ t, i, n }) {
       <div className="flex flex-1 flex-col pt-6 md:pt-7">
         <p className="eyebrow">{t.label}</p>
         <h3 className="t-h3 balance mt-3">{t.title}</h3>
-        <p className="mt-3 max-w-[40ch] text-[15px] leading-relaxed text-graphite">{t.line}</p>
+        <p className="mt-3 max-w-[35.72em] text-[15px] leading-relaxed text-graphite">{t.line}</p>
         <p className="mt-5 text-[12px] font-medium text-slate">What it moves</p>
         <ul className="mt-2 grid gap-1.5" aria-label="What it moves">
           {t.kpis.map((k) => (
@@ -139,7 +139,7 @@ export default function Teams() {
             >
               <span
                 key={`${active}-${touched}`}
-                className={cn('absolute inset-y-0 left-0 rounded-full bg-ink', i < active || (i === active && (touched || reduce)) ? 'w-full' : 'w-0')}
+                className={cn('absolute inset-y-0 left-0 rounded-full bg-ink', i <= active ? 'w-full' : 'w-0')}
                 style={i === active && !touched && !reduce ? { animation: `outcomes-fill ${ADVANCE_MS}ms linear forwards` } : undefined}
               />
             </button>

@@ -26,7 +26,7 @@ export default function PageNotFound() {
           <div className="lg:col-span-6">
             <p className="text-[13px] font-medium text-slate">Error 404</p>
             <h1 className="t-display mt-4">This page took a day off.</h1>
-            <p className="t-lead mt-6 max-w-[44ch] text-graphite">The link may be old or mistyped. Aurora would have routed it, but here are the best places to pick up from.</p>
+            <p className="t-lead mt-6 max-w-[39.29em] text-graphite">The link may be old or mistyped. Aurora would have routed it, but here are the best places to pick up from.</p>
           </div>
           <LiquidGlass
             className="rounded-[28px] p-2 lg:col-span-6"
