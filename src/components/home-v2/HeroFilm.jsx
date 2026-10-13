@@ -660,7 +660,7 @@ function PhoneBackstage({ scene, st, approvedBy, onApprove, btnRef }) {
         </span>
         <span className="text-[10px] text-slate">{now.of ? 'System ' + now.n + ' of ' + now.of : 'Only your team sees this'}</span>
       </div>
-      <div className="relative h-[58px]">
+      <div className="relative h-[66px]">
         <AnimatePresence initial={false} mode="wait">
           <motion.div
             key={scene.key + now.key}
