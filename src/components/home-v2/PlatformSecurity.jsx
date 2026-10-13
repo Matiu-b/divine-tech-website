@@ -17,7 +17,7 @@ const SHEET = 'rounded-[16px] bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_1
 
 function RulesMock({ m }) {
   return (
-    <div className={cn(SHEET, 'absolute left-5 right-[-24px] top-5 p-4')}>
+    <div className={cn(SHEET, 'absolute left-6 right-[-28px] top-1/2 -translate-y-1/2 p-4 lg:left-7')}>
       <p className="flex items-center gap-1.5 text-[12px] font-medium text-slate">
         <ShieldCheck className="h-3.5 w-3.5 text-[#D9481C]" strokeWidth={1.8} aria-hidden="true" />
         {m.title}
@@ -36,7 +36,7 @@ function RulesMock({ m }) {
 
 function ApprovalMock({ m }) {
   return (
-    <div className="absolute inset-x-5 top-5">
+    <div className="absolute inset-x-6 top-1/2 -translate-y-1/2 lg:inset-x-7">
       <div className={cn(SHEET, 'p-4')}>
         <p className="text-[11px] font-medium text-[#B4471A]">{m.tag}</p>
         <p className="mt-1 text-[16px] font-medium tracking-[-0.01em] text-ink">{m.what}</p>
@@ -56,7 +56,7 @@ function ApprovalMock({ m }) {
 
 function AuditMock({ m }) {
   return (
-    <div className={cn(SHEET, 'absolute bottom-[-24px] left-5 right-5 top-5 p-4')}>
+    <div className={cn(SHEET, 'absolute bottom-[-28px] left-6 right-6 top-8 p-4 lg:left-7 lg:right-7')}>
       <p className="flex items-center gap-1.5 text-[12px] font-medium text-slate">
         <ScrollText className="h-3.5 w-3.5 text-[#D9481C]" strokeWidth={1.8} aria-hidden="true" />
         {m.title}
@@ -78,7 +78,7 @@ function AuditMock({ m }) {
 
 function HandoffMock({ m }) {
   return (
-    <div className="absolute inset-x-5 top-5 grid gap-2.5">
+    <div className="absolute inset-x-6 top-1/2 grid -translate-y-1/2 gap-3 lg:inset-x-7">
       <p className="w-fit max-w-[85%] rounded-[16px] rounded-bl-[6px] bg-white px-3.5 py-2 text-[13px] text-ink shadow-[0_0_0_1px_rgba(10,15,14,0.06)]">{m.ask}</p>
       <p className="flex items-center gap-2 text-[11px] text-slate">
         <span className="h-px flex-1 bg-ink/10" />
@@ -112,7 +112,7 @@ export default function PlatformSecurity() {
               <RevealItem key={it.key} as="article" className="w-[78%] shrink-0 snap-start xs:w-[68%] sm:w-[46%] md:w-auto">
                 <div
                   aria-hidden="true"
-                  className="relative h-[210px] overflow-hidden rounded-[22px] bg-[linear-gradient(160deg,#FBF6EF_0%,#F2E9DC_100%)] shadow-[inset_0_0_0_1px_rgba(10,15,14,0.04)] lg:h-[220px]"
+                  className="relative h-[240px] overflow-hidden rounded-[22px] bg-[linear-gradient(160deg,#FBF6EF_0%,#F2E9DC_100%)] shadow-[inset_0_0_0_1px_rgba(10,15,14,0.04)] lg:h-[260px]"
                 >
                   {Mock && <Mock m={it.mock} />}
                 </div>
