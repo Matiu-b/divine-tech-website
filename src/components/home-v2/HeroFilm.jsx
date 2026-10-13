@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { AnimatePresence, animate, motion, useMotionValue, useMotionValueEvent, useReducedMotion, useTransform } from 'framer-motion';
-import { CalendarDays, Check, Database, ListChecks, Mail, MessageCircle, MessagesSquare, Pause, PenLine, Phone, Play, ShieldCheck, UserRound } from 'lucide-react';
+import { CalendarDays, Check, Database, ListChecks, Mail, MessageCircle, MessagesSquare, Pause, PenLine, Phone, Play, ShieldCheck, UserRound, Volume2, VolumeX } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { brand, heroFilm, media } from '@/data/site';
 import Grow from './primitives/Grow';
@@ -24,9 +24,9 @@ import { useInViewport, useMediaQuery, usePageVisible } from './hooks';
 
 const SCENES = heroFilm.scenes;
 
-// Shared timeline (ms). Written at the original pace and scaled by PACE, so the loop runs
-// about 12 seconds instead of 17.
-const PACE = 0.7;
+// Shared timeline (ms) for the written scenes. PACE 1 keeps the loop around 17 seconds: slow enough
+// to read every message and every system update without the screen feeling busy.
+const PACE = 1;
 const pace = (v) => (Array.isArray(v) ? v.map(pace) : Math.round(v * PACE));
 const T_BASE = {
   line: [500, 4800, 5900, 8400, 13900],
@@ -44,15 +44,39 @@ const T_BASE = {
   cursorClick: 12850,
   approvalDone: 12950,
   end: 17400,
+  chapterAt: [0, 2000, 5900, 9300],
 };
-const T = Object.fromEntries(Object.entries(T_BASE).map(([k, v]) => [k, pace(v)]));
 
-const CHAPTERS = [
-  { label: heroFilm.chapters[0], start: 0, end: pace(2000) },
-  { label: heroFilm.chapters[1], start: pace(2000), end: pace(5900) },
-  { label: heroFilm.chapters[2], start: pace(5900), end: pace(9300) },
-  { label: heroFilm.chapters[3], start: pace(9300), end: T.end },
-];
+// The voice call plays a real recorded call (scene.audio), so its timeline follows the
+// recording: each line starts exactly where it starts in the audio file (ms).
+const T_VOICE = {
+  line: [500, 6100, 12900, 17500, 25800],
+  lineDur: [3120, 6320, 2080, 4480, 4820],
+  typing: [
+    [5600, 6100],
+    [17100, 17500],
+    [25300, 25800],
+  ],
+  stepRun: [3800, 4400, 5000],
+  stepDone: [4400, 5000, 5600],
+  actRun: [15300, 15900, 16500],
+  actDone: [15900, 16500, 17100],
+  approvalPending: 22200,
+  cursorIn: 24000,
+  cursorClick: 24900,
+  approvalDone: 25000,
+  end: 33000,
+  chapterAt: [0, 3700, 12900, 22200],
+};
+
+function makeTimeline(T) {
+  const CHAPTERS = T.chapterAt.map((start, i) => ({ label: heroFilm.chapters[i], start, end: i < 3 ? T.chapterAt[i + 1] : T.end }));
+  return { T, CHAPTERS };
+}
+const TL_BASE = makeTimeline(Object.fromEntries(Object.entries(T_BASE).map(([k, v]) => [k, pace(v)])));
+const TL_VOICE = makeTimeline(T_VOICE);
+/** The timeline a scene runs on: its recording's, or the shared one. */
+const tlOf = (scene) => (scene && scene.audio ? TL_VOICE : TL_BASE);
 
 // Which groups the camera favours in each chapter (others dim slightly).
 const FOCUS = [
@@ -149,6 +173,7 @@ const SYS_ICON = { CRM: Database, Calendar: CalendarDays, Tasks: ListChecks };
 const speakDur = (text) => Math.min(3000, 500 + text.length * 30);
 
 function computeState(scene, t) {
+  const { T, CHAPTERS } = tlOf(scene);
   const lines = T.line.filter((lt, i) => i < scene.lines.length && t >= lt).length;
   const typing = T.typing.some(([a, b]) => t >= a && t < b);
   const steps = T.stepRun.map((r, i) => (t >= T.stepDone[i] ? 'done' : t >= r ? 'run' : 'idle'));
@@ -161,7 +186,7 @@ function computeState(scene, t) {
   });
   let speaking = null;
   for (let i = 0; i < lines; i += 1) {
-    if (t < T.line[i] + speakDur(scene.lines[i].text)) speaking = scene.lines[i].who;
+    if (t < T.line[i] + (T.lineDur ? T.lineDur[i] : speakDur(scene.lines[i].text))) speaking = scene.lines[i].who;
   }
   return { lines, typing, steps, actions, approval, cursor, chapter, speaking };
 }
@@ -310,7 +335,7 @@ function Stream({ text, step = 0.035, delay = 0.05, soft = true }) {
 /* ------------------------------------------------------------------ */
 
 /** @param {any} props */
-function PanelHeader({ scene, phone, callTime, live }) {
+function PanelHeader({ scene, phone, callTime, live, sound, onSound }) {
   const ch = CH[scene.mode];
   const Icon = ch.icon;
   const web = scene.mode === 'web';
@@ -351,10 +376,27 @@ function PanelHeader({ scene, phone, callTime, live }) {
           )}
         </p>
       </div>
-      <span className={cn('ui-chip shrink-0', web ? 'bg-white/10 text-white' : ch.chip)}>
-        <Icon className="h-3 w-3" strokeWidth={2} aria-hidden="true" />
-        {phone ? null : scene.channel}
-      </span>
+      {scene.audio && onSound ? (
+        <button
+          type="button"
+          onClick={onSound}
+          aria-pressed={!!sound}
+          aria-label={sound ? 'Mute the call' : 'Listen to the call with sound'}
+          className={cn(
+            'flex shrink-0 items-center gap-1.5 rounded-full font-medium transition-colors',
+            phone ? 'h-7 px-2.5 text-[10.5px]' : 'h-8 px-3 text-[11.5px]',
+            sound ? 'bg-[#F25C2A] text-white hover:bg-[#D9481C]' : 'bg-ink text-white hover:bg-[#1D2625]'
+          )}
+        >
+          {sound ? <Volume2 className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" /> : <VolumeX className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />}
+          {sound ? 'Sound on' : 'Listen'}
+        </button>
+      ) : (
+        <span className={cn('ui-chip shrink-0', web ? 'bg-white/10 text-white' : ch.chip)}>
+          <Icon className="h-3 w-3" strokeWidth={2} aria-hidden="true" />
+          {phone ? null : scene.channel}
+        </span>
+      )}
     </div>
   );
 }
@@ -478,7 +520,7 @@ function VoiceBody({ scene, st, phone, reduce }) {
                       {mine ? brand.product : 'Caller'}
                     </p>
                     <p className={cn('mt-0.5 leading-[1.45] text-ink', phone ? 'text-[12.5px]' : 'text-[13.5px]')}>
-                      {reduce ? l.text : <Stream text={l.text} step={Math.min(0.24, speakDur(l.text) / 1000 / words)} soft={false} />}
+                      {reduce ? l.text : <Stream text={l.text} step={Math.min(0.24, (tlOf(scene).T.lineDur ? tlOf(scene).T.lineDur[i] : speakDur(l.text)) / 1000 / words)} soft={false} />}
                     </p>
                   </div>
                 </Grow>
@@ -536,11 +578,11 @@ function EmailBody({ scene, st, phone, reduce }) {
 }
 
 /** @param {any} props */
-function Panel({ scene, st, phone, reduce, callTime, takeover, onTakeover, approvedBy, onApprove, btnRef }) {
+function Panel({ scene, st, phone, reduce, callTime, takeover, onTakeover, approvedBy, onApprove, btnRef, sound, onSound }) {
   const Body = scene.mode === 'voice' ? VoiceBody : scene.mode === 'email' ? EmailBody : ChatBody;
   return (
     <div className={cn('ui-card flex h-full flex-col overflow-hidden transition-shadow duration-500', takeover && 'shadow-[0_0_0_2px_#0A0F0E,0_12px_32px_-10px_rgba(10,15,14,0.2)]')}>
-      <PanelHeader scene={scene} phone={phone} callTime={callTime} live={st.lines > 0 && !reduce} />
+      <PanelHeader scene={scene} phone={phone} callTime={callTime} live={st.lines > 0 && !reduce} sound={sound} onSound={onSound} />
       <div className="relative min-h-0 flex-1 overflow-hidden">
         {phone ? (
           <PhoneFeed scene={scene} st={st} reduce={reduce} approvedBy={approvedBy} onApprove={onApprove} btnRef={btnRef} />
@@ -684,6 +726,7 @@ function WorkCard({ scene, st, takeover }) {
 
 /** @param {any} props */
 function AuditTrail({ scene, st, approvedBy }) {
+  const { T } = tlOf(scene);
   const ts = (ms) => '09:41:' + String(2 + Math.floor(ms / 1000)).padStart(2, '0');
   const entries = [];
   if (st.lines >= 1) entries.push({ k: 'msg', t: ts(T.line[0]), text: 'Message received · ' + scene.channel });
@@ -804,6 +847,35 @@ function FeedEvent({ sys, title, detail, state }) {
   );
 }
 
+/** Phone feed: Aurora's system updates as one block; the rows tick in place instead of each arriving on its own. */
+/** @param {any} props */
+function FeedWork({ scene, st }) {
+  const done = st.actions.filter((x) => x === 'done').length;
+  return (
+    <div className="pt-2">
+      <div className="rounded-[14px] bg-[#FBF6EF] p-2">
+        <p className="px-1 pb-1 text-[10.5px] font-medium text-[#B4471A]">
+          {done === scene.actions.length ? brand.product + ' updated ' + done + ' systems' : brand.product + ' is working in your systems'}
+        </p>
+        <ul className="grid gap-1">
+          {scene.actions.map((a, i) => {
+            const Icon = SYS_ICON[a.sys];
+            const state = st.actions[i];
+            return (
+              <li key={a.sys} className={cn('flex items-center gap-2 rounded-[10px] px-2 py-1.5 transition-colors duration-700', state === 'done' ? 'bg-white' : 'bg-white/45')}>
+                <Status state={state} size={13} />
+                <Icon className="h-3 w-3 shrink-0 text-[#B4471A]" strokeWidth={1.9} aria-hidden="true" />
+                <span className={cn('min-w-0 flex-1 truncate text-[11px] font-medium transition-colors duration-700', state === 'idle' ? 'text-ink/35' : 'text-ink')}>{a.title}</span>
+                <span className={cn('max-w-[46%] shrink truncate text-right text-[10px] transition-colors duration-700', state === 'done' ? 'text-graphite' : 'text-ink/25')}>{a.detail}</span>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
 /** One message in the phone feed, drawn the way its channel draws it. */
 /** @param {any} props */
 function FeedMessage({ scene, l, i, reduce }) {
@@ -812,7 +884,9 @@ function FeedMessage({ scene, l, i, reduce }) {
     return (
       <div className="pt-2.5">
         <p className={cn('text-[9.5px] font-medium uppercase tracking-[0.06em]', mine ? 'text-[#B4471A]' : 'text-slate')}>{mine ? brand.product : 'Caller'}</p>
-        <p className="mt-0.5 text-[12.5px] leading-[1.45] text-ink">{mine && !reduce ? <Stream text={l.text} soft={false} /> : l.text}</p>
+        <p className="mt-0.5 text-[12.5px] leading-[1.45] text-ink">
+          {reduce ? l.text : <Stream text={l.text} step={Math.min(0.24, (tlOf(scene).T.lineDur ? tlOf(scene).T.lineDur[i] : speakDur(l.text)) / 1000 / l.text.split(' ').length)} soft={false} />}
+        </p>
       </div>
     );
   }
@@ -854,13 +928,12 @@ function FeedMessage({ scene, l, i, reduce }) {
  * @param {any} props
  */
 function PhoneFeed({ scene, st, reduce, approvedBy, onApprove, btnRef }) {
+  const { T } = tlOf(scene);
   const understood = st.steps[2] === 'done' ? 'done' : st.steps.includes('run') || st.steps.includes('done') ? 'run' : 'idle';
   const items = [];
   scene.lines.slice(0, st.lines).forEach((l, i) => items.push({ t: T.line[i], key: 'm' + i, el: <FeedMessage scene={scene} l={l} i={i} reduce={reduce} /> }));
   if (understood !== 'idle') items.push({ t: T.stepRun[0], key: 'u', el: <FeedEvent title={scene.steps[0].title} detail={scene.steps[0].detail} state={understood} /> });
-  scene.actions.forEach((a, i) => {
-    if (st.actions[i] !== 'idle') items.push({ t: T.actRun[i], key: 'a' + i, el: <FeedEvent sys={a.sys} title={a.title} detail={a.detail} state={st.actions[i]} /> });
-  });
+  if (st.actions.some((x) => x !== 'idle')) items.push({ t: T.actRun[0], key: 'work', el: <FeedWork scene={scene} st={st} /> });
   if (st.approval !== 'none')
     items.push({
       t: T.approvalPending,
@@ -977,7 +1050,7 @@ function Segment({ c, time, active, onSeek, phone }) {
 }
 
 /** @param {any} props */
-function ChapterBar({ time, chapter, playing, onToggle, onSeek, phone, reduce }) {
+function ChapterBar({ chapters, time, chapter, playing, onToggle, onSeek, phone, reduce }) {
   return (
     <LiquidGlass className={cn('flex h-full items-center rounded-full', phone ? 'gap-1.5 px-1' : 'gap-2 px-1.5')}>
       {reduce ? null : (
@@ -995,11 +1068,11 @@ function ChapterBar({ time, chapter, playing, onToggle, onSeek, phone, reduce })
         </button>
       )}
       <div className={cn('flex min-w-0 flex-1 items-center', phone ? 'gap-1' : 'gap-1')}>
-        {CHAPTERS.map((c, i) => (
-          <Segment key={c.label} c={c} time={time} active={chapter === i} onSeek={onSeek} phone={phone} />
+        {chapters.map((c, i) => (
+          <Segment key={c.label + c.end} c={c} time={time} active={chapter === i} onSeek={onSeek} phone={phone} />
         ))}
       </div>
-      {phone ? <span className="w-[76px] shrink-0 truncate pr-2 text-right text-[10.5px] font-medium text-ink">{CHAPTERS[chapter].label}</span> : null}
+      {phone ? <span className="w-[76px] shrink-0 truncate pr-2 text-right text-[10.5px] font-medium text-ink">{chapters[chapter].label}</span> : null}
     </LiquidGlass>
   );
 }
@@ -1147,6 +1220,9 @@ export default function HeroFilm({ startScene = undefined }) {
   const [lite, setLite] = useState(false);
   const userDriven = useRef(false);
   const scene = SCENES[k];
+  const { T, CHAPTERS } = tlOf(scene);
+  const audioRef = useRef(null);
+  const [sound, setSound] = useState(false);
 
   const inView = useInViewport(stageRef, { threshold: 0.15 });
   const visible = usePageVisible();
@@ -1167,6 +1243,9 @@ export default function HeroFilm({ startScene = undefined }) {
   runRef.current = run;
 
   useMotionValueEvent(time, 'change', (t) => {
+    // keep the recorded call in step with the film clock
+    const a = audioRef.current;
+    if (a && !a.paused && Math.abs(a.currentTime * 1000 - t) > 300) a.currentTime = t / 1000;
     const next = computeState(sceneRef.current, t);
     const sig = sigOf(next);
     if (sig !== sigRef.current) {
@@ -1230,6 +1309,36 @@ export default function HeroFilm({ startScene = undefined }) {
     return stop;
   }, [running, play, stop, k, loop]);
 
+  // The recorded call: plays only on the voice scene, only after the visitor asks for sound.
+  const hasAudio = !!scene.audio;
+  useEffect(() => {
+    const a = audioRef.current;
+    if (!a) return;
+    if (hasAudio && sound && running) {
+      a.currentTime = time.get() / 1000;
+      const p = a.play();
+      if (p && p.catch) p.catch(() => setSound(false));
+    } else a.pause();
+  }, [hasAudio, sound, running, k, loop, time]);
+  const toggleSound = () => {
+    const a = audioRef.current;
+    if (sound) {
+      setSound(false);
+      if (a) a.pause();
+      return;
+    }
+    // start the call from the top, inside the click so every browser allows the sound
+    setPlaying(true);
+    setTakeover(false);
+    if (a) {
+      a.currentTime = 0;
+      const p = a.play();
+      if (p && p.catch) p.catch(() => setSound(false));
+    }
+    setSound(true);
+    setLoop((n) => n + 1);
+  };
+
   onEnd.current = () => {
     if (userDriven.current) setLoop((n) => n + 1);
     else setK((i) => (i + 1) % SCENES.length);
@@ -1238,6 +1347,7 @@ export default function HeroFilm({ startScene = undefined }) {
   const seek = (ms) => {
     userDriven.current = true;
     if (ms < T.approvalDone) setApprovedBy(null);
+    if (audioRef.current) audioRef.current.currentTime = ms / 1000;
     // Reduced motion: show the finished state of the chosen chapter.
     const chapter = CHAPTERS.find((c) => c.start === ms);
     time.set(reduce && chapter ? chapter.end - 1 : ms);
@@ -1330,7 +1440,7 @@ export default function HeroFilm({ startScene = undefined }) {
                         animate={{ opacity: 1, y: 0, transition: { duration: 0.6, delay: 0.12, ease: EASE } }}
                         exit={{ opacity: 0, transition: { duration: 0.35, ease: EASE } }}
                       >
-                        <Panel scene={scene} st={st} phone={phone} reduce={reduce} callTime={callTime} takeover={takeover} onTakeover={toggleTakeover} approvedBy={approvedBy} onApprove={approve} btnRef={btnRef} />
+                        <Panel scene={scene} st={st} phone={phone} reduce={reduce} callTime={callTime} takeover={takeover} onTakeover={toggleTakeover} approvedBy={approvedBy} onApprove={approve} btnRef={btnRef} sound={sound} onSound={toggleSound} />
                       </motion.div>
                     </AnimatePresence>
                   </Group>
@@ -1386,7 +1496,7 @@ export default function HeroFilm({ startScene = undefined }) {
                   </div>
                 ) : null}
                 <Group p={comp.bar} index={6} z={5}>
-                  <ChapterBar time={time} chapter={st.chapter} playing={playing} onToggle={togglePlay} onSeek={seek} phone={phone} reduce={reduce} />
+                  <ChapterBar chapters={CHAPTERS} time={time} chapter={st.chapter} playing={playing} onToggle={togglePlay} onSeek={seek} phone={phone} reduce={reduce} />
                 </Group>
               </motion.div>
             </div>
@@ -1394,6 +1504,7 @@ export default function HeroFilm({ startScene = undefined }) {
 
         </div>
       </motion.div>
+      {hasAudio ? <audio ref={audioRef} src={scene.audio} preload="none" onEnded={() => setSound(false)} /> : null}
       <figcaption id="film-caption" className="sr-only">
         Interactive product demo: {brand.product} handles a {scene.channel.toLowerCase()} conversation for a {scene.industry.toLowerCase()} business. It replies to the customer,
         checks availability and policy, updates the CRM, books the appointment, sets a follow-up and asks a person to approve one decision. Use the channel tabs to switch

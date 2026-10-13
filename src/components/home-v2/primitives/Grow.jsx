@@ -17,7 +17,7 @@ export default function Grow({ children, className = undefined }) {
       initial={{ height: 0, opacity: 0 }}
       animate={{ height: 'auto', opacity: 1 }}
       exit={{ height: 0, opacity: 0, transition: { duration: 0.3 } }}
-      transition={{ height: { duration: 0.5, ease: EASE }, opacity: { duration: 0.4, delay: 0.08 } }}
+      transition={{ height: { duration: 0.7, ease: EASE }, opacity: { duration: 0.55, delay: 0.15 } }}
       className={cn('shrink-0 overflow-hidden', className)}
     >
       {children}
