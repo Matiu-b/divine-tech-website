@@ -1575,7 +1575,9 @@ export default function HeroFilm({ startScene = undefined }) {
             {hasAudio && !callStarted && !reduce ? (
               <motion.div
                 key="call-start"
-                className="absolute inset-0 z-[6] flex items-center justify-center bg-[#F6F2EA]/35 backdrop-blur-[3px]"
+                // starts under the channel tabs, so they stay visible and clickable
+                className="absolute inset-x-0 bottom-0 z-[6] flex items-center justify-center rounded-b-[inherit] bg-[#F6F2EA]/30 backdrop-blur-[2px]"
+                style={{ top: comp.panel.y * scale - 6 }}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1, transition: { duration: 0.4, ease: EASE } }}
                 exit={{ opacity: 0, transition: { duration: 0.3 } }}
