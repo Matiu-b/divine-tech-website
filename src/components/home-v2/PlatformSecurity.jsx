@@ -35,10 +35,10 @@ function PolicyEditor() {
         {P.rows.map((r, i) => {
           const mode = modes[i];
           return (
-            <li key={r.action} className={cn('items-center justify-between gap-3 py-2.5 sm:gap-4 sm:py-3', r.phone === false ? 'hidden sm:flex' : 'flex')}>
+            <li key={r.action} className={cn('items-center justify-between gap-3 py-2 sm:gap-4 sm:py-3', r.phone === false ? 'hidden sm:flex' : 'flex')}>
               <div className="min-w-0">
                 <p className="text-[13px] font-medium leading-snug text-ink sm:text-[13.5px]">{r.action}</p>
-                <p className="mt-0.5 text-[11px] leading-snug text-slate sm:text-[11.5px]">
+                <p className="mt-0.5 hidden text-[11.5px] leading-snug text-slate sm:block">
                   {mode === 'auto' ? 'Aurora does it on its own' : mode === 'approval' ? 'Waits for ' + (r.who || 'a manager') : 'Aurora never does this'}
                 </p>
               </div>
