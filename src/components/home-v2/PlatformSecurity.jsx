@@ -31,7 +31,7 @@ export default function PlatformSecurity() {
                 </span>
                 <p className="mt-2 text-[13px] leading-relaxed text-ink sm:mt-4 sm:text-[15px]">
                   {t.examples.map((ex, i) => (
-                    <span key={ex} className="sm:block">
+                    <span key={ex} className="whitespace-nowrap sm:block">
                       {i > 0 && <span className="px-1.5 text-ink/30 sm:hidden" aria-hidden="true">·</span>}
                       {ex}
                     </span>
@@ -41,7 +41,7 @@ export default function PlatformSecurity() {
             ))}
           </ul>
 
-          <ul className="mt-5 grid grid-cols-2 gap-x-3 gap-y-3 px-1 md:mt-6 md:flex md:flex-wrap md:justify-between">
+          <ul className="mt-5 grid gap-2.5 px-1 sm:grid-cols-2 sm:gap-x-3 md:mt-6 md:flex md:flex-wrap md:justify-between">
             {S.items.map((it) => {
               const Icon = ICONS[it.icon] || ShieldCheck;
               return (
