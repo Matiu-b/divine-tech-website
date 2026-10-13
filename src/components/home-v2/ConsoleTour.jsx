@@ -78,7 +78,7 @@ function Avatar({ s, ch: Ch, size = 26 }) {
 }
 
 /* ------------------------------------------------------------------ */
-/* The six screens                                                     */
+/* The four screens                                                     */
 /* ------------------------------------------------------------------ */
 function DashboardScreen() {
   const stats = [
@@ -261,128 +261,11 @@ function HandoffScreen() {
   );
 }
 
-function ChannelsScreen() {
-  const rows = [
-    [Globe, 'Web chat', 184, 41, '#0A0F0E'],
-    [Phone, 'Phone', 121, 27, '#F25C2A'],
-    [Mail, 'Email', 86, 19, '#F25C2A'],
-    [MessageSquare, 'Text message', 58, 13, '#F25C2A'],
-  ];
-  return (
-    <>
-      <Win className="left-[22px] top-[24px] w-[226px] p-3" style={{ height: 300 }}>
-        <p className="text-[10px] font-medium text-ink">Communication channels</p>
-        <p className="mt-0.5 text-[7.5px] text-graphite">Performance per channel · last 7 days</p>
-        <div className="mt-2.5 grid gap-1.5">
-          {rows.map(([Ic, name, n, pct, color]) => (
-            <div key={name} className="rounded-[10px] bg-[#FFF5EA] px-2.5 py-2">
-              <div className="flex items-center gap-2">
-                <span className="flex h-5 w-5 items-center justify-center rounded-[6px] bg-white text-ink/60">
-                  <Ic className="h-2.5 w-2.5" strokeWidth={1.8} />
-                </span>
-                <span className="flex-1">
-                  <span className="block text-[8.5px] font-medium text-ink">{name}</span>
-                  <span className="block text-[6.5px] text-slate">{n} conversations</span>
-                </span>
-                <span className="text-[10px] font-medium text-ink">{pct}%</span>
-              </div>
-              <span className="mt-1.5 block h-[3px] rounded-full bg-ink/10">
-                <span className="block h-full rounded-full" style={{ width: pct * 2 + '%', background: color }} />
-              </span>
-            </div>
-          ))}
-        </div>
-      </Win>
-      <Win className="left-[232px] top-[58px] w-[118px] p-2.5">
-        <p className="text-[7px] text-slate">Handled by AI</p>
-        <p className="mt-1 text-[17px] font-medium leading-none text-ink">91%</p>
-        <svg viewBox="0 0 100 34" className="mt-2 h-[30px] w-full" aria-hidden="true">
-          <defs>
-            <linearGradient id="ct-area" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stopColor="#FF9F45" stopOpacity="0.45" />
-              <stop offset="1" stopColor="#FF9F45" stopOpacity="0" />
-            </linearGradient>
-          </defs>
-          <path d="M0 28 L14 25 L28 26 L42 18 L56 15 L70 16 L84 8 L100 5 L100 34 L0 34 Z" fill="url(#ct-area)" />
-          <path d="M0 28 L14 25 L28 26 L42 18 L56 15 L70 16 L84 8 L100 5" fill="none" stroke="#F25C2A" strokeWidth="1.6" strokeLinejoin="round" />
-        </svg>
-        <p className="mt-1 text-[6.5px] text-graphite">412 conversations this week</p>
-      </Win>
-    </>
-  );
-}
-
-function CustomerScreen() {
-  const notes = [
-    ['Prefers weekend viewings. Looking for a 2BR near Maple St.', 'Dana K. · Oct 9'],
-    ['Application fee waived on REQ-2048.', 'Aurora · Oct 11'],
-  ];
-  return (
-    <Win className="left-[22px] top-[24px] w-[214px] p-3" style={{ height: 300 }}>
-      <p className="text-[10px] font-medium text-ink">Customer</p>
-      <p className="mt-0.5 text-[7px] text-graphite">sarah.k@example.com</p>
-      <div className="mt-3 flex items-center gap-2.5">
-        <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#FBE2CB] text-[12px] font-medium text-[#7A4A22]">SK</span>
-        <div>
-          <p className="text-[10px] font-medium text-ink">Sarah K.</p>
-          <p className="text-[7px] text-graphite">Lead · 2BR Maple St</p>
-        </div>
-      </div>
-      <div className="mt-2.5 flex gap-1.5">
-        {['Send email', 'Merge contact'].map((b) => (
-          <span key={b} className="flex h-[18px] items-center rounded-full px-2 text-[7px] font-medium text-ink shadow-[0_0_0_1px_rgba(10,15,14,0.09)]">
-            {b}
-          </span>
-        ))}
-      </div>
-      <p className="mt-3 text-[7.5px] font-medium text-ink">CRM notes</p>
-      <div className="mt-1 grid gap-1.5">
-        {notes.map(([t, by]) => (
-          <div key={t} className="rounded-[8px] bg-[#FFF6EC] px-2 py-1.5">
-            <p className="text-[7.5px] leading-snug text-ink">{t}</p>
-            <p className="mt-0.5 text-[6.5px] text-slate">{by}</p>
-          </div>
-        ))}
-      </div>
-      <p className="mt-3 text-[7.5px] font-medium text-ink">Details</p>
-      <dl className="mt-1 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-[7px]">
-        {[
-          ['Source', 'Web chat'],
-          ['Stage', 'Viewing booked'],
-          ['Owner', 'Dana K.'],
-        ].map(([k, v]) => (
-          <React.Fragment key={k}>
-            <dt className="text-slate">{k}</dt>
-            <dd className="text-ink">{v}</dd>
-          </React.Fragment>
-        ))}
-      </dl>
-      <Win className="left-[184px] top-[40px] w-[118px] p-2.5">
-        <p className="text-[7px] text-slate">Past requests</p>
-        {[
-          ['Viewing booked'],
-          ['Fee waived'],
-          ['Reminder sent'],
-        ].map(([a]) => (
-          <p key={a} className="mt-1.5 flex items-center gap-1.5 text-[7.5px] text-ink">
-            <span className="flex h-3 w-3 items-center justify-center rounded-full bg-[#E4F4E8] text-[#2E7A48]">
-              <Check className="h-2 w-2" strokeWidth={3} />
-            </span>
-            <span className="flex-1 whitespace-nowrap">{a}</span>
-          </p>
-        ))}
-      </Win>
-    </Win>
-  );
-}
-
 const SCREENS = {
   dashboard: [DashboardScreen, 'peach'],
   inbox: [InboxScreen, 'sand'],
   action: [ActionScreen, 'gold'],
   handoff: [HandoffScreen, 'blush'],
-  channels: [ChannelsScreen, 'cream'],
-  customer: [CustomerScreen, 'mist'],
 };
 
 /* ------------------------------------------------------------------ */
