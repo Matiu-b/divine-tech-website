@@ -1280,10 +1280,14 @@ export default function HeroFilm({ startScene = undefined }) {
   const [sound, setSound] = useState(false);
   // The recorded call never plays on its own: it waits for the visitor to press play (with sound).
   const [callStarted, setCallStarted] = useState(false);
+  // True once the recording is actually playing: the film clock waits for it, so the first
+  // words are never skipped while the file is still buffering (and it pauses if playback stalls).
+  const [audioReady, setAudioReady] = useState(false);
 
   const inView = useInViewport(stageRef, { threshold: 0.15 });
   const visible = usePageVisible();
-  const running = introDone && inView && visible && playing && !takeover && !reduce && (!scene.audio || callStarted);
+  const live = introDone && inView && visible && playing && !takeover && !reduce;
+  const running = live && (!scene.audio || (callStarted && (!sound || audioReady)));
 
   const { time, play, stop, onEnd } = useClock(T.end);
   // The film state belongs to one run (scene + replay). A new run uses its own
@@ -1302,7 +1306,7 @@ export default function HeroFilm({ startScene = undefined }) {
   useMotionValueEvent(time, 'change', (t) => {
     // keep the recorded call in step with the film clock
     const a = audioRef.current;
-    if (a && !a.paused && Math.abs(a.currentTime * 1000 - t) > 300) a.currentTime = t / 1000;
+    if (a && !a.paused && a.readyState >= 3 && Math.abs(a.currentTime * 1000 - t) > 400) a.currentTime = t / 1000;
     const next = computeState(sceneRef.current, t);
     const sig = sigOf(next);
     if (sig !== sigRef.current) {
@@ -1371,12 +1375,15 @@ export default function HeroFilm({ startScene = undefined }) {
   useEffect(() => {
     const a = audioRef.current;
     if (!a) return;
-    if (hasAudio && sound && running) {
-      a.currentTime = time.get() / 1000;
-      const p = a.play();
-      if (p && p.catch) p.catch(() => setSound(false));
+    if (hasAudio && sound && callStarted && live) {
+      const t = time.get() / 1000;
+      if (Math.abs(a.currentTime - t) > 0.3) a.currentTime = t;
+      if (a.paused) {
+        const p = a.play();
+        if (p && p.catch) p.catch(() => setSound(false));
+      }
     } else a.pause();
-  }, [hasAudio, sound, running, k, loop, time]);
+  }, [hasAudio, sound, callStarted, live, k, loop, time]);
   const toggleSound = () => {
     const a = audioRef.current;
     if (sound) {
@@ -1387,6 +1394,7 @@ export default function HeroFilm({ startScene = undefined }) {
     // start the call from the top, inside the click so every browser allows the sound
     setPlaying(true);
     setTakeover(false);
+    setAudioReady(false);
     if (a) {
       a.currentTime = 0;
       const p = a.play();
@@ -1400,6 +1408,7 @@ export default function HeroFilm({ startScene = undefined }) {
   useEffect(() => {
     setCallStarted(false);
     setSound(false);
+    setAudioReady(false);
   }, [k]);
   const startCall = () => {
     setCallStarted(true);
@@ -1612,7 +1621,14 @@ export default function HeroFilm({ startScene = undefined }) {
           </AnimatePresence>
         </div>
       </motion.div>
-      {hasAudio ? <audio ref={audioRef} src={scene.audio} preload="none" onEnded={() => setSound(false)} /> : null}
+      {hasAudio ? <audio
+          ref={audioRef}
+          src={scene.audio}
+          preload="auto"
+          onPlaying={() => setAudioReady(true)}
+          onWaiting={() => setAudioReady(false)}
+          onEnded={() => setSound(false)}
+        /> : null}
       <figcaption id="film-caption" className="sr-only">
         Interactive product demo: {brand.product} handles a {scene.channel.toLowerCase()} conversation for a {scene.industry.toLowerCase()} business. It replies to the customer,
         checks availability and policy, updates the CRM, books the appointment, sets a follow-up and asks a person to approve one decision. Use the channel tabs to switch
