@@ -55,7 +55,8 @@ export function Reveal({
 /**
  * Headline lines that resolve from a soft blur. Each line is a block; a real
  * space is kept between lines so the accessible name reads naturally.
- * `immediate` animates on mount (hero) instead of on scroll.
+ * `immediate` (hero headlines) animates on mount instead of on scroll, with a CSS animation
+ * (`.intro-line` in index.css), so it starts with the prerendered HTML's first paint.
  * @param {any} props
  */
 export function RevealLines({
@@ -73,13 +74,16 @@ export function RevealLines({
   return (
     <>
       {lines.flatMap((line, i) => {
-        const el = (
+        const el = immediate ? (
+          <span key={'line-' + i} className={cn('intro-line block', lineClassNames[i])} style={{ animationDelay: `${delay + i * stagger}s` }}>
+            {line}
+          </span>
+        ) : (
           <motion.span
             key={'line-' + i}
             className={cn('block', lineClassNames[i])}
             initial={reduce ? false : { opacity: 0, y, filter: blur ? 'blur(10px)' : 'blur(0px)' }}
-            animate={immediate && !reduce ? target : undefined}
-            whileInView={!immediate && !reduce ? target : undefined}
+            whileInView={reduce ? undefined : target}
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 1.05, delay: delay + i * stagger, ease: EASE }}
           >

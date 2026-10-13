@@ -54,7 +54,7 @@ function loadPixel() {
   window.fbq('init', META_PIXEL_ID);
 }
 
-/** Runs fn when index.html's dtWhenEngaged says so (first interaction, or 4 s after load). */
+/** Runs fn when index.html's dtWhenEngaged says so (first interaction, or 10 s after load). */
 function whenEngaged(fn) {
   if (typeof window.dtWhenEngaged === 'function') window.dtWhenEngaged(fn);
   else fn();

@@ -3,7 +3,6 @@ import { AnimatePresence, m as motion, useReducedMotion } from 'framer-motion';
 import { CalendarCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import LiquidGlass from './primitives/LiquidGlass';
-import { Reveal } from './primitives/MotionReveal';
 import { EASE } from './motion';
 import { EVENT_ICONS } from './eventIcons';
 import { useInViewport, useMediaQuery, usePageVisible } from './hooks';
@@ -136,6 +135,8 @@ function useWidth(ref) {
  * photo: { src, srcSet, mobileSrcSet?, alt, lqip?, position? }
  * caption: one line at the bottom of the photo saying what the viewer is looking at
  * events: [{ icon, title, detail }]  (illustrative examples, not customer data)
+ * It rises in with a CSS animation (.intro-rise), so the photo shows on the prerendered page's first
+ * paint instead of waiting for JavaScript; it is the largest thing on the first screen (LCP).
  * @param {any} props
  */
 export default function PhotoStage({ photo, events, caption = undefined, tasks = undefined, className = undefined }) {
@@ -153,7 +154,7 @@ export default function PhotoStage({ photo, events, caption = undefined, tasks =
   const feed = picked ? picked.events : events;
 
   return (
-    <Reveal y={40} amount={0.05} className={className}>
+    <div className={cn('intro-rise', className)} style={{ animationDelay: '0.36s' }}>
       <figure
         ref={ref}
         className="canvas relative m-0 aspect-[4/5] bg-cover bg-center sm:aspect-[16/10] lg:aspect-[16/7]"
@@ -175,7 +176,7 @@ export default function PhotoStage({ photo, events, caption = undefined, tasks =
           <>
             <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-[linear-gradient(to_top,rgba(6,12,10,0.6)_0%,rgba(6,12,10,0.22)_45%,rgba(6,12,10,0)_100%)]" />
             <figcaption className="absolute inset-x-0 bottom-0 p-5 xs:p-6 md:p-8">
-              <p className="max-w-[30ch] text-[17px] font-medium leading-snug text-white sm:text-[20px] md:max-w-[34ch] md:text-[24px]">{caption}</p>
+              <p className="max-w-[27.27em] text-[17px] font-medium leading-snug text-white sm:text-[20px] md:max-w-[30.91em] md:text-[24px]">{caption}</p>
               {tasks ? (
                 <div className="mt-4 hidden sm:block md:mt-5">
                   <TaskButtons tasks={tasks} active={task} onPick={setTask} onPhoto />
@@ -193,6 +194,6 @@ export default function PhotoStage({ photo, events, caption = undefined, tasks =
           <TaskButtons tasks={tasks} active={task} onPick={setTask} onPhoto={false} />
         </div>
       ) : null}
-    </Reveal>
+    </div>
   );
 }

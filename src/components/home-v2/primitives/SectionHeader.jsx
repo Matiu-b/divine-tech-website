@@ -52,7 +52,7 @@ export default function SectionHeader({
   return (
     <div className={cn(layout === 'center' && 'mx-auto flex flex-col items-center text-center', className)}>
       {title}
-      {body ? <div className={cn('mt-6 max-w-[46ch]', layout === 'center' && 'mx-auto')}>{body}</div> : null}
+      {body ? <div className={cn('mt-6 max-w-[41.08em]', layout === 'center' && 'mx-auto')}>{body}</div> : null}
     </div>
   );
 }

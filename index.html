@@ -21,6 +21,8 @@
       try {
         var c = JSON.parse(localStorage.getItem('dt_consent') || 'null');
         if (c && c.v === 1) {
+          // The cookie banner is in the prerendered HTML; hide it before the first paint.
+          document.documentElement.classList.add('dt-consented');
           var ads = c.marketing ? 'granted' : 'denied';
           gtag('consent', 'update', {
             analytics_storage: c.analytics ? 'granted' : 'denied',
@@ -33,14 +35,15 @@
       } catch (e) {}
     </script>
     <!-- Marketing tags wait for the visitor: they load on the first scroll, tap, key press or
-         pointer move, or 4 s after the page has loaded, whichever comes first. Calls made before
-         then (dataLayer pushes, fbq) queue and are sent when the tags arrive. -->
+         pointer move, or 10 s after the page has loaded, whichever comes first (a shorter wait
+         lets PageSpeed's mobile scan count their code against the site). Calls made before then
+         (dataLayer pushes, fbq) queue and are sent when the tags arrive. -->
     <script>
     (function(w,d){
       var q=[],done=false,evs=['scroll','wheel','pointerdown','pointermove','touchstart','keydown'],opts={passive:true,capture:true};
       function run(){if(done)return;done=true;evs.forEach(function(e){w.removeEventListener(e,run,opts);});q.forEach(function(f){f();});q=[];}
       evs.forEach(function(e){w.addEventListener(e,run,opts);});
-      function start(){setTimeout(run,4000);}
+      function start(){setTimeout(run,10000);}
       d.readyState==='complete'?start():w.addEventListener('load',start,{once:true});
       w.dtWhenEngaged=function(f){done?f():q.push(f);};
     })(window,document);

@@ -321,7 +321,7 @@ export default function Configure() {
                 <Reveal y={16} className="md:col-span-5">
                   <p className="text-[13px] text-slate">{s.who}</p>
                   <h3 className="t-h3 mt-2">{s.name}</h3>
-                  <p className="mt-2 max-w-[34ch] text-[15px] leading-relaxed text-graphite">{s.text}</p>
+                  <p className="mt-2 max-w-[30.36em] text-[15px] leading-relaxed text-graphite">{s.text}</p>
                 </Reveal>
                 <Reveal y={28} delay={0.08} className="w-full max-w-[440px] md:col-span-7">
                   <Visual />

@@ -23,7 +23,7 @@ export default function Faq({ id, items, eyebrow = 'Questions', title = 'Good to
                   <h3 className="font-medium">{q}</h3>
                   <Plus className="h-4 w-4 shrink-0 text-ink/50 transition-transform duration-300 group-open:rotate-45" strokeWidth={1.8} aria-hidden="true" />
                 </summary>
-                <p className="max-w-[62ch] pb-6 text-[14px] leading-relaxed text-graphite">{a}</p>
+                <p className="max-w-[55.37em] pb-6 text-[14px] leading-relaxed text-graphite">{a}</p>
               </details>
             ))}
           </div>

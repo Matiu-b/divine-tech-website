@@ -89,7 +89,7 @@ export default function Outcomes() {
                 <div className="px-1 pt-5 md:pt-6">
                   <p className="text-[12.5px] font-medium uppercase tracking-[0.08em] text-brand-ink">{o.label}</p>
                   <h3 className="mt-2 text-[21px] font-normal leading-[1.2] tracking-[-0.02em] text-ink md:text-[23px]">{o.title}</h3>
-                  <p className="mt-2.5 max-w-[36ch] text-[15px] leading-relaxed text-graphite">{o.text}</p>
+                  <p className="mt-2.5 max-w-[32.15em] text-[15px] leading-relaxed text-graphite">{o.text}</p>
                 </div>
               </Reveal>
             </article>
@@ -112,13 +112,12 @@ export default function Outcomes() {
             >
               <span
                 key={`${active}-${touched}`}
-                className={cn('absolute inset-y-0 left-0 rounded-full bg-ink', i < active || (i === active && (touched || reduce)) ? 'w-full' : 'w-0')}
+                className={cn('absolute inset-y-0 left-0 rounded-full bg-ink', i <= active ? 'w-full' : 'w-0')}
                 style={i === active && !touched && !reduce ? { animation: `outcomes-fill ${ADVANCE_MS}ms linear forwards` } : undefined}
               />
             </button>
           ))}
         </div>
-        <style>{'@keyframes outcomes-fill { from { width: 0 } to { width: 100% } }'}</style>
 
         <Reveal delay={0.1}>
           <p className="mt-8 border-t border-ink/10 pt-6 text-[15px] text-graphite md:mt-14">{outcomes.note}</p>

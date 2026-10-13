@@ -1,5 +1,4 @@
 import React from 'react';
-import { m as motion, useReducedMotion } from 'framer-motion';
 import { platformPage } from '@/data/site';
 import SiteLayout from '@/components/home-v2/SiteLayout';
 import HeroFilm from '@/components/home-v2/HeroFilm';
@@ -14,16 +13,11 @@ import SafeBoundary from '@/components/home-v2/primitives/SafeBoundary';
 import { RevealLines } from '@/components/home-v2/primitives/MotionReveal';
 import { useLead } from '@/components/home-v2/LeadDrawer';
 import { onAnchorClick } from '@/components/home-v2/hooks';
-import { EASE } from '@/components/home-v2/motion';
 
 /** Platform hero: the product film (shown on this page only). */
 function PlatformHero() {
   const { open } = useLead();
-  const reduce = useReducedMotion();
-  const rise = (delay) =>
-    reduce ? {} : { initial: { opacity: 0, y: 16 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.9, delay, ease: EASE } };
-  const slide = (delay) => (reduce ? {} : { initial: { y: 16 }, animate: { y: 0 }, transition: { duration: 0.9, delay, ease: EASE } });
-  const fade = (delay) => (reduce ? undefined : { initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { duration: 0.9, delay, ease: EASE } });
+  // Entrances are CSS animations (.intro-* in index.css), so they run on the prerendered HTML's first paint.
   const p = platformPage;
 
   return (
@@ -34,11 +28,11 @@ function PlatformHero() {
           <RevealLines lines={[p.titleA, p.titleB]} lineClassNames={['', '']} immediate delay={0.08} stagger={0.14} />
         </h1>
         <div className="mt-7 grid gap-7 md:mt-9 lg:grid-cols-12 lg:items-end lg:gap-8">
-          <motion.p className="t-lead pretty max-w-[56ch] lg:col-span-7" {...slide(0.3)}>
+          <p className="intro-slide t-lead pretty max-w-[50.01em] lg:col-span-7" style={{ animationDelay: '0.3s' }}>
             {p.text}
-          </motion.p>
-          <motion.div className="flex flex-wrap items-center gap-2.5 sm:gap-3 lg:col-span-5 lg:justify-end" {...slide(0.42)}>
-            <CTAButton size="lg" onClick={open} motionProps={fade(0.42)} className="max-sm:h-12 max-sm:px-5 max-sm:text-[15px]">
+          </p>
+          <div className="intro-slide flex flex-wrap items-center gap-2.5 sm:gap-3 lg:col-span-5 lg:justify-end" style={{ animationDelay: '0.42s' }}>
+            <CTAButton size="lg" onClick={open} style={{ animationDelay: '0.42s' }} className="intro-fade max-sm:h-12 max-sm:px-5 max-sm:text-[15px]">
               Book a demo
             </CTAButton>
             <CTAButton
@@ -47,12 +41,12 @@ function PlatformHero() {
               href="#console"
               arrow={false}
               onClick={(e) => onAnchorClick(e, '#console')}
-              motionProps={fade(0.48)}
-              className="max-sm:h-12 max-sm:px-5 max-sm:text-[15px]"
+              style={{ animationDelay: '0.48s' }}
+              className="intro-fade max-sm:h-12 max-sm:px-5 max-sm:text-[15px]"
             >
               See the console
             </CTAButton>
-          </motion.div>
+          </div>
         </div>
       </div>
       <div className="shell relative mt-10 md:mt-12">

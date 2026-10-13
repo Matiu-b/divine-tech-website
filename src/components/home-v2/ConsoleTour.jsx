@@ -353,7 +353,7 @@ export default function ConsoleTour() {
                 <Screen />
               </Stage>
               <h3 className="mt-5 text-[17px] font-medium tracking-[-0.01em] text-ink md:mt-6 md:text-[18px]">{s.title}</h3>
-              <p className="mt-2 max-w-[38ch] text-[14px] leading-relaxed text-graphite md:text-[15px]">{s.text}</p>
+              <p className="mt-2 max-w-[33.93em] text-[14px] leading-relaxed text-graphite md:text-[15px]">{s.text}</p>
             </Reveal>
           );
         })}

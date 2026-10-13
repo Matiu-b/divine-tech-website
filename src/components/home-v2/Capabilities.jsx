@@ -296,7 +296,7 @@ export default function Capabilities() {
                     <RevealLines lines={[c.title]} blur={false} y={20} />
                   </h3>
                   <Reveal delay={0.1}>
-                    <p className="t-lead pretty mt-5 max-w-[40ch]">{c.text}</p>
+                    <p className="t-lead pretty mt-5 max-w-[35.72em]">{c.text}</p>
                   </Reveal>
                 </div>
                 <Reveal y={40} className={cn('lg:col-span-7', flip ? 'lg:order-1 lg:col-start-1 lg:row-start-1' : 'lg:order-2 lg:col-start-6')}>

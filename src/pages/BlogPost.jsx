@@ -34,7 +34,7 @@ export default function BlogPost() {
             <h1 id="post-title" className="t-h1 mt-4 text-balance">
               {post.title}
             </h1>
-            <p className="t-lead mx-auto mt-5 max-w-[52ch]">{post.dek}</p>
+            <p className="t-lead mx-auto mt-5 max-w-[46.44em]">{post.dek}</p>
             <p className="mt-6 text-[13.5px] text-slate">
               {post.author} <span aria-hidden="true">·</span> <time dateTime={post.date}>{formatDate(post.date)}</time> <span aria-hidden="true">·</span>{' '}
               {readMinutes(post.bodyHtml)} min read

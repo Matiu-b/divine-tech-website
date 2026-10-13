@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import SiteLayout from '@/components/home-v2/SiteLayout';
 import { blog, posts, postPath, readMinutes } from '@/data/blog';
 
-export const formatDate = (iso) => new Date(iso + 'T12:00:00Z').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+export const formatDate = (iso) => new Date(iso + 'T12:00:00Z').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
 
 /** Cover art in two widths; the large one only where the layout needs it. @param {any} props */
 export function Cover({ image, sizes, eager = false, className = '' }) {
@@ -41,7 +41,7 @@ export default function Blog() {
           <h1 id="blog-title" className="t-h1">
             {blog.title}
           </h1>
-          <p className="t-lead mt-4 max-w-[46ch]">{blog.intro}</p>
+          <p className="t-lead mt-4 max-w-[41.08em]">{blog.intro}</p>
 
           {featured ? (
             <article className="group mt-10 grid gap-6 md:mt-14 md:grid-cols-12 md:items-center md:gap-10">
@@ -55,7 +55,7 @@ export default function Blog() {
                     {featured.title}
                   </Link>
                 </h2>
-                <p className="mt-4 max-w-[40ch] text-[16px] leading-relaxed text-graphite">{featured.dek}</p>
+                <p className="mt-4 max-w-[35.72em] text-[16px] leading-relaxed text-graphite">{featured.dek}</p>
               </div>
             </article>
           ) : null}

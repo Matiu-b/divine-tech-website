@@ -67,7 +67,7 @@ export function PhoneTile({ className }) {
 
 /** Full-colour logo files (official artwork) shown as images. @param {any} props */
 function LogoFile({ src, className }) {
-  return <img src={src} alt="" aria-hidden="true" className={className} style={{ objectFit: 'contain' }} />;
+  return <img src={src} alt="" aria-hidden="true" loading="lazy" decoding="async" className={className} style={{ objectFit: 'contain' }} />;
 }
 export const GmailMark = (p) => <LogoFile src="/img/logos/gmail.svg" {...p} />;
 export const OutlookMark = (p) => <LogoFile src="/img/logos/outlook.svg" {...p} />;

@@ -52,7 +52,7 @@ function Core({ active, compact = false }) {
         style={{ '--lg-tint-a': 'rgba(255,250,242,0.5)', '--lg-tint-b': 'rgba(255,246,229,0.18)', '--lg-sheen': 'rgba(255,240,215,0.7)' }}
       >
         <div>
-          <img src="/brand/aurora-logo-horizontal-color.svg" alt={brand.product} width="124" height="32" className="h-7 w-auto 2xl:h-8" />
+          <img src="/brand/aurora-logo-horizontal-color.svg" alt={brand.product} width="124" height="32" loading="lazy" className="h-7 w-auto 2xl:h-8" />
           <p className="mt-1.5 text-[12.5px] text-ink/55">AI operating system</p>
         </div>
         <ul className="relative mt-4 grid flex-1 content-center gap-2 2xl:mt-5 2xl:gap-2.5">
@@ -315,7 +315,7 @@ function StoryCompact() {
           style={{ '--lg-tint-a': 'rgba(255,250,242,0.5)', '--lg-tint-b': 'rgba(255,246,229,0.18)', '--lg-sheen': 'rgba(255,240,215,0.7)' }}
         >
           <div className="relative flex items-center justify-between gap-3">
-            <img src="/brand/aurora-logo-horizontal-color.svg" alt={brand.product} width="93" height="24" className="h-6 w-auto" />
+            <img src="/brand/aurora-logo-horizontal-color.svg" alt={brand.product} width="93" height="24" loading="lazy" className="h-6 w-auto" />
             <p className="text-[11px] text-ink/55">AI operating system</p>
           </div>
           <ol className="relative mt-3 grid grid-cols-3 gap-1.5">

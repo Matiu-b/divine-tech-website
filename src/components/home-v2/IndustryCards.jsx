@@ -136,7 +136,7 @@ export default function IndustryCards() {
             >
               <span
                 key={`${active}-${touched}`}
-                className={cn('absolute inset-y-0 left-0 rounded-full bg-ink', i < active || (i === active && (touched || reduce)) ? 'w-full' : 'w-0')}
+                className={cn('absolute inset-y-0 left-0 rounded-full bg-ink', i <= active ? 'w-full' : 'w-0')}
                 style={i === active && !touched && !reduce ? { animation: `outcomes-fill ${ADVANCE_MS}ms linear forwards` } : undefined}
               />
             </button>
