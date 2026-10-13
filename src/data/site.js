@@ -591,7 +591,7 @@ export const platformPage = {
     // Three levels, two illustrative examples each.
     tiers: [
       { mode: 'auto', label: 'On its own', examples: ['Answer questions', 'Book visits'] },
-      { mode: 'approval', label: 'Waits for a person', examples: ['Refunds over $200', 'Discounts over 10%'] },
+      { mode: 'approval', label: 'Waits for a person', examples: ['Refunds over $200', 'Big discounts'] },
       { mode: 'never', label: 'Never', examples: ['Change prices', 'Sign contracts'] },
     ],
     items: [
