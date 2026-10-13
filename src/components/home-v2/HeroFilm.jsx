@@ -764,9 +764,9 @@ function ApprovalCard({ scene, st, phone, approvedBy, onApprove, btnRef }) {
         </span>
         <div className="min-w-0 flex-1">
           <p className={cn('truncate font-medium', phone ? 'text-[10.5px]' : 'text-[11px]', state === 'pending' ? 'text-[#8A5A12]' : state === 'done' ? 'text-[#B4471A]' : 'text-slate')}>
-            {state === 'none' ? 'Policy check' : state === 'pending' ? 'Needs a person · ' + scene.approval.by : 'Approved by ' + by + ' · logged'}
+            {state === 'none' ? 'Policy check' : state === 'pending' ? (phone ? 'Approval · ' : 'Needs a person · ') + scene.approval.by : (phone ? 'Approved by ' + by : 'Approved by ' + by + ' · logged')}
           </p>
-          <p className={cn('truncate font-medium leading-tight tracking-[-0.01em]', phone ? 'text-[12px]' : 'text-[13px]', state === 'none' ? 'text-ink/45' : 'text-ink')}>{scene.approval.ask}</p>
+          <p className={cn('font-medium leading-tight tracking-[-0.01em]', phone ? 'line-clamp-2 text-[12px]' : 'truncate text-[13px]', state === 'none' ? 'text-ink/45' : 'text-ink')}>{scene.approval.ask}</p>
         </div>
         {phone ? control : null}
       </div>
@@ -792,9 +792,13 @@ function FeedEvent({ sys, title, detail, state }) {
     <div className="pt-2">
       <div className={cn('flex items-center gap-2 rounded-[12px] px-2.5 py-[7px] transition-colors duration-500', state === 'done' ? 'bg-[#FFF1E4]' : 'bg-[#F7F4EE]')}>
         <Status state={state} size={14} />
-        {Icon ? <Icon className="h-3.5 w-3.5 shrink-0 text-[#B4471A]" strokeWidth={1.8} aria-hidden="true" /> : null}
-        <span className="shrink-0 text-[11.5px] font-medium text-ink">{sys ? sys + ' · ' + title : title}</span>
-        <span className={cn('min-w-0 flex-1 truncate text-right text-[10.5px] transition-colors duration-500', state === 'done' ? 'text-graphite' : 'text-ink/30')}>{detail}</span>
+        <span className="min-w-0 flex-1">
+          <span className="flex items-center gap-1.5 text-[11.5px] font-medium leading-tight text-ink">
+            {Icon ? <Icon className="h-3 w-3 shrink-0 text-[#B4471A]" strokeWidth={1.9} aria-hidden="true" /> : null}
+            <span className="truncate">{sys ? sys + ' · ' + title : title}</span>
+          </span>
+          <span className={cn('mt-0.5 block truncate text-[10.5px] leading-tight transition-colors duration-500', state === 'done' ? 'text-graphite' : 'text-ink/30')}>{detail}</span>
+        </span>
       </div>
     </div>
   );
