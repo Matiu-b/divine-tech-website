@@ -1,7 +1,6 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { AnimatePresence, m as motion, useReducedMotion } from 'framer-motion';
 import { CalendarCheck } from 'lucide-react';
-import { brand } from '@/data/site';
 import { cn } from '@/lib/utils';
 import LiquidGlass from './primitives/LiquidGlass';
 import { Reveal } from './primitives/MotionReveal';
