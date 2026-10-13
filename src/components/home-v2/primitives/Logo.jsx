@@ -47,7 +47,7 @@ export default function Logo({ tone = 'dark', height = 28, variant = 'divine', c
         height={height}
         decoding="async"
         draggable={false}
-        className="absolute inset-0 h-full w-full select-none transition-opacity duration-500 ease-out"
+        className="absolute inset-0 h-full w-full select-none transition-opacity duration-300 ease-out"
         style={{ opacity: onDark ? 0 : 1 }}
       />
       <img
@@ -58,7 +58,7 @@ export default function Logo({ tone = 'dark', height = 28, variant = 'divine', c
         height={height}
         decoding="async"
         draggable={false}
-        className="absolute inset-0 h-full w-full select-none transition-opacity duration-500 ease-out"
+        className="absolute inset-0 h-full w-full select-none transition-opacity duration-300 ease-out"
         style={{ opacity: onDark ? 1 : 0 }}
       />
     </span>

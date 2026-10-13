@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { AnimatePresence, animate, motion, useMotionValue, useMotionValueEvent, useReducedMotion, useTransform } from 'framer-motion';
-import { CalendarDays, Check, Database, ListChecks, Mail, MessageCircle, MessagesSquare, Pause, PenLine, Phone, Play, ShieldCheck, UserRound } from 'lucide-react';
+import { CalendarDays, Check, CreditCard, Database, FileText, ListChecks, Mail, MessageCircle, MessagesSquare, Pause, PenLine, Phone, Play, Receipt, ShieldCheck, UserRound, Volume2, VolumeX } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { brand, heroFilm, media } from '@/data/site';
 import Grow from './primitives/Grow';
@@ -15,8 +15,8 @@ import { useInViewport, useMediaQuery, usePageVisible } from './hooks';
  * The same request flow plays on four channels: listen → understand → act →
  * confirm, with one decision handed to a person. It is built like a motion
  * comp: fixed-size compositions (wide / tablet / phone) scaled to fit, one
- * linear clock driving every event, a slow camera pan with a key light, a
- * light sweep and text that streams in. Nothing reacts to hover: motion is
+ * linear clock driving every event and text that streams in. The framing is
+ * fixed (no camera pan or light sweep), and phones show one card at a time. Nothing reacts to hover: motion is
  * driven by the clock and by clicks only, so it stays steady under the mouse. Visitors can switch channels, approve the decision
  * themselves, take over the conversation, pause, or jump between chapters.
  * Reduced motion shows each scene's finished state.
@@ -24,8 +24,11 @@ import { useInViewport, useMediaQuery, usePageVisible } from './hooks';
 
 const SCENES = heroFilm.scenes;
 
-// Shared timeline (ms).
-const T = {
+// Shared timeline (ms) for the written scenes. PACE 1.35 keeps the loop around 23 seconds: slow
+// enough to read every message and every system update without the screen feeling busy.
+const PACE = 1.35;
+const pace = (v) => (Array.isArray(v) ? v.map(pace) : Math.round(v * PACE));
+const T_BASE = {
   line: [500, 4800, 5900, 8400, 13900],
   typing: [
     [3950, 4800],
@@ -41,14 +44,107 @@ const T = {
   cursorClick: 12850,
   approvalDone: 12950,
   end: 17400,
+  chapterAt: [0, 2000, 5900, 9300],
 };
 
-const CHAPTERS = [
-  { label: heroFilm.chapters[0], start: 0, end: 2000 },
-  { label: heroFilm.chapters[1], start: 2000, end: 5900 },
-  { label: heroFilm.chapters[2], start: 5900, end: 9300 },
-  { label: heroFilm.chapters[3], start: 9300, end: T.end },
-];
+// The voice call plays one continuous recorded call (Eleven v4 dialogue, scene.audio), so its
+// timeline follows the recording: each line starts exactly where it starts in the file (ms).
+const T_VOICE = {
+  // Edited take: a real pause while the caller goes to shut the valve, and a hold while
+  // dispatch approves the same-day slot. Every cue lands on the words that trigger it:
+  // "leaking" -> urgency, "Luis there today" -> schedule, "close the valve" -> safety step,
+  // the valve pause -> job created, "two to four works" -> technician booked,
+  // "sign-off from dispatch" -> approval request, "you'll get a text" -> customer updates.
+  line: [250, 7500, 19690, 26550, 36300],
+  lineDur: [6770, 11290, 6290, 5710, 5280],
+  // when each word is spoken, in ms after its line starts (from the recording)
+  wordAt: [
+    [0, 190, 480, 920, 1160, 1510, 2040, 2490, 2790, 3030, 3640, 3900, 4630, 5610, 5860, 6150, 6390],
+    [0, 150, 290, 690, 960, 1170, 1480, 1630, 1830, 1970, 2160, 3290, 3550, 3650, 4270, 4530, 4760, 5030, 5460, 5810, 6320, 6540, 6650, 6790, 7070, 7950, 8250, 8710, 9060, 9400, 9860, 10130, 10270, 10460, 10640, 11010],
+    [0, 3750, 4300, 4700, 4900, 5300],
+    [0, 350, 820, 1850, 2130, 2380, 2870, 3160, 3340, 3710, 4080, 4400, 5260, 5410],
+    [0, 170, 930, 1150, 1470, 1600, 1850, 2330, 2430, 2720, 2820, 3300, 3550, 3720, 3820, 4240, 4520, 4720, 4860, 5120],
+  ],
+  typing: [
+    [7000, 7500],
+    [26050, 26550],
+    [35900, 36300],
+  ],
+  stepRun: [2300, 11300, 15700],
+  stepDone: [3000, 12100, 16300],
+  actRun: [20500, 24000, 39300],
+  actDone: [21300, 24800, 39900],
+  approvalPending: 30300,
+  cursorIn: 33300,
+  cursorClick: 35000,
+  approvalDone: 35100,
+  end: 43400,
+  chapterAt: [0, 2300, 19690, 30300],
+};
+
+function makeTimeline(T) {
+  const CHAPTERS = T.chapterAt.map((start, i) => ({ label: heroFilm.chapters[i], start, end: i < 3 ? T.chapterAt[i + 1] : T.end }));
+  return { T, CHAPTERS };
+}
+const TL_BASE = makeTimeline(Object.fromEntries(Object.entries(T_BASE).map(([k, v]) => [k, pace(v)])));
+const TL_VOICE = makeTimeline(T_VOICE);
+
+/**
+ * Written conversations get a timeline built from their own script, so a longer chat with
+ * qualifying questions plays at reading pace: each message stays up for a time that grows
+ * with its length, Aurora types before she answers, and her reasoning, the system updates
+ * and the approval land right after the lines the scene names (stepsAfter, actionsAfter,
+ * approvalAfter), one calm beat at a time.
+ */
+function buildTextTimeline(scene) {
+  const T = { line: [], typing: [], stepRun: [], stepDone: [], actRun: [], actDone: [] };
+  let t = 700;
+  scene.lines.forEach((l, i) => {
+    if (i > 0) {
+      if (l.who === 'aurora') {
+        T.typing.push([t, t + 1100]);
+        t += 1100;
+      } else t += 800;
+    }
+    T.line.push(t);
+    t += Math.min(4800, Math.max(2000, 800 + l.text.length * 32));
+    if (i === scene.stepsAfter) {
+      for (let k = 0; k < 3; k += 1) {
+        T.stepRun.push(t);
+        t += 800;
+        T.stepDone.push(t);
+      }
+      t += 300;
+    }
+    if (i === scene.actionsAfter) {
+      for (let k = 0; k < 3; k += 1) {
+        T.actRun.push(t);
+        t += 900;
+        T.actDone.push(t);
+      }
+      t += 300;
+    }
+    if (i === scene.approvalAfter) {
+      T.approvalPending = t;
+      T.cursorIn = t + 2600;
+      T.cursorClick = t + 3550;
+      T.approvalDone = t + 3650;
+      t = T.approvalDone + 600;
+    }
+  });
+  T.end = t + 2600;
+  T.chapterAt = [0, T.stepRun[0], T.actRun[0], T.approvalPending];
+  return T;
+}
+const TL_TEXT = new Map();
+/** The timeline a scene runs on: its recording's, its own script's, or the shared one. */
+const tlOf = (scene) => {
+  if (!scene) return TL_BASE;
+  if (scene.audio) return TL_VOICE;
+  if (scene.stepsAfter === undefined) return TL_BASE;
+  if (!TL_TEXT.has(scene.key)) TL_TEXT.set(scene.key, makeTimeline(buildTextTimeline(scene)));
+  return TL_TEXT.get(scene.key);
+};
 
 // Which groups the camera favours in each chapter (others dim slightly).
 const FOCUS = [
@@ -108,34 +204,36 @@ const COMPS = {
     bounds: [24, 76, 836, 638],
     safe: [10, 68, 850, 650],
   },
+  // Phones show a single thread (PhoneFeed): messages, Aurora's work and the approval land in
+  // it in time order, so nothing switches between cards.
   phone: {
     w: 360,
-    h: 680,
+    h: 520,
     tabs: { x: 12, y: 12 },
-    panel: { x: 12, y: 58, w: 336, h: 288 },
-    work: { x: 12, y: 356, w: 336 },
-    approval: { x: 12, y: 566, w: 336 },
-    bar: { x: 12, y: 642, w: 336, h: 28 },
+    panel: { x: 12, y: 58, w: 336, h: 404 },
+    bar: { x: 12, y: 478, w: 336, h: 28 },
     flows: null,
     focus: [
-      [180, 202],
-      [180, 300],
-      [180, 456],
-      [180, 597],
+      [180, 260],
+      [180, 260],
+      [180, 260],
+      [180, 260],
     ],
-    bounds: [12, 58, 348, 628],
-    safe: [5, 52, 355, 634],
+    bounds: [12, 58, 348, 462],
+    safe: [5, 52, 355, 468],
   },
 };
 
+
 const CH = {
-  chat: { icon: MessageCircle, chip: 'bg-[#E6F4EC] text-[#1C7A4F]' },
-  voice: { icon: Phone, chip: 'bg-[#E4F2F0] text-[#0E6E66]' },
+  chat: { icon: MessageCircle, chip: 'bg-[#FDEBDD] text-[#B4471A]' },
+  imessage: { icon: MessageCircle, chip: 'bg-[#E6F0FF] text-[#0B5FD8]' },
+  voice: { icon: Phone, chip: 'bg-[#FFF1D6] text-[#8A5A12]' },
   web: { icon: MessagesSquare, chip: 'bg-[#ECEFF6] text-[#3B4A6B]' },
   email: { icon: Mail, chip: 'bg-[#F4EEE3] text-[#7A5A1E]' },
 };
 
-const SYS_ICON = { CRM: Database, Calendar: CalendarDays, Tasks: ListChecks };
+const SYS_ICON = { CRM: Database, Calendar: CalendarDays, Tasks: ListChecks, Quotes: FileText, Applications: FileText, Payments: CreditCard, Billing: Receipt };
 
 /* ------------------------------------------------------------------ */
 /* Clock + state                                                        */
@@ -144,6 +242,7 @@ const SYS_ICON = { CRM: Database, Calendar: CalendarDays, Tasks: ListChecks };
 const speakDur = (text) => Math.min(3000, 500 + text.length * 30);
 
 function computeState(scene, t) {
+  const { T, CHAPTERS } = tlOf(scene);
   const lines = T.line.filter((lt, i) => i < scene.lines.length && t >= lt).length;
   const typing = T.typing.some(([a, b]) => t >= a && t < b);
   const steps = T.stepRun.map((r, i) => (t >= T.stepDone[i] ? 'done' : t >= r ? 'run' : 'idle'));
@@ -156,7 +255,7 @@ function computeState(scene, t) {
   });
   let speaking = null;
   for (let i = 0; i < lines; i += 1) {
-    if (t < T.line[i] + speakDur(scene.lines[i].text)) speaking = scene.lines[i].who;
+    if (t < T.line[i] + (T.lineDur ? T.lineDur[i] : speakDur(scene.lines[i].text))) speaking = scene.lines[i].who;
   }
   return { lines, typing, steps, actions, approval, cursor, chapter, speaking };
 }
@@ -200,15 +299,6 @@ function centreWithin(el, root) {
   return n === root ? [x, y] : null;
 }
 
-/** Keeps the camera's framing inside the stage so no card is ever cut off. */
-function frameCamera(c, z, x, y) {
-  const [bx0, by0, bx1, by1] = c.bounds;
-  const [sx0, sy0, sx1, sy1] = c.safe;
-  const cx = c.w / 2;
-  const cy = c.h / 2;
-  const fit = (v, lo, hi) => (lo > hi ? (lo + hi) / 2 : Math.min(hi, Math.max(lo, v)));
-  return [fit(x, sx0 - (cx + z * (bx0 - cx)), sx1 - (cx + z * (bx1 - cx))), fit(y, sy0 - (cy + z * (by0 - cy)), sy1 - (cy + z * (by1 - cy)))];
-}
 
 const pseudo = (i) => {
   const x = Math.sin(i * 12.9898) * 43758.5453;
@@ -249,7 +339,7 @@ function Status({ state, size = 16 }) {
         initial={{ scale: 0.4, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.4, ease: EASE }}
-        className="flex shrink-0 items-center justify-center rounded-full bg-brand text-white"
+        className="flex shrink-0 items-center justify-center rounded-full bg-ink text-white"
         style={{ width: size, height: size }}
       >
         <Check strokeWidth={3} style={{ width: size * 0.62, height: size * 0.62 }} aria-hidden="true" />
@@ -257,7 +347,7 @@ function Status({ state, size = 16 }) {
     );
   }
   if (state === 'run') {
-    return <span className="block shrink-0 animate-spin rounded-full border-[1.75px] border-brand/20 border-t-brand [animation-duration:0.9s]" style={{ width: size, height: size }} />;
+    return <span className="block shrink-0 animate-spin rounded-full border-[1.75px] border-[#F25C2A]/20 border-t-[#F25C2A] [animation-duration:0.9s]" style={{ width: size, height: size }} />;
   }
   return <span className="block shrink-0 rounded-full border-[1.5px] border-ink/15" style={{ width: size, height: size }} />;
 }
@@ -274,15 +364,38 @@ function Ring({ active, done, small = false }) {
         )}
       />
       <span className="absolute inset-[2.5px] rounded-full bg-white" />
-      <span className={cn('relative h-2.5 w-2.5 rounded-full transition-colors duration-500', done ? 'bg-brand' : active ? 'bg-brand-glow' : 'bg-ink/20')} />
+      <span className={cn('relative h-2.5 w-2.5 rounded-full transition-colors duration-500', done ? 'bg-ink' : active ? 'bg-[#FF9F45]' : 'bg-ink/20')} />
     </span>
   );
 }
 
 /** Words arrive one by one (Aurora's replies, live transcripts). */
 /** @param {any} props */
-function Stream({ text, step = 0.035, delay = 0.05, soft = true }) {
+function Stream({ text, step = 0.035, delay = 0.05, soft = true, times = undefined }) {
   const words = text.split(' ');
+  if (times) {
+    // recorded call: each word appears when it is spoken
+    return (
+      <>
+        <span className="sr-only">{text}</span>
+        <span aria-hidden="true">
+          {words.flatMap((w, i) => {
+            const el = (
+              <motion.span
+                key={'w' + i}
+                className="inline-block"
+                initial={{ opacity: 0, y: 3 }}
+                animate={{ opacity: 1, y: 0, transition: { duration: 0.28, ease: EASE, delay: (times[i] || 0) / 1000 } }}
+              >
+                {w}
+              </motion.span>
+            );
+            return i < words.length - 1 ? [el, ' '] : [el];
+          })}
+        </span>
+      </>
+    );
+  }
   return (
     <>
       <span className="sr-only">{text}</span>
@@ -314,7 +427,7 @@ function Stream({ text, step = 0.035, delay = 0.05, soft = true }) {
 /* ------------------------------------------------------------------ */
 
 /** @param {any} props */
-function PanelHeader({ scene, phone, callTime, live }) {
+function PanelHeader({ scene, phone, callTime, live, sound, onSound }) {
   const ch = CH[scene.mode];
   const Icon = ch.icon;
   const web = scene.mode === 'web';
@@ -355,10 +468,27 @@ function PanelHeader({ scene, phone, callTime, live }) {
           )}
         </p>
       </div>
-      <span className={cn('ui-chip shrink-0', web ? 'bg-white/10 text-white' : ch.chip)}>
-        <Icon className="h-3 w-3" strokeWidth={2} aria-hidden="true" />
-        {phone ? null : scene.channel}
-      </span>
+      {scene.audio && onSound ? (
+        <button
+          type="button"
+          onClick={onSound}
+          aria-pressed={!!sound}
+          aria-label={sound ? 'Mute the call' : 'Listen to the call with sound'}
+          className={cn(
+            'flex shrink-0 items-center gap-1.5 rounded-full font-medium transition-colors',
+            phone ? 'h-7 px-2.5 text-[10.5px]' : 'h-8 px-3 text-[11.5px]',
+            sound ? 'bg-[#F25C2A] text-white hover:bg-[#D9481C]' : 'bg-ink text-white hover:bg-[#1D2625]'
+          )}
+        >
+          {sound ? <Volume2 className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" /> : <VolumeX className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />}
+          {sound ? 'Sound on' : 'Listen'}
+        </button>
+      ) : (
+        <span className={cn('ui-chip shrink-0', web ? 'bg-white/10 text-white' : ch.chip)}>
+          <Icon className="h-3 w-3" strokeWidth={2} aria-hidden="true" />
+          {phone ? null : scene.channel}
+        </span>
+      )}
     </div>
   );
 }
@@ -386,11 +516,11 @@ function PanelFooter({ scene, phone, takeover, onTakeover }) {
   );
 }
 
-function TypingDots() {
+function TypingDots({ blue = false }) {
   return (
     <Grow>
       <div className="flex justify-end pt-2.5">
-        <span className="flex items-center gap-1 rounded-[16px] rounded-br-[6px] bg-ink px-3.5 py-3">
+        <span className={cn('flex items-center gap-1 rounded-[18px] rounded-br-[6px] px-3.5 py-3', blue ? 'bg-[#0A84FF]' : 'bg-ink')}>
           {[0, 1, 2].map((i) => (
             <span key={i} className="h-1.5 w-1.5 animate-blink rounded-full bg-white/80" style={{ animationDelay: i * 0.18 + 's' }} />
           ))}
@@ -416,7 +546,7 @@ function ChatBody({ scene, st, phone, reduce }) {
                   className={cn(
                     'max-w-[86%] px-3.5 py-2.5 leading-[1.45] tracking-[-0.005em]',
                     phone ? 'text-[12.5px]' : 'text-[13.5px]',
-                    mine ? 'rounded-[16px] rounded-br-[6px] bg-ink text-white' : 'rounded-[16px] rounded-bl-[6px] bg-[#F1EFE9] text-ink'
+                    mine ? cn('rounded-[18px] rounded-br-[6px] text-white', scene.mode === 'imessage' ? 'bg-[#0A84FF]' : 'bg-ink') : cn('rounded-[18px] rounded-bl-[6px] text-ink', scene.mode === 'imessage' ? 'bg-[#E9E9EB]' : 'bg-[#F1EFE9]')
                   )}
                 >
                   {mine && !reduce ? <Stream text={l.text} soft={!phone} /> : l.text}
@@ -425,7 +555,7 @@ function ChatBody({ scene, st, phone, reduce }) {
             </Grow>
           );
         })}
-        {st.typing ? <TypingDots key="typing" /> : null}
+        {st.typing ? <TypingDots key="typing" blue={scene.mode === 'imessage'} /> : null}
       </AnimatePresence>
     </div>
   );
@@ -435,7 +565,7 @@ const BARS = 44;
 
 /** @param {any} props */
 function Waveform({ speaking, thinking, phone }) {
-  const tone = speaking === 'aurora' ? 'bg-brand' : speaking === 'customer' ? 'bg-ink/70' : 'bg-ink/20';
+  const tone = speaking === 'aurora' ? 'bg-[#F25C2A]' : speaking === 'customer' ? 'bg-ink/70' : 'bg-ink/20';
   const n = phone ? 34 : BARS;
   return (
     <div className={cn('flex items-center justify-between', phone ? 'h-[52px] gap-[2px]' : 'h-[76px] gap-[3px]', speaking ? 'wave-on' : thinking ? 'wave-think' : '')} aria-hidden="true">
@@ -463,7 +593,7 @@ function VoiceBody({ scene, st, phone, reduce }) {
     <div className="absolute inset-0 flex flex-col">
       <div className={cn(phone ? 'px-3.5 pt-3' : 'px-5 pt-6')}>
         <Waveform speaking={reduce ? null : st.speaking} thinking={st.typing} phone={phone} />
-        <p className={cn('mt-2 text-center font-medium', phone ? 'text-[10.5px]' : 'text-[11.5px]', st.speaking === 'aurora' ? 'text-brand-ink' : 'text-slate')}>
+        <p className={cn('mt-2 text-center font-medium', phone ? 'text-[10.5px]' : 'text-[11.5px]', st.speaking === 'aurora' ? 'text-[#B4471A]' : 'text-slate')}>
           {st.speaking === 'aurora' ? brand.product + ' is speaking' : st.speaking === 'customer' ? scene.contact + ' is speaking' : st.typing ? 'Checking the schedule…' : 'Live transcript'}
         </p>
       </div>
@@ -478,11 +608,11 @@ function VoiceBody({ scene, st, phone, reduce }) {
               return (
                 <Grow key={scene.key + i}>
                   <div className={cn('pt-3 transition-opacity duration-500', isLast ? 'opacity-100' : 'opacity-55')}>
-                    <p className={cn('font-medium uppercase tracking-[0.06em]', phone ? 'text-[9.5px]' : 'text-[10px]', mine ? 'text-brand-ink' : 'text-slate')}>
+                    <p className={cn('font-medium uppercase tracking-[0.06em]', phone ? 'text-[9.5px]' : 'text-[10px]', mine ? 'text-[#B4471A]' : 'text-slate')}>
                       {mine ? brand.product : 'Caller'}
                     </p>
                     <p className={cn('mt-0.5 leading-[1.45] text-ink', phone ? 'text-[12.5px]' : 'text-[13.5px]')}>
-                      {reduce ? l.text : <Stream text={l.text} step={Math.min(0.24, speakDur(l.text) / 1000 / words)} soft={false} />}
+                      {reduce ? l.text : <Stream text={l.text} step={Math.min(0.24, (tlOf(scene).T.lineDur ? tlOf(scene).T.lineDur[i] : speakDur(l.text)) / 1000 / words)} soft={false} times={tlOf(scene).T.wordAt && tlOf(scene).T.wordAt[i]} />}
                     </p>
                   </div>
                 </Grow>
@@ -506,13 +636,13 @@ function EmailBody({ scene, st, phone, reduce }) {
           return (
             <Grow key={scene.key + i}>
               <div className="pt-2.5">
-                <div className={cn('rounded-[14px] border', phone ? 'p-2.5' : 'p-3', mine ? 'border-brand/20 bg-[#F3FAF6]' : 'border-ink/[0.07] bg-[#FAF9F6]')}>
+                <div className={cn('rounded-[14px] border', phone ? 'p-2.5' : 'p-3', mine ? 'border-[#F25C2A]/15 bg-[#FFF6EE]' : 'border-ink/[0.07] bg-[#FAF9F6]')}>
                   <div className="mb-1 flex items-center gap-2">
-                    <span className={cn('flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[9px] font-medium', mine ? 'bg-brand text-white' : 'bg-ink/[0.08] text-ink/70')}>
+                    <span className={cn('flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[9px] font-medium', mine ? 'bg-[#F25C2A] text-white' : 'bg-ink/[0.08] text-ink/70')}>
                       {mine ? brand.product[0] : scene.initials}
                     </span>
                     <span className={cn('min-w-0 flex-1 truncate font-medium', phone ? 'text-[11px]' : 'text-[12px]')}>{mine ? brand.product + (scene.desk ? ' · ' + scene.desk : '') : scene.contact}</span>
-                    {mine ? <span className="ui-chip h-[18px] shrink-0 bg-brand/10 px-1.5 text-[10px] text-brand-ink">Sent</span> : null}
+                    {mine ? <span className="ui-chip h-[18px] shrink-0 bg-[#F25C2A]/10 px-1.5 text-[10px] text-[#B4471A]">Sent</span> : null}
                     <span className="t-data shrink-0 text-ink/35">{'09:' + String(12 + i * 2).padStart(2, '0')}</span>
                   </div>
                   <p className={cn('leading-[1.45] text-ink', phone ? 'text-[12px]' : 'text-[13px]')}>{mine && !reduce ? <Stream text={l.text} soft={!phone} /> : l.text}</p>
@@ -523,12 +653,12 @@ function EmailBody({ scene, st, phone, reduce }) {
         })}
         {st.typing ? (
           <Grow key="drafting">
-            <div className={cn('flex items-center gap-2 pt-2.5 font-medium text-brand-ink', phone ? 'text-[11px]' : 'text-[12px]')}>
+            <div className={cn('flex items-center gap-2 pt-2.5 font-medium text-[#B4471A]', phone ? 'text-[11px]' : 'text-[12px]')}>
               <PenLine className="h-3.5 w-3.5" strokeWidth={1.8} aria-hidden="true" />
               {brand.product} is drafting a reply
               <span className="flex gap-0.5">
                 {[0, 1, 2].map((d) => (
-                  <span key={d} className="h-1 w-1 animate-blink rounded-full bg-brand" style={{ animationDelay: d * 0.18 + 's' }} />
+                  <span key={d} className="h-1 w-1 animate-blink rounded-full bg-[#F25C2A]" style={{ animationDelay: d * 0.18 + 's' }} />
                 ))}
               </span>
             </div>
@@ -540,15 +670,90 @@ function EmailBody({ scene, st, phone, reduce }) {
 }
 
 /** @param {any} props */
-function Panel({ scene, st, phone, reduce, callTime, takeover, onTakeover }) {
+function Panel({ scene, st, phone, reduce, callTime, takeover, onTakeover, approvedBy, onApprove, btnRef, sound, onSound }) {
   const Body = scene.mode === 'voice' ? VoiceBody : scene.mode === 'email' ? EmailBody : ChatBody;
   return (
     <div className={cn('ui-card flex h-full flex-col overflow-hidden transition-shadow duration-500', takeover && 'shadow-[0_0_0_2px_#0A0F0E,0_12px_32px_-10px_rgba(10,15,14,0.2)]')}>
-      <PanelHeader scene={scene} phone={phone} callTime={callTime} live={st.lines > 0 && !reduce} />
+      <PanelHeader scene={scene} phone={phone} callTime={callTime} live={st.lines > 0 && !reduce} sound={sound} onSound={onSound} />
       <div className="relative min-h-0 flex-1 overflow-hidden">
-        <Body scene={scene} st={st} phone={phone} reduce={reduce} />
+        {phone ? (
+          <PhoneFeed scene={scene} st={st} reduce={reduce} />
+        ) : (
+          <Body scene={scene} st={st} phone={phone} reduce={reduce} />
+        )}
       </div>
+      {phone ? <PhoneBackstage scene={scene} st={st} approvedBy={approvedBy} onApprove={onApprove} btnRef={btnRef} /> : null}
       <PanelFooter scene={scene} phone={phone} takeover={takeover} onTakeover={onTakeover} />
+    </div>
+  );
+}
+
+/**
+ * What Aurora is doing behind the scenes (phones). Three calm beats instead of a ticker:
+ * the request understood, then one item for all the system updates, then the approval.
+ */
+function backstageNow(scene, st) {
+  if (st.approval !== 'none') return { key: 'approval', approval: true };
+  if (st.actions.some((x) => x !== 'idle')) {
+    const done = st.actions.filter((x) => x === 'done').length;
+    const all = done === scene.actions.length;
+    return {
+      key: 'work',
+      title: all ? 'Updated ' + done + ' systems' : 'Updating your systems',
+      detail: scene.actions.map((a) => a.sys).join(' · '),
+      state: all ? 'done' : 'run',
+      n: done,
+      of: scene.actions.length,
+    };
+  }
+  if (st.steps[0] !== 'idle') return { key: 'understood', title: scene.steps[0].title, detail: scene.steps[0].detail, state: st.steps[0] === 'done' ? 'done' : 'run' };
+  return { key: 'idle', idle: true };
+}
+
+/** @param {any} props */
+function PhoneBackstage({ scene, st, approvedBy, onApprove, btnRef }) {
+  const now = backstageNow(scene, st);
+  const Icon = now.sys ? SYS_ICON[now.sys] : null;
+  return (
+    <div className="border-t border-dashed border-ink/[0.12] bg-[#FAF6F0] px-2.5 pb-2.5 pt-2">
+      <div className="mb-1.5 flex items-center justify-between px-0.5">
+        <span className="flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.07em] text-[#B4471A]">
+          <span className="h-1.5 w-1.5 rounded-full bg-[#F25C2A]" aria-hidden="true" />
+          Behind the scenes
+        </span>
+        <span className="text-[10px] text-slate">{now.of ? now.n + ' of ' + now.of + ' done' : 'Only your team sees this'}</span>
+      </div>
+      <div className="relative h-[66px]">
+        <AnimatePresence initial={false} mode="wait">
+          <motion.div
+            key={scene.key + now.key}
+            className="absolute inset-0"
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0, transition: { duration: 0.5, ease: EASE } }}
+            exit={{ opacity: 0, y: -6, transition: { duration: 0.3, ease: EASE } }}
+          >
+            {now.approval ? (
+              <ApprovalCard scene={scene} st={st} phone approvedBy={approvedBy} onApprove={onApprove} btnRef={btnRef} />
+            ) : now.idle ? (
+              <div className="flex h-full items-center gap-2 rounded-[12px] bg-white px-3 text-[11.5px] text-ink/45 shadow-[0_0_0_1px_rgba(10,15,14,0.05)]">
+                <Ring active={false} done={false} small />
+                Waiting for the first message
+              </div>
+            ) : (
+              <div className="flex h-full items-center gap-2.5 rounded-[12px] bg-white px-3 shadow-[0_0_0_1px_rgba(10,15,14,0.05)]">
+                <Status state={now.state} size={15} />
+                <span className="min-w-0 flex-1">
+                  <span className="flex items-center gap-1.5 text-[12px] font-medium leading-tight text-ink">
+                    {Icon ? <Icon className="h-3.5 w-3.5 shrink-0 text-[#B4471A]" strokeWidth={1.9} aria-hidden="true" /> : null}
+                    <span className="truncate">{now.title}</span>
+                  </span>
+                  <span className="mt-0.5 block truncate text-[10.5px] leading-tight text-graphite">{now.detail}</span>
+                </span>
+              </div>
+            )}
+          </motion.div>
+        </AnimatePresence>
+      </div>
     </div>
   );
 }
@@ -669,7 +874,7 @@ function WorkCard({ scene, st, takeover }) {
         {rows.map((r) => {
           const Icon = r.sys ? SYS_ICON[r.sys] : null;
           return (
-            <li key={scene.key + r.title} className={cn('flex items-center gap-2 rounded-[12px] px-2 py-[6px] transition-colors duration-500', r.state === 'done' ? 'bg-brand/[0.07]' : 'bg-white/55')}>
+            <li key={scene.key + r.title} className={cn('flex items-center gap-2 rounded-[12px] px-2 py-[6px] transition-colors duration-500', r.state === 'done' ? 'bg-[#FFF3E8]' : 'bg-white/55')}>
               <Status state={r.state} size={14} />
               {Icon ? <Icon className="h-3.5 w-3.5 shrink-0 text-ink/45" strokeWidth={1.8} aria-hidden="true" /> : null}
               <span className={cn('shrink-0 text-[11.5px] font-medium transition-colors duration-500', r.state === 'idle' ? 'text-ink/40' : 'text-ink')}>{r.title}</span>
@@ -684,6 +889,7 @@ function WorkCard({ scene, st, takeover }) {
 
 /** @param {any} props */
 function AuditTrail({ scene, st, approvedBy }) {
+  const { T } = tlOf(scene);
   const ts = (ms) => '09:41:' + String(2 + Math.floor(ms / 1000)).padStart(2, '0');
   const entries = [];
   if (st.lines >= 1) entries.push({ k: 'msg', t: ts(T.line[0]), text: 'Message received · ' + scene.channel });
@@ -729,7 +935,7 @@ function ApprovalCard({ scene, st, phone, approvedBy, onApprove, btnRef }) {
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.4, ease: EASE }}
-        className={cn('inline-flex shrink-0 items-center gap-1.5 rounded-full bg-brand font-medium text-white', phone ? 'h-7 px-2.5 text-[11px]' : 'h-8 px-3 text-[12px]')}
+        className={cn('inline-flex shrink-0 items-center gap-1.5 rounded-full bg-ink font-medium text-white', phone ? 'h-7 px-2.5 text-[11px]' : 'h-8 px-3 text-[12px]')}
       >
         <Check className="h-3.5 w-3.5" strokeWidth={3} aria-hidden="true" />
         {phone ? 'Approved' : scene.approval.result}
@@ -753,16 +959,20 @@ function ApprovalCard({ scene, st, phone, approvedBy, onApprove, btnRef }) {
       </button>
     );
   return (
-    <LiquidGlass className={cn('rounded-[20px] transition-opacity duration-700', phone ? 'p-2.5' : 'p-4', state === 'none' ? 'opacity-75' : 'opacity-100')}>
+    <LiquidGlass
+      className={cn('rounded-[20px] transition-opacity duration-700', phone ? 'p-2.5' : 'p-4', state === 'none' && !phone ? 'opacity-75' : 'opacity-100')}
+      // phones float this card over the transcript, so the glass is near-opaque there to keep both readable
+      style={phone ? { '--lg-tint-a': 'rgba(255,252,247,0.96)', '--lg-tint-b': 'rgba(255,249,241,0.92)' } : undefined}
+    >
       <div className="flex items-center gap-3">
         <span className={cn('flex shrink-0 items-center justify-center rounded-[11px] bg-white/80 text-ink shadow-[0_1px_2px_rgba(10,15,14,0.08)]', phone ? 'h-8 w-8' : 'h-9 w-9')}>
           <ShieldCheck className="h-[17px] w-[17px]" strokeWidth={1.7} aria-hidden="true" />
         </span>
         <div className="min-w-0 flex-1">
-          <p className={cn('truncate font-medium', phone ? 'text-[10.5px]' : 'text-[11px]', state === 'pending' ? 'text-[#8A5A12]' : state === 'done' ? 'text-brand-ink' : 'text-slate')}>
-            {state === 'none' ? 'Policy check' : state === 'pending' ? 'Needs a person · ' + scene.approval.by : 'Approved by ' + by + ' · logged'}
+          <p className={cn('truncate font-medium', phone ? 'text-[10.5px]' : 'text-[11px]', state === 'pending' ? 'text-[#8A5A12]' : state === 'done' ? 'text-[#B4471A]' : 'text-slate')}>
+            {state === 'none' ? 'Policy check' : state === 'pending' ? (phone ? 'Approval · ' : 'Needs a person · ') + scene.approval.by : (phone ? 'Approved by ' + by : 'Approved by ' + by + ' · logged')}
           </p>
-          <p className={cn('truncate font-medium leading-tight tracking-[-0.01em]', phone ? 'text-[12px]' : 'text-[13px]', state === 'none' ? 'text-ink/45' : 'text-ink')}>{scene.approval.ask}</p>
+          <p className={cn('font-medium leading-tight tracking-[-0.01em]', phone ? 'line-clamp-2 text-[12px]' : 'truncate text-[13px]', state === 'none' ? 'text-ink/45' : 'text-ink')}>{scene.approval.ask}</p>
         </div>
         {phone ? control : null}
       </div>
@@ -777,6 +987,86 @@ function ApprovalCard({ scene, st, phone, approvedBy, onApprove, btnRef }) {
 }
 
 /* ------------------------------------------------------------------ */
+/* Phone: one feed, in the order things happen                          */
+/* ------------------------------------------------------------------ */
+
+/** One message in the phone feed, drawn the way its channel draws it. */
+/** @param {any} props */
+function FeedMessage({ scene, l, i, reduce }) {
+  const mine = l.who === 'aurora';
+  if (scene.mode === 'voice') {
+    return (
+      <div className="pt-2.5">
+        <p className={cn('text-[9.5px] font-medium uppercase tracking-[0.06em]', mine ? 'text-[#B4471A]' : 'text-slate')}>{mine ? brand.product : 'Caller'}</p>
+        <p className="mt-0.5 text-[12.5px] leading-[1.45] text-ink">
+          {reduce ? l.text : <Stream text={l.text} step={Math.min(0.24, (tlOf(scene).T.lineDur ? tlOf(scene).T.lineDur[i] : speakDur(l.text)) / 1000 / l.text.split(' ').length)} soft={false} times={tlOf(scene).T.wordAt && tlOf(scene).T.wordAt[i]} />}
+        </p>
+      </div>
+    );
+  }
+  if (scene.mode === 'email') {
+    return (
+      <div className="pt-2.5">
+        <div className={cn('rounded-[14px] border p-2.5', mine ? 'border-[#F25C2A]/15 bg-[#FFF6EE]' : 'border-ink/[0.07] bg-[#FAF9F6]')}>
+          <div className="mb-1 flex items-center gap-2">
+            <span className={cn('flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[9px] font-medium', mine ? 'bg-[#F25C2A] text-white' : 'bg-ink/[0.08] text-ink/70')}>
+              {mine ? brand.product[0] : scene.initials}
+            </span>
+            <span className="min-w-0 flex-1 truncate text-[11px] font-medium">{mine ? brand.product : scene.contact}</span>
+            <span className="t-data shrink-0 text-ink/35">{'09:' + String(12 + i * 2).padStart(2, '0')}</span>
+          </div>
+          <p className="text-[12px] leading-[1.45] text-ink">{mine && !reduce ? <Stream text={l.text} soft={false} /> : l.text}</p>
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div className={cn('flex flex-col pt-2.5', mine ? 'items-end' : 'items-start')}>
+      {mine ? <span className="mb-1 mr-1 text-[10.5px] font-medium text-slate">{brand.product}</span> : null}
+      <span
+        className={cn(
+          'max-w-[86%] px-3.5 py-2.5 text-[12.5px] leading-[1.45] tracking-[-0.005em]',
+          mine ? cn('rounded-[18px] rounded-br-[6px] text-white', scene.mode === 'imessage' ? 'bg-[#0A84FF]' : 'bg-ink') : cn('rounded-[18px] rounded-bl-[6px] text-ink', scene.mode === 'imessage' ? 'bg-[#E9E9EB]' : 'bg-[#F1EFE9]')
+        )}
+      >
+        {mine && !reduce ? <Stream text={l.text} soft={false} /> : l.text}
+      </span>
+    </div>
+  );
+}
+
+/**
+ * Phones: the conversation and Aurora's work in one feed, in time order. Messages, "Request
+ * understood", each system update and the approval request all land in the same thread, so
+ * nothing jumps between cards and the viewer reads one story top to bottom.
+ * @param {any} props
+ */
+function PhoneFeed({ scene, st, reduce }) {
+  // the conversation only: what Aurora does behind the scenes lives in PhoneBackstage
+  const items = scene.lines.slice(0, st.lines).map((l, i) => ({ key: 'm' + i, el: <FeedMessage scene={scene} l={l} i={i} reduce={reduce} /> }));
+  const voice = scene.mode === 'voice';
+  return (
+    <div className="absolute inset-0 flex flex-col">
+      {voice ? (
+        <div className="px-3.5 pt-2">
+          <Waveform speaking={reduce ? null : st.speaking} thinking={st.typing} phone />
+        </div>
+      ) : null}
+      <div className="relative min-h-0 flex-1 [mask-image:linear-gradient(to_bottom,transparent,#000_18%)]">
+        <div className="absolute inset-x-0 bottom-0 flex flex-col justify-end px-3 pb-3">
+          <AnimatePresence initial={false}>
+            {items.map((it) => (
+              <Grow key={scene.key + it.key}>{it.el}</Grow>
+            ))}
+            {st.typing && !voice ? (scene.mode === 'email' ? null : <TypingDots key="typing" blue={scene.mode === 'imessage'} />) : null}
+          </AnimatePresence>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
 /* Chrome: tabs, live pill, chapter bar, cursor, flows                   */
 /* ------------------------------------------------------------------ */
 
@@ -784,9 +1074,21 @@ function ApprovalCard({ scene, st, phone, approvedBy, onApprove, btnRef }) {
 function ChannelTabs({ k, onSelect, phone }) {
   const refs = useRef([]);
   const [pill, setPill] = useState({ x: 0, w: 0, ready: false });
+  // Re-measure whenever a tab changes size, not only when the tab changes: the brand font
+  // often arrives after the first paint, and the pill must grow with the label it sits under.
   useLayoutEffect(() => {
-    const el = refs.current[k];
-    if (el) setPill((p) => ({ x: el.offsetLeft, w: el.offsetWidth, ready: p.w > 0 }));
+    const measure = () => {
+      const el = refs.current[k];
+      if (el) setPill((p) => (p.x === el.offsetLeft && p.w === el.offsetWidth ? p : { x: el.offsetLeft, w: el.offsetWidth, ready: p.w > 0 }));
+    };
+    measure();
+    let ro = null;
+    if (typeof ResizeObserver !== 'undefined') {
+      ro = new ResizeObserver(measure);
+      refs.current.forEach((el) => el && ro.observe(el));
+    }
+    if (typeof document !== 'undefined' && document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+    return () => ro && ro.disconnect();
   }, [k, phone]);
   const onKey = (e, i) => {
     const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
@@ -859,7 +1161,7 @@ function Segment({ c, time, active, onSeek, phone }) {
 }
 
 /** @param {any} props */
-function ChapterBar({ time, chapter, playing, onToggle, onSeek, phone, reduce }) {
+function ChapterBar({ chapters, time, chapter, playing, onToggle, onSeek, phone, reduce }) {
   return (
     <LiquidGlass className={cn('flex h-full items-center rounded-full', phone ? 'gap-1.5 px-1' : 'gap-2 px-1.5')}>
       {reduce ? null : (
@@ -877,11 +1179,11 @@ function ChapterBar({ time, chapter, playing, onToggle, onSeek, phone, reduce })
         </button>
       )}
       <div className={cn('flex min-w-0 flex-1 items-center', phone ? 'gap-1' : 'gap-1')}>
-        {CHAPTERS.map((c, i) => (
-          <Segment key={c.label} c={c} time={time} active={chapter === i} onSeek={onSeek} phone={phone} />
+        {chapters.map((c, i) => (
+          <Segment key={c.label + c.end} c={c} time={time} active={chapter === i} onSeek={onSeek} phone={phone} />
         ))}
       </div>
-      {phone ? <span className="w-[76px] shrink-0 truncate pr-2 text-right text-[10.5px] font-medium text-ink">{CHAPTERS[chapter].label}</span> : null}
+      {phone ? <span className="w-[76px] shrink-0 truncate pr-2 text-right text-[10.5px] font-medium text-ink">{chapters[chapter].label}</span> : null}
     </LiquidGlass>
   );
 }
@@ -910,7 +1212,7 @@ function GhostCursor({ target, clicking, name }) {
     >
       {clicking ? (
         <motion.span
-          className="absolute -left-4 -top-4 h-8 w-8 rounded-full border-2 border-brand"
+          className="absolute -left-4 -top-4 h-8 w-8 rounded-full border-2 border-[#F25C2A]"
           initial={{ scale: 0.3, opacity: 0.9 }}
           animate={{ scale: 1.7, opacity: 0 }}
           transition={{ duration: 0.65, ease: EASE }}
@@ -919,7 +1221,7 @@ function GhostCursor({ target, clicking, name }) {
       <motion.svg width="22" height="22" viewBox="0 0 24 24" className="-ml-[4px] -mt-[2px] drop-shadow-[0_2px_4px_rgba(10,15,14,0.3)]" animate={{ scale: clicking ? [1, 0.8, 1] : 1 }} transition={{ duration: 0.35 }}>
         <path d="M4 2 L4 19.2 L8.6 15 L11.6 21.6 L14.4 20.4 L11.5 14 L17.6 13.8 Z" fill="#0A0F0E" stroke="#fff" strokeWidth="1.4" strokeLinejoin="round" />
       </motion.svg>
-      <span className="absolute left-4 top-5 whitespace-nowrap rounded-full bg-brand px-2 py-0.5 text-[11px] font-medium text-white shadow-[0_4px_12px_-4px_rgba(11,110,74,0.6)]">{name}</span>
+      <span className="absolute left-4 top-5 whitespace-nowrap rounded-full bg-[#F25C2A] px-2 py-0.5 text-[11px] font-medium text-white shadow-[0_4px_12px_-4px_rgba(242,92,42,0.6)]">{name}</span>
     </motion.div>
   );
 }
@@ -936,8 +1238,8 @@ function Flows({ flows, st, intro, reduce }) {
     <svg className="pointer-events-none absolute inset-0 h-full w-full" aria-hidden="true">
       <defs>
         <linearGradient id="hf-flow" x1="0" x2="1" y1="0" y2="0">
-          <stop offset="0" stopColor="#14A36B" stopOpacity="0" />
-          <stop offset="0.5" stopColor="#14A36B" stopOpacity="0.95" />
+          <stop offset="0" stopColor="#F25C2A" stopOpacity="0" />
+          <stop offset="0.5" stopColor="#F25C2A" stopOpacity="0.95" />
           <stop offset="1" stopColor="#13A89C" stopOpacity="0.25" />
         </linearGradient>
       </defs>
@@ -973,9 +1275,13 @@ function Flows({ flows, st, intro, reduce }) {
  * fading wrapper would cut the glass off from its backdrop until the fade ends.
  * @param {any} props
  */
-function Group({ p, index, dim = false, children, className = undefined, z = 1, glass = true }) {
+function Group({ p, index, dim = false, hide = false, children, className = undefined, z = 1, glass = true }) {
   return (
-    <div className={cn('absolute', className)} style={{ left: p.x, top: p.y, width: p.w, height: p.h, zIndex: z }}>
+    <div
+      className={cn('absolute transition-[opacity,transform] duration-500 ease-out', hide && 'pointer-events-none', className)}
+      style={{ left: p.x, top: p.y, width: p.w, height: p.h, zIndex: z, opacity: hide ? 0 : 1, transform: hide ? 'translateY(10px)' : 'none' }}
+      aria-hidden={hide || undefined}
+    >
       <motion.div
         className="h-full"
         custom={index}
@@ -1025,10 +1331,19 @@ export default function HeroFilm({ startScene = undefined }) {
   const [lite, setLite] = useState(false);
   const userDriven = useRef(false);
   const scene = SCENES[k];
+  const { T, CHAPTERS } = tlOf(scene);
+  const audioRef = useRef(null);
+  const [sound, setSound] = useState(false);
+  // The recorded call never plays on its own: it waits for the visitor to press play (with sound).
+  const [callStarted, setCallStarted] = useState(false);
+  // True once the recording is actually playing: the film clock waits for it, so the first
+  // words are never skipped while the file is still buffering (and it pauses if playback stalls).
+  const [audioReady, setAudioReady] = useState(false);
 
   const inView = useInViewport(stageRef, { threshold: 0.15 });
   const visible = usePageVisible();
-  const running = introDone && inView && visible && playing && !takeover && !reduce;
+  const live = introDone && inView && visible && playing && !takeover && !reduce;
+  const running = live && (!scene.audio || (callStarted && (!sound || audioReady)));
 
   const { time, play, stop, onEnd } = useClock(T.end);
   // The film state belongs to one run (scene + replay). A new run uses its own
@@ -1045,6 +1360,9 @@ export default function HeroFilm({ startScene = undefined }) {
   runRef.current = run;
 
   useMotionValueEvent(time, 'change', (t) => {
+    // keep the recorded call in step with the film clock
+    const a = audioRef.current;
+    if (a && !a.paused && a.readyState >= 3 && Math.abs(a.currentTime * 1000 - t) > 400) a.currentTime = t / 1000;
     const next = computeState(sceneRef.current, t);
     const sig = sigOf(next);
     if (sig !== sigRef.current) {
@@ -1108,6 +1426,59 @@ export default function HeroFilm({ startScene = undefined }) {
     return stop;
   }, [running, play, stop, k, loop]);
 
+  // The recorded call: plays only on the voice scene, only after the visitor asks for sound.
+  const hasAudio = !!scene.audio;
+  useEffect(() => {
+    const a = audioRef.current;
+    if (!a) return;
+    if (hasAudio && sound && callStarted && live) {
+      const t = time.get() / 1000;
+      if (Math.abs(a.currentTime - t) > 0.3) a.currentTime = t;
+      if (a.paused) {
+        const p = a.play();
+        if (p && p.catch) p.catch(() => setSound(false));
+      }
+    } else a.pause();
+  }, [hasAudio, sound, callStarted, live, k, loop, time]);
+  const toggleSound = () => {
+    const a = audioRef.current;
+    if (sound) {
+      setSound(false);
+      if (a) a.pause();
+      return;
+    }
+    // start the call from the top, inside the click so every browser allows the sound
+    setPlaying(true);
+    setTakeover(false);
+    setAudioReady(false);
+    if (a) {
+      a.currentTime = 0;
+      const p = a.play();
+      if (p && p.catch) p.catch(() => setSound(false));
+    }
+    setSound(true);
+    setLoop((n) => n + 1);
+  };
+
+  // A new scene starts with the call not started and the sound off.
+  useEffect(() => {
+    setCallStarted(false);
+    setSound(false);
+    setAudioReady(false);
+  }, [k]);
+  const startCall = () => {
+    setCallStarted(true);
+    if (!sound) toggleSound();
+    else setLoop((n) => n + 1);
+  };
+  // Reached by the automatic tour (not chosen by the visitor): offer the call for a few
+  // seconds, then move on, so the film never sits still waiting for a click.
+  useEffect(() => {
+    if (!scene.audio || callStarted || reduce || userDriven.current || !introDone || !inView || !visible) return undefined;
+    const id = window.setTimeout(() => setK((i) => (i + 1) % SCENES.length), 7000);
+    return () => window.clearTimeout(id);
+  }, [scene.audio, callStarted, reduce, introDone, inView, visible, k]);
+
   onEnd.current = () => {
     if (userDriven.current) setLoop((n) => n + 1);
     else setK((i) => (i + 1) % SCENES.length);
@@ -1116,6 +1487,7 @@ export default function HeroFilm({ startScene = undefined }) {
   const seek = (ms) => {
     userDriven.current = true;
     if (ms < T.approvalDone) setApprovedBy(null);
+    if (audioRef.current) audioRef.current.currentTime = ms / 1000;
     // Reduced motion: show the finished state of the chosen chapter.
     const chapter = CHAPTERS.find((c) => c.start === ms);
     time.set(reduce && chapter ? chapter.end - 1 : ms);
@@ -1146,14 +1518,11 @@ export default function HeroFilm({ startScene = undefined }) {
   useLayoutEffect(() => {
     if (st.approval !== 'pending' || !btnRef.current || !compRef.current) return;
     setTarget(centreWithin(btnRef.current, compRef.current));
-  }, [st.approval, compKey, k, scale]);
+  }, [st.approval, st.cursor, compKey, k, scale]);
 
-  // Camera: a slow pan toward the active chapter (translate only: no zoom, so
-  // text is never re-rasterised mid-move), framed so no card is cut off.
-  const [fx, fy] = comp.focus[st.chapter];
-  const [camX, camY] = frameCamera(comp, 1, -0.1 * (fx - comp.w / 2), -0.1 * (fy - comp.h / 2));
+  const [camX, camY] = [0, 0]; // fixed framing: no camera pan
   const focus = FOCUS[st.chapter];
-  const dim = (key) => !reduce && introDone && !focus.includes(key);
+  const dim = (key) => !phone && !reduce && introDone && !focus.includes(key);
   const calm = lite || compKey !== 'wide'; // still backgrounds on phones, tablets and software rendering
 
   const callTime = useTransform(time, (t) => '00:' + String(Math.max(0, Math.floor((t - 200) / 1000))).padStart(2, '0'));
@@ -1168,7 +1537,7 @@ export default function HeroFilm({ startScene = undefined }) {
       >
         <div
           className={cn(
-            'canvas relative bg-[linear-gradient(180deg,#F1F1EC_0%,#E5E9E2_100%)] shadow-[0_0_0_1px_rgba(10,15,14,0.05),0_50px_100px_-55px_rgba(10,15,14,0.45)]',
+            'canvas relative bg-[linear-gradient(180deg,#F6F2EA_0%,#EFE5D8_100%)] shadow-[0_0_0_1px_rgba(10,15,14,0.05),0_50px_100px_-55px_rgba(10,15,14,0.45)]',
             (!playing || takeover) && 'film-paused',
             calm && 'film-calm',
             lite && 'film-lite'
@@ -1181,10 +1550,10 @@ export default function HeroFilm({ startScene = undefined }) {
               className="absolute inset-0"
               fallback={
                 <>
-                  <div className="orb left-[52%] top-[-22%] h-[80%] w-[52%] animate-drift bg-[radial-gradient(closest-side,rgba(60,224,154,0.42),rgba(60,224,154,0))]" />
-                  <div className="orb bottom-[-30%] left-[-8%] h-[85%] w-[48%] animate-drift-slow bg-[radial-gradient(closest-side,rgba(19,168,156,0.3),rgba(19,168,156,0))]" />
+                  <div className="orb left-[52%] top-[-22%] h-[80%] w-[52%] animate-drift bg-[radial-gradient(closest-side,rgba(242,92,42,0.32),rgba(242,92,42,0))]" />
+                  <div className="orb bottom-[-30%] left-[-8%] h-[85%] w-[48%] animate-drift-slow bg-[radial-gradient(closest-side,rgba(255,200,87,0.38),rgba(255,200,87,0))]" />
                   <div className="orb left-[26%] top-[-30%] h-[70%] w-[40%] animate-drift-slow bg-[radial-gradient(closest-side,rgba(255,215,170,0.55),rgba(255,215,170,0))] [animation-delay:-9s]" />
-                  <div className="orb bottom-[-26%] right-[-6%] h-[70%] w-[36%] animate-drift bg-[radial-gradient(closest-side,rgba(160,190,255,0.28),rgba(160,190,255,0))] [animation-delay:-14s]" />
+                  <div className="orb bottom-[-26%] right-[-6%] h-[70%] w-[36%] animate-drift bg-[radial-gradient(closest-side,rgba(255,159,69,0.3),rgba(255,159,69,0))] [animation-delay:-14s]" />
                 </>
               }
             />
@@ -1194,17 +1563,6 @@ export default function HeroFilm({ startScene = undefined }) {
           <div ref={wrapRef} className="relative z-[2]" style={{ aspectRatio: comp.w + ' / ' + comp.h }}>
             <div ref={compRef} id="film-scene" className="absolute left-0 top-0 origin-top-left" style={{ width: comp.w, height: comp.h, transform: 'scale(' + scale + ')' }}>
               <motion.div className="absolute inset-0" initial={reduce ? false : 'hidden'} animate="show">
-                {/* Key light that follows the action */}
-                {reduce || lite ? null : (
-                  <motion.div
-                    aria-hidden="true"
-                    className="pointer-events-none absolute left-0 top-0 h-[760px] w-[760px] rounded-full bg-[radial-gradient(closest-side,rgba(255,255,255,0.55),rgba(255,255,255,0))]"
-                    initial={false}
-                    animate={{ x: fx - 380, y: fy - 380 }}
-                    transition={{ duration: 1.8, ease: EASE_IN_OUT }}
-                  />
-                )}
-
                 <motion.div
                   className="absolute inset-0"
                   initial={false}
@@ -1222,7 +1580,7 @@ export default function HeroFilm({ startScene = undefined }) {
                         animate={{ opacity: 1, y: 0, transition: { duration: 0.6, delay: 0.12, ease: EASE } }}
                         exit={{ opacity: 0, transition: { duration: 0.35, ease: EASE } }}
                       >
-                        <Panel scene={scene} st={st} phone={phone} reduce={reduce} callTime={callTime} takeover={takeover} onTakeover={toggleTakeover} />
+                        <Panel scene={scene} st={st} phone={phone} reduce={reduce} callTime={callTime} takeover={takeover} onTakeover={toggleTakeover} approvedBy={approvedBy} onApprove={approve} btnRef={btnRef} sound={sound} onSound={callStarted ? toggleSound : startCall} />
                       </motion.div>
                     </AnimatePresence>
                   </Group>
@@ -1243,7 +1601,7 @@ export default function HeroFilm({ startScene = undefined }) {
                     <Group p={comp.actions} index={3} dim={dim('actions')} z={2}>
                       <div className={cn('grid', compKey === 'tablet' ? 'gap-2.5' : 'gap-[14px]')}>
                         {scene.actions.map((a, i) => (
-                          <ActionCard key={a.sys} scene={scene} a={a} state={st.actions[i]} tablet={compKey === 'tablet'} />
+                          <ActionCard key={a.sys + i} scene={scene} a={a} state={st.actions[i]} tablet={compKey === 'tablet'} />
                         ))}
                       </div>
                     </Group>
@@ -1255,9 +1613,11 @@ export default function HeroFilm({ startScene = undefined }) {
                     </Group>
                   ) : null}
 
-                  <Group p={comp.approval} index={5} dim={dim('approval')} z={3}>
-                    <ApprovalCard scene={scene} st={st} phone={phone} approvedBy={approvedBy} onApprove={approve} btnRef={btnRef} />
-                  </Group>
+                  {phone ? null : (
+                    <Group p={comp.approval} index={5} dim={dim('approval')} z={3}>
+                      <ApprovalCard scene={scene} st={st} phone={phone} approvedBy={approvedBy} onApprove={approve} btnRef={btnRef} />
+                    </Group>
+                  )}
 
                   <AnimatePresence>
                     {cursorOn ? <GhostCursor key={scene.key + loop} target={target} clicking={st.cursor === 'click'} name={scene.approval.by} /> : null}
@@ -1276,29 +1636,59 @@ export default function HeroFilm({ startScene = undefined }) {
                   </div>
                 ) : null}
                 <Group p={comp.bar} index={6} z={5}>
-                  <ChapterBar time={time} chapter={st.chapter} playing={playing} onToggle={togglePlay} onSeek={seek} phone={phone} reduce={reduce} />
+                  <ChapterBar chapters={CHAPTERS} time={time} chapter={st.chapter} playing={playing} onToggle={togglePlay} onSeek={seek} phone={phone} reduce={reduce} />
                 </Group>
               </motion.div>
             </div>
           </div>
 
-          {/* Light sweep on intro and on every scene change */}
-          {reduce ? null : (
-            <motion.div
-              key={sweep}
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0 z-[6] bg-[linear-gradient(102deg,transparent_34%,rgba(255,255,255,0.3)_47%,rgba(255,255,255,0.1)_53%,transparent_64%)]"
-              initial={{ x: '-105%', opacity: sweep ? 1 : 0 }}
-              animate={{ x: '105%', opacity: sweep ? 1 : 0 }}
-              transition={{ duration: 1.5, ease: EASE_IN_OUT }}
-            />
-          )}
+          {/* The voice scene opens on a play button: the call starts only when asked, with sound */}
+          <AnimatePresence>
+            {hasAudio && !callStarted && !reduce ? (
+              <motion.div
+                key="call-start"
+                // starts under the channel tabs, so they stay visible and clickable
+                className="absolute inset-x-0 bottom-0 z-[6] flex items-center justify-center rounded-b-[inherit] bg-[#F6F2EA]/30 backdrop-blur-[2px]"
+                style={{ top: comp.panel.y * scale - 6 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1, transition: { duration: 0.4, ease: EASE } }}
+                exit={{ opacity: 0, transition: { duration: 0.3 } }}
+              >
+                <button type="button" onClick={startCall} className="group" aria-label="Play the recorded call with sound">
+                  <LiquidGlass
+                    solid
+                    className={cn('flex items-center rounded-full text-left shadow-[0_18px_40px_-18px_rgba(90,50,20,0.45)]', phone ? 'gap-3 py-2 pl-2 pr-5' : 'gap-4 py-2.5 pl-2.5 pr-7')}
+                  >
+                    <span className={cn('relative flex shrink-0 items-center justify-center rounded-full bg-[#F25C2A] text-white transition-transform duration-300 group-hover:scale-105', phone ? 'h-11 w-11' : 'h-14 w-14')}>
+                      <span className="ring-ping absolute inset-0 rounded-full bg-[#F25C2A]/40" aria-hidden="true" />
+                      <Play className={cn('relative ml-0.5 fill-current', phone ? 'h-4 w-4' : 'h-5 w-5')} strokeWidth={0} aria-hidden="true" />
+                    </span>
+                    <span>
+                      <span className={cn('block font-medium tracking-[-0.01em] text-ink', phone ? 'text-[14px]' : 'text-[16px]')}>Listen to a real call</span>
+                      <span className={cn('mt-0.5 flex items-center gap-1.5 text-graphite', phone ? 'text-[11px]' : 'text-[12.5px]')}>
+                        <Volume2 className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
+                        Plays with sound · 0:43
+                      </span>
+                    </span>
+                  </LiquidGlass>
+                </button>
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
         </div>
       </motion.div>
+      {hasAudio ? <audio
+          ref={audioRef}
+          src={scene.audio}
+          preload="auto"
+          onPlaying={() => setAudioReady(true)}
+          onWaiting={() => setAudioReady(false)}
+          onEnded={() => setSound(false)}
+        /> : null}
       <figcaption id="film-caption" className="sr-only">
-        Interactive product demo: {brand.product} handles a {scene.channel.toLowerCase()} conversation for a {scene.industry.toLowerCase()} business. It replies to the customer,
-        checks availability and policy, updates the CRM, books the appointment, sets a follow-up and asks a person to approve one decision. Use the channel tabs to switch
-        conversations and the pause button to stop the animation.
+        Interactive product demo: {brand.product} handles a {scene.channel.toLowerCase()} conversation ({scene.industry.toLowerCase()}). It replies to the customer, checks the
+        business's rules, does the work in its systems and asks a person to approve one decision. Use the channel tabs to switch conversations and the pause button to stop
+        the animation.
       </figcaption>
     </figure>
   );

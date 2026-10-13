@@ -84,7 +84,7 @@ export default function HeroReel({ className = undefined }) {
       })}
 
       {/* legibility: darker top and bottom, a soft vignette in the middle */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(6,12,10,0.62)_0%,rgba(6,12,10,0.38)_42%,rgba(6,12,10,0.5)_72%,rgba(6,12,10,0.78)_100%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(6,12,10,0.74)_0%,rgba(6,12,10,0.5)_16%,rgba(6,12,10,0.38)_42%,rgba(6,12,10,0.5)_72%,rgba(6,12,10,0.78)_100%)]" />
 
       {/* what Aurora did in this scene, and progress through the reel */}
       <div className="absolute inset-x-0 bottom-0">

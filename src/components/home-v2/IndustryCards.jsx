@@ -77,7 +77,7 @@ export default function IndustryCards() {
         <div
           ref={track}
           aria-roledescription="carousel"
-          className="no-scrollbar mx-[calc(-1*var(--gutter))] mt-10 flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-px-[var(--gutter)] px-[var(--gutter)] md:mt-16 lg:mx-0 lg:grid lg:grid-cols-3 lg:gap-5 lg:overflow-visible lg:px-0"
+          className="no-scrollbar mx-[calc(-1*var(--gutter))] mt-10 flex snap-x snap-mandatory gap-3 overflow-x-auto overflow-y-hidden overscroll-x-contain scroll-px-[var(--gutter)] px-[var(--gutter)] md:mt-16 lg:mx-0 lg:grid lg:grid-cols-3 lg:gap-5 lg:overflow-visible lg:px-0"
         >
           {industries.map((it, i) => (
             <Reveal key={it.slug} delay={i * 0.08} className="w-[84%] shrink-0 snap-start sm:w-[60%] md:w-[46%] lg:w-auto" aria-roledescription="slide" aria-label={`${i + 1} of ${n}: ${it.label}`}>

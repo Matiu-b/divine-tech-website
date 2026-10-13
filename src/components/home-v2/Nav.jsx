@@ -14,24 +14,46 @@ import { useScrollLock } from './hooks';
 
 const industryLinks = industries.map((i) => ({ href: industryPath(i.slug), label: i.label, text: i.short }));
 
-/** Watches sections marked data-nav-theme="dark" passing under the nav (re-run on every page). */
+// The line through the middle of the nav pill: whatever section sits under it decides the logo.
+const NAV_PROBE_Y = 44;
+
+/**
+ * True while a section marked data-nav-theme="dark" sits behind the nav.
+ * Reads the sections fresh on every check (scroll, resize, and any page swap in the DOM), so a
+ * lazily loaded page or a removed hero can never leave the light logo showing on a light page.
+ */
 function useNavTheme() {
   const { pathname } = useLocation();
   const [dark, setDark] = useState(false);
   useEffect(() => {
-    setDark(false);
-    const targets = Array.from(document.querySelectorAll('[data-nav-theme="dark"]'));
-    if (!targets.length || typeof IntersectionObserver === 'undefined') return undefined;
-    const active = new Set();
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((en) => (en.isIntersecting ? active.add(en.target) : active.delete(en.target)));
-        setDark(active.size > 0);
-      },
-      { rootMargin: '-3% 0px -95% 0px', threshold: 0 }
-    );
-    targets.forEach((t) => io.observe(t));
-    return () => io.disconnect();
+    let raf = 0;
+    const check = () => {
+      raf = 0;
+      const els = document.querySelectorAll('[data-nav-theme="dark"]');
+      let next = false;
+      for (let i = 0; i < els.length; i += 1) {
+        const r = els[i].getBoundingClientRect();
+        if (r.top <= NAV_PROBE_Y && r.bottom > NAV_PROBE_Y) {
+          next = true;
+          break;
+        }
+      }
+      setDark(next);
+    };
+    const schedule = () => {
+      if (!raf) raf = window.requestAnimationFrame(check);
+    };
+    check();
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
+    const mo = typeof MutationObserver === 'undefined' ? null : new MutationObserver(schedule);
+    if (mo) mo.observe(document.body, { childList: true, subtree: true });
+    return () => {
+      window.removeEventListener('scroll', schedule);
+      window.removeEventListener('resize', schedule);
+      if (mo) mo.disconnect();
+      if (raf) window.cancelAnimationFrame(raf);
+    };
   }, [pathname]);
   return dark;
 }
@@ -191,7 +213,8 @@ export default function Nav() {
           className={cn(
             'pointer-events-auto flex h-[58px] items-center justify-between gap-3 rounded-full pl-4 pr-2 transition-[background,box-shadow] duration-500 sm:pl-5 md:h-[62px]',
             !scrolled && !menu && '[--lg-tint-a:rgba(255,255,255,0.28)] [--lg-tint-b:rgba(255,255,255,0.08)]',
-            !scrolled && onDark && '[--lg-tint-a:rgba(255,255,255,0.06)] [--lg-tint-b:rgba(255,255,255,0.02)]'
+            // over the home reel the light logo needs a dark backing even when a clip has a bright sky or a white van
+            !scrolled && onDark && '[--lg-tint-a:rgba(10,15,14,0.3)] [--lg-tint-b:rgba(10,15,14,0.2)]'
           )}
         >
           <SmartLink
