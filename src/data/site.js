@@ -535,10 +535,10 @@ export const platformPage = {
     text: 'Every conversation, every action Aurora takes and every handoff to a person shows up in one place, for your whole team to see.',
     note: 'Aurora console screens. Names and figures are illustrative.',
     slides: [
+      { key: 'dashboard', title: 'Today at a glance', text: 'Unread conversations, open handoffs and how much the agents handled, the moment you sign in.' },
       { key: 'inbox', title: 'One inbox for every channel', text: 'Web chat, email, text and calls land in one list, tagged by what each one needs.' },
       { key: 'action', title: 'Every action on the record', text: 'See the exact request Aurora sent to your system, and who approved it.' },
       { key: 'handoff', title: 'Take over in one click', text: 'Assign a conversation, switch from the agent to a person and back, with the full history in view.' },
-      { key: 'dashboard', title: 'Today at a glance', text: 'Unread conversations, open handoffs and how much the agents handled, the moment you sign in.' },
     ],
   },
   architecture: {
