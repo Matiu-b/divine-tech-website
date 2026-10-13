@@ -61,7 +61,7 @@ const TAG = {
   bad: 'bg-[#FDE6E0] text-[#BF3E28]',
 };
 function Tag({ t = 'open', children }) {
-  return <span className={cn('inline-flex h-[15px] items-center rounded-full px-1.5 text-[7.5px] font-medium', TAG[t])}>{children}</span>;
+  return <span className={cn('inline-flex h-[15px] shrink-0 items-center whitespace-nowrap rounded-full px-1.5 text-[7.5px] font-medium', TAG[t])}>{children}</span>;
 }
 
 function Avatar({ s, ch: Ch, size = 26 }) {
@@ -191,7 +191,7 @@ function ActionScreen() {
   return (
     <Win className="left-[22px] top-[24px] w-[290px] p-3" style={{ height: 300 }}>
       <div className="flex items-center justify-between">
-        <p className="text-[9.5px] font-medium text-ink">Fee waiver request · REQ-2048</p>
+        <p className="whitespace-nowrap text-[9.5px] font-medium text-ink">Fee waiver · REQ-2048</p>
         <Tag t="ok">Approval · Approved</Tag>
       </div>
       <div className="mt-2.5 rounded-[12px] bg-[#FFF6EC] p-2.5">
@@ -227,16 +227,16 @@ function HandoffScreen() {
         </div>
       </div>
       <div className="mt-2.5 flex items-center gap-1.5">
-        <span className="flex h-[17px] items-center gap-1 rounded-full px-2 text-[7px] font-medium text-ink shadow-[0_0_0_1px_rgba(10,15,14,0.08)]">
+        <span className="flex h-[17px] shrink-0 items-center gap-1 whitespace-nowrap rounded-full px-2 text-[7px] font-medium text-ink shadow-[0_0_0_1px_rgba(10,15,14,0.08)]">
           <span className="h-1 w-1 rounded-full bg-[#F25C2A]" /> Dana is replying
         </span>
-        <span className="flex h-[17px] items-center gap-1 rounded-full px-2 text-[7px] text-ink shadow-[0_0_0_1px_rgba(10,15,14,0.08)]">
+        <span className="flex h-[17px] shrink-0 items-center gap-1 whitespace-nowrap rounded-full px-2 text-[7px] text-ink shadow-[0_0_0_1px_rgba(10,15,14,0.08)]">
           <UserRound className="h-2 w-2" strokeWidth={2} /> Dana K. <ChevronDown className="h-2 w-2" strokeWidth={2} />
         </span>
-        <span className="flex h-[17px] items-center gap-1 rounded-full px-2 text-[7px] text-ink shadow-[0_0_0_1px_rgba(10,15,14,0.08)]">
+        <span className="flex h-[17px] shrink-0 items-center gap-1 whitespace-nowrap rounded-full px-2 text-[7px] text-ink shadow-[0_0_0_1px_rgba(10,15,14,0.08)]">
           Unresolved <ChevronDown className="h-2 w-2" strokeWidth={2} />
         </span>
-        <span className="flex h-[17px] overflow-hidden rounded-full text-[7px] font-medium shadow-[0_0_0_1px_rgba(10,15,14,0.08)]">
+        <span className="flex h-[17px] shrink-0 overflow-hidden whitespace-nowrap rounded-full text-[7px] font-medium shadow-[0_0_0_1px_rgba(10,15,14,0.08)]">
           <span className="flex items-center gap-1 px-2 text-ink/60">
             <Bot className="h-2 w-2" strokeWidth={2} /> Bot
           </span>
@@ -270,7 +270,7 @@ function ChannelsScreen() {
   ];
   return (
     <>
-      <Win className="left-[22px] top-[24px] w-[250px] p-3" style={{ height: 300 }}>
+      <Win className="left-[22px] top-[24px] w-[226px] p-3" style={{ height: 300 }}>
         <p className="text-[10px] font-medium text-ink">Communication channels</p>
         <p className="mt-0.5 text-[7.5px] text-graphite">Performance per channel · last 7 days</p>
         <div className="mt-2.5 grid gap-1.5">
@@ -293,7 +293,7 @@ function ChannelsScreen() {
           ))}
         </div>
       </Win>
-      <Win className="left-[200px] top-[44px] w-[120px] p-2.5">
+      <Win className="left-[232px] top-[58px] w-[118px] p-2.5">
         <p className="text-[7px] text-slate">Handled by AI</p>
         <p className="mt-1 text-[17px] font-medium leading-none text-ink">91%</p>
         <svg viewBox="0 0 100 34" className="mt-2 h-[30px] w-full" aria-hidden="true">
@@ -357,19 +357,18 @@ function CustomerScreen() {
           </React.Fragment>
         ))}
       </dl>
-      <Win className="left-[180px] top-[36px] w-[134px] p-2.5">
+      <Win className="left-[184px] top-[40px] w-[118px] p-2.5">
         <p className="text-[7px] text-slate">Past requests</p>
         {[
-          ['Viewing booked', 'Sat 11:00'],
-          ['Fee waived', 'REQ-2048'],
-          ['Reminder sent', 'Fri 6 pm'],
-        ].map(([a, b]) => (
+          ['Viewing booked'],
+          ['Fee waived'],
+          ['Reminder sent'],
+        ].map(([a]) => (
           <p key={a} className="mt-1.5 flex items-center gap-1.5 text-[7.5px] text-ink">
             <span className="flex h-3 w-3 items-center justify-center rounded-full bg-[#E4F4E8] text-[#2E7A48]">
               <Check className="h-2 w-2" strokeWidth={3} />
             </span>
-            <span className="flex-1">{a}</span>
-            <span className="text-[6.5px] text-slate">{b}</span>
+            <span className="flex-1 whitespace-nowrap">{a}</span>
           </p>
         ))}
       </Win>
