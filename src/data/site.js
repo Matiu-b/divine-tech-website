@@ -610,7 +610,7 @@ export const platformPage = {
         { time: '10:18', what: 'Fee waived', ref: 'REQ-2048', by: 'Approved by Dana · Leasing' },
         { time: '10:05', what: 'Technician booked', ref: 'JOB-1186', by: 'Automatic · within rules' },
       ],
-      note: 'Each entry links to the conversation, the rule that applied and the change made in your systems.',
+      note: 'Each entry keeps the original request next to the action.',
     },
     items: [
       { icon: 'roles', title: 'Access per role', text: 'Each agent only sees and does what its job needs.' },
