@@ -32,18 +32,27 @@
         }
       } catch (e) {}
     </script>
+    <!-- Marketing tags wait for the visitor: they load on the first scroll, tap, key press or
+         pointer move, or 4 s after the page has loaded, whichever comes first. Calls made before
+         then (dataLayer pushes, fbq) queue and are sent when the tags arrive. -->
+    <script>
+    (function(w,d){
+      var q=[],done=false,evs=['scroll','wheel','pointerdown','pointermove','touchstart','keydown'],opts={passive:true,capture:true};
+      function run(){if(done)return;done=true;evs.forEach(function(e){w.removeEventListener(e,run,opts);});q.forEach(function(f){f();});q=[];}
+      evs.forEach(function(e){w.addEventListener(e,run,opts);});
+      function start(){setTimeout(run,4000);}
+      d.readyState==='complete'?start():w.addEventListener('load',start,{once:true});
+      w.dtWhenEngaged=function(f){done?f():q.push(f);};
+    })(window,document);
+    </script>
     <!-- Google Tag Manager (production domain only: Netlify deploy previews and
          localhost must not send analytics or show up as extra domains in Google).
-         gtm.js is fetched once the page has loaded and the browser is idle (at most
-         2 s after load), so the tags don't compete with the page itself; anything
-         pushed to dataLayer before then is processed when GTM starts. -->
+         gtm.js waits for dtWhenEngaged above. -->
     <script>if (/^(www\.)?divine-tech\.ai$/.test(location.hostname)) {
     (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var load=function(){var f=d.getElementsByTagName(s)[0],
+    new Date().getTime(),event:'gtm.js'});w.dtWhenEngaged(function(){var f=d.getElementsByTagName(s)[0],
     j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);};
-    var idle=function(){w.requestIdleCallback?w.requestIdleCallback(load,{timeout:2000}):setTimeout(load,0);};
-    d.readyState==='complete'?idle():w.addEventListener('load',idle,{once:true});
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);});
     })(window,document,'script','dataLayer','GTM-KGSKS6PM');
     }</script>
     <!-- End Google Tag Manager -->
