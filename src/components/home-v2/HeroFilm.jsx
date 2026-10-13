@@ -50,23 +50,25 @@ const T_BASE = {
 // The voice call plays one continuous recorded call (Eleven v4 dialogue, scene.audio), so its
 // timeline follows the recording: each line starts exactly where it starts in the file (ms).
 const T_VOICE = {
-  line: [250, 7500, 19000, 22950, 31700],
-  lineDur: [6750, 11300, 3400, 5650, 5300],
+  // edited take: a real pause while the caller goes to shut the valve (Aurora books in the
+  // meantime), and a short hold while dispatch approves the same-day slot
+  line: [250, 7500, 19500, 26550, 36300],
+  lineDur: [6750, 11300, 6200, 5650, 5300],
   typing: [
     [7000, 7500],
-    [22450, 22950],
-    [31300, 31700],
+    [26050, 26550],
+    [35900, 36300],
   ],
   stepRun: [7700, 8300, 8900],
   stepDone: [8300, 8900, 9500],
-  actRun: [19400, 20100, 20800],
-  actDone: [20100, 20800, 21500],
-  approvalPending: 28700,
-  cursorIn: 29800,
-  cursorClick: 30700,
-  approvalDone: 30800,
-  end: 39000,
-  chapterAt: [0, 7000, 19000, 28700],
+  actRun: [20800, 21600, 22400],
+  actDone: [21600, 22400, 23200],
+  approvalPending: 32400,
+  cursorIn: 33800,
+  cursorClick: 35000,
+  approvalDone: 35100,
+  end: 43400,
+  chapterAt: [0, 7000, 19500, 32400],
 };
 
 function makeTimeline(T) {
