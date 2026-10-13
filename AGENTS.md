@@ -12,8 +12,11 @@ Divine Tech AI company website (divine-tech.ai). React, Vite and Tailwind CSS, b
 
 ## Lead Form
 
-- `src/components/home-v2/LeadDrawer.jsx` submits to Netlify Forms (form name `lead`).
-- `public/__forms.html` is the hidden static copy Netlify uses to detect the form. If you add, rename or remove a field in the component, update this file to match exactly, or submissions will fail.
+- Every "Book a demo" entry point (nav, hero, platform/industry/blog buttons, the footer CTA form) renders the same `LeadForm` in `src/components/home-v2/LeadDrawer.jsx`.
+- On submit it posts in parallel to `/api/lead` (`netlify/functions/lead.mjs`) and to Netlify Forms (form name `lead`). The success screen shows if either accepted the lead.
+- `/api/lead` validates the lead and forwards it to the Make lead webhook (env var `MAKE_LEAD_WEBHOOK_URL`, Functions scope), which creates the HubSpot contact and posts to the Business WhatsApp group. This path exists because Netlify never fires outgoing webhooks for submissions its spam filter flags, so real leads could vanish.
+- Netlify Forms is now a backup record only. Make scenario 04 skips Netlify's own outgoing-webhook payloads (they carry a top-level `form_name`) so a lead is not posted twice.
+- `public/__forms.html` is the hidden static copy Netlify uses to detect the form. If you add, rename or remove a field in the component, update this file and `lead.mjs` to match exactly.
 
 ## Privacy, Cookies and Tracking
 
