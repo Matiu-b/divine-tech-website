@@ -103,9 +103,9 @@ export default function PlatformArchitecture() {
                 className="relative rounded-[28px] p-4 md:p-6"
                 style={{ '--lg-tint-a': 'rgba(255,250,242,0.55)', '--lg-tint-b': 'rgba(255,246,229,0.2)', '--lg-sheen': 'rgba(255,240,215,0.7)' }}
               >
-                <div className="flex items-center justify-between gap-3">
+                <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1.5">
                   <img src="/brand/aurora-logo-horizontal-color.svg" alt={brand.product} width="124" height="32" className="h-7 w-auto" />
-                  <span className="text-[12px] text-ink/55">One memory · one set of rules · one record</span>
+                  <span className="whitespace-nowrap text-[12px] text-ink/55">One memory · one set of rules · one record</span>
                 </div>
                 <ol className="mt-4 grid gap-2.5 md:grid-cols-3">
                   {A.layers.map((l, i) => (

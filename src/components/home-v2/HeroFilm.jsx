@@ -119,7 +119,7 @@ const COMPS = {
     h: 520,
     tabs: { x: 12, y: 12 },
     panel: { x: 12, y: 58, w: 336, h: 404 },
-    work: { x: 12, y: 120, w: 336 },
+    work: { x: 12, y: 150, w: 336 },
     approval: { x: 20, y: 382, w: 320 },
     bar: { x: 12, y: 478, w: 336, h: 28 },
     flows: null,
@@ -757,7 +757,11 @@ function ApprovalCard({ scene, st, phone, approvedBy, onApprove, btnRef }) {
       </button>
     );
   return (
-    <LiquidGlass className={cn('rounded-[20px] transition-opacity duration-700', phone ? 'p-2.5' : 'p-4', state === 'none' ? 'opacity-75' : 'opacity-100')}>
+    <LiquidGlass
+      className={cn('rounded-[20px] transition-opacity duration-700', phone ? 'p-2.5' : 'p-4', state === 'none' && !phone ? 'opacity-75' : 'opacity-100')}
+      // phones float this card over the transcript, so the glass is near-opaque there to keep both readable
+      style={phone ? { '--lg-tint-a': 'rgba(255,252,247,0.96)', '--lg-tint-b': 'rgba(255,249,241,0.92)' } : undefined}
+    >
       <div className="flex items-center gap-3">
         <span className={cn('flex shrink-0 items-center justify-center rounded-[11px] bg-white/80 text-ink shadow-[0_1px_2px_rgba(10,15,14,0.08)]', phone ? 'h-8 w-8' : 'h-9 w-9')}>
           <ShieldCheck className="h-[17px] w-[17px]" strokeWidth={1.7} aria-hidden="true" />
