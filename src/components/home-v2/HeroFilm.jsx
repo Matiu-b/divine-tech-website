@@ -24,9 +24,9 @@ import { useInViewport, useMediaQuery, usePageVisible } from './hooks';
 
 const SCENES = heroFilm.scenes;
 
-// Shared timeline (ms) for the written scenes. PACE 1 keeps the loop around 17 seconds: slow enough
-// to read every message and every system update without the screen feeling busy.
-const PACE = 1;
+// Shared timeline (ms) for the written scenes. PACE 1.35 keeps the loop around 23 seconds: slow
+// enough to read every message and every system update without the screen feeling busy.
+const PACE = 1.35;
 const pace = (v) => (Array.isArray(v) ? v.map(pace) : Math.round(v * PACE));
 const T_BASE = {
   line: [500, 4800, 5900, 8400, 13900],
@@ -621,12 +621,76 @@ function Panel({ scene, st, phone, reduce, callTime, takeover, onTakeover, appro
       <PanelHeader scene={scene} phone={phone} callTime={callTime} live={st.lines > 0 && !reduce} sound={sound} onSound={onSound} />
       <div className="relative min-h-0 flex-1 overflow-hidden">
         {phone ? (
-          <PhoneFeed scene={scene} st={st} reduce={reduce} approvedBy={approvedBy} onApprove={onApprove} btnRef={btnRef} />
+          <PhoneFeed scene={scene} st={st} reduce={reduce} />
         ) : (
           <Body scene={scene} st={st} phone={phone} reduce={reduce} />
         )}
       </div>
+      {phone ? <PhoneBackstage scene={scene} st={st} approvedBy={approvedBy} onApprove={onApprove} btnRef={btnRef} /> : null}
       <PanelFooter scene={scene} phone={phone} takeover={takeover} onTakeover={onTakeover} />
+    </div>
+  );
+}
+
+/** What Aurora is doing right now, behind the scenes (phones): one item at a time, outside the chat. */
+function backstageNow(scene, st) {
+  if (st.approval !== 'none') return { key: 'approval', approval: true };
+  for (let i = st.actions.length - 1; i >= 0; i -= 1) {
+    if (st.actions[i] !== 'idle') {
+      const a = scene.actions[i];
+      return { key: 'a' + i, sys: a.sys, title: a.title, detail: a.detail, state: st.actions[i], n: i + 1, of: scene.actions.length };
+    }
+  }
+  for (let i = st.steps.length - 1; i >= 0; i -= 1) {
+    if (st.steps[i] !== 'idle') return { key: 's' + i, title: scene.steps[i].title, detail: scene.steps[i].detail, state: st.steps[i] };
+  }
+  return { key: 'idle', idle: true };
+}
+
+/** @param {any} props */
+function PhoneBackstage({ scene, st, approvedBy, onApprove, btnRef }) {
+  const now = backstageNow(scene, st);
+  const Icon = now.sys ? SYS_ICON[now.sys] : null;
+  return (
+    <div className="border-t border-dashed border-ink/[0.12] bg-[#FAF6F0] px-2.5 pb-2.5 pt-2">
+      <div className="mb-1.5 flex items-center justify-between px-0.5">
+        <span className="flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.07em] text-[#B4471A]">
+          <span className="h-1.5 w-1.5 rounded-full bg-[#F25C2A]" aria-hidden="true" />
+          Behind the scenes
+        </span>
+        <span className="text-[10px] text-slate">{now.of ? 'System ' + now.n + ' of ' + now.of : 'Only your team sees this'}</span>
+      </div>
+      <div className="relative h-[58px]">
+        <AnimatePresence initial={false} mode="wait">
+          <motion.div
+            key={scene.key + now.key}
+            className="absolute inset-0"
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0, transition: { duration: 0.5, ease: EASE } }}
+            exit={{ opacity: 0, y: -6, transition: { duration: 0.3, ease: EASE } }}
+          >
+            {now.approval ? (
+              <ApprovalCard scene={scene} st={st} phone approvedBy={approvedBy} onApprove={onApprove} btnRef={btnRef} />
+            ) : now.idle ? (
+              <div className="flex h-full items-center gap-2 rounded-[12px] bg-white px-3 text-[11.5px] text-ink/45 shadow-[0_0_0_1px_rgba(10,15,14,0.05)]">
+                <Ring active={false} done={false} small />
+                Waiting for the first message
+              </div>
+            ) : (
+              <div className="flex h-full items-center gap-2.5 rounded-[12px] bg-white px-3 shadow-[0_0_0_1px_rgba(10,15,14,0.05)]">
+                <Status state={now.state} size={15} />
+                <span className="min-w-0 flex-1">
+                  <span className="flex items-center gap-1.5 text-[12px] font-medium leading-tight text-ink">
+                    {Icon ? <Icon className="h-3.5 w-3.5 shrink-0 text-[#B4471A]" strokeWidth={1.9} aria-hidden="true" /> : null}
+                    <span className="truncate">{now.sys ? now.sys + ' · ' + now.title : now.title}</span>
+                  </span>
+                  <span className="mt-0.5 block truncate text-[10.5px] leading-tight text-graphite">{now.detail}</span>
+                </span>
+              </div>
+            )}
+          </motion.div>
+        </AnimatePresence>
+      </div>
     </div>
   );
 }
@@ -863,55 +927,6 @@ function ApprovalCard({ scene, st, phone, approvedBy, onApprove, btnRef }) {
 /* Phone: one feed, in the order things happen                          */
 /* ------------------------------------------------------------------ */
 
-/** A line in the phone feed for something Aurora did: understood the request, or acted in a system. */
-/** @param {any} props */
-function FeedEvent({ sys, title, detail, state }) {
-  const Icon = sys ? SYS_ICON[sys] : null;
-  return (
-    <div className="pt-2">
-      <div className={cn('flex items-center gap-2 rounded-[12px] px-2.5 py-[7px] transition-colors duration-500', state === 'done' ? 'bg-[#FFF1E4]' : 'bg-[#F7F4EE]')}>
-        <Status state={state} size={14} />
-        <span className="min-w-0 flex-1">
-          <span className="flex items-center gap-1.5 text-[11.5px] font-medium leading-tight text-ink">
-            {Icon ? <Icon className="h-3 w-3 shrink-0 text-[#B4471A]" strokeWidth={1.9} aria-hidden="true" /> : null}
-            <span className="truncate">{sys ? sys + ' · ' + title : title}</span>
-          </span>
-          <span className={cn('mt-0.5 block truncate text-[10.5px] leading-tight transition-colors duration-500', state === 'done' ? 'text-graphite' : 'text-ink/30')}>{detail}</span>
-        </span>
-      </div>
-    </div>
-  );
-}
-
-/** Phone feed: Aurora's system updates as one block; the rows tick in place instead of each arriving on its own. */
-/** @param {any} props */
-function FeedWork({ scene, st }) {
-  const done = st.actions.filter((x) => x === 'done').length;
-  return (
-    <div className="pt-2">
-      <div className="rounded-[14px] bg-[#FBF6EF] p-2">
-        <p className="px-1 pb-1 text-[10.5px] font-medium text-[#B4471A]">
-          {done === scene.actions.length ? brand.product + ' updated ' + done + ' systems' : brand.product + ' is working in your systems'}
-        </p>
-        <ul className="grid gap-1">
-          {scene.actions.map((a, i) => {
-            const Icon = SYS_ICON[a.sys];
-            const state = st.actions[i];
-            return (
-              <li key={a.sys} className={cn('flex items-center gap-2 rounded-[10px] px-2 py-1.5 transition-colors duration-700', state === 'done' ? 'bg-white' : 'bg-white/45')}>
-                <Status state={state} size={13} />
-                <Icon className="h-3 w-3 shrink-0 text-[#B4471A]" strokeWidth={1.9} aria-hidden="true" />
-                <span className={cn('min-w-0 flex-1 truncate text-[11px] font-medium transition-colors duration-700', state === 'idle' ? 'text-ink/35' : 'text-ink')}>{a.title}</span>
-                <span className={cn('max-w-[46%] shrink truncate text-right text-[10px] transition-colors duration-700', state === 'done' ? 'text-graphite' : 'text-ink/25')}>{a.detail}</span>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-    </div>
-  );
-}
-
 /** One message in the phone feed, drawn the way its channel draws it. */
 /** @param {any} props */
 function FeedMessage({ scene, l, i, reduce }) {
@@ -963,24 +978,9 @@ function FeedMessage({ scene, l, i, reduce }) {
  * nothing jumps between cards and the viewer reads one story top to bottom.
  * @param {any} props
  */
-function PhoneFeed({ scene, st, reduce, approvedBy, onApprove, btnRef }) {
-  const { T } = tlOf(scene);
-  const understood = st.steps[0];
-  const items = [];
-  scene.lines.slice(0, st.lines).forEach((l, i) => items.push({ t: T.line[i], key: 'm' + i, el: <FeedMessage scene={scene} l={l} i={i} reduce={reduce} /> }));
-  if (understood !== 'idle') items.push({ t: T.stepRun[0], key: 'u', el: <FeedEvent title={scene.steps[0].title} detail={scene.steps[0].detail} state={understood} /> });
-  if (st.actions.some((x) => x !== 'idle')) items.push({ t: T.actRun[0], key: 'work', el: <FeedWork scene={scene} st={st} /> });
-  if (st.approval !== 'none')
-    items.push({
-      t: T.approvalPending,
-      key: 'ok',
-      el: (
-        <div className="pt-2.5">
-          <ApprovalCard scene={scene} st={st} phone approvedBy={approvedBy} onApprove={onApprove} btnRef={btnRef} />
-        </div>
-      ),
-    });
-  items.sort((a, b) => a.t - b.t);
+function PhoneFeed({ scene, st, reduce }) {
+  // the conversation only: what Aurora does behind the scenes lives in PhoneBackstage
+  const items = scene.lines.slice(0, st.lines).map((l, i) => ({ key: 'm' + i, el: <FeedMessage scene={scene} l={l} i={i} reduce={reduce} /> }));
   const voice = scene.mode === 'voice';
   return (
     <div className="absolute inset-0 flex flex-col">
