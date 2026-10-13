@@ -1,17 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, m as motion, useReducedMotion } from 'framer-motion';
 import { CalendarCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { heroStage } from '@/data/site';
 import LiquidGlass from './primitives/LiquidGlass';
 import { EVENT_ICONS } from './eventIcons';
 import { EASE } from './motion';
-import { useMediaQuery, usePageVisible } from './hooks';
+import { useMediaQuery, usePageLoaded, usePageVisible } from './hooks';
 
 /**
  * Home hero background: short clips that cross-fade in place (no sliding), one after another.
  * Phones get vertical versions, wider screens the 16:9 ones. Only the clip on screen plays; the
- * next one is fetched while it runs. Reduced motion shows the first still only.
+ * next one is fetched once it is running. The first clip waits for the page's load event, so the
+ * poster, code and font come first. Reduced motion shows the first still only.
  * A small glass card says what Aurora did in each scene, and thin bars show the progress.
  */
 export default function HeroReel({ className = undefined }) {
@@ -21,6 +22,8 @@ export default function HeroReel({ className = undefined }) {
   const tall = useMediaQuery('(max-aspect-ratio: 4/5)', false);
   const [active, setActive] = useState(0);
   const [progress, setProgress] = useState(0);
+  const pageLoaded = usePageLoaded();
+  const [playing, setPlaying] = useState(-1);
   const refs = useRef([]);
   const next = (active + 1) % clips.length;
 
@@ -40,12 +43,15 @@ export default function HeroReel({ className = undefined }) {
         v.pause();
       }
     });
-  }, [active, visible, reduce, tall]);
+  }, [active, visible, reduce, tall, pageLoaded]);
 
   const onTime = (i) => (e) => {
     if (i !== active) return;
     const v = e.currentTarget;
     if (v.duration) setProgress(v.currentTime / v.duration);
+  };
+  const onPlaying = (i) => () => {
+    if (i === active) setPlaying(i);
   };
   const onEnded = (i) => () => {
     if (i !== active) return;
@@ -63,8 +69,9 @@ export default function HeroReel({ className = undefined }) {
         if (reduce) {
           return i === 0 ? <img key={c.key} src={poster} alt="" className="absolute inset-0 h-full w-full object-cover" /> : null;
         }
-        // The active clip and the next one load; the rest wait until their turn comes near.
-        const load = i === active || i === next;
+        // After the page has loaded, the active clip loads; the next one once the active clip is
+        // playing; the rest wait until their turn comes near.
+        const load = pageLoaded && (i === active || (i === next && playing === active));
         return (
           <video
             key={c.key + (tall ? '-t' : '-w')}
@@ -78,6 +85,7 @@ export default function HeroReel({ className = undefined }) {
             playsInline
             preload={load ? 'auto' : 'none'}
             onTimeUpdate={onTime(i)}
+            onPlaying={onPlaying(i)}
             onEnded={onEnded(i)}
           />
         );

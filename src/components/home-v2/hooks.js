@@ -41,6 +41,18 @@ export function useInViewport(ref, { rootMargin = '0px', threshold = 0, once = f
   return inView;
 }
 
+/** True once the window's load event has fired, so heavy media can wait for the page itself. */
+export function usePageLoaded() {
+  const [loaded, setLoaded] = useState(() => typeof document !== 'undefined' && document.readyState === 'complete');
+  useEffect(() => {
+    if (loaded) return undefined;
+    const onLoad = () => setLoaded(true);
+    window.addEventListener('load', onLoad, { once: true });
+    return () => window.removeEventListener('load', onLoad);
+  }, [loaded]);
+  return loaded;
+}
+
 export function usePageVisible() {
   const [visible, setVisible] = useState(true);
   useEffect(() => {

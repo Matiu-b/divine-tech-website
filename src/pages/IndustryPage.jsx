@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate, useParams } from 'react-router-dom';
-import { motion, useReducedMotion } from 'framer-motion';
+import { m as motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight, ArrowUpRight, Check, ScrollText, ShieldCheck, UserCheck } from 'lucide-react';
 import { brand } from '@/data/site';
 import { industries, industryBySlug, industryPath } from '@/data/industries';
@@ -39,7 +39,7 @@ function IndustryHero({ it }) {
           <RevealLines lines={[it.hero.titleA, it.hero.titleB]} lineClassNames={['', '']} immediate delay={0.08} stagger={0.14} />
         </h1>
         <div className="mt-7 grid gap-7 md:mt-9 lg:grid-cols-12 lg:items-end lg:gap-8">
-          <motion.p className="t-lead pretty max-w-[56ch] lg:col-span-7" {...rise(0.3)}>
+          <motion.p className="t-lead pretty max-w-[56ch] lg:col-span-7" {...slide(0.3)}>
             {it.hero.text}
           </motion.p>
           <motion.div className="flex flex-wrap items-center gap-2.5 sm:gap-3 lg:col-span-5 lg:justify-end" {...slide(0.42)}>
