@@ -50,25 +50,36 @@ const T_BASE = {
 // The voice call plays one continuous recorded call (Eleven v4 dialogue, scene.audio), so its
 // timeline follows the recording: each line starts exactly where it starts in the file (ms).
 const T_VOICE = {
-  // edited take: a real pause while the caller goes to shut the valve (Aurora books in the
-  // meantime), and a short hold while dispatch approves the same-day slot
-  line: [250, 7500, 19500, 26550, 36300],
-  lineDur: [6750, 11300, 6200, 5650, 5300],
+  // Edited take: a real pause while the caller goes to shut the valve, and a hold while
+  // dispatch approves the same-day slot. Every cue lands on the words that trigger it:
+  // "leaking" -> urgency, "Luis there today" -> schedule, "close the valve" -> safety step,
+  // the valve pause -> job created, "two to four works" -> technician booked,
+  // "sign-off from dispatch" -> approval request, "you'll get a text" -> customer updates.
+  line: [250, 7500, 19690, 26550, 36300],
+  lineDur: [6770, 11290, 6290, 5710, 5280],
+  // when each word is spoken, in ms after its line starts (from the recording)
+  wordAt: [
+    [0, 190, 480, 920, 1160, 1510, 2040, 2490, 2790, 3030, 3640, 3900, 4630, 5610, 5860, 6150, 6390],
+    [0, 150, 290, 690, 960, 1170, 1480, 1630, 1830, 1970, 2160, 3290, 3550, 3650, 4270, 4530, 4760, 5030, 5460, 5810, 6320, 6540, 6650, 6790, 7070, 7950, 8250, 8710, 9060, 9400, 9860, 10130, 10270, 10460, 10640, 11010],
+    [0, 3750, 4300, 4700, 4900, 5300],
+    [0, 350, 820, 1850, 2130, 2380, 2870, 3160, 3340, 3710, 4080, 4400, 5260, 5410],
+    [0, 170, 930, 1150, 1470, 1600, 1850, 2330, 2430, 2720, 2820, 3300, 3550, 3720, 3820, 4240, 4520, 4720, 4860, 5120],
+  ],
   typing: [
     [7000, 7500],
     [26050, 26550],
     [35900, 36300],
   ],
-  stepRun: [7700, 8300, 8900],
-  stepDone: [8300, 8900, 9500],
-  actRun: [20800, 21600, 22400],
-  actDone: [21600, 22400, 23200],
-  approvalPending: 32400,
-  cursorIn: 33800,
+  stepRun: [2300, 11300, 15700],
+  stepDone: [3000, 12100, 16300],
+  actRun: [20500, 24000, 39300],
+  actDone: [21300, 24800, 39900],
+  approvalPending: 30300,
+  cursorIn: 33300,
   cursorClick: 35000,
   approvalDone: 35100,
   end: 43400,
-  chapterAt: [0, 7000, 19500, 32400],
+  chapterAt: [0, 2300, 19690, 30300],
 };
 
 function makeTimeline(T) {
@@ -304,8 +315,31 @@ function Ring({ active, done, small = false }) {
 
 /** Words arrive one by one (Aurora's replies, live transcripts). */
 /** @param {any} props */
-function Stream({ text, step = 0.035, delay = 0.05, soft = true }) {
+function Stream({ text, step = 0.035, delay = 0.05, soft = true, times = undefined }) {
   const words = text.split(' ');
+  if (times) {
+    // recorded call: each word appears when it is spoken
+    return (
+      <>
+        <span className="sr-only">{text}</span>
+        <span aria-hidden="true">
+          {words.flatMap((w, i) => {
+            const el = (
+              <motion.span
+                key={'w' + i}
+                className="inline-block"
+                initial={{ opacity: 0, y: 3 }}
+                animate={{ opacity: 1, y: 0, transition: { duration: 0.28, ease: EASE, delay: (times[i] || 0) / 1000 } }}
+              >
+                {w}
+              </motion.span>
+            );
+            return i < words.length - 1 ? [el, ' '] : [el];
+          })}
+        </span>
+      </>
+    );
+  }
   return (
     <>
       <span className="sr-only">{text}</span>
@@ -522,7 +556,7 @@ function VoiceBody({ scene, st, phone, reduce }) {
                       {mine ? brand.product : 'Caller'}
                     </p>
                     <p className={cn('mt-0.5 leading-[1.45] text-ink', phone ? 'text-[12.5px]' : 'text-[13.5px]')}>
-                      {reduce ? l.text : <Stream text={l.text} step={Math.min(0.24, (tlOf(scene).T.lineDur ? tlOf(scene).T.lineDur[i] : speakDur(l.text)) / 1000 / words)} soft={false} />}
+                      {reduce ? l.text : <Stream text={l.text} step={Math.min(0.24, (tlOf(scene).T.lineDur ? tlOf(scene).T.lineDur[i] : speakDur(l.text)) / 1000 / words)} soft={false} times={tlOf(scene).T.wordAt && tlOf(scene).T.wordAt[i]} />}
                     </p>
                   </div>
                 </Grow>
@@ -887,7 +921,7 @@ function FeedMessage({ scene, l, i, reduce }) {
       <div className="pt-2.5">
         <p className={cn('text-[9.5px] font-medium uppercase tracking-[0.06em]', mine ? 'text-[#B4471A]' : 'text-slate')}>{mine ? brand.product : 'Caller'}</p>
         <p className="mt-0.5 text-[12.5px] leading-[1.45] text-ink">
-          {reduce ? l.text : <Stream text={l.text} step={Math.min(0.24, (tlOf(scene).T.lineDur ? tlOf(scene).T.lineDur[i] : speakDur(l.text)) / 1000 / l.text.split(' ').length)} soft={false} />}
+          {reduce ? l.text : <Stream text={l.text} step={Math.min(0.24, (tlOf(scene).T.lineDur ? tlOf(scene).T.lineDur[i] : speakDur(l.text)) / 1000 / l.text.split(' ').length)} soft={false} times={tlOf(scene).T.wordAt && tlOf(scene).T.wordAt[i]} />}
         </p>
       </div>
     );
@@ -931,7 +965,7 @@ function FeedMessage({ scene, l, i, reduce }) {
  */
 function PhoneFeed({ scene, st, reduce, approvedBy, onApprove, btnRef }) {
   const { T } = tlOf(scene);
-  const understood = st.steps[2] === 'done' ? 'done' : st.steps.includes('run') || st.steps.includes('done') ? 'run' : 'idle';
+  const understood = st.steps[0];
   const items = [];
   scene.lines.slice(0, st.lines).forEach((l, i) => items.push({ t: T.line[i], key: 'm' + i, el: <FeedMessage scene={scene} l={l} i={i} reduce={reduce} /> }));
   if (understood !== 'idle') items.push({ t: T.stepRun[0], key: 'u', el: <FeedEvent title={scene.steps[0].title} detail={scene.steps[0].detail} state={understood} /> });
