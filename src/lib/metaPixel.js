@@ -43,22 +43,21 @@ function loadPixel() {
   if (loaded || typeof window === 'undefined') return;
   loaded = true;
   /* eslint-disable */
-  // Meta's snippet, except that fbevents.js is fetched once the page has loaded: calls made
-  // before then wait in fbq.queue and are sent when the script arrives.
+  // Meta's snippet, except that fbevents.js waits for the visitor (window.dtWhenEngaged in
+  // index.html): calls made before then wait in fbq.queue and are sent when the script arrives.
   !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
   n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-  n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];afterPageLoad(function(){t=b.createElement(e);t.async=!0;
+  n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];whenEngaged(function(){t=b.createElement(e);t.async=!0;
   t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)})}(window,
   document,'script','https://connect.facebook.net/en_US/fbevents.js');
   /* eslint-enable */
   window.fbq('init', META_PIXEL_ID);
 }
 
-/** Runs fn once the page has loaded and the browser is idle (at most 2 s after load). */
-function afterPageLoad(fn) {
-  const idle = () => (window.requestIdleCallback ? window.requestIdleCallback(fn, { timeout: 2000 }) : setTimeout(fn, 0));
-  if (document.readyState === 'complete') idle();
-  else window.addEventListener('load', idle, { once: true });
+/** Runs fn when index.html's dtWhenEngaged says so (first interaction, or 4 s after load). */
+function whenEngaged(fn) {
+  if (typeof window.dtWhenEngaged === 'function') window.dtWhenEngaged(fn);
+  else fn();
 }
 
 /** @param {...any} args */
