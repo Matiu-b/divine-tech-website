@@ -9,6 +9,7 @@ import FinalCTA from '@/components/home-v2/FinalCTA';
 import Faq from '@/components/home-v2/Faq';
 import PlatformArchitecture from '@/components/home-v2/PlatformArchitecture';
 import PlatformSecurity from '@/components/home-v2/PlatformSecurity';
+import ConsoleTour from '@/components/home-v2/ConsoleTour';
 import CTAButton from '@/components/home-v2/primitives/CTAButton';
 import SafeBoundary from '@/components/home-v2/primitives/SafeBoundary';
 import { RevealLines } from '@/components/home-v2/primitives/MotionReveal';
@@ -69,6 +70,7 @@ export default function PlatformPage() {
   return (
     <SiteLayout meta={platformPage.meta}>
       <PlatformHero />
+      <ConsoleTour />
       <div id="capabilities">
         <Capabilities />
       </div>

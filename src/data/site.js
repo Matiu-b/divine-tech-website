@@ -527,6 +527,22 @@ export const platformPage = {
   note: 'Scripted demo built from typical flows. Names, times and prices are examples.',
   // How it's built: channels in, three layers, systems out. Integration names are text only:
   // no partner logos until there are agreements to show them.
+  // Product tour: real Aurora console screens, redrawn with illustrative data.
+  console: {
+    eyebrow: 'Inside Aurora',
+    titleA: 'The console',
+    titleB: 'your team works in.',
+    text: 'Every conversation, every action Aurora takes and every handoff to a person shows up in one place, for your whole team to see.',
+    note: 'Aurora console screens. Names and figures are illustrative.',
+    slides: [
+      { key: 'dashboard', title: 'Today at a glance', text: 'Unread conversations, open handoffs and how much the agents handled, the moment you sign in.' },
+      { key: 'inbox', title: 'One inbox for every channel', text: 'Web chat, email, text and calls land in one list, tagged by what each one needs.' },
+      { key: 'action', title: 'Every action on the record', text: 'See the exact request Aurora sent to your system, and who approved it.' },
+      { key: 'handoff', title: 'Take over in one click', text: 'Assign a conversation, switch from the agent to a person and back, with the full history in view.' },
+      { key: 'channels', title: 'Performance per channel', text: 'Where conversations come from and how much of each channel the agents resolve.' },
+      { key: 'customer', title: 'The customer beside the chat', text: 'Profile, CRM notes and past requests next to every conversation.' },
+    ],
+  },
   architecture: {
     eyebrow: 'How it is built',
     titleA: 'An AI agent platform',

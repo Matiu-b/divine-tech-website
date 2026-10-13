@@ -154,6 +154,7 @@ function render(path, meta, main) {
   const p = s.platformPage;
   const main = [
     `<section><h1>${esc(p.titleA)} ${esc(p.titleB)}</h1><p>${esc(p.text)}</p></section>`,
+    `<section id="console"><h2>${esc(p.console.titleA)} ${esc(p.console.titleB)}</h2><p>${esc(p.console.text)}</p>${p.console.slides.map((x) => `<h3>${esc(x.title)}</h3><p>${esc(x.text)}</p>`).join('')}</section>`,
     `<section id="capabilities"><h2>What Aurora does</h2>${s.capabilities.map((c) => `<h3>${esc(c.title)}</h3><p>${esc(c.text)}</p>`).join('')}</section>`,
     `<section id="teams"><h2>${esc(s.teams.titleA)} ${esc(s.teams.titleB)}</h2>${s.teams.items
       .map((t) => `<h3>${esc(t.label)}: ${esc(t.title)}</h3><p>${esc(t.line)}</p><p>Measured by: ${esc(t.kpis.join(', '))}.</p>`)
