@@ -587,13 +587,35 @@ export const platformPage = {
     eyebrow: 'Security and trust',
     titleA: 'Autonomy you set.',
     titleB: 'Every step on record.',
+    text: 'You decide what Aurora does on its own, what waits for a person and what it never does. Every action is logged with the rule that applied and who approved it.',
+    // Product view of the rules: try moving a row. Illustrative rules, matching the hero film scenarios.
+    policy: {
+      title: 'Rules for your agents',
+      hint: 'Tap a setting to change it',
+      rows: [
+        { action: 'Answer customer questions', mode: 'auto' },
+        { action: 'Book and reschedule visits', mode: 'auto' },
+        { action: 'Waive application fees', mode: 'approval', who: 'Leasing manager' },
+        { action: 'Refunds over $200', mode: 'approval', who: 'Finance' },
+        { action: 'Discounts over 10%', mode: 'approval', who: 'Sales manager' },
+        { action: 'Change prices or contract terms', mode: 'never' },
+      ],
+      note: 'Limits apply the same way at 3 pm and at 3 am.',
+    },
+    audit: {
+      title: 'Audit log',
+      entries: [
+        { time: '10:42', what: 'Refund $240', ref: 'BIL-311', by: 'Approved by Alex · Finance' },
+        { time: '10:31', what: 'Discount 15%', ref: 'Q-1042', by: 'Approved by Daniel · Sales' },
+        { time: '10:18', what: 'Application fee waived', ref: 'REQ-2048', by: 'Approved by Dana · Leasing' },
+        { time: '10:05', what: 'Technician booked', ref: 'JOB-1186', by: 'Automatic · within rules' },
+      ],
+    },
     items: [
-      { icon: 'rules', title: 'Rules and approvals', text: 'You decide what Aurora does alone, what needs a person’s approval and what it never does, with limits such as refund or discount amounts. When a request crosses a limit, Aurora asks the right person and waits.' },
-      { icon: 'roles', title: 'Access per role', text: 'Permissions are set per role, team and channel, so each agent only sees and does what its job needs.' },
-      { icon: 'audit', title: 'A full audit log', text: 'Every action is recorded with the request, the rule that applied and who approved it.' },
-      { icon: 'handoff', title: 'A person can step in', text: 'Your team can take over any conversation at any moment, and Aurora hands off with the full history.' },
-      { icon: 'data', title: 'Your data stays yours', text: 'Your data is never used to train shared models.' },
-      { icon: 'golive', title: 'Nothing goes live untested', text: 'Aurora is tested on real questions from your own data, and goes live only when you approve.' },
+      { icon: 'roles', title: 'Access per role', text: 'Each agent only sees and does what its job needs.' },
+      { icon: 'handoff', title: 'A person can step in', text: 'Take over any conversation, with the full history.' },
+      { icon: 'data', title: 'Your data stays yours', text: 'Never used to train shared models.' },
+      { icon: 'golive', title: 'Tested before it goes live', text: 'On real questions from your own data, live only when you approve.' },
     ],
   },
   faq: [
