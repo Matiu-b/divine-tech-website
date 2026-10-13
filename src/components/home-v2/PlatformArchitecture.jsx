@@ -120,9 +120,10 @@ export default function PlatformArchitecture() {
                         <span className={cn('h-2 w-2 rounded-full transition-colors duration-500', layerOn(i) ? 'bg-[#F25C2A]' : 'bg-ink/20')} />
                         {l.name}
                       </p>
+                      {/* phones: the first point only, so the card never changes height */}
                       <ul className="mt-2 grid gap-1.5">
-                        {l.points.map((pt) => (
-                          <li key={pt} className="text-[12.5px] leading-snug text-ink/70">
+                        {l.points.map((pt, j) => (
+                          <li key={pt} className={cn('text-[12.5px] leading-snug text-ink/70', j > 0 && 'hidden md:block')}>
                             {pt}
                           </li>
                         ))}

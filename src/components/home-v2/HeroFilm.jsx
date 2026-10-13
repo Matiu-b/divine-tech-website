@@ -112,15 +112,15 @@ const COMPS = {
     bounds: [24, 76, 836, 638],
     safe: [10, 68, 850, 650],
   },
-  // Phones show one card at a time (see PHONE_SHOW): the conversation, then Aurora's work,
-  // then the approval, then the conversation again with the outcome. All share one slot.
+  // Phones show one card at a time (see PHONE_SHOW): the conversation, then Aurora's work, then
+  // the conversation again with the approval request floating over its foot, then the outcome.
   phone: {
     w: 360,
     h: 520,
     tabs: { x: 12, y: 12 },
     panel: { x: 12, y: 58, w: 336, h: 404 },
-    work: { x: 12, y: 96, w: 336 },
-    approval: { x: 12, y: 196, w: 336 },
+    work: { x: 12, y: 120, w: 336 },
+    approval: { x: 20, y: 382, w: 320 },
     bar: { x: 12, y: 478, w: 336, h: 28 },
     flows: null,
     focus: [
@@ -136,7 +136,7 @@ const COMPS = {
 
 /** Phone: which card is on screen for the current chapter and approval state. */
 const PHONE_SHOW = {
-  panel: (st) => st.chapter === 0 || (st.chapter === 3 && st.approval === 'done'),
+  panel: (st) => st.chapter === 0 || st.chapter === 3,
   work: (st) => st.chapter === 1 || st.chapter === 2,
   approval: (st) => st.chapter === 3 && st.approval !== 'done',
 };
