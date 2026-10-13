@@ -594,10 +594,10 @@ export const platformPage = {
       hint: 'Tap a setting to change it',
       rows: [
         { action: 'Answer customer questions', mode: 'auto' },
-        { action: 'Book and reschedule visits', mode: 'auto' },
+        { action: 'Book and reschedule visits', mode: 'auto', phone: false },
         { action: 'Waive application fees', mode: 'approval', who: 'Leasing manager' },
         { action: 'Refunds over $200', mode: 'approval', who: 'Finance' },
-        { action: 'Discounts over 10%', mode: 'approval', who: 'Sales manager' },
+        { action: 'Discounts over 10%', mode: 'approval', who: 'Sales manager', phone: false },
         { action: 'Change prices or contract terms', mode: 'never' },
       ],
       note: 'Limits apply the same way at 3 pm and at 3 am.',

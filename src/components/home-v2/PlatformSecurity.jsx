@@ -24,25 +24,25 @@ function PolicyEditor() {
   const [modes, setModes] = useState(() => P.rows.map((r) => r.mode));
   return (
     <div className="rounded-[24px] bg-white p-4 shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_24px_48px_-32px_rgba(90,50,20,0.35)] md:p-5">
-      <div className="flex items-baseline justify-between gap-3">
+      <div className="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-3">
         <p className="flex items-center gap-2 text-[14px] font-medium text-ink">
           <ShieldCheck className="h-4 w-4 text-[#D9481C]" strokeWidth={1.8} aria-hidden="true" />
           {P.title}
         </p>
-        <p className="text-[11.5px] text-slate">{P.hint}</p>
+        <p className="pl-6 text-[11.5px] text-slate sm:pl-0">{P.hint}</p>
       </div>
       <ul className="mt-3 divide-y divide-ink/[0.06]">
         {P.rows.map((r, i) => {
           const mode = modes[i];
           return (
-            <li key={r.action} className="flex flex-col gap-2 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+            <li key={r.action} className={cn('items-center justify-between gap-3 py-2.5 sm:gap-4 sm:py-3', r.phone === false ? 'hidden sm:flex' : 'flex')}>
               <div className="min-w-0">
-                <p className="text-[13.5px] font-medium text-ink">{r.action}</p>
-                <p className="mt-0.5 text-[11.5px] text-slate">
+                <p className="text-[13px] font-medium leading-snug text-ink sm:text-[13.5px]">{r.action}</p>
+                <p className="mt-0.5 text-[11px] leading-snug text-slate sm:text-[11.5px]">
                   {mode === 'auto' ? 'Aurora does it on its own' : mode === 'approval' ? 'Waits for ' + (r.who || 'a manager') : 'Aurora never does this'}
                 </p>
               </div>
-              <div role="radiogroup" aria-label={r.action} className="flex shrink-0 gap-1 rounded-full bg-paper p-1">
+              <div role="radiogroup" aria-label={r.action} className="flex shrink-0 gap-0.5 rounded-full bg-paper p-1 sm:gap-1">
                 {MODES.map(([m, label]) => (
                   <button
                     key={m}
@@ -51,7 +51,7 @@ function PolicyEditor() {
                     aria-checked={mode === m}
                     onClick={() => setModes((all) => all.map((x, j) => (j === i ? m : x)))}
                     className={cn(
-                      'h-7 flex-1 rounded-full px-3 text-[11.5px] font-medium transition-colors duration-300 sm:flex-none',
+                      'h-7 rounded-full px-2 text-[11px] font-medium transition-colors duration-300 sm:px-3 sm:text-[11.5px]',
                       mode === m ? MODE_ON[m] : 'text-ink/50 hover:text-ink'
                     )}
                   >
