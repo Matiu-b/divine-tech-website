@@ -1011,9 +1011,21 @@ function PhoneFeed({ scene, st, reduce, approvedBy, onApprove, btnRef }) {
 function ChannelTabs({ k, onSelect, phone }) {
   const refs = useRef([]);
   const [pill, setPill] = useState({ x: 0, w: 0, ready: false });
+  // Re-measure whenever a tab changes size, not only when the tab changes: the brand font
+  // often arrives after the first paint, and the pill must grow with the label it sits under.
   useLayoutEffect(() => {
-    const el = refs.current[k];
-    if (el) setPill((p) => ({ x: el.offsetLeft, w: el.offsetWidth, ready: p.w > 0 }));
+    const measure = () => {
+      const el = refs.current[k];
+      if (el) setPill((p) => (p.x === el.offsetLeft && p.w === el.offsetWidth ? p : { x: el.offsetLeft, w: el.offsetWidth, ready: p.w > 0 }));
+    };
+    measure();
+    let ro = null;
+    if (typeof ResizeObserver !== 'undefined') {
+      ro = new ResizeObserver(measure);
+      refs.current.forEach((el) => el && ro.observe(el));
+    }
+    if (typeof document !== 'undefined' && document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+    return () => ro && ro.disconnect();
   }, [k, phone]);
   const onKey = (e, i) => {
     const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
@@ -1259,10 +1271,12 @@ export default function HeroFilm({ startScene = undefined }) {
   const { T, CHAPTERS } = tlOf(scene);
   const audioRef = useRef(null);
   const [sound, setSound] = useState(false);
+  // The recorded call never plays on its own: it waits for the visitor to press play (with sound).
+  const [callStarted, setCallStarted] = useState(false);
 
   const inView = useInViewport(stageRef, { threshold: 0.15 });
   const visible = usePageVisible();
-  const running = introDone && inView && visible && playing && !takeover && !reduce;
+  const running = introDone && inView && visible && playing && !takeover && !reduce && (!scene.audio || callStarted);
 
   const { time, play, stop, onEnd } = useClock(T.end);
   // The film state belongs to one run (scene + replay). A new run uses its own
@@ -1375,6 +1389,24 @@ export default function HeroFilm({ startScene = undefined }) {
     setLoop((n) => n + 1);
   };
 
+  // A new scene starts with the call not started and the sound off.
+  useEffect(() => {
+    setCallStarted(false);
+    setSound(false);
+  }, [k]);
+  const startCall = () => {
+    setCallStarted(true);
+    if (!sound) toggleSound();
+    else setLoop((n) => n + 1);
+  };
+  // Reached by the automatic tour (not chosen by the visitor): offer the call for a few
+  // seconds, then move on, so the film never sits still waiting for a click.
+  useEffect(() => {
+    if (!scene.audio || callStarted || reduce || userDriven.current || !introDone || !inView || !visible) return undefined;
+    const id = window.setTimeout(() => setK((i) => (i + 1) % SCENES.length), 7000);
+    return () => window.clearTimeout(id);
+  }, [scene.audio, callStarted, reduce, introDone, inView, visible, k]);
+
   onEnd.current = () => {
     if (userDriven.current) setLoop((n) => n + 1);
     else setK((i) => (i + 1) % SCENES.length);
@@ -1476,7 +1508,7 @@ export default function HeroFilm({ startScene = undefined }) {
                         animate={{ opacity: 1, y: 0, transition: { duration: 0.6, delay: 0.12, ease: EASE } }}
                         exit={{ opacity: 0, transition: { duration: 0.35, ease: EASE } }}
                       >
-                        <Panel scene={scene} st={st} phone={phone} reduce={reduce} callTime={callTime} takeover={takeover} onTakeover={toggleTakeover} approvedBy={approvedBy} onApprove={approve} btnRef={btnRef} sound={sound} onSound={toggleSound} />
+                        <Panel scene={scene} st={st} phone={phone} reduce={reduce} callTime={callTime} takeover={takeover} onTakeover={toggleTakeover} approvedBy={approvedBy} onApprove={approve} btnRef={btnRef} sound={sound} onSound={callStarted ? toggleSound : startCall} />
                       </motion.div>
                     </AnimatePresence>
                   </Group>
@@ -1538,6 +1570,37 @@ export default function HeroFilm({ startScene = undefined }) {
             </div>
           </div>
 
+          {/* The voice scene opens on a play button: the call starts only when asked, with sound */}
+          <AnimatePresence>
+            {hasAudio && !callStarted && !reduce ? (
+              <motion.div
+                key="call-start"
+                className="absolute inset-0 z-[6] flex items-center justify-center bg-[#F6F2EA]/35 backdrop-blur-[3px]"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1, transition: { duration: 0.4, ease: EASE } }}
+                exit={{ opacity: 0, transition: { duration: 0.3 } }}
+              >
+                <button type="button" onClick={startCall} className="group" aria-label="Play the recorded call with sound">
+                  <LiquidGlass
+                    solid
+                    className={cn('flex items-center rounded-full text-left shadow-[0_18px_40px_-18px_rgba(90,50,20,0.45)]', phone ? 'gap-3 py-2 pl-2 pr-5' : 'gap-4 py-2.5 pl-2.5 pr-7')}
+                  >
+                    <span className={cn('relative flex shrink-0 items-center justify-center rounded-full bg-[#F25C2A] text-white transition-transform duration-300 group-hover:scale-105', phone ? 'h-11 w-11' : 'h-14 w-14')}>
+                      <span className="ring-ping absolute inset-0 rounded-full bg-[#F25C2A]/40" aria-hidden="true" />
+                      <Play className={cn('relative ml-0.5 fill-current', phone ? 'h-4 w-4' : 'h-5 w-5')} strokeWidth={0} aria-hidden="true" />
+                    </span>
+                    <span>
+                      <span className={cn('block font-medium tracking-[-0.01em] text-ink', phone ? 'text-[14px]' : 'text-[16px]')}>Listen to a real call</span>
+                      <span className={cn('mt-0.5 flex items-center gap-1.5 text-graphite', phone ? 'text-[11px]' : 'text-[12.5px]')}>
+                        <Volume2 className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
+                        Plays with sound · 0:43
+                      </span>
+                    </span>
+                  </LiquidGlass>
+                </button>
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
         </div>
       </motion.div>
       {hasAudio ? <audio ref={audioRef} src={scene.audio} preload="none" onEnded={() => setSound(false)} /> : null}
