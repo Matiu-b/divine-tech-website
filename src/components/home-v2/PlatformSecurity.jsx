@@ -24,21 +24,24 @@ export default function PlatformSecurity() {
         <Reveal y={28} className="mt-8 md:mt-14">
           <ul className="grid divide-y divide-ink/[0.06] rounded-[24px] bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.06)] sm:grid-cols-3 sm:divide-x sm:divide-y-0">
             {S.tiers.map((t) => (
-              <li key={t.mode} className="flex items-center justify-between gap-4 px-4 py-3.5 sm:block sm:p-6">
+              <li key={t.mode} className="px-4 py-3.5 sm:p-6">
                 <span className={cn('inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-[12px] font-medium', CHIP[t.mode])}>
                   <span className={cn('h-1.5 w-1.5 rounded-full', DOT[t.mode])} aria-hidden="true" />
                   {t.label}
                 </span>
-                <p className="text-right text-[13px] leading-relaxed text-graphite sm:mt-4 sm:text-left sm:text-[15px] sm:text-ink">
-                  {t.examples.map((ex) => (
-                    <span key={ex} className="block">{ex}</span>
+                <p className="mt-2 text-[13px] leading-relaxed text-ink sm:mt-4 sm:text-[15px]">
+                  {t.examples.map((ex, i) => (
+                    <span key={ex} className="sm:block">
+                      {i > 0 && <span className="px-1.5 text-ink/30 sm:hidden" aria-hidden="true">·</span>}
+                      {ex}
+                    </span>
                   ))}
                 </p>
               </li>
             ))}
           </ul>
 
-          <ul className="mt-5 grid grid-cols-2 gap-x-4 gap-y-3 px-1 md:mt-6 md:flex md:flex-wrap md:justify-between">
+          <ul className="mt-5 grid grid-cols-2 gap-x-3 gap-y-3 px-1 md:mt-6 md:flex md:flex-wrap md:justify-between">
             {S.items.map((it) => {
               const Icon = ICONS[it.icon] || ShieldCheck;
               return (
