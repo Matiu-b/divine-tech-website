@@ -587,18 +587,48 @@ export const platformPage = {
     eyebrow: 'Security and trust',
     titleA: 'Autonomy you set.',
     titleB: 'Every step on record.',
-    text: 'You choose what Aurora does on its own, what waits for a person and what it never does. Every action is logged.',
-    // Three levels, two illustrative examples each.
-    tiers: [
-      { mode: 'auto', label: 'On its own', examples: ['Answer questions', 'Book visits'] },
-      { mode: 'approval', label: 'Waits for a person', examples: ['Refunds over $200', 'Big discounts'] },
-      { mode: 'never', label: 'Never', examples: ['Change prices', 'Sign contracts'] },
-    ],
+    text: 'You decide how much Aurora does on its own. Every action is on record, and your data is never used to train shared models.',
+    // Four cards, each with a small product snippet (illustrative names and figures).
     items: [
-      { icon: 'roles', title: 'Access per role', text: 'Each agent only sees and does what its job needs.' },
-      { icon: 'handoff', title: 'A person can step in', text: 'Take over any conversation, with the full history.' },
-      { icon: 'data', title: 'Your data stays yours', text: 'Never used to train shared models.' },
-      { icon: 'golive', title: 'Tested before it goes live', text: 'On real questions from your own data, live only when you approve.' },
+      {
+        key: 'rules',
+        title: 'Rules you set',
+        text: 'Choose what Aurora does on its own, what needs approval and what it never does.',
+        mock: {
+          title: 'Rules',
+          rows: [
+            ['auto', 'Auto', 'Answer questions'],
+            ['approval', 'Approval', 'Refunds over $200'],
+            ['approval', 'Approval', 'Discounts over 10%'],
+            ['never', 'Never', 'Change prices'],
+          ],
+        },
+      },
+      {
+        key: 'approval',
+        title: 'Approvals in one tap',
+        text: 'When a request crosses a limit, the right person gets it and decides.',
+        mock: { tag: 'Needs approval', what: 'Refund $240', why: 'BIL-311 · over the $200 limit', who: 'Waiting for Alex · Finance' },
+      },
+      {
+        key: 'audit',
+        title: 'Every step on record',
+        text: 'Each action is logged with the rule that applied and who approved it.',
+        mock: {
+          title: 'Audit log',
+          rows: [
+            ['Refund $240', 'Approved by Alex'],
+            ['Discount 15%', 'Approved by Daniel'],
+            ['Technician booked', 'Within rules'],
+          ],
+        },
+      },
+      {
+        key: 'handoff',
+        title: 'A person can step in',
+        text: 'Your team can take over any conversation, with the full history.',
+        mock: { ask: 'Can I talk to someone?', joined: 'Dana joined · Leasing', reply: 'Hi Sarah, I have everything here.' },
+      },
     ],
   },
   faq: [
