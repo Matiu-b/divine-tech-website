@@ -64,8 +64,9 @@ function Field({ id, label, optional = false, hint = undefined, error = undefine
 const LEAD_FORM_NAME = 'lead';
 
 /**
- * Lead form. Submits to Netlify Forms (form "lead"); submissions appear in the
- * Netlify dashboard and trigger the email notifications configured there.
+ * Lead form, used by every "Book a demo" entry point. Submits to /api/lead
+ * (Netlify Function -> Make: HubSpot + WhatsApp) and, as a backup record, to
+ * Netlify Forms (form "lead").
  * @param {any} props
  */
 export function LeadForm({ dark = false, columns = 1, wide = false, onDone = undefined, autoFocus = false, industry = '' }) {
@@ -120,9 +121,7 @@ export function LeadForm({ dark = false, columns = 1, wide = false, onDone = und
     setFailure('');
     setState('sending');
     try {
-      const body = new URLSearchParams({
-        'form-name': LEAD_FORM_NAME,
-        subject: 'New demo request from divine-tech.ai: ' + d.name,
+      const lead = {
         name: d.name,
         company: d.company || '',
         email: d.email,
@@ -131,14 +130,33 @@ export function LeadForm({ dark = false, columns = 1, wide = false, onDone = und
         message: d.message || '',
         source: 'divine-tech.ai landing',
         page: window.location.href,
-      });
-      const res = await fetch('/__forms.html', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: body.toString(),
-      });
-      if (!res.ok) throw new Error('Form submission failed: ' + res.status);
-      // Conversion is reported only after Netlify accepted the submission.
+      };
+      // Two deliveries in parallel:
+      // 1. /api/lead (netlify/functions/lead.mjs) hands the lead straight to Make
+      //    (HubSpot + WhatsApp), so Netlify's spam filter can't swallow it.
+      // 2. Netlify Forms keeps a backup copy in the dashboard.
+      // The visitor sees the success screen if either one accepted the lead.
+      const post = (url, init) =>
+        fetch(url, { method: 'POST', ...init }).then((res) => {
+          if (!res.ok) throw new Error(url + ' ' + res.status);
+          return res;
+        });
+      const results = await Promise.allSettled([
+        post('/api/lead', {
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(lead),
+        }),
+        post('/__forms.html', {
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams({
+            'form-name': LEAD_FORM_NAME,
+            subject: 'New demo request from divine-tech.ai: ' + d.name,
+            ...lead,
+          }).toString(),
+        }),
+      ]);
+      if (!results.some((r) => r.status === 'fulfilled')) throw new Error('Form submission failed');
+      // Conversion is reported only after the lead was accepted.
       try {
         trackDemoRequest({ email: d.email, phone: d.phone, industry: d.industry });
       } catch {
