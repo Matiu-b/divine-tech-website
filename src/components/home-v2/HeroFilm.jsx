@@ -107,7 +107,7 @@ function buildTextTimeline(scene) {
       } else t += 800;
     }
     T.line.push(t);
-    t += Math.min(5200, Math.max(2200, 900 + l.text.length * 36));
+    t += Math.min(4800, Math.max(2000, 800 + l.text.length * 32));
     if (i === scene.stepsAfter) {
       for (let k = 0; k < 3; k += 1) {
         T.stepRun.push(t);
