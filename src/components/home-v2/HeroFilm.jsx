@@ -15,8 +15,8 @@ import { useInViewport, useMediaQuery, usePageVisible } from './hooks';
  * The same request flow plays on four channels: listen → understand → act →
  * confirm, with one decision handed to a person. It is built like a motion
  * comp: fixed-size compositions (wide / tablet / phone) scaled to fit, one
- * linear clock driving every event, a slow camera pan with a key light, a
- * light sweep and text that streams in. Nothing reacts to hover: motion is
+ * linear clock driving every event and text that streams in. The framing is
+ * fixed (no camera pan or light sweep), and phones show one card at a time. Nothing reacts to hover: motion is
  * driven by the clock and by clicks only, so it stays steady under the mouse. Visitors can switch channels, approve the decision
  * themselves, take over the conversation, pause, or jump between chapters.
  * Reduced motion shows each scene's finished state.
@@ -24,8 +24,11 @@ import { useInViewport, useMediaQuery, usePageVisible } from './hooks';
 
 const SCENES = heroFilm.scenes;
 
-// Shared timeline (ms).
-const T = {
+// Shared timeline (ms). Written at the original pace and scaled by PACE, so the loop runs
+// about 12 seconds instead of 17.
+const PACE = 0.7;
+const pace = (v) => (Array.isArray(v) ? v.map(pace) : Math.round(v * PACE));
+const T_BASE = {
   line: [500, 4800, 5900, 8400, 13900],
   typing: [
     [3950, 4800],
@@ -42,12 +45,13 @@ const T = {
   approvalDone: 12950,
   end: 17400,
 };
+const T = Object.fromEntries(Object.entries(T_BASE).map(([k, v]) => [k, pace(v)]));
 
 const CHAPTERS = [
-  { label: heroFilm.chapters[0], start: 0, end: 2000 },
-  { label: heroFilm.chapters[1], start: 2000, end: 5900 },
-  { label: heroFilm.chapters[2], start: 5900, end: 9300 },
-  { label: heroFilm.chapters[3], start: 9300, end: T.end },
+  { label: heroFilm.chapters[0], start: 0, end: pace(2000) },
+  { label: heroFilm.chapters[1], start: pace(2000), end: pace(5900) },
+  { label: heroFilm.chapters[2], start: pace(5900), end: pace(9300) },
+  { label: heroFilm.chapters[3], start: pace(9300), end: T.end },
 ];
 
 // Which groups the camera favours in each chapter (others dim slightly).
@@ -108,29 +112,38 @@ const COMPS = {
     bounds: [24, 76, 836, 638],
     safe: [10, 68, 850, 650],
   },
+  // Phones show one card at a time (see PHONE_SHOW): the conversation, then Aurora's work,
+  // then the approval, then the conversation again with the outcome. All share one slot.
   phone: {
     w: 360,
-    h: 680,
+    h: 520,
     tabs: { x: 12, y: 12 },
-    panel: { x: 12, y: 58, w: 336, h: 288 },
-    work: { x: 12, y: 356, w: 336 },
-    approval: { x: 12, y: 566, w: 336 },
-    bar: { x: 12, y: 642, w: 336, h: 28 },
+    panel: { x: 12, y: 58, w: 336, h: 404 },
+    work: { x: 12, y: 96, w: 336 },
+    approval: { x: 12, y: 196, w: 336 },
+    bar: { x: 12, y: 478, w: 336, h: 28 },
     flows: null,
     focus: [
-      [180, 202],
-      [180, 300],
-      [180, 456],
-      [180, 597],
+      [180, 260],
+      [180, 260],
+      [180, 260],
+      [180, 260],
     ],
-    bounds: [12, 58, 348, 628],
-    safe: [5, 52, 355, 634],
+    bounds: [12, 58, 348, 462],
+    safe: [5, 52, 355, 468],
   },
 };
 
+/** Phone: which card is on screen for the current chapter and approval state. */
+const PHONE_SHOW = {
+  panel: (st) => st.chapter === 0 || (st.chapter === 3 && st.approval === 'done'),
+  work: (st) => st.chapter === 1 || st.chapter === 2,
+  approval: (st) => st.chapter === 3 && st.approval !== 'done',
+};
+
 const CH = {
-  chat: { icon: MessageCircle, chip: 'bg-[#E6F4EC] text-[#1C7A4F]' },
-  voice: { icon: Phone, chip: 'bg-[#E4F2F0] text-[#0E6E66]' },
+  chat: { icon: MessageCircle, chip: 'bg-[#FDEBDD] text-[#B4471A]' },
+  voice: { icon: Phone, chip: 'bg-[#FFF1D6] text-[#8A5A12]' },
   web: { icon: MessagesSquare, chip: 'bg-[#ECEFF6] text-[#3B4A6B]' },
   email: { icon: Mail, chip: 'bg-[#F4EEE3] text-[#7A5A1E]' },
 };
@@ -200,15 +213,6 @@ function centreWithin(el, root) {
   return n === root ? [x, y] : null;
 }
 
-/** Keeps the camera's framing inside the stage so no card is ever cut off. */
-function frameCamera(c, z, x, y) {
-  const [bx0, by0, bx1, by1] = c.bounds;
-  const [sx0, sy0, sx1, sy1] = c.safe;
-  const cx = c.w / 2;
-  const cy = c.h / 2;
-  const fit = (v, lo, hi) => (lo > hi ? (lo + hi) / 2 : Math.min(hi, Math.max(lo, v)));
-  return [fit(x, sx0 - (cx + z * (bx0 - cx)), sx1 - (cx + z * (bx1 - cx))), fit(y, sy0 - (cy + z * (by0 - cy)), sy1 - (cy + z * (by1 - cy)))];
-}
 
 const pseudo = (i) => {
   const x = Math.sin(i * 12.9898) * 43758.5453;
@@ -249,7 +253,7 @@ function Status({ state, size = 16 }) {
         initial={{ scale: 0.4, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.4, ease: EASE }}
-        className="flex shrink-0 items-center justify-center rounded-full bg-brand text-white"
+        className="flex shrink-0 items-center justify-center rounded-full bg-ink text-white"
         style={{ width: size, height: size }}
       >
         <Check strokeWidth={3} style={{ width: size * 0.62, height: size * 0.62 }} aria-hidden="true" />
@@ -257,7 +261,7 @@ function Status({ state, size = 16 }) {
     );
   }
   if (state === 'run') {
-    return <span className="block shrink-0 animate-spin rounded-full border-[1.75px] border-brand/20 border-t-brand [animation-duration:0.9s]" style={{ width: size, height: size }} />;
+    return <span className="block shrink-0 animate-spin rounded-full border-[1.75px] border-[#F25C2A]/20 border-t-[#F25C2A] [animation-duration:0.9s]" style={{ width: size, height: size }} />;
   }
   return <span className="block shrink-0 rounded-full border-[1.5px] border-ink/15" style={{ width: size, height: size }} />;
 }
@@ -274,7 +278,7 @@ function Ring({ active, done, small = false }) {
         )}
       />
       <span className="absolute inset-[2.5px] rounded-full bg-white" />
-      <span className={cn('relative h-2.5 w-2.5 rounded-full transition-colors duration-500', done ? 'bg-brand' : active ? 'bg-brand-glow' : 'bg-ink/20')} />
+      <span className={cn('relative h-2.5 w-2.5 rounded-full transition-colors duration-500', done ? 'bg-ink' : active ? 'bg-[#FF9F45]' : 'bg-ink/20')} />
     </span>
   );
 }
@@ -435,7 +439,7 @@ const BARS = 44;
 
 /** @param {any} props */
 function Waveform({ speaking, thinking, phone }) {
-  const tone = speaking === 'aurora' ? 'bg-brand' : speaking === 'customer' ? 'bg-ink/70' : 'bg-ink/20';
+  const tone = speaking === 'aurora' ? 'bg-[#F25C2A]' : speaking === 'customer' ? 'bg-ink/70' : 'bg-ink/20';
   const n = phone ? 34 : BARS;
   return (
     <div className={cn('flex items-center justify-between', phone ? 'h-[52px] gap-[2px]' : 'h-[76px] gap-[3px]', speaking ? 'wave-on' : thinking ? 'wave-think' : '')} aria-hidden="true">
@@ -463,7 +467,7 @@ function VoiceBody({ scene, st, phone, reduce }) {
     <div className="absolute inset-0 flex flex-col">
       <div className={cn(phone ? 'px-3.5 pt-3' : 'px-5 pt-6')}>
         <Waveform speaking={reduce ? null : st.speaking} thinking={st.typing} phone={phone} />
-        <p className={cn('mt-2 text-center font-medium', phone ? 'text-[10.5px]' : 'text-[11.5px]', st.speaking === 'aurora' ? 'text-brand-ink' : 'text-slate')}>
+        <p className={cn('mt-2 text-center font-medium', phone ? 'text-[10.5px]' : 'text-[11.5px]', st.speaking === 'aurora' ? 'text-[#B4471A]' : 'text-slate')}>
           {st.speaking === 'aurora' ? brand.product + ' is speaking' : st.speaking === 'customer' ? scene.contact + ' is speaking' : st.typing ? 'Checking the schedule…' : 'Live transcript'}
         </p>
       </div>
@@ -478,7 +482,7 @@ function VoiceBody({ scene, st, phone, reduce }) {
               return (
                 <Grow key={scene.key + i}>
                   <div className={cn('pt-3 transition-opacity duration-500', isLast ? 'opacity-100' : 'opacity-55')}>
-                    <p className={cn('font-medium uppercase tracking-[0.06em]', phone ? 'text-[9.5px]' : 'text-[10px]', mine ? 'text-brand-ink' : 'text-slate')}>
+                    <p className={cn('font-medium uppercase tracking-[0.06em]', phone ? 'text-[9.5px]' : 'text-[10px]', mine ? 'text-[#B4471A]' : 'text-slate')}>
                       {mine ? brand.product : 'Caller'}
                     </p>
                     <p className={cn('mt-0.5 leading-[1.45] text-ink', phone ? 'text-[12.5px]' : 'text-[13.5px]')}>
@@ -506,13 +510,13 @@ function EmailBody({ scene, st, phone, reduce }) {
           return (
             <Grow key={scene.key + i}>
               <div className="pt-2.5">
-                <div className={cn('rounded-[14px] border', phone ? 'p-2.5' : 'p-3', mine ? 'border-brand/20 bg-[#F3FAF6]' : 'border-ink/[0.07] bg-[#FAF9F6]')}>
+                <div className={cn('rounded-[14px] border', phone ? 'p-2.5' : 'p-3', mine ? 'border-[#F25C2A]/15 bg-[#FFF6EE]' : 'border-ink/[0.07] bg-[#FAF9F6]')}>
                   <div className="mb-1 flex items-center gap-2">
-                    <span className={cn('flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[9px] font-medium', mine ? 'bg-brand text-white' : 'bg-ink/[0.08] text-ink/70')}>
+                    <span className={cn('flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[9px] font-medium', mine ? 'bg-[#F25C2A] text-white' : 'bg-ink/[0.08] text-ink/70')}>
                       {mine ? brand.product[0] : scene.initials}
                     </span>
                     <span className={cn('min-w-0 flex-1 truncate font-medium', phone ? 'text-[11px]' : 'text-[12px]')}>{mine ? brand.product + (scene.desk ? ' · ' + scene.desk : '') : scene.contact}</span>
-                    {mine ? <span className="ui-chip h-[18px] shrink-0 bg-brand/10 px-1.5 text-[10px] text-brand-ink">Sent</span> : null}
+                    {mine ? <span className="ui-chip h-[18px] shrink-0 bg-[#F25C2A]/10 px-1.5 text-[10px] text-[#B4471A]">Sent</span> : null}
                     <span className="t-data shrink-0 text-ink/35">{'09:' + String(12 + i * 2).padStart(2, '0')}</span>
                   </div>
                   <p className={cn('leading-[1.45] text-ink', phone ? 'text-[12px]' : 'text-[13px]')}>{mine && !reduce ? <Stream text={l.text} soft={!phone} /> : l.text}</p>
@@ -523,12 +527,12 @@ function EmailBody({ scene, st, phone, reduce }) {
         })}
         {st.typing ? (
           <Grow key="drafting">
-            <div className={cn('flex items-center gap-2 pt-2.5 font-medium text-brand-ink', phone ? 'text-[11px]' : 'text-[12px]')}>
+            <div className={cn('flex items-center gap-2 pt-2.5 font-medium text-[#B4471A]', phone ? 'text-[11px]' : 'text-[12px]')}>
               <PenLine className="h-3.5 w-3.5" strokeWidth={1.8} aria-hidden="true" />
               {brand.product} is drafting a reply
               <span className="flex gap-0.5">
                 {[0, 1, 2].map((d) => (
-                  <span key={d} className="h-1 w-1 animate-blink rounded-full bg-brand" style={{ animationDelay: d * 0.18 + 's' }} />
+                  <span key={d} className="h-1 w-1 animate-blink rounded-full bg-[#F25C2A]" style={{ animationDelay: d * 0.18 + 's' }} />
                 ))}
               </span>
             </div>
@@ -669,7 +673,7 @@ function WorkCard({ scene, st, takeover }) {
         {rows.map((r) => {
           const Icon = r.sys ? SYS_ICON[r.sys] : null;
           return (
-            <li key={scene.key + r.title} className={cn('flex items-center gap-2 rounded-[12px] px-2 py-[6px] transition-colors duration-500', r.state === 'done' ? 'bg-brand/[0.07]' : 'bg-white/55')}>
+            <li key={scene.key + r.title} className={cn('flex items-center gap-2 rounded-[12px] px-2 py-[6px] transition-colors duration-500', r.state === 'done' ? 'bg-[#FFF3E8]' : 'bg-white/55')}>
               <Status state={r.state} size={14} />
               {Icon ? <Icon className="h-3.5 w-3.5 shrink-0 text-ink/45" strokeWidth={1.8} aria-hidden="true" /> : null}
               <span className={cn('shrink-0 text-[11.5px] font-medium transition-colors duration-500', r.state === 'idle' ? 'text-ink/40' : 'text-ink')}>{r.title}</span>
@@ -729,7 +733,7 @@ function ApprovalCard({ scene, st, phone, approvedBy, onApprove, btnRef }) {
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.4, ease: EASE }}
-        className={cn('inline-flex shrink-0 items-center gap-1.5 rounded-full bg-brand font-medium text-white', phone ? 'h-7 px-2.5 text-[11px]' : 'h-8 px-3 text-[12px]')}
+        className={cn('inline-flex shrink-0 items-center gap-1.5 rounded-full bg-ink font-medium text-white', phone ? 'h-7 px-2.5 text-[11px]' : 'h-8 px-3 text-[12px]')}
       >
         <Check className="h-3.5 w-3.5" strokeWidth={3} aria-hidden="true" />
         {phone ? 'Approved' : scene.approval.result}
@@ -759,7 +763,7 @@ function ApprovalCard({ scene, st, phone, approvedBy, onApprove, btnRef }) {
           <ShieldCheck className="h-[17px] w-[17px]" strokeWidth={1.7} aria-hidden="true" />
         </span>
         <div className="min-w-0 flex-1">
-          <p className={cn('truncate font-medium', phone ? 'text-[10.5px]' : 'text-[11px]', state === 'pending' ? 'text-[#8A5A12]' : state === 'done' ? 'text-brand-ink' : 'text-slate')}>
+          <p className={cn('truncate font-medium', phone ? 'text-[10.5px]' : 'text-[11px]', state === 'pending' ? 'text-[#8A5A12]' : state === 'done' ? 'text-[#B4471A]' : 'text-slate')}>
             {state === 'none' ? 'Policy check' : state === 'pending' ? 'Needs a person · ' + scene.approval.by : 'Approved by ' + by + ' · logged'}
           </p>
           <p className={cn('truncate font-medium leading-tight tracking-[-0.01em]', phone ? 'text-[12px]' : 'text-[13px]', state === 'none' ? 'text-ink/45' : 'text-ink')}>{scene.approval.ask}</p>
@@ -910,7 +914,7 @@ function GhostCursor({ target, clicking, name }) {
     >
       {clicking ? (
         <motion.span
-          className="absolute -left-4 -top-4 h-8 w-8 rounded-full border-2 border-brand"
+          className="absolute -left-4 -top-4 h-8 w-8 rounded-full border-2 border-[#F25C2A]"
           initial={{ scale: 0.3, opacity: 0.9 }}
           animate={{ scale: 1.7, opacity: 0 }}
           transition={{ duration: 0.65, ease: EASE }}
@@ -919,7 +923,7 @@ function GhostCursor({ target, clicking, name }) {
       <motion.svg width="22" height="22" viewBox="0 0 24 24" className="-ml-[4px] -mt-[2px] drop-shadow-[0_2px_4px_rgba(10,15,14,0.3)]" animate={{ scale: clicking ? [1, 0.8, 1] : 1 }} transition={{ duration: 0.35 }}>
         <path d="M4 2 L4 19.2 L8.6 15 L11.6 21.6 L14.4 20.4 L11.5 14 L17.6 13.8 Z" fill="#0A0F0E" stroke="#fff" strokeWidth="1.4" strokeLinejoin="round" />
       </motion.svg>
-      <span className="absolute left-4 top-5 whitespace-nowrap rounded-full bg-brand px-2 py-0.5 text-[11px] font-medium text-white shadow-[0_4px_12px_-4px_rgba(11,110,74,0.6)]">{name}</span>
+      <span className="absolute left-4 top-5 whitespace-nowrap rounded-full bg-[#F25C2A] px-2 py-0.5 text-[11px] font-medium text-white shadow-[0_4px_12px_-4px_rgba(242,92,42,0.6)]">{name}</span>
     </motion.div>
   );
 }
@@ -936,8 +940,8 @@ function Flows({ flows, st, intro, reduce }) {
     <svg className="pointer-events-none absolute inset-0 h-full w-full" aria-hidden="true">
       <defs>
         <linearGradient id="hf-flow" x1="0" x2="1" y1="0" y2="0">
-          <stop offset="0" stopColor="#14A36B" stopOpacity="0" />
-          <stop offset="0.5" stopColor="#14A36B" stopOpacity="0.95" />
+          <stop offset="0" stopColor="#F25C2A" stopOpacity="0" />
+          <stop offset="0.5" stopColor="#F25C2A" stopOpacity="0.95" />
           <stop offset="1" stopColor="#13A89C" stopOpacity="0.25" />
         </linearGradient>
       </defs>
@@ -973,9 +977,13 @@ function Flows({ flows, st, intro, reduce }) {
  * fading wrapper would cut the glass off from its backdrop until the fade ends.
  * @param {any} props
  */
-function Group({ p, index, dim = false, children, className = undefined, z = 1, glass = true }) {
+function Group({ p, index, dim = false, hide = false, children, className = undefined, z = 1, glass = true }) {
   return (
-    <div className={cn('absolute', className)} style={{ left: p.x, top: p.y, width: p.w, height: p.h, zIndex: z }}>
+    <div
+      className={cn('absolute transition-[opacity,transform] duration-500 ease-out', hide && 'pointer-events-none', className)}
+      style={{ left: p.x, top: p.y, width: p.w, height: p.h, zIndex: z, opacity: hide ? 0 : 1, transform: hide ? 'translateY(10px)' : 'none' }}
+      aria-hidden={hide || undefined}
+    >
       <motion.div
         className="h-full"
         custom={index}
@@ -1148,12 +1156,10 @@ export default function HeroFilm({ startScene = undefined }) {
     setTarget(centreWithin(btnRef.current, compRef.current));
   }, [st.approval, compKey, k, scale]);
 
-  // Camera: a slow pan toward the active chapter (translate only: no zoom, so
-  // text is never re-rasterised mid-move), framed so no card is cut off.
-  const [fx, fy] = comp.focus[st.chapter];
-  const [camX, camY] = frameCamera(comp, 1, -0.1 * (fx - comp.w / 2), -0.1 * (fy - comp.h / 2));
+  const [camX, camY] = [0, 0]; // fixed framing: no camera pan
   const focus = FOCUS[st.chapter];
-  const dim = (key) => !reduce && introDone && !focus.includes(key);
+  const dim = (key) => !phone && !reduce && introDone && !focus.includes(key);
+  const hide = (key) => phone && !reduce && !PHONE_SHOW[key](st);
   const calm = lite || compKey !== 'wide'; // still backgrounds on phones, tablets and software rendering
 
   const callTime = useTransform(time, (t) => '00:' + String(Math.max(0, Math.floor((t - 200) / 1000))).padStart(2, '0'));
@@ -1168,7 +1174,7 @@ export default function HeroFilm({ startScene = undefined }) {
       >
         <div
           className={cn(
-            'canvas relative bg-[linear-gradient(180deg,#F1F1EC_0%,#E5E9E2_100%)] shadow-[0_0_0_1px_rgba(10,15,14,0.05),0_50px_100px_-55px_rgba(10,15,14,0.45)]',
+            'canvas relative bg-[linear-gradient(180deg,#F6F2EA_0%,#EFE5D8_100%)] shadow-[0_0_0_1px_rgba(10,15,14,0.05),0_50px_100px_-55px_rgba(10,15,14,0.45)]',
             (!playing || takeover) && 'film-paused',
             calm && 'film-calm',
             lite && 'film-lite'
@@ -1181,10 +1187,10 @@ export default function HeroFilm({ startScene = undefined }) {
               className="absolute inset-0"
               fallback={
                 <>
-                  <div className="orb left-[52%] top-[-22%] h-[80%] w-[52%] animate-drift bg-[radial-gradient(closest-side,rgba(60,224,154,0.42),rgba(60,224,154,0))]" />
-                  <div className="orb bottom-[-30%] left-[-8%] h-[85%] w-[48%] animate-drift-slow bg-[radial-gradient(closest-side,rgba(19,168,156,0.3),rgba(19,168,156,0))]" />
+                  <div className="orb left-[52%] top-[-22%] h-[80%] w-[52%] animate-drift bg-[radial-gradient(closest-side,rgba(242,92,42,0.32),rgba(242,92,42,0))]" />
+                  <div className="orb bottom-[-30%] left-[-8%] h-[85%] w-[48%] animate-drift-slow bg-[radial-gradient(closest-side,rgba(255,200,87,0.38),rgba(255,200,87,0))]" />
                   <div className="orb left-[26%] top-[-30%] h-[70%] w-[40%] animate-drift-slow bg-[radial-gradient(closest-side,rgba(255,215,170,0.55),rgba(255,215,170,0))] [animation-delay:-9s]" />
-                  <div className="orb bottom-[-26%] right-[-6%] h-[70%] w-[36%] animate-drift bg-[radial-gradient(closest-side,rgba(160,190,255,0.28),rgba(160,190,255,0))] [animation-delay:-14s]" />
+                  <div className="orb bottom-[-26%] right-[-6%] h-[70%] w-[36%] animate-drift bg-[radial-gradient(closest-side,rgba(255,159,69,0.3),rgba(255,159,69,0))] [animation-delay:-14s]" />
                 </>
               }
             />
@@ -1194,17 +1200,6 @@ export default function HeroFilm({ startScene = undefined }) {
           <div ref={wrapRef} className="relative z-[2]" style={{ aspectRatio: comp.w + ' / ' + comp.h }}>
             <div ref={compRef} id="film-scene" className="absolute left-0 top-0 origin-top-left" style={{ width: comp.w, height: comp.h, transform: 'scale(' + scale + ')' }}>
               <motion.div className="absolute inset-0" initial={reduce ? false : 'hidden'} animate="show">
-                {/* Key light that follows the action */}
-                {reduce || lite ? null : (
-                  <motion.div
-                    aria-hidden="true"
-                    className="pointer-events-none absolute left-0 top-0 h-[760px] w-[760px] rounded-full bg-[radial-gradient(closest-side,rgba(255,255,255,0.55),rgba(255,255,255,0))]"
-                    initial={false}
-                    animate={{ x: fx - 380, y: fy - 380 }}
-                    transition={{ duration: 1.8, ease: EASE_IN_OUT }}
-                  />
-                )}
-
                 <motion.div
                   className="absolute inset-0"
                   initial={false}
@@ -1213,7 +1208,7 @@ export default function HeroFilm({ startScene = undefined }) {
                 >
                   <Flows flows={comp.flows} st={st} intro={introDone} reduce={reduce} />
 
-                  <Group p={comp.panel} index={1} dim={dim('panel')} glass={false}>
+                  <Group p={comp.panel} index={1} dim={dim('panel')} hide={hide('panel')} glass={false}>
                     <AnimatePresence initial={false}>
                       <motion.div
                         key={scene.key + '-' + loop}
@@ -1234,7 +1229,7 @@ export default function HeroFilm({ startScene = undefined }) {
                   ) : null}
 
                   {comp.work ? (
-                    <Group p={comp.work} index={2} dim={dim('work')} z={2}>
+                    <Group p={comp.work} index={2} dim={dim('work')} hide={hide('work')} z={2}>
                       <WorkCard scene={scene} st={st} takeover={takeover} />
                     </Group>
                   ) : null}
@@ -1255,7 +1250,7 @@ export default function HeroFilm({ startScene = undefined }) {
                     </Group>
                   ) : null}
 
-                  <Group p={comp.approval} index={5} dim={dim('approval')} z={3}>
+                  <Group p={comp.approval} index={5} dim={dim('approval')} hide={hide('approval')} z={3}>
                     <ApprovalCard scene={scene} st={st} phone={phone} approvedBy={approvedBy} onApprove={approve} btnRef={btnRef} />
                   </Group>
 
@@ -1282,17 +1277,6 @@ export default function HeroFilm({ startScene = undefined }) {
             </div>
           </div>
 
-          {/* Light sweep on intro and on every scene change */}
-          {reduce ? null : (
-            <motion.div
-              key={sweep}
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0 z-[6] bg-[linear-gradient(102deg,transparent_34%,rgba(255,255,255,0.3)_47%,rgba(255,255,255,0.1)_53%,transparent_64%)]"
-              initial={{ x: '-105%', opacity: sweep ? 1 : 0 }}
-              animate={{ x: '105%', opacity: sweep ? 1 : 0 }}
-              transition={{ duration: 1.5, ease: EASE_IN_OUT }}
-            />
-          )}
         </div>
       </motion.div>
       <figcaption id="film-caption" className="sr-only">

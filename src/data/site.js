@@ -334,59 +334,48 @@ export const capabilities = [
   },
 ];
 
+// The capability visuals on the platform page follow the film's first case: Sarah K. asks
+// about the 2-bedroom on Maple Street, Aurora books the viewing and Dana approves the fee waiver.
+export const storyCase = { who: 'Sarah K.', ref: 'REQ-2048', topic: '2BR Maple St' };
+
 export const understandVisual = {
   sources: [
-    { name: 'Price book', kind: 'PDF' },
-    { name: 'Service policies', kind: 'DOC' },
+    { name: 'Listings and price sheet', kind: 'PDF' },
+    { name: 'Leasing policies', kind: 'DOC' },
     { name: 'Website and FAQs', kind: 'WEB' },
     { name: 'CRM fields', kind: 'CRM' },
   ],
   rules: [
-    { kind: 'Rule', text: 'Never quote a final price. Offer a viewing instead.' },
+    { kind: 'Rule', text: 'Never quote a final rent. Offer a viewing instead.' },
     { kind: 'Process', text: 'New lead → qualify → book → follow up' },
-    { kind: 'Approval', text: 'Discounts above 5% need a manager' },
+    { kind: 'Approval', text: 'Fee changes need a leasing manager', used: true },
     { kind: 'Exception', text: 'Returning clients skip qualification' },
     { kind: 'Escalation', text: 'Complaints reach a person within the hour' },
   ],
 };
 
+// Everything Aurora did for Sarah's request, in order.
 export const workVisual = [
-  { t: '09:14', ch: 'Web chat', text: 'Answered a question about parking' },
-  { t: '09:14', ch: 'CRM', text: 'Qualified lead · budget, timeline, area' },
-  { t: '09:15', ch: 'Calendar', text: 'Booked a viewing · Sat 11:00 with Dana' },
-  { t: '09:15', ch: 'SMS', text: 'Sent confirmation and directions' },
-  { t: '09:15', ch: 'Tasks', text: 'Created a follow-up · Fri 18:00' },
-  { t: '09:21', ch: 'Voice', text: 'Moved a showing to Monday 10:30' },
-  { t: '09:22', ch: 'CRM', text: 'Logged call notes to the record' },
-  { t: '09:30', ch: 'Email', text: 'Sent the application link' },
-  { t: '09:34', ch: 'Team', text: 'Handed a complaint to Dana with full context' },
+  { t: '09:14', ch: 'SMS', text: 'Answered Sarah K. about 2BR Maple St' },
+  { t: '09:14', ch: 'CRM', text: 'Lead created · budget, move-in, area' },
+  { t: '09:15', ch: 'Calendar', text: 'Viewing booked · Sat 11:00 with Dana' },
+  { t: '09:15', ch: 'SMS', text: 'Confirmation and directions sent' },
+  { t: '09:15', ch: 'Team', text: 'Fee waiver sent to Dana for approval' },
+  { t: '09:17', ch: 'SMS', text: 'Fee waived · Sarah told' },
+  { t: '09:17', ch: 'Tasks', text: 'Follow-up set · Fri 18:00' },
 ];
 
 export const controlVisual = {
-  // The refund case shown on the platform page, start to finish.
+  // The same case as the film: the fee question goes to a person, start to finish.
   story: {
-    ask: 'Hi, can I get a refund on order 4821? It was $340.',
-    rule: 'Refunds above $250 need a manager',
-    hold: "I've asked our manager to approve it. You'll hear back shortly.",
-    manager: 'Dana K. · Operations',
-    done: 'Good news: your $340 refund is on its way.',
+    ask: 'Great, Saturday works. Is there an application fee?',
+    rule: 'Fee changes need a leasing manager',
+    hold: "You're booked for Saturday at 11:00. I've asked Dana about the fee.",
+    manager: 'Dana K. · Leasing manager',
+    initials: 'DK',
+    done: 'Good news: Dana has waived the fee. See you on Saturday.',
   },
-  title: 'Approval required',
-  item: 'Refund of $340 · Order 4821',
-  reason: 'Above the $250 limit you set',
-  requester: 'Requested by Aurora',
-  approver: 'Dana K. · Operations',
-  permissions: [
-    ['Book and reschedule appointments', 'Allowed'],
-    ['Refunds up to $250', 'Allowed'],
-    ['Refunds above $250', 'Needs approval'],
-    ['Change prices', 'Not allowed'],
-  ],
-  audit: [
-    ['14:12', 'Refund requested', 'Aurora'],
-    ['14:14', 'Approved', 'Dana K.'],
-    ['14:14', 'Refund issued · Order 4821', 'Aurora'],
-  ],
+  item: 'Waive the application fee · REQ-2048',
 };
 
 // Outcomes (home page): what the business gets. Deliberately no percentages until there is
@@ -536,6 +525,50 @@ export const platformPage = {
   titleB: 'Aurora works.',
   text: 'Aurora books the appointment, updates the record, sends the follow-up and brings in a person when it matters. Watch one request go from first message to done.',
   note: 'Scripted demo built from typical flows. Names, times and prices are examples.',
+  // How it's built: channels in, three layers, systems out. Integration names are text only:
+  // no partner logos until there are agreements to show them.
+  architecture: {
+    eyebrow: 'How it is built',
+    titleA: 'An AI agent platform',
+    titleB: 'between your channels and your systems.',
+    text: 'Every request, from a customer or from your own team, passes through the same three layers. One memory, one set of rules, one record.',
+    channels: ['Phone', 'SMS', 'Web chat', 'Email', 'WhatsApp', 'Slack'],
+    layers: [
+      { name: 'Understand', points: ['Who is asking and what they need', 'Full history across every channel', 'Your documents, policies and FAQs'] },
+      { name: 'Decide', points: ['Your rules and limits on every step', 'What it may do alone, what needs a person', 'Hands off with the whole context'] },
+      { name: 'Act', points: ['Works inside your systems, not beside them', 'Follows up until the task is closed', 'Writes every action to the audit log'] },
+    ],
+    systems: [
+      { name: 'CRM', examples: 'HubSpot, Salesforce' },
+      { name: 'Calendars', examples: 'Google Calendar, Outlook' },
+      { name: 'Messaging', examples: 'Email, SMS, WhatsApp, Slack' },
+      { name: 'Phone system', examples: 'Your existing numbers' },
+      { name: 'Payments and invoicing', examples: 'Payment links, invoices' },
+      { name: 'Knowledge', examples: 'Docs, website, price book' },
+    ],
+  },
+  security: {
+    eyebrow: 'Security and trust',
+    titleA: 'Autonomy you set.',
+    titleB: 'Every step on record.',
+    items: [
+      { icon: 'rules', title: 'Rules before autonomy', text: 'You decide what Aurora does alone, what waits for a person and what it never does. Limits apply the same way at 3 pm and at 3 am.' },
+      { icon: 'roles', title: 'Access per role', text: 'Permissions are set per role, team and channel, so each agent only sees and does what its job needs.' },
+      { icon: 'audit', title: 'A full audit log', text: 'Every action is recorded with the request, the rule that applied and who approved it.' },
+      { icon: 'handoff', title: 'A person can step in', text: 'Your team can take over any conversation at any moment, and Aurora hands off with the full history.' },
+      { icon: 'data', title: 'Your data stays yours', text: 'Your data is never used to train shared models.' },
+      { icon: 'golive', title: 'Nothing goes live untested', text: 'Aurora is tested on real questions from your own data, and goes live only when you approve.' },
+    ],
+  },
+  faq: [
+    ['What is an AI agent platform?', 'An AI agent platform runs AI agents that answer requests and do work inside your business systems. Aurora is built as an AI operating system: every agent shares one memory of each customer and employee, one set of rules and one audit log, across sales, service and internal operations.'],
+    ['How is Aurora different from a chatbot?', 'A chatbot answers questions in one channel. Aurora understands the request, applies your rules, does the work in your CRM, calendar and other systems, follows up until the task is closed and asks a person to approve anything above the limits you set.'],
+    ['Which channels does Aurora work on?', 'Phone, text message, web chat, email and WhatsApp with customers, and Slack and email for your own team. A conversation that moves between channels stays one conversation, with its full history.'],
+    ['Which systems does Aurora connect to?', 'Aurora works inside the tools you already use, including CRMs such as HubSpot and Salesforce, Google Calendar and Microsoft Outlook calendars, email, messaging, your phone system and payment tools. Nothing needs to be replaced.'],
+    ['How does Aurora decide what it can do on its own?', 'You set the rules. Each action is allowed, needs approval or is never allowed, with limits such as refund or discount amounts. When a request crosses a limit, Aurora asks the right person and continues once they decide.'],
+    ['Can my team take over a conversation?', 'Yes. Anyone with access can step into a conversation at any moment. Aurora hands off with the full history and picks up again when your team is done.'],
+    ['Is our data used to train AI models?', 'No. Your data is never used to train shared models. Access is set per role and every action is recorded in the audit log.'],
+  ],
 };
 
 export const footer = {

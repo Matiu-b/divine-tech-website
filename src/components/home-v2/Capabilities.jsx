@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { Check, FileText, Globe, Database, Lock } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { brand, capabilities, controlVisual, understandVisual, workVisual } from '@/data/site';
+import { brand, capabilities, controlVisual, storyCase, understandVisual, workVisual } from '@/data/site';
 import LiquidGlass from './primitives/LiquidGlass';
 import { Reveal, RevealLines } from './primitives/MotionReveal';
 import { useInViewport, usePageVisible } from './hooks';
@@ -11,7 +11,7 @@ import { EASE } from './motion';
 const KIND_ICON = { PDF: FileText, DOC: FileText, WEB: Globe, CRM: Database };
 const RULE_TONE = {
   Rule: 'bg-[#EEF1F7] text-[#3D4E74]',
-  Process: 'bg-brand-mint text-brand-ink',
+  Process: 'bg-[#E9F1EC] text-[#2F6B4F]',
   Approval: 'bg-[#F7EDDC] text-[#8A5A12]',
   Exception: 'bg-[#F1ECF6] text-[#5F4A7A]',
   Escalation: 'bg-[#F8E9E7] text-[#93382F]',
@@ -23,35 +23,44 @@ const RULE_TONE = {
 function UnderstandVisual() {
   const ref = useRef(null);
   const reduce = useReducedMotion();
-  const inView = useInViewport(ref, { threshold: 0.35, once: true });
-  const [n, setN] = useState(reduce ? 99 : 0);
+  const visible = usePageVisible();
+  const inView = useInViewport(ref, { threshold: 0.35 });
+  const S = understandVisual.sources.length;
+  const R = understandVisual.rules.length;
+  const usedIdx = understandVisual.rules.findIndex((r) => r.used);
+  // 0..S-1 sources get read · S..S+R-1 each rule lights up in turn · then the rule used for
+  // Sarah's request stays lit for a few beats · loop.
+  const END = S + R + 5;
+  const [n, setN] = useState(reduce ? END - 1 : 0);
 
   useEffect(() => {
-    if (reduce || !inView) return undefined;
-    const total = understandVisual.sources.length + understandVisual.rules.length;
-    const timers = Array.from({ length: total }, (_, i) => window.setTimeout(() => setN(i + 1), 500 + i * 420));
-    return () => timers.forEach((t) => window.clearTimeout(t));
-  }, [inView, reduce]);
+    if (reduce || !inView || !visible) return undefined;
+    const id = window.setInterval(() => setN((v) => (v + 1) % END), 650);
+    return () => window.clearInterval(id);
+  }, [reduce, inView, visible, END]);
 
-  const S = understandVisual.sources.length;
+  const lit = n >= S && n < S + R ? n - S : -1;
+  const applied = n >= S + R;
+
   return (
-    <div ref={ref} className="canvas canvas-grain bg-[linear-gradient(160deg,#E9EEE7_0%,#DCE4DB_100%)] p-4 xs:p-6 md:p-10">
-      <div aria-hidden="true" className="orb right-[-10%] top-[-30%] h-[80%] w-[60%] bg-[radial-gradient(closest-side,rgba(255,255,255,0.75),rgba(255,255,255,0))]" />
+    <div ref={ref} className="canvas canvas-grain relative bg-[linear-gradient(160deg,#F5F0E7_0%,#EBE3D6_100%)] p-4 xs:p-6 md:p-10">
+      <div aria-hidden="true" className="orb right-[-10%] top-[-30%] h-[80%] w-[60%] bg-[radial-gradient(closest-side,rgba(255,200,87,0.45),rgba(255,200,87,0))]" />
+      <div aria-hidden="true" className="orb bottom-[-30%] left-[-10%] h-[70%] w-[55%] bg-[radial-gradient(closest-side,rgba(242,92,42,0.18),rgba(242,92,42,0))]" />
       <div className="relative grid gap-3 md:grid-cols-[0.85fr_1.15fr] md:items-start md:gap-4 lg:grid-cols-1 xl:grid-cols-[0.85fr_1.15fr]">
-        <LiquidGlass className="rounded-[20px] p-4">
+        <LiquidGlass className="rounded-[20px] p-4" style={{ '--lg-tint-a': 'rgba(255,250,242,0.6)', '--lg-tint-b': 'rgba(255,246,229,0.25)' }}>
           <p className="text-[12px] font-medium text-ink">Sources</p>
           <p className="text-[11.5px] text-slate">What you already have</p>
           <ul className="mt-3 grid gap-2">
             {understandVisual.sources.map((src, i) => {
               const Icon = KIND_ICON[src.kind] || FileText;
-              const done = n > i;
+              const done = reduce || n > i;
               return (
                 <li key={src.name} className="flex items-center gap-2.5 rounded-[12px] bg-white/70 px-2.5 py-2">
                   <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[8px] bg-paper text-ink/70">
                     <Icon className="h-3.5 w-3.5" strokeWidth={1.8} aria-hidden="true" />
                   </span>
                   <span className="min-w-0 flex-1 truncate text-[12.5px] font-medium text-ink">{src.name}</span>
-                  <span className={cn('flex h-4 w-4 items-center justify-center rounded-full transition-all duration-500', done ? 'scale-100 bg-brand text-white' : 'scale-75 bg-ink/10 text-transparent')}>
+                  <span className={cn('flex h-4 w-4 items-center justify-center rounded-full transition-all duration-500', done ? 'scale-100 bg-ink text-white' : 'scale-75 bg-ink/10 text-transparent')}>
                     <Check className="h-2.5 w-2.5" strokeWidth={3.2} aria-hidden="true" />
                   </span>
                 </li>
@@ -66,21 +75,28 @@ function UnderstandVisual() {
               <p className="text-[12px] font-medium text-ink">How your business runs</p>
               <p className="text-[11.5px] text-slate">Mapped by {brand.product} · review and approve</p>
             </div>
-            <span className="ui-chip bg-paper text-graphite">Draft</span>
+            <span className="ui-chip bg-paper text-graphite">Approved</span>
           </div>
           <ul className="mt-3 grid gap-1.5">
             {understandVisual.rules.map((r, i) => {
-              const show = n > S + i;
+              const on = lit === i || (applied && i === usedIdx);
               return (
                 <li
                   key={r.text}
                   className={cn(
-                    'flex items-start gap-2.5 rounded-[12px] border border-ink/[0.06] px-2.5 py-2 transition-all duration-700 ease-out',
-                    show ? 'translate-y-0 opacity-100' : 'translate-y-1 opacity-25'
+                    'relative flex items-start gap-2.5 rounded-[12px] border px-2.5 py-2 transition-[background-color,border-color,box-shadow] duration-500 ease-out',
+                    on ? 'border-[#F25C2A]/30 bg-[#FFF5EC] shadow-[0_6px_18px_-12px_rgba(242,92,42,0.6)]' : 'border-ink/[0.06] bg-white'
                   )}
                 >
                   <span className={cn('ui-chip mt-[1px] w-[74px] shrink-0 justify-center', RULE_TONE[r.kind])}>{r.kind}</span>
-                  <span className="text-[12.5px] leading-snug text-ink">{r.text}</span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-[12.5px] leading-snug text-ink">{r.text}</span>
+                    {r.used ? (
+                      <span className={cn('mt-1 block text-[11px] font-medium text-[#B4471A] transition-opacity duration-500', applied ? 'opacity-100' : 'opacity-0')}>
+                        Applied to {storyCase.who} · {storyCase.ref}
+                      </span>
+                    ) : null}
+                  </span>
                 </li>
               );
             })}
@@ -99,60 +115,57 @@ function WorkVisual() {
   const reduce = useReducedMotion();
   const visible = usePageVisible();
   const inView = useInViewport(ref, { threshold: 0.3 });
-  const [head, setHead] = useState(4);
+  const L = workVisual.length;
+  // One request from first message to closed: each action lands in order, the request
+  // closes, it holds, and the run starts again.
+  const END = L + 5;
+  const [n, setN] = useState(reduce ? L + 1 : 0);
 
   useEffect(() => {
     if (reduce || !inView || !visible) return undefined;
-    const id = window.setInterval(() => setHead((h) => h + 1), 2200);
+    const id = window.setInterval(() => setN((v) => (v + 1) % END), 900);
     return () => window.clearInterval(id);
-  }, [reduce, inView, visible]);
+  }, [reduce, inView, visible, END]);
 
-  const len = workVisual.length;
-  const rows = Array.from({ length: 5 }, (_, k) => {
-    const i = head - k;
-    return { key: i, item: workVisual[((i % len) + len) % len] };
-  });
+  const closed = n > L;
 
   return (
-    <div ref={ref} className="canvas canvas-grain bg-[linear-gradient(160deg,#EFEBE4_0%,#E2DDD3_100%)] p-4 xs:p-6 md:p-10">
-      <div aria-hidden="true" className="orb left-[-10%] top-[-20%] h-[70%] w-[55%] bg-[radial-gradient(closest-side,rgba(255,255,255,0.7),rgba(255,255,255,0))]" />
+    <div ref={ref} className="canvas canvas-grain relative bg-[linear-gradient(160deg,#F3EEE6_0%,#E8E0D3_100%)] p-4 xs:p-6 md:p-10">
+      <div aria-hidden="true" className="orb left-[-10%] top-[-20%] h-[70%] w-[55%] bg-[radial-gradient(closest-side,rgba(255,159,69,0.32),rgba(255,159,69,0))]" />
       <div className="ui-card relative overflow-hidden">
-        <div className="flex items-center justify-between border-b border-ink/[0.07] px-4 py-3.5">
-          <div>
-            <p className="text-[12.5px] font-medium text-ink">Activity</p>
+        <div className="flex items-center justify-between gap-3 border-b border-ink/[0.07] px-4 py-3.5">
+          <div className="min-w-0">
+            <p className="truncate text-[12.5px] font-medium text-ink">
+              {storyCase.who} · {storyCase.topic}
+            </p>
             <p className="text-[11.5px] text-slate">Completed by {brand.product}, in your tools</p>
           </div>
+          <span className="t-data shrink-0 text-[11px] text-slate">{storyCase.ref}</span>
         </div>
-        <ul className="relative px-2 py-2" aria-hidden="true">
-          {/* popLayout: the leaving row is lifted out of the flow, so the card never changes height */}
-          <AnimatePresence initial={false} mode="popLayout">
-            {rows.map(({ key, item }, k) => (
-              <motion.li
-                key={key}
-                layout="position"
-                initial={reduce ? false : { opacity: 0, y: -14 }}
-                animate={{ opacity: k === 4 ? 0.35 : 1, y: 0 }}
-                exit={{ opacity: 0, transition: { duration: 0.3 } }}
-                transition={{ duration: 0.6, ease: EASE }}
-                className="flex items-center gap-3 rounded-[12px] px-2.5 py-2.5"
-              >
-                <span className="t-data w-10 shrink-0 text-slate">{item.t}</span>
-                <span className="ui-chip w-[72px] shrink-0 justify-center bg-paper text-graphite">{item.ch}</span>
-                <span className="min-w-0 flex-1 truncate text-[13px] text-ink">{item.text}</span>
-                <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-brand text-white">
-                  <Check className="h-2.5 w-2.5" strokeWidth={3.2} />
-                </span>
-              </motion.li>
-            ))}
-          </AnimatePresence>
-        </ul>
-      </div>
-      <div className="relative mt-3 flex flex-wrap gap-2">
-        {['CRM', 'Calendar', 'Tasks', 'SMS', 'Email'].map((t) => (
-          <LiquidGlass key={t} className="rounded-full px-3 py-1.5 text-[12px] font-medium text-ink">
-            {t}
-          </LiquidGlass>
-        ))}
+        <ol className="relative px-2 py-2" aria-label={'Actions ' + brand.product + ' took for ' + storyCase.who}>
+          {workVisual.map((item, i) => {
+            const done = reduce || n > i;
+            const running = !reduce && n === i;
+            return (
+              <li key={i} className={cn('flex items-center gap-3 rounded-[12px] px-2.5 py-2 transition-colors duration-500', running && 'bg-[#FFF5EC]')}>
+                <span className={cn('t-data w-10 shrink-0 transition-colors duration-500', done || running ? 'text-slate' : 'text-ink/25')}>{item.t}</span>
+                <span className={cn('ui-chip w-[72px] shrink-0 justify-center transition-opacity duration-500', done || running ? 'bg-paper text-graphite opacity-100' : 'bg-paper text-graphite opacity-40')}>{item.ch}</span>
+                <span className={cn('min-w-0 flex-1 truncate text-[13px] transition-colors duration-500', done || running ? 'text-ink' : 'text-ink/30')}>{item.text}</span>
+                {running ? (
+                  <span className="block h-4 w-4 shrink-0 animate-spin rounded-full border-[1.75px] border-[#F25C2A]/25 border-t-[#F25C2A] [animation-duration:0.9s]" />
+                ) : (
+                  <span className={cn('flex h-4 w-4 shrink-0 items-center justify-center rounded-full transition-all duration-500', done ? 'scale-100 bg-ink text-white' : 'scale-75 bg-ink/10 text-transparent')}>
+                    <Check className="h-2.5 w-2.5" strokeWidth={3.2} aria-hidden="true" />
+                  </span>
+                )}
+              </li>
+            );
+          })}
+        </ol>
+        <div className="flex items-center justify-between gap-3 border-t border-ink/[0.07] px-4 py-3 text-[12px]">
+          <span className="text-slate">{L} actions · 5 systems</span>
+          <span className={cn('font-medium transition-colors duration-500', closed ? 'text-ink' : 'text-ink/35')}>{closed ? 'Request closed in 3 minutes' : 'In progress'}</span>
+        </div>
       </div>
     </div>
   );
@@ -206,7 +219,7 @@ function ControlVisual() {
       el: (
         <div className="mx-auto w-full max-w-[300px] rounded-[18px] bg-white p-3 shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_12px_28px_-16px_rgba(10,15,14,0.35)]">
           <div className="flex items-center gap-2">
-            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-paper-2 text-[10.5px] font-medium text-ink">DK</span>
+            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-paper-2 text-[10.5px] font-medium text-ink">{C.story.initials}</span>
             <div className="min-w-0 text-[11.5px] leading-tight">
               <p className="font-medium text-ink">{C.story.manager}</p>
               <p className="text-ink/50">Approval request from {brand.product}</p>
@@ -277,7 +290,7 @@ export default function Capabilities() {
             const Visual = VISUALS[c.key];
             const flip = i % 2 === 1;
             return (
-              <article key={c.key} id={c.key === 'control' ? 'security' : undefined} aria-labelledby={'cap-' + c.key} className="grid items-center gap-10 lg:grid-cols-12 lg:gap-12">
+              <article key={c.key} aria-labelledby={'cap-' + c.key} className="grid items-center gap-10 lg:grid-cols-12 lg:gap-12">
                 <div className={cn('lg:col-span-5', flip ? 'lg:order-2 lg:col-start-8' : 'lg:order-1')}>
                   <h3 id={'cap-' + c.key} className="t-h1 balance">
                     <RevealLines lines={[c.title]} blur={false} y={20} />

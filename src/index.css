@@ -924,3 +924,17 @@
 
 /* Carousel pager: the active bar fills while the slide waits to move on */
 @keyframes outcomes-fill { from { width: 0; } to { width: 100%; } }
+
+/* Platform architecture: a request travelling along a hairline between columns. */
+@keyframes beam-x {
+  0% { left: 0; opacity: 0; }
+  12% { opacity: 1; }
+  88% { opacity: 1; }
+  100% { left: calc(100% - 6px); opacity: 0; }
+}
+@keyframes beam-y {
+  0% { top: 0; opacity: 0; }
+  12% { opacity: 1; }
+  88% { opacity: 1; }
+  100% { top: calc(100% - 6px); opacity: 0; }
+}
