@@ -329,7 +329,7 @@ export default function ConsoleTour() {
         ref={track}
         aria-roledescription="carousel"
         aria-label="Aurora console screens"
-        className="no-scrollbar mt-8 flex snap-x snap-mandatory overflow-x-auto md:mt-5"
+        className="no-scrollbar mt-8 flex snap-x snap-mandatory overflow-x-auto overflow-y-hidden overscroll-x-contain md:mt-5"
         style={{
           gap: GAP,
           paddingLeft: 'max(var(--gutter), calc((100% - var(--maxw)) / 2))',
