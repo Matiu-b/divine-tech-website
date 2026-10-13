@@ -73,7 +73,7 @@ export default function PlatformArchitecture() {
               <div className={cn('absolute bottom-[-20%] left-[40%] h-[70%] w-[45%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.5),rgba(255,200,87,0))] blur-2xl', !reduce && 'animate-drift [animation-delay:-8s]')} />
             </div>
 
-            <div className="relative grid items-center gap-0 lg:grid-cols-[minmax(0,0.9fr)_56px_minmax(0,1.6fr)_56px_minmax(0,1fr)]">
+            <div className="relative grid items-center gap-0 lg:grid-cols-[minmax(0,0.72fr)_40px_minmax(0,2fr)_40px_minmax(0,0.95fr)]">
               {/* Channels */}
               <Column title="Channels in">
                 <ul className="mt-3 flex flex-wrap gap-1.5 lg:grid lg:gap-1.5">
