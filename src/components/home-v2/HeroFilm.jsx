@@ -112,15 +112,13 @@ const COMPS = {
     bounds: [24, 76, 836, 638],
     safe: [10, 68, 850, 650],
   },
-  // Phones show one card at a time (see PHONE_SHOW): the conversation, then Aurora's work, then
-  // the conversation again with the approval request floating over its foot, then the outcome.
+  // Phones show a single thread (PhoneFeed): messages, Aurora's work and the approval land in
+  // it in time order, so nothing switches between cards.
   phone: {
     w: 360,
     h: 520,
     tabs: { x: 12, y: 12 },
     panel: { x: 12, y: 58, w: 336, h: 404 },
-    work: { x: 12, y: 150, w: 336 },
-    approval: { x: 20, y: 382, w: 320 },
     bar: { x: 12, y: 478, w: 336, h: 28 },
     flows: null,
     focus: [
@@ -134,12 +132,6 @@ const COMPS = {
   },
 };
 
-/** Phone: which card is on screen for the current chapter and approval state. */
-const PHONE_SHOW = {
-  panel: (st) => st.chapter === 0 || st.chapter === 3,
-  work: (st) => st.chapter === 1 || st.chapter === 2,
-  approval: (st) => st.chapter === 3 && st.approval !== 'done',
-};
 
 const CH = {
   chat: { icon: MessageCircle, chip: 'bg-[#FDEBDD] text-[#B4471A]' },
@@ -544,13 +536,17 @@ function EmailBody({ scene, st, phone, reduce }) {
 }
 
 /** @param {any} props */
-function Panel({ scene, st, phone, reduce, callTime, takeover, onTakeover }) {
+function Panel({ scene, st, phone, reduce, callTime, takeover, onTakeover, approvedBy, onApprove, btnRef }) {
   const Body = scene.mode === 'voice' ? VoiceBody : scene.mode === 'email' ? EmailBody : ChatBody;
   return (
     <div className={cn('ui-card flex h-full flex-col overflow-hidden transition-shadow duration-500', takeover && 'shadow-[0_0_0_2px_#0A0F0E,0_12px_32px_-10px_rgba(10,15,14,0.2)]')}>
       <PanelHeader scene={scene} phone={phone} callTime={callTime} live={st.lines > 0 && !reduce} />
       <div className="relative min-h-0 flex-1 overflow-hidden">
-        <Body scene={scene} st={st} phone={phone} reduce={reduce} />
+        {phone ? (
+          <PhoneFeed scene={scene} st={st} reduce={reduce} approvedBy={approvedBy} onApprove={onApprove} btnRef={btnRef} />
+        ) : (
+          <Body scene={scene} st={st} phone={phone} reduce={reduce} />
+        )}
       </div>
       <PanelFooter scene={scene} phone={phone} takeover={takeover} onTakeover={onTakeover} />
     </div>
@@ -781,6 +777,116 @@ function ApprovalCard({ scene, st, phone, approvedBy, onApprove, btnRef }) {
         </div>
       )}
     </LiquidGlass>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Phone: one feed, in the order things happen                          */
+/* ------------------------------------------------------------------ */
+
+/** A line in the phone feed for something Aurora did: understood the request, or acted in a system. */
+/** @param {any} props */
+function FeedEvent({ sys, title, detail, state }) {
+  const Icon = sys ? SYS_ICON[sys] : null;
+  return (
+    <div className="pt-2">
+      <div className={cn('flex items-center gap-2 rounded-[12px] px-2.5 py-[7px] transition-colors duration-500', state === 'done' ? 'bg-[#FFF1E4]' : 'bg-[#F7F4EE]')}>
+        <Status state={state} size={14} />
+        {Icon ? <Icon className="h-3.5 w-3.5 shrink-0 text-[#B4471A]" strokeWidth={1.8} aria-hidden="true" /> : null}
+        <span className="shrink-0 text-[11.5px] font-medium text-ink">{sys ? sys + ' · ' + title : title}</span>
+        <span className={cn('min-w-0 flex-1 truncate text-right text-[10.5px] transition-colors duration-500', state === 'done' ? 'text-graphite' : 'text-ink/30')}>{detail}</span>
+      </div>
+    </div>
+  );
+}
+
+/** One message in the phone feed, drawn the way its channel draws it. */
+/** @param {any} props */
+function FeedMessage({ scene, l, i, reduce }) {
+  const mine = l.who === 'aurora';
+  if (scene.mode === 'voice') {
+    return (
+      <div className="pt-2.5">
+        <p className={cn('text-[9.5px] font-medium uppercase tracking-[0.06em]', mine ? 'text-[#B4471A]' : 'text-slate')}>{mine ? brand.product : 'Caller'}</p>
+        <p className="mt-0.5 text-[12.5px] leading-[1.45] text-ink">{mine && !reduce ? <Stream text={l.text} soft={false} /> : l.text}</p>
+      </div>
+    );
+  }
+  if (scene.mode === 'email') {
+    return (
+      <div className="pt-2.5">
+        <div className={cn('rounded-[14px] border p-2.5', mine ? 'border-[#F25C2A]/15 bg-[#FFF6EE]' : 'border-ink/[0.07] bg-[#FAF9F6]')}>
+          <div className="mb-1 flex items-center gap-2">
+            <span className={cn('flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[9px] font-medium', mine ? 'bg-[#F25C2A] text-white' : 'bg-ink/[0.08] text-ink/70')}>
+              {mine ? brand.product[0] : scene.initials}
+            </span>
+            <span className="min-w-0 flex-1 truncate text-[11px] font-medium">{mine ? brand.product : scene.contact}</span>
+            <span className="t-data shrink-0 text-ink/35">{'09:' + String(12 + i * 2).padStart(2, '0')}</span>
+          </div>
+          <p className="text-[12px] leading-[1.45] text-ink">{mine && !reduce ? <Stream text={l.text} soft={false} /> : l.text}</p>
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div className={cn('flex flex-col pt-2.5', mine ? 'items-end' : 'items-start')}>
+      {mine ? <span className="mb-1 mr-1 text-[10.5px] font-medium text-slate">{brand.product}</span> : null}
+      <span
+        className={cn(
+          'max-w-[86%] px-3.5 py-2.5 text-[12.5px] leading-[1.45] tracking-[-0.005em]',
+          mine ? 'rounded-[16px] rounded-br-[6px] bg-ink text-white' : 'rounded-[16px] rounded-bl-[6px] bg-[#F1EFE9] text-ink'
+        )}
+      >
+        {mine && !reduce ? <Stream text={l.text} soft={false} /> : l.text}
+      </span>
+    </div>
+  );
+}
+
+/**
+ * Phones: the conversation and Aurora's work in one feed, in time order. Messages, "Request
+ * understood", each system update and the approval request all land in the same thread, so
+ * nothing jumps between cards and the viewer reads one story top to bottom.
+ * @param {any} props
+ */
+function PhoneFeed({ scene, st, reduce, approvedBy, onApprove, btnRef }) {
+  const understood = st.steps[2] === 'done' ? 'done' : st.steps.includes('run') || st.steps.includes('done') ? 'run' : 'idle';
+  const items = [];
+  scene.lines.slice(0, st.lines).forEach((l, i) => items.push({ t: T.line[i], key: 'm' + i, el: <FeedMessage scene={scene} l={l} i={i} reduce={reduce} /> }));
+  if (understood !== 'idle') items.push({ t: T.stepRun[0], key: 'u', el: <FeedEvent title={scene.steps[0].title} detail={scene.steps[0].detail} state={understood} /> });
+  scene.actions.forEach((a, i) => {
+    if (st.actions[i] !== 'idle') items.push({ t: T.actRun[i], key: 'a' + i, el: <FeedEvent sys={a.sys} title={a.title} detail={a.detail} state={st.actions[i]} /> });
+  });
+  if (st.approval !== 'none')
+    items.push({
+      t: T.approvalPending,
+      key: 'ok',
+      el: (
+        <div className="pt-2.5">
+          <ApprovalCard scene={scene} st={st} phone approvedBy={approvedBy} onApprove={onApprove} btnRef={btnRef} />
+        </div>
+      ),
+    });
+  items.sort((a, b) => a.t - b.t);
+  const voice = scene.mode === 'voice';
+  return (
+    <div className="absolute inset-0 flex flex-col">
+      {voice ? (
+        <div className="px-3.5 pt-2">
+          <Waveform speaking={reduce ? null : st.speaking} thinking={st.typing} phone />
+        </div>
+      ) : null}
+      <div className="relative min-h-0 flex-1 [mask-image:linear-gradient(to_bottom,transparent,#000_18%)]">
+        <div className="absolute inset-x-0 bottom-0 flex flex-col justify-end px-3 pb-3">
+          <AnimatePresence initial={false}>
+            {items.map((it) => (
+              <Grow key={scene.key + it.key}>{it.el}</Grow>
+            ))}
+            {st.typing && !voice ? (scene.mode === 'email' ? null : <TypingDots key="typing" />) : null}
+          </AnimatePresence>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -1158,12 +1264,11 @@ export default function HeroFilm({ startScene = undefined }) {
   useLayoutEffect(() => {
     if (st.approval !== 'pending' || !btnRef.current || !compRef.current) return;
     setTarget(centreWithin(btnRef.current, compRef.current));
-  }, [st.approval, compKey, k, scale]);
+  }, [st.approval, st.cursor, compKey, k, scale]);
 
   const [camX, camY] = [0, 0]; // fixed framing: no camera pan
   const focus = FOCUS[st.chapter];
   const dim = (key) => !phone && !reduce && introDone && !focus.includes(key);
-  const hide = (key) => phone && !reduce && !PHONE_SHOW[key](st);
   const calm = lite || compKey !== 'wide'; // still backgrounds on phones, tablets and software rendering
 
   const callTime = useTransform(time, (t) => '00:' + String(Math.max(0, Math.floor((t - 200) / 1000))).padStart(2, '0'));
@@ -1212,7 +1317,7 @@ export default function HeroFilm({ startScene = undefined }) {
                 >
                   <Flows flows={comp.flows} st={st} intro={introDone} reduce={reduce} />
 
-                  <Group p={comp.panel} index={1} dim={dim('panel')} hide={hide('panel')} glass={false}>
+                  <Group p={comp.panel} index={1} dim={dim('panel')} glass={false}>
                     <AnimatePresence initial={false}>
                       <motion.div
                         key={scene.key + '-' + loop}
@@ -1221,7 +1326,7 @@ export default function HeroFilm({ startScene = undefined }) {
                         animate={{ opacity: 1, y: 0, transition: { duration: 0.6, delay: 0.12, ease: EASE } }}
                         exit={{ opacity: 0, transition: { duration: 0.35, ease: EASE } }}
                       >
-                        <Panel scene={scene} st={st} phone={phone} reduce={reduce} callTime={callTime} takeover={takeover} onTakeover={toggleTakeover} />
+                        <Panel scene={scene} st={st} phone={phone} reduce={reduce} callTime={callTime} takeover={takeover} onTakeover={toggleTakeover} approvedBy={approvedBy} onApprove={approve} btnRef={btnRef} />
                       </motion.div>
                     </AnimatePresence>
                   </Group>
@@ -1233,7 +1338,7 @@ export default function HeroFilm({ startScene = undefined }) {
                   ) : null}
 
                   {comp.work ? (
-                    <Group p={comp.work} index={2} dim={dim('work')} hide={hide('work')} z={2}>
+                    <Group p={comp.work} index={2} dim={dim('work')} z={2}>
                       <WorkCard scene={scene} st={st} takeover={takeover} />
                     </Group>
                   ) : null}
@@ -1254,9 +1359,11 @@ export default function HeroFilm({ startScene = undefined }) {
                     </Group>
                   ) : null}
 
-                  <Group p={comp.approval} index={5} dim={dim('approval')} hide={hide('approval')} z={3}>
-                    <ApprovalCard scene={scene} st={st} phone={phone} approvedBy={approvedBy} onApprove={approve} btnRef={btnRef} />
-                  </Group>
+                  {phone ? null : (
+                    <Group p={comp.approval} index={5} dim={dim('approval')} z={3}>
+                      <ApprovalCard scene={scene} st={st} phone={phone} approvedBy={approvedBy} onApprove={approve} btnRef={btnRef} />
+                    </Group>
+                  )}
 
                   <AnimatePresence>
                     {cursorOn ? <GhostCursor key={scene.key + loop} target={target} clicking={st.cursor === 'click'} name={scene.approval.by} /> : null}
