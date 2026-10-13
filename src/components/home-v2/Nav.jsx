@@ -191,7 +191,8 @@ export default function Nav() {
           className={cn(
             'pointer-events-auto flex h-[58px] items-center justify-between gap-3 rounded-full pl-4 pr-2 transition-[background,box-shadow] duration-500 sm:pl-5 md:h-[62px]',
             !scrolled && !menu && '[--lg-tint-a:rgba(255,255,255,0.28)] [--lg-tint-b:rgba(255,255,255,0.08)]',
-            !scrolled && onDark && '[--lg-tint-a:rgba(255,255,255,0.06)] [--lg-tint-b:rgba(255,255,255,0.02)]'
+            // over the home reel the light logo needs a dark backing even when a clip has a bright sky or a white van
+            !scrolled && onDark && '[--lg-tint-a:rgba(10,15,14,0.46)] [--lg-tint-b:rgba(10,15,14,0.34)]'
           )}
         >
           <SmartLink
