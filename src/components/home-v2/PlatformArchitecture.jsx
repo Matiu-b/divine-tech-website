@@ -48,7 +48,7 @@ export default function PlatformArchitecture() {
               <Column title="Channels in">
                 <ul className="mt-2 flex flex-wrap gap-1 lg:mt-3 lg:grid lg:gap-1.5">
                   {A.channels.map((c) => (
-                    <li key={c} className="rounded-[10px] bg-paper px-2.5 py-1 text-[12px] font-medium text-ink lg:rounded-[12px] lg:px-3 lg:py-2 lg:text-[13px]">
+                    <li key={c} className="rounded-[10px] bg-ink/[0.05] px-2.5 py-1 lg:bg-paper text-[12px] font-medium text-ink lg:rounded-[12px] lg:px-3 lg:py-2 lg:text-[13px]">
                       {c}
                     </li>
                   ))}
@@ -105,7 +105,7 @@ export default function PlatformArchitecture() {
               <Column title="Your systems">
                 <ul className="mt-2 flex flex-wrap gap-1 lg:mt-3 lg:grid lg:grid-cols-1 lg:gap-1.5">
                   {A.systems.map((s) => (
-                    <li key={s.name} className="rounded-[10px] bg-paper px-2.5 py-1 lg:rounded-[12px] lg:px-3 lg:py-2">
+                    <li key={s.name} className="rounded-[10px] bg-ink/[0.05] px-2.5 py-1 lg:bg-paper lg:rounded-[12px] lg:px-3 lg:py-2">
                       <span className="block text-[12px] font-medium text-ink lg:text-[13px]">{s.name}</span>
                       <span className="hidden truncate text-[11.5px] text-slate lg:block">{s.examples}</span>
                     </li>
