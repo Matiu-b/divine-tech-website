@@ -118,14 +118,14 @@ export const heroFilm = {
       initials: 'MT',
       sub: 'Inbound call · Water heater',
       ref: 'JOB-1186',
-      // Recorded call (ElevenLabs voices: Aurora and the caller). Line timings live in HeroFilm (T_VOICE).
+      // One recorded call (ElevenLabs Eleven v4 dialogue: Aurora and the caller). Line timings live in HeroFilm (T_VOICE).
       audio: '/audio/hero-voice-call.mp3',
       lines: [
-        { who: 'customer', text: 'Hi, our water heater is leaking into the basement. Can someone come today?' },
-        { who: 'aurora', text: 'I can send Luis today between 2 and 4. First, please close the cold-water valve on top of the tank.' },
-        { who: 'customer', text: 'Okay, done. Two to four works.' },
-        { who: 'aurora', text: 'You’re booked. Same-day slots need a quick sign-off from dispatch. One moment.' },
-        { who: 'aurora', text: 'Confirmed. Luis arrives between 2 and 4. You’ll get a text when he’s close.' },
+        { who: 'customer', text: 'Hi, our water heater is leaking into the basement. Can someone come out today?' },
+        { who: 'aurora', text: 'Oh no, I’m sorry to hear that. I can have Luis there today between 2 and 4. In the meantime, please close the cold-water valve on top of the tank.' },
+        { who: 'customer', text: 'Okay… done. Two to four works.' },
+        { who: 'aurora', text: 'Great, you’re booked. Same-day visits just need a quick sign-off from dispatch. One moment.' },
+        { who: 'aurora', text: 'All set. Luis will be there between 2 and 4, and you’ll get a text when he’s on his way.' },
       ],
       steps: [
         { title: 'Urgency detected', detail: 'Active leak · same day' },
