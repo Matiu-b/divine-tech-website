@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { AnimatePresence, animate, motion, useMotionValue, useMotionValueEvent, useReducedMotion, useTransform } from 'framer-motion';
-import { CalendarDays, Check, Database, ListChecks, Mail, MessageCircle, MessagesSquare, Pause, PenLine, Phone, Play, ShieldCheck, UserRound, Volume2, VolumeX } from 'lucide-react';
+import { CalendarDays, Check, CreditCard, Database, FileText, ListChecks, Mail, MessageCircle, MessagesSquare, Pause, PenLine, Phone, Play, Receipt, ShieldCheck, UserRound, Volume2, VolumeX } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { brand, heroFilm, media } from '@/data/site';
 import Grow from './primitives/Grow';
@@ -177,7 +177,7 @@ const CH = {
   email: { icon: Mail, chip: 'bg-[#F4EEE3] text-[#7A5A1E]' },
 };
 
-const SYS_ICON = { CRM: Database, Calendar: CalendarDays, Tasks: ListChecks };
+const SYS_ICON = { CRM: Database, Calendar: CalendarDays, Tasks: ListChecks, Quotes: FileText, Payments: CreditCard, Billing: Receipt };
 
 /* ------------------------------------------------------------------ */
 /* Clock + state                                                        */
@@ -1545,7 +1545,7 @@ export default function HeroFilm({ startScene = undefined }) {
                     <Group p={comp.actions} index={3} dim={dim('actions')} z={2}>
                       <div className={cn('grid', compKey === 'tablet' ? 'gap-2.5' : 'gap-[14px]')}>
                         {scene.actions.map((a, i) => (
-                          <ActionCard key={a.sys} scene={scene} a={a} state={st.actions[i]} tablet={compKey === 'tablet'} />
+                          <ActionCard key={a.sys + i} scene={scene} a={a} state={st.actions[i]} tablet={compKey === 'tablet'} />
                         ))}
                       </div>
                     </Group>
@@ -1630,9 +1630,9 @@ export default function HeroFilm({ startScene = undefined }) {
           onEnded={() => setSound(false)}
         /> : null}
       <figcaption id="film-caption" className="sr-only">
-        Interactive product demo: {brand.product} handles a {scene.channel.toLowerCase()} conversation for a {scene.industry.toLowerCase()} business. It replies to the customer,
-        checks availability and policy, updates the CRM, books the appointment, sets a follow-up and asks a person to approve one decision. Use the channel tabs to switch
-        conversations and the pause button to stop the animation.
+        Interactive product demo: {brand.product} handles a {scene.channel.toLowerCase()} conversation ({scene.industry.toLowerCase()}). It replies to the customer, checks the
+        business's rules, does the work in its systems and asks a person to approve one decision. Use the channel tabs to switch conversations and the pause button to stop
+        the animation.
       </figcaption>
     </figure>
   );
