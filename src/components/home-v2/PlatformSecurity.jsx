@@ -1,9 +1,10 @@
-import React from 'react';
-import { CircleCheck, ScrollText, ShieldCheck, Timer } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { useReducedMotion } from 'framer-motion';
+import { ArrowLeft, ArrowRight, CircleCheck, ScrollText, ShieldCheck, Timer } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { platformPage } from '@/data/site';
 import SectionHeader from './primitives/SectionHeader';
-import { RevealGroup, RevealItem } from './primitives/MotionReveal';
+import { Reveal } from './primitives/MotionReveal';
 
 const S = platformPage.security;
 const CHIP = {
@@ -95,21 +96,66 @@ function HandoffMock({ m }) {
 
 const MOCKS = { rules: RulesMock, approval: ApprovalMock, audit: AuditMock, handoff: HandoffMock };
 
-/** Security and trust: four cards, each a small product snippet with one line under it. Target of /platform#security. */
+const GAP = 12;
+
+/** Security and trust: four cards, each a small product snippet with one line under it. Target of /platform#security.
+ * Below md the cards are a swipe carousel with arrows and a pager, like the console tour. */
 export default function PlatformSecurity() {
+  const track = useRef(null);
+  const reduce = useReducedMotion();
+  const [active, setActive] = useState(0);
+  const n = S.items.length;
+
+  useEffect(() => {
+    const el = track.current;
+    if (!el) return undefined;
+    const onScroll = () => {
+      const w = el.firstElementChild ? el.firstElementChild.getBoundingClientRect().width : el.clientWidth;
+      const end = el.scrollLeft + el.clientWidth > el.scrollWidth - 8;
+      setActive(end ? n - 1 : Math.max(0, Math.min(n - 1, Math.round(el.scrollLeft / (w + GAP)))));
+    };
+    onScroll();
+    el.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      el.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, [n]);
+
+  const go = (i) => {
+    const el = track.current;
+    if (!el || !el.firstElementChild) return;
+    const w = el.firstElementChild.getBoundingClientRect().width + GAP;
+    el.scrollTo({ left: Math.max(0, Math.min(n - 1, i)) * w, behavior: reduce ? 'auto' : 'smooth' });
+  };
+
+  const arrow =
+    'flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-ink shadow-[0_0_0_1px_rgba(10,15,14,0.08)] transition hover:bg-ink hover:text-white disabled:pointer-events-none disabled:opacity-35';
+
   return (
     <section id="security" data-nav-theme="light" aria-labelledby="security-title" className="section relative pb-0 pt-0">
       <div className="shell">
         <SectionHeader id="security-title" eyebrow={S.eyebrow} titleA={S.titleA} titleB={S.titleB} text={S.text} layout="split" />
 
-        <RevealGroup
+        <div
+          ref={track}
+          aria-roledescription="carousel"
+          aria-label="Security and trust"
           className="no-scrollbar mx-[calc(-1*var(--gutter))] mt-8 flex snap-x snap-mandatory gap-3 overflow-x-auto overflow-y-hidden overscroll-x-contain scroll-px-[var(--gutter)] px-[var(--gutter)] md:mx-0 md:mt-14 md:grid md:grid-cols-2 md:gap-5 md:overflow-visible md:px-0 lg:grid-cols-4"
-          amount={0.15}
         >
-          {S.items.map((it) => {
+          {S.items.map((it, i) => {
             const Mock = MOCKS[it.key];
             return (
-              <RevealItem key={it.key} as="article" className="w-[78%] shrink-0 snap-start xs:w-[68%] sm:w-[46%] md:w-auto">
+              <Reveal
+                key={it.key}
+                as="article"
+                delay={i * 0.08}
+                y={28}
+                className="w-[78%] shrink-0 snap-start xs:w-[68%] sm:w-[46%] md:w-auto"
+                aria-roledescription="slide"
+                aria-label={`${i + 1} of ${n}: ${it.title}`}
+              >
                 <div
                   aria-hidden="true"
                   className="relative h-[240px] overflow-hidden rounded-[22px] bg-[linear-gradient(160deg,#FBF6EF_0%,#F2E9DC_100%)] shadow-[inset_0_0_0_1px_rgba(10,15,14,0.04)] lg:h-[260px]"
@@ -118,10 +164,36 @@ export default function PlatformSecurity() {
                 </div>
                 <h3 className="mt-4 text-[16px] font-medium tracking-[-0.01em] text-ink md:text-[17px]">{it.title}</h3>
                 <p className="mt-1.5 text-[14px] leading-relaxed text-graphite md:text-[15px]">{it.text}</p>
-              </RevealItem>
+              </Reveal>
             );
           })}
-        </RevealGroup>
+        </div>
+
+        {/* phones and small tablets: pager plus arrows */}
+        <div className="mt-6 flex items-center gap-4 md:hidden">
+          <div className="flex flex-1 gap-2">
+            {S.items.map((it, i) => (
+              <button
+                key={it.key}
+                type="button"
+                onClick={() => go(i)}
+                aria-label={`Show ${it.title}`}
+                aria-current={i === active ? 'true' : undefined}
+                className="relative h-1 flex-1 overflow-hidden rounded-full bg-ink/10"
+              >
+                <span className={cn('absolute inset-y-0 left-0 rounded-full bg-ink transition-[width] duration-300', i <= active ? 'w-full' : 'w-0')} />
+              </button>
+            ))}
+          </div>
+          <div className="flex gap-2">
+            <button type="button" className={arrow} onClick={() => go(active - 1)} disabled={active === 0} aria-label="Previous">
+              <ArrowLeft className="h-4 w-4" strokeWidth={1.8} />
+            </button>
+            <button type="button" className={arrow} onClick={() => go(active + 1)} disabled={active === n - 1} aria-label="Next">
+              <ArrowRight className="h-4 w-4" strokeWidth={1.8} />
+            </button>
+          </div>
+        </div>
       </div>
     </section>
   );
