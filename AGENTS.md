@@ -31,6 +31,8 @@ Divine Tech AI company website (divine-tech.ai). React, Vite and Tailwind CSS, b
 - Routes (`src/App.jsx`): `/` (home), `/platform` (the product in depth; the product film `HeroFilm` appears on this page only), `/industries/:slug` (one page per vertical: `real-estate`, `wellness-healthcare`, `home-services`), `/privacy`.
 - `src/data/site.js`: home page copy, contact details and navigation. `src/data/industries.js`: everything on the industry pages (copy, hero photo and live-feed events, FAQ). Add an industry there and it appears in the nav menu, the footer, the home page cards and its own page.
 - Home and industry pages share `SiteLayout` (nav, footer, demo drawer, per-page title and description). Use `SmartLink` for links: `/#section` scrolls on the home page and routes there from other pages.
+- Each page is its own JS chunk (`src/pages/routes.jsx`): add a new page there and in `pageForPath`, and in `pageSource` in `scripts/prerender.mjs` (which adds `modulepreload` links for the page's chunk). `main.jsx` loads the current page's chunk before the first render.
+- Animations: `App.jsx` wraps the site in `<LazyMotion strict>` and loads framer-motion's features in their own chunk. Import `m` (`import { m as motion } from 'framer-motion'`), never the full `motion` component, or strict mode throws.
 - No performance numbers, customer names or testimonials on the site until they are verified with the team.
 
 ## Brand

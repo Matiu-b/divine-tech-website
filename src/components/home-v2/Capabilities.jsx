@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, m as motion, useReducedMotion } from 'framer-motion';
 import { Check, FileText, Globe, Database, Lock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { brand, capabilities, controlVisual, storyCase, understandVisual, workVisual } from '@/data/site';

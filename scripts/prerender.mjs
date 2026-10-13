@@ -3,7 +3,7 @@
 // writes dist/<path>.html with its own title, description, canonical, Open Graph tags, JSON-LD and
 // the page text already in the HTML (React replaces it on load). It also writes 404.html (served by
 // Netlify with a real 404 status), sitemap.xml, robots.txt and llms.txt. No dependencies.
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, rmSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { SITE_URL, blog, posts, postPath } from '../src/data/blog.js';
@@ -123,8 +123,32 @@ function write(path, html) {
   console.log('prerendered', path);
 }
 
+// Each page's code is its own chunk (src/pages/routes.jsx). Preloading it, and the chunks it
+// imports, lets the browser fetch it alongside the entry script instead of after it.
+const manifest = JSON.parse(readFileSync(join(dist, '.vite/manifest.json'), 'utf8'));
+rmSync(join(dist, '.vite'), { recursive: true, force: true }); // build metadata, not for the site
+const entryChunks = new Set((template.match(/\/assets\/[^"]+\.js/g) || []).map((s) => s.slice(1)));
+const pageSource = (path) =>
+  path === '/' ? 'Home' : path === '/platform' ? 'PlatformPage' : path === '/privacy' ? 'PrivacyPolicy' : path === '/blog' ? 'Blog'
+    : path.startsWith('/blog/') ? 'BlogPost' : path.startsWith('/industries/') ? 'IndustryPage' : null;
+function preloads(path) {
+  const name = pageSource(path);
+  if (!name) return '';
+  const files = new Set();
+  const visit = (key) => {
+    const chunk = manifest[key];
+    if (!chunk || files.has(chunk.file)) return;
+    files.add(chunk.file);
+    (chunk.imports || []).forEach(visit);
+  };
+  visit(`src/pages/${name}.jsx`);
+  return [...files].filter((f) => !entryChunks.has(f)).map((f) => `<link rel="modulepreload" crossorigin href="/${f}">`).join('\n    ');
+}
+
 function render(path, meta, main) {
-  write(path, withBody(setMeta(template, { ...meta, path }), page(main)));
+  const links = preloads(path);
+  const html = setMeta(template, { ...meta, path });
+  write(path, withBody(links ? html.replace('</head>', `  ${links}\n  </head>`) : html, page(main)));
 }
 
 // Home

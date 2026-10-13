@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, m as motion, useReducedMotion } from 'framer-motion';
 import { CalendarCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { heroStage } from '@/data/site';

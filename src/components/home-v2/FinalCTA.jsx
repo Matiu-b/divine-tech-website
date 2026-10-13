@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { m as motion, useReducedMotion } from 'framer-motion';
 import { closing, media } from '@/data/site';
 import LiquidGlass from './primitives/LiquidGlass';
 import MediaSlot from './primitives/MediaSlot';

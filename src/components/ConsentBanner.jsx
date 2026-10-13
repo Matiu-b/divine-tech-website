@@ -1,6 +1,6 @@
 import React, { useEffect, useId, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, m as motion, useReducedMotion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { OPEN_CONSENT_EVENT, readConsent, saveConsent } from '@/lib/consent';
 import { EASE } from '@/components/home-v2/motion';

@@ -1,5 +1,5 @@
 import React, { createContext, useCallback, useContext, useEffect, useId, useMemo, useRef, useState } from 'react';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, m as motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight, Check, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { trackDemoRequest } from '@/lib/tracking';

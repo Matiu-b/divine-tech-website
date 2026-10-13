@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { m as motion, useReducedMotion } from 'framer-motion';
 import { BookOpen, CalendarDays, Check, Database, ScrollText, ShieldCheck, UserCheck, Hash, ListChecks, Mail, MessageCircle, MessageSquare, Phone, Smartphone, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { brand, platform } from '@/data/site';

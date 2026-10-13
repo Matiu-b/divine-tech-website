@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { AnimatePresence, animate, motion, useMotionValue, useMotionValueEvent, useReducedMotion, useTransform } from 'framer-motion';
+import { AnimatePresence, animate, m as motion, useMotionValue, useMotionValueEvent, useReducedMotion, useTransform } from 'framer-motion';
 import { CalendarDays, Check, CreditCard, Database, FileText, ListChecks, Mail, MessageCircle, MessagesSquare, Pause, PenLine, Phone, Play, Receipt, ShieldCheck, UserRound, Volume2, VolumeX } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { brand, heroFilm, media } from '@/data/site';

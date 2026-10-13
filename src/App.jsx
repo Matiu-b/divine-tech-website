@@ -1,18 +1,15 @@
-import { Toaster } from "@/components/ui/toaster"
-import { QueryClientProvider } from '@tanstack/react-query'
-import { queryClientInstance } from '@/lib/query-client'
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
+import { LazyMotion } from 'framer-motion';
 import PageNotFound from './lib/PageNotFound';
 import { trackMetaPageView } from '@/lib/metaPixel';
 import ScrollToTop from './components/ScrollToTop';
 import ConsentBanner from './components/ConsentBanner';
-import Home from '@/pages/Home';
-import PrivacyPolicy from '@/pages/PrivacyPolicy';
-import IndustryPage from '@/pages/IndustryPage';
-import PlatformPage from '@/pages/PlatformPage';
-import Blog from '@/pages/Blog';
-import BlogPost from '@/pages/BlogPost';
+import { Page } from '@/pages/routes';
+
+// Animation features (including layout animations) load in their own chunk after the first render;
+// components use `m` from framer-motion, which needs them.
+const motionFeatures = () => import('@/lib/motionFeatures').then((mod) => mod.default);
 
 // Meta PageView on first load and on every client-side route change.
 function MetaPageViews() {
@@ -25,23 +22,24 @@ function MetaPageViews() {
 
 function App() {
   return (
-    <QueryClientProvider client={queryClientInstance}>
+    <LazyMotion features={motionFeatures} strict>
       <Router>
         <ScrollToTop />
         <MetaPageViews />
+        <Suspense fallback={null}>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/platform" element={<PlatformPage />} />
-          <Route path="/industries/:slug" element={<IndustryPage />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/blog/:slug" element={<BlogPost />} />
-          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/" element={<Page name="home" />} />
+          <Route path="/platform" element={<Page name="platform" />} />
+          <Route path="/industries/:slug" element={<Page name="industry" />} />
+          <Route path="/blog" element={<Page name="blog" />} />
+          <Route path="/blog/:slug" element={<Page name="post" />} />
+          <Route path="/privacy" element={<Page name="privacy" />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
+        </Suspense>
         <ConsentBanner />
       </Router>
-      <Toaster />
-    </QueryClientProvider>
+    </LazyMotion>
   )
 }
 

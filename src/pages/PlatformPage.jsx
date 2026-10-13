@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { m as motion, useReducedMotion } from 'framer-motion';
 import { platformPage } from '@/data/site';
 import SiteLayout from '@/components/home-v2/SiteLayout';
 import HeroFilm from '@/components/home-v2/HeroFilm';
@@ -34,7 +34,7 @@ function PlatformHero() {
           <RevealLines lines={[p.titleA, p.titleB]} lineClassNames={['', '']} immediate delay={0.08} stagger={0.14} />
         </h1>
         <div className="mt-7 grid gap-7 md:mt-9 lg:grid-cols-12 lg:items-end lg:gap-8">
-          <motion.p className="t-lead pretty max-w-[56ch] lg:col-span-7" {...rise(0.3)}>
+          <motion.p className="t-lead pretty max-w-[56ch] lg:col-span-7" {...slide(0.3)}>
             {p.text}
           </motion.p>
           <motion.div className="flex flex-wrap items-center gap-2.5 sm:gap-3 lg:col-span-5 lg:justify-end" {...slide(0.42)}>
