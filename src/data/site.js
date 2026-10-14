@@ -492,6 +492,16 @@ export const teams = {
       kpis: ['Speed to lead', 'Meetings booked', 'Conversion rate'],
       agent: 'Sales agent',
       chip: { icon: 'calendar', title: 'Meeting booked', detail: 'Thu 11:00' },
+      // Card visual: a short looping exchange (illustrative names and times).
+      scene: {
+        channel: 'Web chat',
+        steps: [
+          { kind: 'in', text: 'Hi, can we see a demo this week?' },
+          { kind: 'out', text: 'Sure. Thursday 11:00 or Friday 2:00?' },
+          { kind: 'in', text: 'Thursday works.' },
+          { kind: 'card', icon: 'calendar', title: 'Meeting booked', detail: 'Thu 11:00 · with Dana' },
+        ],
+      },
       photo: {
         src: PHOTOS + 'team-sales2-960.webp',
         srcSet: srcSet('team-sales2', [640, 960, 1440]),
@@ -506,6 +516,15 @@ export const teams = {
       kpis: ['First response time', 'Resolution rate', 'Customer satisfaction'],
       agent: 'Service agent',
       chip: { icon: 'service', title: 'Request resolved', detail: 'Moved to Thu' },
+      scene: {
+        channel: 'Email',
+        steps: [
+          { kind: 'in', text: 'Can my delivery move to Thursday? Order #4471' },
+          { kind: 'work', items: ['Order found', 'Carrier slot moved'] },
+          { kind: 'out', text: 'Done. It now arrives Thursday, Oct 16.' },
+          { kind: 'card', icon: 'service', title: 'Request resolved', detail: 'No handoff needed' },
+        ],
+      },
       photo: {
         src: PHOTOS + 'team-service2-960.webp',
         srcSet: srcSet('team-service2', [640, 960, 1440]),
@@ -520,6 +539,15 @@ export const teams = {
       kpis: ['Cycle time', 'Manual work hours', 'On-time completion'],
       agent: 'Operations agent',
       chip: { icon: 'approval', title: 'Invoice approved', detail: 'To Finance' },
+      scene: {
+        channel: 'Slack · #finance',
+        steps: [
+          { kind: 'in', text: 'New invoice INV-2291 from Northwind, $4,800' },
+          { kind: 'work', items: ['Matches PO-118', 'Within budget'] },
+          { kind: 'approve', title: 'Approve $4,800?', who: 'Dana · Ops lead' },
+          { kind: 'card', icon: 'approval', title: 'Invoice approved', detail: 'Sent to Finance' },
+        ],
+      },
       photo: {
         src: PHOTOS + 'team-internal2-960.webp',
         srcSet: srcSet('team-internal2', [640, 960, 1440]),
