@@ -92,11 +92,11 @@ export const industries = [
         // One evening on a buyer's phone: she messages the listing agents of three homes and hears nothing;
         // the fourth home is listed by a brokerage that runs Aurora. Every name, address, number and message is illustrative.
         steps: [
-          { time: '7:58 pm', title: 'She messages the listing agents', text: 'Three homes she likes, three listing agents, three messages.' },
-          { time: '9:46 pm', title: 'No one replies', text: 'Almost two hours later, every message still says Delivered.' },
-          { time: '9:47 pm', title: 'One more listing', text: 'A house on Willow Court, listed by a brokerage that runs Aurora.' },
-          { time: '3 sec later', title: 'Aurora answers', text: 'A reply before she puts the phone down, in her own conversation.' },
-          { time: '9:52 pm', title: 'Qualified, booked, in your CRM', text: 'Name, email, budget, timing and a tour with Marcus, all filed for your team.' },
+          { time: '7:58 pm', title: 'She messages the listing agents', text: 'Three homes, three listing agents, three messages.' },
+          { time: '9:46 pm', title: 'No one replies', text: 'Two hours later, every message still says Delivered.' },
+          { time: '9:47 pm', title: 'One more listing', text: 'This one is listed by a brokerage that runs Aurora.' },
+          { time: '3 sec later', title: 'Aurora answers', text: 'A reply in seconds, right in her conversation.' },
+          { time: '9:52 pm', title: 'Qualified, booked, in your CRM', text: 'Name, email, budget, timing and a tour, all filed.' },
         ],
         phone: {
           title: 'Messages',
