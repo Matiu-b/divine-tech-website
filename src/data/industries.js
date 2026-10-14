@@ -166,8 +166,8 @@ export const industries = [
           booked: 'Tour booked · Thu 6:30 pm',
           // her conversation with the brokerage that runs Aurora; `crm` names the fields each message fills
           chat: [
-            { who: 'buyer', text: 'Hi! Is 18 Willow Court still available? What are the HOA fees?' },
-            { who: 'aurora', text: "Hi! Yes, it's available. The HOA is $45 a month and covers the community pool and common areas. I'm Aurora, Harbor Lane's AI assistant. May I have your name?", crm: ['phone', 'home'] },
+            { who: 'buyer', text: 'Hi! Is 18 Willow Court still available? What are the HOA fees?', crm: ['phone', 'home'] },
+            { who: 'aurora', text: "Hi! Yes, it's available. The HOA is $45 a month and covers the community pool and common areas. I'm Aurora, Harbor Lane's AI assistant. May I have your name?" },
             { who: 'buyer', text: 'Emma Clarke', crm: ['name'] },
             { who: 'aurora', text: 'Thanks, Emma! When are you hoping to move, and have you talked to a lender yet?' },
             { who: 'buyer', text: 'In about two months. Pre-approved up to $450K', crm: ['timeline', 'budget'] },
@@ -181,7 +181,7 @@ export const industries = [
         crm: {
           title: 'Harbor Lane CRM',
           empty: 'Waiting for a new lead',
-          status: ['New lead', 'Qualified', 'Tour booked'],
+          status: ['New lead · text', 'Qualified', 'Tour booked'],
           fields: [
             { key: 'name', label: 'Name', value: 'Emma Clarke' },
             { key: 'phone', label: 'Phone', value: '(312) 555-0147' },

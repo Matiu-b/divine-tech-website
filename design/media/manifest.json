@@ -112,6 +112,11 @@
       "kind": "image",
       "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_145853_663f9916-2c51-4234-bf03-62d303fb1a1a.png",
       "out": "public/media/real-estate/listing-willow"
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_154901_bee8c712-a65c-4519-9c5e-85ba06ad34e7.png",
+      "out": "public/media/real-estate/emma-sofa"
     }
   ]
 }
