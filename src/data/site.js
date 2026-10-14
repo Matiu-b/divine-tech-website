@@ -492,6 +492,18 @@ export const teams = {
       kpis: ['Speed to lead', 'Meetings booked', 'Conversion rate'],
       agent: 'Sales agent',
       chip: { icon: 'calendar', title: 'Meeting booked', detail: 'Thu 11:00' },
+      // Card visual: a short looping exchange (illustrative names and times).
+      scene: {
+        channel: 'Web chat',
+        steps: [
+          { kind: 'in', text: 'Hi, can we see a demo this week?' },
+          { kind: 'out', text: 'Sure. Thursday 11:00 or Friday 2:00?' },
+          { kind: 'in', text: 'Thursday works.' },
+          { kind: 'card', icon: 'calendar', title: 'Meeting booked', detail: 'Thu 11:00 · with Dana' },
+        ],
+      },
+      // Preview: images served from Higgsfield until they are copied into /public.
+      sketch: { src: 'https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_090642_b271fce4-3e2e-4b00-aa5a-3795571a6bf2.png', bg: '#F2672E', alt: 'A sales executive walking and reading a message on her phone against an orange studio wall' },
       photo: {
         src: PHOTOS + 'team-sales2-960.webp',
         srcSet: srcSet('team-sales2', [640, 960, 1440]),
@@ -506,6 +518,17 @@ export const teams = {
       kpis: ['First response time', 'Resolution rate', 'Customer satisfaction'],
       agent: 'Service agent',
       chip: { icon: 'service', title: 'Request resolved', detail: 'Moved to Thu' },
+      scene: {
+        channel: 'Email',
+        steps: [
+          { kind: 'in', text: 'Can my delivery move to Thursday? Order #4471' },
+          { kind: 'work', items: ['Order found', 'Carrier slot moved'] },
+          { kind: 'out', text: 'Done. It now arrives Thursday, Oct 16.' },
+          { kind: 'card', icon: 'service', title: 'Request resolved', detail: 'No handoff needed' },
+        ],
+      },
+      // Preview: images served from Higgsfield until they are copied into /public.
+      sketch: { src: 'https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_090642_9c0c57c6-ed61-4323-bb3c-657a3a07a443.png', bg: '#FFC857', alt: 'A support specialist with a headset laughing mid-conversation against a honey-yellow studio wall' },
       photo: {
         src: PHOTOS + 'team-service2-960.webp',
         srcSet: srcSet('team-service2', [640, 960, 1440]),
@@ -520,6 +543,17 @@ export const teams = {
       kpis: ['Cycle time', 'Manual work hours', 'On-time completion'],
       agent: 'Operations agent',
       chip: { icon: 'approval', title: 'Invoice approved', detail: 'To Finance' },
+      scene: {
+        channel: 'Slack · #finance',
+        steps: [
+          { kind: 'in', text: 'New invoice INV-2291 from Northwind, $4,800' },
+          { kind: 'work', items: ['Matches PO-118', 'Within budget'] },
+          { kind: 'approve', title: 'Approve $4,800?', who: 'Dana · Ops lead' },
+          { kind: 'card', icon: 'approval', title: 'Invoice approved', detail: 'Sent to Finance' },
+        ],
+      },
+      // Preview: images served from Higgsfield until they are copied into /public.
+      sketch: { src: 'https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_090643_94229636-c0df-4d38-98ea-a084779d1916.png', bg: '#1B120D', alt: 'Two operations colleagues reviewing a tablet against a dark wall lit by an orange glow' },
       photo: {
         src: PHOTOS + 'team-internal2-960.webp',
         srcSet: srcSet('team-internal2', [640, 960, 1440]),

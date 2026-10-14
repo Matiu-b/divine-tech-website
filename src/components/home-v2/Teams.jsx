@@ -3,22 +3,19 @@ import { useReducedMotion } from 'framer-motion';
 import { TrendingUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { teams } from '@/data/site';
-import LiquidGlass from './primitives/LiquidGlass';
 import SectionHeader from './primitives/SectionHeader';
 import { Reveal } from './primitives/MotionReveal';
-import { EVENT_ICONS } from './eventIcons';
+import TeamSketch from './TeamSketch';
 import { useInViewport, usePageVisible } from './hooks';
 
 const ADVANCE_MS = 5000;
 const GAP = 12;
 
 /**
- * One team, one agent. The photo and its glass status chip share a canvas, so
- * the card can reveal as a whole without the glass losing its backdrop.
+ * One team, one agent: a coloured scene of the agent at work, then what the team gets.
  * @param {any} props
  */
 function TeamCard({ t, i, n }) {
-  const Icon = EVENT_ICONS[t.chip.icon];
   return (
     <Reveal
       delay={i * 0.08}
@@ -27,32 +24,12 @@ function TeamCard({ t, i, n }) {
       aria-roledescription="slide"
       aria-label={`${i + 1} of ${n}: ${t.label}`}
     >
-      <div className="canvas relative aspect-[4/3] bg-cover bg-center" style={t.photo.lqip ? { backgroundImage: 'url(' + t.photo.lqip + ')' } : undefined}>
-        <img
-          src={t.photo.src}
-          srcSet={t.photo.srcSet}
-          sizes="(min-width: 1440px) 420px, (min-width: 1024px) 31vw, calc(100vw - 32px)"
-          alt={t.photo.alt}
-          loading="lazy"
-          decoding="async"
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-        <LiquidGlass className="absolute inset-x-3 bottom-3 flex items-center gap-3 rounded-[16px] px-3 py-2.5 xs:inset-x-4 xs:bottom-4">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[11px] bg-white/85 text-ink shadow-[0_1px_2px_rgba(10,15,14,0.08)]">
-            {Icon ? <Icon className="h-[17px] w-[17px]" strokeWidth={1.7} aria-hidden="true" /> : null}
-          </span>
-          <span className="min-w-0 flex-1">
-            <span className="block truncate text-[11px] font-medium text-slate">{t.agent}</span>
-            <span className="block truncate text-[13px] font-medium leading-tight tracking-[-0.01em] text-ink">{t.chip.title}</span>
-          </span>
-          <span className="shrink-0 text-[11.5px] text-graphite lg:hidden xl:inline">{t.chip.detail}</span>
-        </LiquidGlass>
-      </div>
+      <TeamSketch t={t} i={i} />
 
       <div className="flex flex-1 flex-col pt-6 md:pt-7">
         <p className="eyebrow">{t.label}</p>
         <h3 className="t-h3 balance mt-3">{t.title}</h3>
-        <p className="mt-3 max-w-[35.72em] text-[15px] leading-relaxed text-graphite">{t.line}</p>
+        <p className="mt-3 max-w-[40ch] text-[15px] leading-relaxed text-graphite">{t.line}</p>
         <p className="mt-5 text-[12px] font-medium text-slate">What it moves</p>
         <ul className="mt-2 grid gap-1.5" aria-label="What it moves">
           {t.kpis.map((k) => (
