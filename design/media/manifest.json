@@ -30,6 +30,51 @@
       "kind": "image",
       "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_093122_13c7bcce-2d7d-48f3-9fdc-0bad66a5a329.png",
       "out": "public/media/teams/internal-object"
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_121813_75871d4b-5936-4438-8889-7971e5493d49.png",
+      "out": "public/media/real-estate/hero"
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_121812_84e0ea26-00b0-4e32-badc-a9becb34d0b2.png",
+      "out": "public/media/real-estate/buyers"
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_121810_df339729-0fef-4a75-b2bd-d5dd353b5488.png",
+      "out": "public/media/real-estate/sellers"
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_121813_ca95ddd5-c7ae-46fe-a55c-2113109cdc53.png",
+      "out": "public/media/real-estate/showings"
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_121810_478c8e8e-30a5-4e97-8ba8-007222cbf8ef.png",
+      "out": "public/media/real-estate/past"
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_121811_f2919646-b135-4e36-866d-a827b0a3c2cc.png",
+      "out": "public/media/real-estate/keys"
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_121811_fd426286-c620-46b0-a564-1f5c526e801c.png",
+      "out": "public/media/real-estate/sign"
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_121813_944c1af8-f9da-4618-8315-d8a746cef004.png",
+      "out": "public/media/real-estate/lockbox"
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_121811_d0d6a68a-a4b4-4959-b5b9-621bae95a266.png",
+      "out": "public/media/real-estate/welcome"
     }
   ]
 }
