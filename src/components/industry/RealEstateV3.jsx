@@ -156,7 +156,7 @@ function Note({ n, reduce }) {
   );
 }
 
-/** The stage: a buyer calling about a listing, Aurora's side of the call as live captions. */
+/** The stage: the listing, and a buyer's call about it as live captions. Takes a still image or a muted clip. */
 function CallStage({ h }) {
   const c = h.call;
   const f = h.film;

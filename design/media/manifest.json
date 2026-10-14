@@ -82,48 +82,6 @@
       "out": "public/media/real-estate/call-c"
     },
     {
-      "kind": "video",
-      "width": 1280,
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_132736_e574e8f1-b3a3-40e9-b13c-ca7c8031c0f7.mp4",
-      "out": "public/media/real-estate/hero-call"
-    },
-    {
-      "kind": "image",
-      "widths": [
-        600,
-        900,
-        1200,
-        1600,
-        2000
-      ],
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_134407_c3761559-b320-44fe-a9b3-e9ee924ffb80.png",
-      "out": "public/media/real-estate/house-1"
-    },
-    {
-      "kind": "image",
-      "widths": [
-        600,
-        900,
-        1200,
-        1600,
-        2000
-      ],
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_134408_e09568c8-f3fe-423c-9cf4-e547e6e52ddb.png",
-      "out": "public/media/real-estate/house-2"
-    },
-    {
-      "kind": "image",
-      "widths": [
-        600,
-        900,
-        1200,
-        1600,
-        2000
-      ],
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_134649_b01217e4-acb1-4f7c-bf3b-1f9e5449174a.png",
-      "out": "public/media/real-estate/house-3"
-    },
-    {
       "kind": "image",
       "widths": [
         600,

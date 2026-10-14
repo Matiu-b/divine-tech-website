@@ -31,13 +31,15 @@ export const industries = [
         titleA: 'The AI ISA for',
         titleB: 'real estate brokerages.',
         text: 'Aurora answers every lead from portals, ads, calls and texts in seconds, qualifies it, books the showing with the right agent and keeps every deal moving. Your agents just sell.',
-        // A buyer calls about a listing at night and Aurora takes the call. Recorded in ElevenLabs v4;
+        // The listing from the call, and the call itself: a buyer phones about it at night and Aurora answers. Recorded in ElevenLabs v4;
         // `at` / `end` are where each caption starts and ends in the recording (ms), `words` when each
         // word is spoken, from the start of its caption. Names, prices and times are illustrative.
         film: {
-          video: '/media/real-estate/hero-call.mp4',
-          poster: '/media/real-estate/hero-call-poster.webp',
-          alt: 'A man on the phone on a quiet street at dusk, smiling at a craftsman house with a yard sign in front',
+          image: {
+            src: '/media/real-estate/house-4-1600.webp',
+            srcSet: '/media/real-estate/house-4-900.webp 900w, /media/real-estate/house-4-1200.webp 1200w, /media/real-estate/house-4-1600.webp 1600w, /media/real-estate/house-4-2000.webp 2000w',
+          },
+          alt: 'The Maple Street listing at dusk: a craftsman house with a two-car garage, a fenced backyard and a For Sale sign on the lawn',
         },
         call: {
           audio: '/media/real-estate/call-c.mp3',
