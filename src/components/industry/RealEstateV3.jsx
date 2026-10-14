@@ -549,10 +549,10 @@ function Inbox({ p, T, t, reduce }) {
 /** One listing in the listings app, with the Message agent button she taps. */
 function Listing({ p, l, tap, t, reduce }) {
   return (
-    <div className="flex h-full flex-col px-4 pt-1">
+    <div className="flex h-full flex-col px-4 pb-4 pt-1">
       <p className="text-[15px] font-medium text-ink">{p.app}</p>
-      <div className="mt-3 overflow-hidden rounded-[18px] bg-[#E8E2D8]">
-        <img src={l.image} alt="" className="aspect-[4/3] w-full object-cover" loading="lazy" decoding="async" />
+      <div className="mt-3 max-h-[260px] min-h-[120px] flex-1 overflow-hidden rounded-[18px] bg-[#E8E2D8]">
+        <img src={l.image} alt="" className="h-full w-full object-cover" loading="lazy" decoding="async" />
       </div>
       <p className="mt-3 text-[22px] font-medium tracking-[-0.02em] text-ink">{l.price}</p>
       <p className="text-[13px] text-graphite">{l.facts}</p>
@@ -560,7 +560,7 @@ function Listing({ p, l, tap, t, reduce }) {
       <p className="text-[12px] text-slate">
         {p.listedBy} {l.agent.aurora || l.aurora ? l.agent.name : l.agent.name + ' · ' + l.agent.office}
       </p>
-      <span className="relative mt-4 flex h-11 items-center justify-center overflow-hidden rounded-full bg-ink text-[14px] font-medium text-white">
+      <span className="relative mt-4 flex h-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-ink text-[14px] font-medium text-white">
         {p.cta}
         {t >= tap && !reduce ? (
           <motion.span className="absolute h-24 w-24 rounded-full bg-white/30" initial={{ scale: 0, opacity: 0.8 }} animate={{ scale: 3, opacity: 0 }} transition={{ duration: 0.6, ease: 'easeOut' }} />
@@ -693,7 +693,7 @@ function BuyerPhone({ p, T, t, reduce, children = null }) {
     prev.current = active;
   }, [active]);
   return (
-    <div className="relative mx-auto h-[560px] w-full max-w-[336px] rounded-[46px] bg-ink p-[9px] shadow-[0_40px_80px_-40px_rgba(60,35,10,0.55)] sm:h-[620px]">
+    <div className="relative mx-auto h-[560px] w-full max-w-[336px] rounded-[46px] bg-ink p-[9px] shadow-[0_40px_80px_-40px_rgba(60,35,10,0.55)] sm:h-[620px] lg:h-[var(--stage-h)] lg:w-[clamp(272px,calc(var(--stage-h)*0.56),336px)]">
       <div className="relative h-full overflow-hidden rounded-[38px] bg-[#FBFAF7]">
         <div className="relative flex items-center justify-between px-7 pb-1 pt-3 text-[13px] font-medium text-ink">
           <span className="tabular-nums">{clockOf(p, T, t)}</span>
@@ -739,11 +739,13 @@ function BuyerPhone({ p, T, t, reduce, children = null }) {
 }
 
 /** The brokerage's CRM, filling in while Aurora talks. */
-function CrmCard({ c, T, t, reduce, compact = false }) {
+function CrmCard({ c, T, t, reduce, compact = false, fit = 0 }) {
   const live = t >= T.statusAt[0];
+  // on short laptop screens the card gets less room: tighter rows, still one field per line
+  const tight = !compact && fit > 0 && fit < 430;
   const status = c.status[lastIndex(T.statusAt.map((at) => ({ at })), t)];
   return (
-    <div className={cn('rounded-[22px] bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_24px_48px_-32px_rgba(90,50,20,0.35)]', compact ? 'p-3.5' : 'p-5')}>
+    <div className={cn('rounded-[22px] bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_24px_48px_-32px_rgba(90,50,20,0.35)]', compact ? 'p-3.5' : tight ? 'px-4 py-3.5' : 'p-5')}>
       <div className="flex items-center justify-between gap-3">
         <span className="flex items-center gap-2 text-[13px] font-medium text-ink">
           <Database className="h-4 w-4 text-[#B4471A]" strokeWidth={1.9} aria-hidden="true" />
@@ -762,13 +764,13 @@ function CrmCard({ c, T, t, reduce, compact = false }) {
           <span className="text-[11.5px] text-slate">{c.empty}</span>
         )}
       </div>
-      <dl className={cn('mt-3 grid', compact ? 'grid-cols-2 gap-x-3 gap-y-2' : 'gap-2.5')}>
+      <dl className={cn('grid', compact ? 'mt-3 grid-cols-2 gap-x-3 gap-y-2' : tight ? 'mt-2 gap-1.5' : 'mt-3 gap-2.5')}>
         {c.fields.map((f) => {
           const on = T.fill[f.key] !== undefined && t >= T.fill[f.key];
           return (
-            <div key={f.key} className={cn('min-w-0', compact ? '' : 'flex items-baseline justify-between gap-4 border-b border-ink/[0.06] pb-2.5 last:border-0 last:pb-0')}>
+            <div key={f.key} className={cn('min-w-0', compact ? '' : cn('flex items-baseline justify-between gap-4 border-b border-ink/[0.06] last:border-0 last:pb-0', tight ? 'pb-1.5' : 'pb-2.5'))}>
               <dt className={cn('shrink-0 text-ink/45', compact ? 'text-[10.5px]' : 'text-[12.5px]')}>{f.label}</dt>
-              <dd className={cn('min-w-0 truncate font-medium text-ink', compact ? 'text-[12px]' : 'text-[13.5px]')}>
+              <dd className={cn('min-w-0 truncate font-medium text-ink', compact ? 'text-[12px]' : tight ? 'text-[13px]' : 'text-[13.5px]')}>
                 {on ? (
                   <motion.span
                     key="v"
@@ -787,7 +789,7 @@ function CrmCard({ c, T, t, reduce, compact = false }) {
           );
         })}
       </dl>
-      <p className={cn('mt-3 flex items-center gap-2 text-ink transition-opacity duration-500', compact ? 'text-[11.5px]' : 'text-[12.5px]', t >= T.assigned ? 'opacity-100' : 'opacity-0')}>
+      <p className={cn('flex items-center gap-2 text-ink transition-opacity duration-500', tight ? 'mt-2' : 'mt-3', compact ? 'text-[11.5px]' : 'text-[12.5px]', t >= T.assigned ? 'opacity-100' : 'opacity-0')}>
         <span className="flex h-5 w-5 items-center justify-center rounded-full bg-ink text-[10px] font-medium text-white">{c.initial}</span>
         {c.assigned}
       </p>
@@ -842,8 +844,17 @@ export function RxRace({ it }) {
   const t = useLoop(T.end, { active: inView && visible, still: reduce });
   const step = lastIndex(T.stepAt.map((at) => ({ at })), t);
   const s = r.steps[step];
-  // one copy of the clip: beside the phone on desktop, a small floating window on the phone elsewhere
+  // one copy of the clip: beside the phone on desktop, beside the step text elsewhere
   const wide = useMediaQuery('(min-width: 1024px)');
+  const boxRef = useRef(null);
+  const [boxH, setBoxH] = useState(0);
+  useEffect(() => {
+    const el = boxRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return undefined;
+    const ro = new ResizeObserver(([e]) => setBoxH(Math.round(e.contentRect.height)));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   return (
     <section id="race" data-nav-theme="light" aria-labelledby="rx-race-title" className="section relative">
@@ -851,7 +862,7 @@ export function RxRace({ it }) {
         <SectionHeader id="rx-race-title" eyebrow={r.eyebrow} titleA={r.titleA} titleB={r.titleB} text={r.text} layout="split" />
         <div
           ref={ref}
-          className="canvas canvas-grain relative mt-8 grid gap-5 overflow-hidden bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] p-4 xs:p-5 md:mt-14 md:p-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:gap-14 lg:p-12"
+          className="canvas canvas-grain relative mt-8 grid gap-5 overflow-hidden bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] p-4 xs:p-5 md:mt-14 md:p-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:gap-12 lg:p-10 lg:[--stage-h:clamp(440px,calc(100svh_-_200px),620px)] xl:gap-16 lg:[@media(max-height:820px)]:py-7"
         >
           <div aria-hidden="true" className="pointer-events-none absolute right-[6%] top-[-10%] h-[70%] w-[45%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.45),rgba(255,200,87,0))] blur-2xl" />
 
@@ -879,7 +890,7 @@ export function RxRace({ it }) {
               )}
             </div>
             {/* desktop: her evening on the sofa until her message reaches the brokerage, then its CRM */}
-            <div className="relative mt-6 hidden aspect-square lg:block">
+            <div ref={boxRef} className="relative mt-5 hidden lg:block lg:h-[calc(var(--stage-h)_-_176px)] lg:max-w-[calc(var(--stage-h)_-_176px)]">
               {wide ? <SofaClip film={r.film} T={T} t={t} reduce={reduce} active={inView && visible} /> : null}
               <AnimatePresence initial={false}>
                 {t >= T.chat[0].at ? (
@@ -891,14 +902,14 @@ export function RxRace({ it }) {
                     exit={{ opacity: 0, transition: { duration: 0.2 } }}
                     transition={{ duration: 0.55, ease: EASE }}
                   >
-                    <CrmCard c={r.crm} T={T} t={t} reduce={reduce} />
+                    <CrmCard c={r.crm} T={T} t={t} reduce={reduce} fit={boxH} />
                   </motion.div>
                 ) : null}
               </AnimatePresence>
             </div>
           </div>
 
-          <div className="relative lg:w-[336px]">
+          <div className="relative">
             <BuyerPhone p={r.phone} T={T} t={t} reduce={reduce} />
           </div>
         </div>
