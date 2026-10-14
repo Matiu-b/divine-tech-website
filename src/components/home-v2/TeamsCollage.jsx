@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { m as motion, useReducedMotion } from 'framer-motion';
-import { Check, TrendingUp } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { teams } from '@/data/site';
 import LiquidGlass from './primitives/LiquidGlass';
@@ -249,16 +249,6 @@ export default function TeamsCollage() {
               <p className="eyebrow hidden lg:block">{t.agent}</p>
               <h3 className="t-h2 balance lg:mt-3">{t.title}</h3>
               <p className="mt-1 max-w-[40ch] text-[14px] leading-snug text-graphite lg:mt-3 lg:leading-relaxed lg:text-[16px]">{t.line}</p>
-              <p className="mt-6 hidden text-[12px] font-medium text-slate lg:block">What it moves</p>
-              {/* phones: the outcomes as a single row of chips; desktop: a list */}
-              <ul className="mt-2.5 flex flex-wrap gap-1 lg:mt-2 lg:grid lg:gap-1.5" aria-label="What it moves">
-                {t.kpis.map((k) => (
-                  <li key={k} className="flex items-center gap-1.5 rounded-full bg-white px-2 py-1 text-[11.5px] font-medium text-ink shadow-[0_0_0_1px_rgba(10,15,14,0.06)] lg:gap-2 lg:rounded-none lg:bg-transparent lg:p-0 lg:text-[14px] lg:shadow-none">
-                    <TrendingUp className="h-3.5 w-3.5 shrink-0 text-[#D9481C]" strokeWidth={2} aria-hidden="true" />
-                    {k}
-                  </li>
-                ))}
-              </ul>
             </motion.div>
           </div>
 

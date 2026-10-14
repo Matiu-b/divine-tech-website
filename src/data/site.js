@@ -487,7 +487,7 @@ export const teams = {
     {
       key: 'sales',
       label: 'Sales',
-      title: 'Your sales development rep.',
+      title: 'Your SDR.',
       line: 'Answers every lead, qualifies it and books the meeting with the right rep.',
       kpis: ['Speed to lead', 'Meetings booked', 'Conversion rate'],
       agent: 'Sales agent',
