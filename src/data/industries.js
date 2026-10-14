@@ -24,7 +24,7 @@ export const industries = [
     key: 're',
     label: 'Real estate',
     leadIndustry: 'Real Estate',
-    // Page v3: one message per section, told with product scenes. Names, times and amounts are illustrative.
+    // Page v3: only what is specific to real estate; the home and platform pages tell the rest. Times are illustrative.
     v3: {
       hero: {
         eyebrow: 'Aurora for real estate',
@@ -32,13 +32,6 @@ export const industries = [
         titleB: 'real estate brokerages.',
         text: 'Aurora answers every lead from portals, ads, calls and texts in seconds, qualifies it, books the showing with the right agent and keeps every deal moving. Your agents just sell.',
         photo: { src: '/media/real-estate/hero-900.webp', srcSet: '/media/real-estate/hero-600.webp 600w, /media/real-estate/hero-900.webp 900w, /media/real-estate/hero-1200.webp 1200w', alt: 'A young couple outside a craftsman house at golden hour, smiling at a reply on their phone' },
-        channel: 'Text · 9:47 pm',
-        messages: [
-          { from: 'in', text: 'Is the 3-bed on Maple St still available?' },
-          { from: 'aurora', text: 'It is! Are you pre-approved, and when are you hoping to move?' },
-          { from: 'in', text: 'Pre-approved, hoping for June.' },
-        ],
-        result: { title: 'Showing booked', detail: 'Sat 11:00 · with Jess' },
       },
       race: {
         eyebrow: 'Speed to lead',
@@ -69,97 +62,6 @@ export const industries = [
         ],
         note: 'An illustrative evening, not measured data.',
       },
-      desks: {
-        eyebrow: 'One AI ISA, every desk',
-        titleA: 'Every lead and every client,',
-        titleB: 'handled the same way.',
-        items: [
-          {
-            key: 'buyers',
-            label: 'Buyer leads',
-            agent: 'Buyer leads',
-            title: 'Every buyer lead, answered.',
-            line: 'Replies in seconds, qualifies budget, timing and area, and books the showing.',
-            collage: {
-              tile: '#E9D7BF',
-              image: { src: '/media/real-estate/buyers-900.webp', srcSet: '/media/real-estate/buyers-600.webp 600w, /media/real-estate/buyers-900.webp 900w, /media/real-estate/buyers-1200.webp 1200w', alt: 'A couple on a sofa in the evening browsing home listings on a tablet' },
-              object: { src: '/media/real-estate/keys-900.webp', srcSet: '/media/real-estate/keys-600.webp 600w, /media/real-estate/keys-900.webp 900w, /media/real-estate/keys-1200.webp 1200w', alt: 'New house keys on a brass ring with a blank tag' },
-              channel: 'Portal inquiry · Text',
-              messages: [
-                { from: 'in', text: 'Is the 3-bed on Maple St still available?' },
-                { from: 'aurora', text: 'It is! Are you pre-approved, and when are you hoping to move?' },
-                { from: 'in', text: 'Pre-approved up to $650k, hoping for June.' },
-                { from: 'aurora', text: 'Great fit. Saturday 11:00 or Sunday 2:00 for a showing?', chips: ['Sat 11:00', 'Sun 2:00'] },
-                { from: 'in', text: 'Saturday works.' },
-              ],
-              result: { title: 'Showing booked', detail: 'Sat 11:00 · with Jess' },
-            },
-          },
-          {
-            key: 'sellers',
-            label: 'Seller leads',
-            agent: 'Seller leads',
-            title: 'Listing appointments, booked.',
-            line: 'Turns “what’s my home worth?” into a listing appointment on your calendar.',
-            collage: {
-              tile: '#EBD3C4',
-              image: { src: '/media/real-estate/sellers-900.webp', srcSet: '/media/real-estate/sellers-600.webp 600w, /media/real-estate/sellers-900.webp 900w, /media/real-estate/sellers-1200.webp 1200w', alt: 'A homeowner in her kitchen on the phone, asking what her home might sell for' },
-              object: { src: '/media/real-estate/sign-900.webp', srcSet: '/media/real-estate/sign-600.webp 600w, /media/real-estate/sign-900.webp 900w, /media/real-estate/sign-1200.webp 1200w', alt: 'A blank real estate yard sign on a front lawn' },
-              channel: 'Website chat',
-              messages: [
-                { from: 'in', text: 'What could my house sell for? 18 Oak Lane.' },
-                { from: 'aurora', text: 'Happy to help. Are you thinking of selling this year?' },
-                { from: 'in', text: 'Maybe in the spring.' },
-                { from: 'aurora', text: 'Jess can walk you through a price range at your home. Thursday at 5?', chips: ['Thu 5:00', 'Fri 10:00'] },
-                { from: 'in', text: 'Thursday is good.' },
-              ],
-              result: { title: 'Listing appointment booked', detail: 'Thu 5:00 · with Jess' },
-            },
-          },
-          {
-            key: 'showings',
-            label: 'Showings',
-            agent: 'Showings',
-            title: 'Showings that actually happen.',
-            line: 'Confirms, reminds and reschedules, then asks how it went and passes hot buyers to the agent.',
-            collage: {
-              tile: '#F1DFB8',
-              image: { src: '/media/real-estate/showings-900.webp', srcSet: '/media/real-estate/showings-600.webp 600w, /media/real-estate/showings-900.webp 900w, /media/real-estate/showings-1200.webp 1200w', alt: 'A real estate agent opening the front door of a staged home for a couple' },
-              object: { src: '/media/real-estate/lockbox-900.webp', srcSet: '/media/real-estate/lockbox-600.webp 600w, /media/real-estate/lockbox-900.webp 900w, /media/real-estate/lockbox-1200.webp 1200w', alt: 'A lockbox on the handle of a honey-yellow front door' },
-              channel: 'Text',
-              messages: [
-                { from: 'aurora', text: 'Reminder: your showing at 42 Maple St is tomorrow at 11:00. Still good?' },
-                { from: 'in', text: 'Can we push it to 12?' },
-                { from: 'aurora', text: 'Done. Jess will meet you there at 12:00.', checks: ['Agent calendar updated', 'Seller notified'] },
-                { from: 'aurora', text: 'How did you like the home?' },
-                { from: 'in', text: 'Loved the kitchen. Can we make an offer?' },
-              ],
-              result: { title: 'Hot buyer sent to Jess', detail: 'With the full conversation' },
-            },
-          },
-          {
-            key: 'past',
-            label: 'Past clients',
-            agent: 'Past clients',
-            title: 'Past clients, never forgotten.',
-            line: 'Checks in on home anniversaries and turns happy clients into referrals.',
-            collage: {
-              tile: '#EED8C2',
-              image: { src: '/media/real-estate/past-900.webp', srcSet: '/media/real-estate/past-600.webp 600w, /media/real-estate/past-900.webp 900w, /media/real-estate/past-1200.webp 1200w', alt: 'A family on the front steps of their home, the father smiling at a message on his phone' },
-              object: { src: '/media/real-estate/welcome-900.webp', srcSet: '/media/real-estate/welcome-600.webp 600w, /media/real-estate/welcome-900.webp 900w, /media/real-estate/welcome-1200.webp 1200w', alt: 'Flowers and a gift on a welcome mat at a terracotta front door' },
-              channel: 'Text',
-              messages: [
-                { from: 'aurora', text: 'Happy one-year home anniversary from Jess and the team! How is the new place?' },
-                { from: 'in', text: 'We love it! Our friends are looking too.' },
-                { from: 'aurora', text: 'That’s wonderful. Would you like me to connect them with Jess?' },
-                { from: 'in', text: 'Yes, I’ll send you their number.' },
-                { from: 'aurora', text: 'Thank you! Jess will reach out this week.' },
-              ],
-              result: { title: 'Referral added', detail: 'Assigned to Jess' },
-            },
-          },
-        ],
-      },
       rules: {
         eyebrow: 'Your rules',
         titleA: 'It follows your rules.',
@@ -169,16 +71,6 @@ export const industries = [
           { icon: 'fair', title: 'Questions about the home', text: 'Budget, timing, area and needs. Never about who the buyer is.' },
           { icon: 'consent', title: 'Contact on their terms', text: 'Replies on the channel the lead chose, and stops when asked.' },
           { icon: 'handoff', title: 'Hot leads to a person', text: 'Ready buyers and sellers go to the right agent with the full history.' },
-        ],
-      },
-      live: {
-        eyebrow: 'Getting started',
-        titleA: 'Live in hours.',
-        titleB: 'Not months.',
-        steps: [
-          { title: 'Map your process', text: 'We describe your lead flow, routing and rules together.' },
-          { title: 'Aurora sets itself up', text: 'It connects to your CRM, calendars and lead sources and is tested on real examples.' },
-          { title: 'You approve, it goes live', text: 'Nothing goes live until you say so.' },
         ],
       },
     },
@@ -250,8 +142,6 @@ export const industries = [
       ['Does Aurora work with our CRM and lead sources?', 'Aurora works inside the systems your team already uses. During setup it is connected to your CRM, your lead sources and your agents’ calendars, and every conversation is logged to the lead’s record.'],
       ['Will Aurora quote prices or negotiate?', 'Only within the rules you set. You can tell it never to quote a final price and to offer a showing or a call with an agent instead. Anything outside your rules goes to an agent for approval.'],
       ['What happens when a lead is ready to talk to an agent?', 'Aurora hands the lead to the right agent with the full conversation, and your team can step into any conversation at any moment.'],
-      FAQ_CHANNELS,
-      FAQ_LIVE,
     ],
   },
   {

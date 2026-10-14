@@ -1,55 +1,24 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { m as motion, useReducedMotion } from 'framer-motion';
-import { ArrowRight, CircleDollarSign, Hand, MessageCircle, Scale } from 'lucide-react';
+import { CircleDollarSign, Hand, MessageCircle, Scale } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import LiquidGlass from '@/components/home-v2/primitives/LiquidGlass';
 import CTAButton from '@/components/home-v2/primitives/CTAButton';
 import SectionHeader from '@/components/home-v2/primitives/SectionHeader';
-import SmartLink from '@/components/home-v2/primitives/SmartLink';
-import { Reveal, RevealGroup, RevealItem, RevealLines } from '@/components/home-v2/primitives/MotionReveal';
-import { CollageTabs, GrowIn, Message, ResultRow } from '@/components/home-v2/TeamsCollage';
+import { RevealGroup, RevealItem, RevealLines } from '@/components/home-v2/primitives/MotionReveal';
 import { useLead } from '@/components/home-v2/LeadDrawer';
-import { onAnchorClick, useInViewport, usePageVisible } from '@/components/home-v2/hooks';
+import { onAnchorClick } from '@/components/home-v2/hooks';
 
 /*
  * Real estate page, v3. One message per section, in this order:
- * promise (hero) -> the race for every lead -> one AI ISA for every desk -> your rules -> live in hours.
+ * promise (hero) -> the race for every lead -> your rules. Sections the home and platform pages already tell are left out.
  * Everything sits on the site's warm light ground; the motion is the product at work.
  */
 
 const EASE = [0.22, 1, 0.36, 1];
-const HERO_BEATS = [0, 700, 2000, 3300, 4500]; // card, three messages, the result
-const HERO_LOOP = 9500;
-
-/** Plays the hero thread on a loop while it is on screen. The prerendered page shows it complete. */
-function useHeroBeat(active, still) {
-  const last = HERO_BEATS.length - 1;
-  const [beat, setBeat] = useState(last);
-  useEffect(() => {
-    if (still || !active) return undefined;
-    let timers = [];
-    const run = () => {
-      timers = HERO_BEATS.map((t, i) => window.setTimeout(() => setBeat(i), t));
-      timers.push(window.setTimeout(run, HERO_LOOP));
-    };
-    run();
-    return () => timers.forEach((id) => window.clearTimeout(id));
-  }, [active, still]);
-  return still ? last : beat;
-}
-
 /** Hero: the promise on the left, a buyer getting an answer on the right. */
 export function RxHero({ it }) {
   const h = it.v3.hero;
   const { open } = useLead();
-  const ref = useRef(null);
-  const reduce = !!useReducedMotion();
-  const inView = useInViewport(ref, { threshold: 0.3 });
-  const visible = usePageVisible();
-  const beat = useHeroBeat(inView && visible, reduce);
-  const calm = reduce || !inView;
-  const shown = h.messages.slice(0, Math.max(0, beat));
-  const done = beat > h.messages.length;
 
   return (
     <section id="top" data-nav-theme="light" aria-labelledby="rx-hero-title" className="relative overflow-hidden pb-[clamp(56px,7vw,104px)] pt-[calc(var(--nav-h)+36px)] md:pt-[calc(var(--nav-h)+56px)]">
@@ -67,13 +36,13 @@ export function RxHero({ it }) {
             <CTAButton size="lg" onClick={open} className="max-sm:h-12 max-sm:px-4 max-sm:text-[14px]">
               Book a demo
             </CTAButton>
-            <CTAButton size="lg" variant="glass" href="#desks" arrow={false} onClick={(e) => onAnchorClick(e, '#desks')} className="max-sm:h-12 max-sm:px-4 max-sm:text-[14px]">
-              See it at work
+            <CTAButton size="lg" variant="glass" href="#race" arrow={false} onClick={(e) => onAnchorClick(e, '#race')} className="max-sm:h-12 max-sm:px-4 max-sm:text-[14px]">
+              Why speed wins
             </CTAButton>
           </div>
         </div>
 
-        <div ref={ref} className="relative lg:col-span-6">
+        <div className="relative lg:col-span-6">
           <div className="intro-fade relative ml-auto aspect-[4/5] w-full overflow-hidden rounded-[28px] bg-[#E9D7BF] sm:w-[82%] lg:w-[88%]" style={{ animationDelay: '0.2s' }}>
             <img
               src={h.photo.src}
@@ -85,30 +54,6 @@ export function RxHero({ it }) {
               className="absolute inset-0 h-full w-full object-cover"
             />
           </div>
-          {/* the buyer's question and Aurora's answer, on the open side of the photo */}
-          <LiquidGlass
-            as={motion.div}
-            initial={false}
-            animate={beat >= 1 ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-            transition={{ duration: calm ? 0 : 0.6, ease: EASE }}
-            className="relative z-[1] -mt-12 w-full rounded-[22px] p-3 sm:absolute sm:bottom-[6%] sm:left-0 sm:mt-0 sm:w-[50%] sm:p-3.5 lg:w-[48%]"
-            style={{ '--lg-tint-a': 'rgba(255,250,242,0.7)', '--lg-tint-b': 'rgba(255,246,229,0.4)' }}
-          >
-            <p className="flex items-center justify-between text-[11px] font-medium text-ink/55">
-              <span>{h.channel}</span>
-              <span>now</span>
-            </p>
-            <div className="flex flex-col">
-              {shown.map((m, i) => (
-                <Message key={i} m={m} still={calm} last={i === shown.length - 1} />
-              ))}
-              <GrowIn show={done} still={calm}>
-                <div className="pt-2.5">
-                  <ResultRow r={h.result} className="rounded-[16px] bg-white/85 p-2" />
-                </div>
-              </GrowIn>
-            </div>
-          </LiquidGlass>
         </div>
       </div>
     </section>
@@ -120,7 +65,7 @@ export function RxRace({ it }) {
   const r = it.v3.race;
   const reduce = !!useReducedMotion();
   return (
-    <section data-nav-theme="light" aria-labelledby="rx-race-title" className="section relative">
+    <section id="race" data-nav-theme="light" aria-labelledby="rx-race-title" className="section relative">
       <div className="shell">
         <SectionHeader id="rx-race-title" eyebrow={r.eyebrow} titleA={r.titleA} titleB={r.titleB} text={r.text} layout="split" />
         <div className="mt-8 grid gap-3 md:mt-14 md:grid-cols-2 md:gap-5">
@@ -187,12 +132,6 @@ export function RxRace({ it }) {
   );
 }
 
-/** One AI ISA, every desk: buyers, sellers, showings and past clients, each as a collage in a tab. */
-export function RxDesks({ it }) {
-  const d = it.v3.desks;
-  return <CollageTabs id="desks" eyebrow={d.eyebrow} titleA={d.titleA} titleB={d.titleB} items={d.items} tabsLabel="Desks" />;
-}
-
 const RULE_ICONS = { price: CircleDollarSign, fair: Scale, consent: MessageCircle, handoff: Hand };
 
 /** Your rules: four short guarantees, specific to real estate. */
@@ -218,55 +157,6 @@ export function RxRules({ it }) {
             );
           })}
         </RevealGroup>
-      </div>
-    </section>
-  );
-}
-
-/** Live in hours: three steps and the tools Aurora works in. */
-export function RxLive({ it }) {
-  const l = it.v3.live;
-  return (
-    <section data-nav-theme="light" aria-labelledby="rx-live-title" className="section relative pt-0">
-      <div className="shell">
-        <Reveal y={28}>
-          <div className="canvas canvas-grain relative overflow-hidden bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] p-5 md:p-9 lg:p-11">
-            <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-              <div className="absolute right-[6%] top-[-20%] h-[80%] w-[40%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.45),rgba(255,200,87,0))] blur-2xl" />
-            </div>
-            <div className="relative grid gap-8 lg:grid-cols-12 lg:items-end lg:gap-10">
-              <div className="lg:col-span-4">
-                <p className="eyebrow">{l.eyebrow}</p>
-                <h2 id="rx-live-title" className="t-h1 balance mt-4">
-                  {l.titleA}
-                  <br />
-                  <span className="text-ink/45">{l.titleB}</span>
-                </h2>
-              </div>
-              <ol className="grid gap-3 sm:grid-cols-3 lg:col-span-8 lg:gap-4">
-                {l.steps.map((s, i) => (
-                  <li key={s.title} className="rounded-[20px] bg-white/80 p-4 shadow-[0_0_0_1px_rgba(10,15,14,0.05)] md:p-5">
-                    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-ink text-[12px] font-medium text-white">{i + 1}</span>
-                    <span className="mt-3 block text-[15px] font-medium tracking-[-0.01em] text-ink">{s.title}</span>
-                    <span className="mt-1 block text-[13.5px] leading-relaxed text-graphite">{s.text}</span>
-                  </li>
-                ))}
-              </ol>
-            </div>
-            <div className="relative mt-7 flex flex-wrap items-center gap-1.5 border-t border-ink/10 pt-5 md:mt-9">
-              <span className="mr-1.5 text-[12px] font-medium text-slate">Works with</span>
-              {it.systems.map((s) => (
-                <span key={s} className="rounded-full bg-white/80 px-3 py-1 text-[12.5px] text-ink shadow-[0_0_0_1px_rgba(10,15,14,0.05)]">
-                  {s}
-                </span>
-              ))}
-              <SmartLink href="/#how-it-works" className="ml-auto mt-2 flex items-center gap-1.5 text-[13.5px] font-medium text-ink hover:underline sm:mt-0">
-                See how setup works
-                <ArrowRight className="h-4 w-4" strokeWidth={1.8} aria-hidden="true" />
-              </SmartLink>
-            </div>
-          </div>
-        </Reveal>
       </div>
     </section>
   );
