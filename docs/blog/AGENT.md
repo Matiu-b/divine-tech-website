@@ -107,63 +107,35 @@ The blog must track what is happening in AI right now, not repeat generic explai
 
 ## 3. Cover image (new articles)
 
-Covers are a text-free background plus a headline rendered in the brand font, so titles stay
-editable. Never ask an image model for text in the image.
+Covers are soft out-of-focus light on film grain with the headline centered in the brand font,
+like the real-estate, clinics and contractors covers. No line drawings and no image model: Yuri
+found text over technical drawings hard to read. The cover script draws the background from a
+palette, so titles stay editable and nothing is downloaded.
 
-1. Choose a short technical headline of 2 to 6 words, not the article title. Examples:
-   "The brokerage, on autopilot", "Dispatch, without the dispatcher", "Rules before autonomy".
-   Choose a palette clearly different from the last three covers: a deep base colour plus 2 or 3
-   bright, saturated accents.
-2. **Background with Higgsfield.** Use `generate_image` with model `nano_banana_2_1` and
-   `aspect_ratio` 16:9. The house style has two layers:
-   - **Colour:** a soft out-of-focus field with an unexpected combination. Use a deep base plus
-     two or three glows that do not usually go together, for example deep teal + hot magenta +
-     acid lime + peach, or ultramarine + apricot + mint + lavender.
-   - **Line art:** a rich but thin layer of crisp white hairline technical drawing that matches
-     the topic. Examples: node networks with right-angle routing for agents and workflows,
-     orbits, wireframe spheres and perspective grids for channels and scale, schematic tables and
-     bar outlines for ROI and data, concentric rings and checkpoints for rules and approvals.
-
-   Prompt pattern (fill in the colours and drawing):
-   > 16:9 editorial background for a technology company blog. Full-bleed soft out-of-focus
-   > gradient field with an unexpected colour combination: <base> base, a large blurred glow of
-   > <accent 1> on the <side>, a smaller glow of <accent 2> at the <corner>, a touch of
-   > <accent 3> in between, fine film grain. Over it, a richer layer of thin crisp white hairline
-   > technical drawings: <drawing for this topic>, small junction markers, dotted guide lines,
-   > tiny tick-mark rulers and a light dot grid. The drawing covers much of the frame but stays
-   > thin and elegant, leaving a calmer horizontal band through the center. Completely free of
-   > text, letters, numbers, logos, icons, people and UI. No watermark.
-3. Wait for the job with `jobs_wait`. Copy its `result_url`. Do not try to download it from this
-   session: the cloud network cannot reach the image host, and GitHub is the hand-off point.
-   If the result shows text or shapes, **do not retry paid generations**. Leave out `bg_url` and
-   the palette fallback is used.
-4. Add the entry to `design/blog-covers/covers.json`:
+1. Choose a short headline of 2 to 6 words, not the article title. Examples:
+   "The brokerage, on autopilot", "Dispatch, without the dispatcher", "When the caller is an agent".
+2. Choose a **new palette** of 4 colours, darkest first, clearly different from the covers already
+   in `design/blog-covers/covers.json`. A hint of the brand kit is welcome (Divine green `#14A36B` /
+   `#3DDC97`, Aurora `#FFC857` / `#FF9F45` / `#F25C2A`) but not required. Keep the middle of the
+   frame calm enough for the headline.
+3. Add the entry to `design/blog-covers/covers.json`:
    ```json
-   { "slug": "<slug>", "title": "<headline>", "tone": "dark", "bg_url": "<result_url>", "palette": ["#0B1640", "#1E4BD8", "#E8743B", "#F2C9A0"] }
+   { "slug": "<slug>", "title": "<headline>", "tone": "dark", "seed": "<any word>", "palette": ["#0B3B40", "#127A78", "#F27BA0", "#FFC9A8"] }
    ```
-   - Use `"tone": "light"` (dark text) only for pale backgrounds.
-   - The palette is a fallback, used if `bg_url` cannot be downloaded.
-5. Commit and push the branch **without** running the cover script locally.
-   - The **Blog covers** GitHub Action (`.github/workflows/blog-covers.yml`) runs on the push.
-     It downloads `bg_url`, renders `public/img/blog/<slug>-1600.webp`, `-800.webp` and
-     `-og.jpg`, and commits them back to the branch.
-   - Wait for it to finish. Check with
-     `gh api "repos/Matiu-b/divine-tech-website/actions/runs?branch=<branch>&per_page=1"` until
-     `status` is `completed`, then `git pull`.
-   - If the Action fails or does not run within 10 minutes, run
-     `python3 scripts/make-blog-covers.py <slug>` locally. It falls back to the palette.
-     Commit the result and say so in the PR.
-6. Open `public/img/blog/<slug>-800.webp` with Read and check:
-   - the headline is spelled correctly and readable;
-   - there is no stray text in the background;
-   - the colours look like soft light, not mud.
-7. Set `image.alt` to describe the cover: colours, headline, logo.
+   - `"tone": "dark"` gives white text; use `"light"` (dark text) for pale palettes.
+   - Change `seed` to move the glows around if the first draw puts a bright glow behind the text.
+4. Render it: `python3 scripts/make-blog-covers.py <slug>` (Playwright with Chromium; in cloud
+   sessions set `CHROMIUM_PATH=/opt/pw-browsers/chromium-1194/chrome-linux/chrome`). If it cannot
+   run, push `covers.json` alone and the **Blog covers** GitHub Action renders and commits the images.
+5. Open `public/img/blog/<slug>-800.webp` with Read and check that the headline is spelled
+   correctly and readable, and that the colours look like soft light, not mud.
+6. Set `image.alt` to describe the cover: colours, headline, logo.
 
 ## 4. Validate
 
 ```bash
 node -e "import('./src/data/blog.js').then(m=>console.log(m.posts.length, m.posts[0].slug))"
-rm -rf dist && mkdir dist && cp index.html dist && node scripts/prerender.mjs && rm -rf dist
+npm run build   # vite build + SSR build + prerender (the prerender needs dist/.vite/manifest.json)
 ```
 
 Then check:
