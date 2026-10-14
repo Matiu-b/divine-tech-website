@@ -46,7 +46,7 @@ function Collage({ t, beat, reduce }) {
       {/* the clip */}
       <motion.div
         {...appear(beat >= 0, reduce, 0)}
-        className="absolute right-0 top-[6%] h-[80%] w-[58%] overflow-hidden rounded-[24px] sm:top-[4%] sm:h-[86%] sm:w-[46%]"
+        className="absolute right-0 top-0 h-[74%] w-[60%] overflow-hidden rounded-[24px] sm:top-[4%] sm:h-[86%] sm:w-[46%]"
         style={{ background: TILE[t.key] }}
       >
         {c.video ? (
@@ -57,7 +57,7 @@ function Collage({ t, beat, reduce }) {
       {/* the object */}
       <motion.div
         {...appear(beat >= 0, reduce, 0)}
-        className="absolute bottom-0 left-[3%] h-[38%] w-[46%] overflow-hidden rounded-[24px] sm:left-[8%] sm:h-[46%] sm:w-[40%]"
+        className="absolute left-0 top-[7%] h-[34%] w-[44%] overflow-hidden rounded-[24px] sm:bottom-0 sm:left-[8%] sm:top-auto sm:h-[46%] sm:w-[40%]"
         style={{ background: TILE[t.key] }}
       >
         {c.object.src ? <img key={c.object.src} src={c.object.src} alt={c.object.alt} loading="lazy" decoding="async" className="h-full w-full object-cover" /> : null}
@@ -67,7 +67,7 @@ function Collage({ t, beat, reduce }) {
       <LiquidGlass
         as={motion.div}
         {...appear(beat >= 1, reduce)}
-        className="absolute left-0 top-0 w-[82%] rounded-[22px] p-3 sm:w-[62%] sm:p-3.5"
+        className="absolute bottom-[2%] left-0 w-[86%] rounded-[22px] p-3 sm:bottom-auto sm:top-0 sm:w-[62%] sm:p-3.5"
         style={{ '--lg-tint-a': 'rgba(255,250,242,0.62)', '--lg-tint-b': 'rgba(255,246,229,0.3)' }}
       >
         <p className="flex items-center justify-between text-[11px] font-medium text-ink/55">
@@ -103,7 +103,7 @@ function Collage({ t, beat, reduce }) {
       <LiquidGlass
         as={motion.div}
         {...appear(beat >= 4, reduce, 12)}
-        className="absolute bottom-[14%] right-[4%] flex items-center gap-2.5 rounded-[18px] py-2.5 pl-2.5 pr-4 sm:bottom-[12%] sm:right-[6%]"
+        className="absolute right-[3%] top-[36%] flex items-center gap-2.5 rounded-[18px] py-2.5 pl-2.5 pr-4 sm:bottom-[12%] sm:right-[6%] sm:top-auto"
         style={{ '--lg-tint-a': 'rgba(255,252,247,0.7)', '--lg-tint-b': 'rgba(255,248,236,0.4)' }}
       >
         <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#E4F4E8]">
@@ -145,13 +145,9 @@ export default function TeamsCollage() {
       <div className="shell" ref={ref}>
         <SectionHeader id="teams-title" eyebrow={teams.eyebrow} titleA={teams.titleA} titleB={teams.titleB} text={teams.text} layout="split" />
 
-        <Reveal y={28} className="mt-8 grid gap-8 md:mt-14 lg:grid-cols-12 lg:items-center lg:gap-12">
-          <div className="lg:col-span-7">
-            <Collage key={t.key} t={t} beat={beat} reduce={reduce} />
-          </div>
-
-          <div className="lg:col-span-5">
-            <div role="tablist" aria-label="Teams" className="no-scrollbar -mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1">
+        <Reveal y={28} className="mt-8 grid gap-7 md:mt-14 lg:grid-cols-12 lg:grid-rows-[auto_1fr] lg:gap-x-12 lg:gap-y-0">
+          <div className="lg:col-span-5 lg:col-start-8 lg:row-start-1 lg:self-end">
+              <div role="tablist" aria-label="Teams" className="no-scrollbar -mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1">
               {teams.items.map((x, i) => (
                 <button
                   key={x.key}
@@ -176,8 +172,14 @@ export default function TeamsCollage() {
                 </button>
               ))}
             </div>
+          </div>
 
-            <motion.div key={t.key} initial={reduce ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: EASE }} role="tabpanel" className="mt-7">
+          <div className="lg:col-span-7 lg:col-start-1 lg:row-span-2 lg:row-start-1 lg:self-center">
+            <Collage key={t.key} t={t} beat={beat} reduce={reduce} />
+          </div>
+
+          <div className="lg:col-span-5 lg:col-start-8 lg:row-start-2">
+            <motion.div key={t.key} initial={reduce ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: EASE }} role="tabpanel" className="lg:mt-7">
               <p className="eyebrow">{t.agent}</p>
               <h3 className="t-h2 balance mt-3">{t.title}</h3>
               <p className="mt-3 max-w-[40ch] text-[15px] leading-relaxed text-graphite md:text-[16px]">{t.line}</p>
