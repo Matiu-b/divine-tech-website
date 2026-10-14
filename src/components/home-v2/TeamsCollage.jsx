@@ -134,7 +134,7 @@ function Collage({ t, beat, reduce, still }) {
           className="relative aspect-[4/5] w-[41%] shrink-0 overflow-hidden rounded-[20px] sm:absolute sm:bottom-0 sm:left-[8%] sm:aspect-auto sm:h-[46%] sm:w-[40%] sm:rounded-[24px]"
           style={{ background: TILE[t.key] }}
         >
-          {c.object.src ? <img key={c.object.src} src={c.object.src} alt={c.object.alt} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" /> : null}
+          {c.object.src ? <img key={c.object.src} src={c.object.src} srcSet={c.object.srcSet} sizes="(min-width: 1024px) 300px, (min-width: 640px) 40vw, 42vw" alt={c.object.alt} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" /> : null}
         </motion.div>
         {/* the clip */}
         <motion.div
@@ -143,7 +143,7 @@ function Collage({ t, beat, reduce, still }) {
           style={{ background: TILE[t.key] }}
         >
           {c.video ? (
-            <video key={c.video} src={c.video} autoPlay muted loop playsInline preload="metadata" className="absolute inset-0 h-full w-full object-cover" aria-hidden="true" />
+            <video key={c.video} src={c.video} poster={c.poster} autoPlay muted loop playsInline preload="metadata" className="absolute inset-0 h-full w-full object-cover" aria-hidden="true" />
           ) : null}
         </motion.div>
       </div>

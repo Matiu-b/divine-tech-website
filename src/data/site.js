@@ -492,10 +492,11 @@ export const teams = {
       kpis: ['Speed to lead', 'Meetings booked', 'Conversion rate'],
       agent: 'Sales agent',
       chip: { icon: 'calendar', title: 'Meeting booked', detail: 'Thu 11:00' },
-      // Collage (preview: media served from Higgsfield until copied into /public). Names and times are illustrative.
+      // Collage media lives in /public/media/teams (see design/media/manifest.json). Names and times are illustrative.
       collage: {
-        video: 'https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_093114_3bc73eed-d110-4a49-a8ea-af79f3491196.mp4',
-        object: { src: 'https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_094618_df09be87-2ee7-4532-babb-f8b60b6b069b.png', alt: 'A client signing a sales contract with a fountain pen, a folded stack of dollar bills beside the papers' },
+        video: '/media/teams/sales.mp4',
+        poster: '/media/teams/sales-poster.webp',
+        object: { src: '/media/teams/sales-object-900.webp', srcSet: '/media/teams/sales-object-600.webp 600w, /media/teams/sales-object-900.webp 900w, /media/teams/sales-object-1200.webp 1200w', alt: 'A client signing a sales contract with a fountain pen, a folded stack of dollar bills beside the papers' },
         channel: 'Web chat',
         messages: [
           { from: 'in', text: 'Hi, can we see a demo this week?' },
@@ -521,8 +522,9 @@ export const teams = {
       agent: 'Service agent',
       chip: { icon: 'service', title: 'Request resolved', detail: 'Moved to Thu' },
       collage: {
-        video: 'https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_093115_bd836d35-4e15-47c3-b773-f9b04f02447d.mp4',
-        object: { src: 'https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_093120_be81e52b-a13f-465d-8d8a-2c2d89bd3ff5.png', alt: 'A delivery box waiting on the doormat of a honey-yellow front door' },
+        video: '/media/teams/service.mp4',
+        poster: '/media/teams/service-poster.webp',
+        object: { src: '/media/teams/service-object-900.webp', srcSet: '/media/teams/service-object-600.webp 600w, /media/teams/service-object-900.webp 900w, /media/teams/service-object-1200.webp 1200w', alt: 'A delivery box waiting on the doormat of a honey-yellow front door' },
         channel: 'Email',
         messages: [
           { from: 'in', text: 'Can my delivery move to Thursday? Order #4471' },
@@ -548,8 +550,9 @@ export const teams = {
       agent: 'Operations agent',
       chip: { icon: 'approval', title: 'Invoice approved', detail: 'To Finance' },
       collage: {
-        video: 'https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_095032_39aa424e-2942-4aac-9aee-cea20b5f1e8d.mp4',
-        object: { src: 'https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_093122_13c7bcce-2d7d-48f3-9fdc-0bad66a5a329.png', alt: 'A printed invoice with a brass approval stamp on a walnut desk' },
+        video: '/media/teams/internal.mp4',
+        poster: '/media/teams/internal-poster.webp',
+        object: { src: '/media/teams/internal-object-900.webp', srcSet: '/media/teams/internal-object-600.webp 600w, /media/teams/internal-object-900.webp 900w, /media/teams/internal-object-1200.webp 1200w', alt: 'A printed invoice with a brass approval stamp on a walnut desk' },
         channel: 'Slack · #finance',
         messages: [
           { from: 'in', name: 'Mia', text: 'New invoice INV-2291 from Northwind, $4,800' },
