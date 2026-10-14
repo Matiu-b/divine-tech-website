@@ -64,10 +64,10 @@ export function RxHero({ it }) {
             {h.text}
           </p>
           <div className="intro-slide mt-7 flex flex-wrap items-center gap-2.5 sm:gap-3" style={{ animationDelay: '0.42s' }}>
-            <CTAButton size="lg" onClick={open} className="max-sm:h-12 max-sm:px-5 max-sm:text-[15px]">
+            <CTAButton size="lg" onClick={open} className="max-sm:h-12 max-sm:px-4 max-sm:text-[14px]">
               Book a demo
             </CTAButton>
-            <CTAButton size="lg" variant="glass" href="#desks" arrow={false} onClick={(e) => onAnchorClick(e, '#desks')} className="max-sm:h-12 max-sm:px-5 max-sm:text-[15px]">
+            <CTAButton size="lg" variant="glass" href="#desks" arrow={false} onClick={(e) => onAnchorClick(e, '#desks')} className="max-sm:h-12 max-sm:px-4 max-sm:text-[14px]">
               See it at work
             </CTAButton>
           </div>
