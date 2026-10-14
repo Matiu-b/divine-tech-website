@@ -1,0 +1,33 @@
+# Compresses generated site media on feature branches. A session that cannot download from the
+# media host commits design/media/manifest.json; this job downloads each file, makes web-ready
+# versions (mp4 + poster, or webp sizes) and commits them back to the branch.
+name: Site media
+
+on:
+  push:
+    branches-ignore: [main]
+    paths: [design/media/manifest.json]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  media:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+      - name: Install ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - name: Download and compress
+        run: python3 scripts/fetch-media.py
+      - name: Commit media
+        run: |
+          git config user.name "site-media[bot]"
+          git config user.email "site-media@users.noreply.github.com"
+          git add public/media
+          if git diff --cached --quiet; then echo "nothing to commit"; exit 0; fi
+          git commit -m "Add compressed site media"
+          git push

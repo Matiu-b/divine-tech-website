@@ -1,0 +1,35 @@
+{
+  "note": "Media generated in Higgsfield for the Teams collage. The site-media workflow downloads each url, compresses it and commits the result to 'out'.",
+  "items": [
+    {
+      "kind": "video",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_093114_3bc73eed-d110-4a49-a8ea-af79f3491196.mp4",
+      "out": "public/media/teams/sales"
+    },
+    {
+      "kind": "video",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_093115_bd836d35-4e15-47c3-b773-f9b04f02447d.mp4",
+      "out": "public/media/teams/service"
+    },
+    {
+      "kind": "video",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_095032_39aa424e-2942-4aac-9aee-cea20b5f1e8d.mp4",
+      "out": "public/media/teams/internal"
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_094618_df09be87-2ee7-4532-babb-f8b60b6b069b.png",
+      "out": "public/media/teams/sales-object"
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_093120_be81e52b-a13f-465d-8d8a-2c2d89bd3ff5.png",
+      "out": "public/media/teams/service-object"
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_093122_13c7bcce-2d7d-48f3-9fdc-0bad66a5a329.png",
+      "out": "public/media/teams/internal-object"
+    }
+  ]
+}
