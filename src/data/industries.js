@@ -37,7 +37,7 @@ export const industries = [
         film: {
           video: '/media/real-estate/hero-call.mp4',
           poster: '/media/real-estate/hero-call-poster.webp',
-          alt: 'A man on the phone on a quiet street at dusk, looking at a craftsman house with a For Sale sign',
+          alt: 'A man on the phone on a quiet street at dusk, smiling at a craftsman house with a yard sign in front',
         },
         call: {
           audio: '/media/real-estate/call-c.mp3',
