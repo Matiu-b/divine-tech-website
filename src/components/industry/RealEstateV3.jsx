@@ -877,7 +877,7 @@ export function RxRace({ it }) {
             </div>
             {/* the step; on phones and tablets the sofa clip sits beside it, so it never covers the phone */}
             <div className="mt-4 flex items-start gap-3 sm:gap-4 lg:block">
-              <div className="min-h-[112px] min-w-0 flex-1 sm:min-h-[116px] md:min-h-[128px] lg:min-h-[120px]" aria-live="polite">
+              <div className="min-h-[150px] min-w-0 flex-1 min-[360px]:min-h-[112px] sm:min-h-[116px] md:min-h-[128px] lg:min-h-[120px]" aria-live="polite">
                 <AnimatePresence mode="wait" initial={false}>
                   <motion.div key={step} initial={reduce ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6, transition: { duration: 0.2 } }} transition={{ duration: 0.45, ease: EASE }}>
                     <p className="t-data text-[12px] text-[#B4471A]">{s.time}</p>
@@ -887,7 +887,7 @@ export function RxRace({ it }) {
                 </AnimatePresence>
               </div>
               {wide ? null : (
-                <div className="relative mt-1 h-[84px] w-[84px] shrink-0 xs:h-24 xs:w-24 sm:h-28 sm:w-28 md:h-32 md:w-32">
+                <div className="relative mt-1 h-[72px] w-[72px] shrink-0 min-[360px]:h-[84px] min-[360px]:w-[84px] xs:h-24 xs:w-24 sm:h-28 sm:w-28 md:h-32 md:w-32">
                   <AuroraTile on={t >= T.chat[0].at} reduce={reduce} />
                   <SofaClip film={r.film} T={T} t={t} reduce={reduce} active={inView && visible} small />
                 </div>
