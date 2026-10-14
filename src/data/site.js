@@ -548,7 +548,7 @@ export const teams = {
       agent: 'Operations agent',
       chip: { icon: 'approval', title: 'Invoice approved', detail: 'To Finance' },
       collage: {
-        video: 'https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_093129_461f1f41-739d-4b52-ad69-551137902dd3.mp4',
+        video: 'https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_095032_39aa424e-2942-4aac-9aee-cea20b5f1e8d.mp4',
         object: { src: 'https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_093122_13c7bcce-2d7d-48f3-9fdc-0bad66a5a329.png', alt: 'A printed invoice with a brass approval stamp on a walnut desk' },
         channel: 'Slack · #finance',
         messages: [
