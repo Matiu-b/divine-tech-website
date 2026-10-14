@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, m as motion, useReducedMotion } from 'framer-motion';
-import { CalendarCheck, Check, ChevronLeft, CircleDollarSign, Hand, MessageCircle, Play, Scale, Volume2 } from 'lucide-react';
+import { CalendarCheck, Check, ChevronLeft, CircleDollarSign, Database, Hand, MessageCircle, Play, Scale, Volume2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import CTAButton from '@/components/home-v2/primitives/CTAButton';
 import SectionHeader from '@/components/home-v2/primitives/SectionHeader';
@@ -351,22 +351,38 @@ export function RxHero({ it }) {
   );
 }
 
-// The buyer's evening, in ms. Aurora's thread is texted first, so it starts at the bottom of the inbox
-// and jumps to the top when it answers.
+// The buyer's evening, in ms of the scene. She texts four listing agents (no reply), opens one more
+// listing, and the brokerage that runs Aurora answers in seconds while its CRM fills in.
 const R = {
-  rows: { north: 500, dana: 800, mike: 1100 },
-  typing: 2200,
-  reply: 3200,
-  open: 4600,
-  chat: [0, 0, 5400, 6900, 8500, 10000], // when each message of the open thread appears
-  typingIn: [null, null, null, 6000, null, 9100],
-  back: 12000,
-  morning: 13400,
-  late: 14200,
-  answer: 15900,
-  end: 20500,
-  stepAt: [0, 3200, 10000, 13400],
+  agents: { rachel: 600, tom: 2600, mark: 3800, sarah: 5000 },
+  personal: { mom: 0, lucy: 2000 },
+  stale: 6400, // "No reply" on every agent thread
+  listing: 8000, // the listings app slides in
+  tap: 9300, // she taps Message agent
+  thread: 10000, // the conversation opens with her message
+  chat: [10000, 11400, 12900, 14300, 15800, 17200, 18700, 20100, 21600, 23000],
+  typing: [null, 10600, null, 13500, null, 16400, null, 19300, null, 22200],
+  inbox: 25600, // back to the inbox, Aurora's thread on top
+  end: 30000,
+  stepAt: [0, 6400, 8000, 11400, 20100],
+  // when each CRM field fills, in the order of crm.fields
+  fill: { phone: 11400, home: 11400, name: 12900, budget: 15800, showing: 20100, email: 21600 },
+  statusAt: [11400, 15800, 20100],
+  assigned: 23000,
 };
+const CLOCK = [
+  [0, '7:58'],
+  [2000, '8:30'],
+  [2600, '8:31'],
+  [3800, '8:45'],
+  [5000, '9:10'],
+  [6400, '9:46'],
+  [8000, '9:47'],
+  [16000, '9:48'],
+  [19000, '9:49'],
+  [22000, '9:50'],
+];
+const clockAt = (t) => CLOCK.filter(([at]) => t >= at).pop()[1];
 
 /** A clock for timed scenes: runs while `active`, loops at `end`, and holds the last frame when `still`. */
 function useLoop(end, { active, still }) {
@@ -409,70 +425,56 @@ function Dots({ className = '' }) {
   );
 }
 
-/** What each inbox row shows at time t. */
-function rowState(th, p, t) {
-  const you = 'You: ' + p.question;
-  if (th.key === 'north') {
-    if (t >= R.back) return { order: 2, time: '9:49 PM', preview: p.booked, done: true };
-    if (t >= R.reply) return { order: 1, time: '9:47 PM', preview: p.replied, unread: t < R.open };
-    if (t >= R.typing) return { order: 0, time: '9:47 PM', typing: true };
-    return { order: 0, time: '9:47 PM', preview: you };
-  }
-  if (th.key === 'dana') {
-    if (t >= R.answer) return { order: 4, time: '8:14 AM', preview: 'You: ' + p.answer };
-    if (t >= R.late) return { order: 3, time: '8:12 AM', preview: p.late, unread: true };
-    return { order: 0.1, time: '9:47 PM', preview: you };
-  }
-  return { order: 0.2, time: '9:47 PM', preview: you, meta: t >= R.morning ? p.read : null };
+function Avatar({ initials, aurora = false, size = 'h-11 w-11' }) {
+  return (
+    <span className={cn('flex shrink-0 items-center justify-center rounded-full text-[13px] font-medium', size, aurora ? 'bg-ink' : 'bg-[linear-gradient(140deg,#E9E4DA,#D9D2C4)] text-ink/70')}>
+      {aurora ? <img src="/brand/aurora-symbol-color.svg" alt="" width="20" height="20" className="h-1/2 w-1/2" /> : initials}
+    </span>
+  );
 }
 
+/** The inbox at time t: her own threads, the four agents she texted, and Aurora's thread at the end. */
 function Inbox({ p, t, reduce }) {
-  const rows = p.threads
-    .filter((th) => t >= R.rows[th.key])
-    .map((th) => ({ th, st: rowState(th, p, t) }))
-    .sort((a, b) => b.st.order - a.st.order);
+  const rows = [];
+  p.personal.forEach((x) => {
+    if (t >= R.personal[x.key]) rows.push({ key: x.key, name: x.name, initials: x.initials, preview: x.preview, time: x.time, order: x.order });
+  });
+  p.agents.forEach((x) => {
+    if (t >= R.agents[x.key])
+      rows.push({ key: x.key, name: x.name, initials: x.initials, tag: p.agentTag, preview: 'You: ' + x.text, time: x.time, order: x.order, meta: t >= R.stale ? p.noReply : p.delivered });
+  });
+  if (t >= R.inbox) rows.push({ key: 'north', name: p.brokerage.name, aurora: true, tag: p.brokerage.tag, done: p.booked, time: '9:50 PM', order: 999 });
+  rows.sort((a, b) => b.order - a.order);
   return (
-    <div className="px-4 pt-2">
+    <div className="px-4 pt-1">
       <p className="text-[26px] font-medium tracking-[-0.02em] text-ink">{p.title}</p>
-      <ul className="mt-3">
+      <ul className="mt-2">
         <AnimatePresence initial={false}>
-          {rows.map(({ th, st }) => (
+          {rows.map((r) => (
             <motion.li
-              key={th.key}
+              key={r.key}
               layout={!reduce}
-              initial={reduce ? false : { opacity: 0, y: -8 }}
+              initial={reduce ? false : { opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, ease: EASE }}
-              className="relative flex gap-3 border-b border-ink/[0.07] py-3 pl-3"
+              className="flex gap-3 border-b border-ink/[0.07] py-2.5"
             >
-              {st.unread ? <span className="absolute left-0 top-[22px] h-2 w-2 rounded-full bg-[#0A84FF]" aria-label="unread" /> : null}
-              <span
-                className={cn(
-                  'flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-[13px] font-medium',
-                  th.aurora ? 'bg-ink text-white' : 'bg-[linear-gradient(140deg,#E9E4DA,#D9D2C4)] text-ink/70'
-                )}
-              >
-                {th.aurora ? <img src="/brand/aurora-symbol-color.svg" alt="" width="20" height="20" className="h-5 w-5" /> : th.initials}
-              </span>
+              <Avatar initials={r.initials} aurora={r.aurora} size="h-10 w-10" />
               <span className="min-w-0 flex-1">
                 <span className="flex items-baseline justify-between gap-2">
-                  <span className="truncate text-[14px] font-medium text-ink">{th.name}</span>
-                  <span className="shrink-0 text-[12px] text-slate">{st.time}</span>
+                  <span className="truncate text-[14px] font-medium text-ink">{r.name}</span>
+                  <span className="shrink-0 text-[11.5px] text-slate">{r.time}</span>
                 </span>
-                {th.aurora ? <span className="block text-[11px] font-medium text-[#B4471A]">{p.auroraTag}</span> : null}
-                <span className="mt-0.5 block text-[13px] leading-snug text-graphite">
-                  {st.typing ? (
-                    <Dots className="text-ink/40" />
-                  ) : st.done ? (
-                    <span className="inline-flex items-center gap-1 whitespace-nowrap rounded-full bg-[#E4F4E8] px-2 py-0.5 text-[12px] font-medium text-[#2E7A48]">
-                      <Check className="h-3.5 w-3.5" strokeWidth={2.6} aria-hidden="true" />
-                      {st.preview}
-                    </span>
-                  ) : (
-                    <span className="line-clamp-2">{st.preview}</span>
-                  )}
-                </span>
-                {st.meta ? <span className="mt-1 block text-[11.5px] text-ink/40">{st.meta}</span> : null}
+                {r.tag ? <span className={cn('block text-[10.5px] font-medium', r.aurora ? 'text-[#B4471A]' : 'text-ink/40')}>{r.tag}</span> : null}
+                {r.done ? (
+                  <span className="mt-1 inline-flex items-center gap-1 rounded-full bg-[#E4F4E8] px-2 py-0.5 text-[11.5px] font-medium text-[#2E7A48]">
+                    <Check className="h-3.5 w-3.5" strokeWidth={2.6} aria-hidden="true" />
+                    {r.done}
+                  </span>
+                ) : (
+                  <span className="block truncate text-[12.5px] leading-snug text-graphite">{r.preview}</span>
+                )}
+                {r.meta ? <span className={cn('block text-[11px]', r.meta === p.noReply ? 'text-[#B4471A]/80' : 'text-ink/40')}>{r.meta}</span> : null}
               </span>
             </motion.li>
           ))}
@@ -482,23 +484,49 @@ function Inbox({ p, t, reduce }) {
   );
 }
 
+/** The listings app, open on the Maple Street house. */
+function Listing({ p, t, reduce }) {
+  const l = p.listing;
+  const tapped = t >= R.tap;
+  return (
+    <div className="flex h-full flex-col px-4 pt-1">
+      <p className="text-[15px] font-medium text-ink">{l.app}</p>
+      <div className="mt-3 overflow-hidden rounded-[18px] bg-[#E8E2D8]">
+        <img src={l.image} alt="" className="aspect-[4/3] w-full object-cover" loading="lazy" decoding="async" />
+      </div>
+      <p className="mt-3 text-[22px] font-medium tracking-[-0.02em] text-ink">{l.price}</p>
+      <p className="text-[13px] text-graphite">{l.facts}</p>
+      <p className="mt-1 text-[13px] font-medium text-ink">{l.address}</p>
+      <p className="text-[12px] text-slate">{l.by}</p>
+      <span className="relative mt-4 flex h-11 items-center justify-center overflow-hidden rounded-full bg-ink text-[14px] font-medium text-white">
+        {l.cta}
+        {tapped && !reduce ? (
+          <motion.span
+            className="absolute h-24 w-24 rounded-full bg-white/30"
+            initial={{ scale: 0, opacity: 0.8 }}
+            animate={{ scale: 3, opacity: 0 }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+          />
+        ) : null}
+      </span>
+    </div>
+  );
+}
+
 function Thread({ p, t, reduce }) {
-  const th = p.threads.find((x) => x.aurora);
-  const shown = p.chat.filter((m, i) => t >= R.open + 0 && (i < 2 || t >= R.chat[i]));
-  const typing = R.typingIn.some((at, i) => at !== null && t >= at && t < R.chat[i]);
+  const shown = p.chat.filter((m, i) => t >= R.chat[i]);
+  const typing = R.typing.some((at, i) => at !== null && t >= at && t < R.chat[i]);
   return (
     <div className="flex h-full flex-col">
       <div className="flex items-center gap-2.5 border-b border-ink/[0.07] px-3 pb-2.5 pt-1">
         <ChevronLeft className="h-5 w-5 text-[#0A84FF]" strokeWidth={2.2} aria-hidden="true" />
-        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-ink">
-          <img src="/brand/aurora-symbol-color.svg" alt="" width="16" height="16" className="h-4 w-4" />
-        </span>
+        <Avatar aurora size="h-8 w-8" />
         <span className="min-w-0">
-          <span className="block truncate text-[13.5px] font-medium leading-tight text-ink">{th.name}</span>
-          <span className="block text-[11px] font-medium text-[#B4471A]">{p.auroraTag}</span>
+          <span className="block truncate text-[13.5px] font-medium leading-tight text-ink">{p.brokerage.name}</span>
+          <span className="block text-[11px] font-medium text-[#B4471A]">{p.brokerage.tag}</span>
         </span>
       </div>
-      <div className="flex min-h-0 flex-1 flex-col justify-end gap-1.5 overflow-hidden px-3 pb-3 [mask-image:linear-gradient(to_bottom,transparent,#000_14%)]">
+      <div className="flex min-h-0 flex-1 flex-col justify-end gap-1.5 overflow-hidden px-3 pb-3 [mask-image:linear-gradient(to_bottom,transparent,#000_12%)]">
         <AnimatePresence initial={false}>
           {shown.map((m, i) => {
             const mine = m.who === 'buyer';
@@ -508,12 +536,12 @@ function Thread({ p, t, reduce }) {
                 layout={!reduce}
                 initial={reduce ? false : { opacity: 0, y: 10, scale: 0.98 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 0.4, ease: EASE }}
-                className={cn('flex', mine ? 'justify-end' : 'justify-start')}
+                transition={{ duration: 0.35, ease: EASE }}
+                className={cn('flex shrink-0 flex-col', mine ? 'items-end' : 'items-start')}
               >
                 <span
                   className={cn(
-                    'max-w-[82%] px-3 py-2 text-[13.5px] leading-[1.4]',
+                    'max-w-[84%] px-3 py-2 text-[13px] leading-[1.4]',
                     mine ? 'rounded-[18px] rounded-br-[6px] bg-[#0A84FF] text-white' : 'rounded-[18px] rounded-bl-[6px] bg-[#ECEAE5] text-ink'
                   )}
                 >
@@ -530,11 +558,12 @@ function Thread({ p, t, reduce }) {
                   ) : null}
                   {m.text}
                 </span>
+                {i === 1 ? <span className="mt-1 text-[10.5px] font-medium text-[#B4471A]">{p.repliedIn}</span> : null}
               </motion.div>
             );
           })}
           {typing ? (
-            <motion.div key="typing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 0.1 } }} className="flex">
+            <motion.div key="typing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 0.1 } }} className="flex shrink-0">
               <span className="rounded-[18px] rounded-bl-[6px] bg-[#ECEAE5] px-3.5 py-3 text-ink/45">
                 <Dots />
               </span>
@@ -546,15 +575,16 @@ function Thread({ p, t, reduce }) {
   );
 }
 
-/** The buyer's phone: the inbox, Aurora's thread opening over it, then the inbox the next morning. */
+/** The buyer's phone: inbox, then the listings app, then Aurora's conversation, then the inbox again. */
 function BuyerPhone({ p, t, reduce }) {
-  const open = t >= R.open && t < R.back;
-  const clock = t >= R.answer ? '8:14' : t >= R.morning ? '8:12' : t >= R.open + 2500 ? '9:48' : '9:47';
+  const screen = t >= R.inbox ? 'inbox' : t >= R.thread ? 'thread' : t >= R.listing ? 'listing' : 'inbox';
+  const slide = (on) => ({ x: on ? '0%' : '104%' });
+  const tr = { duration: reduce ? 0 : 0.45, ease: EASE };
   return (
-    <div className="relative mx-auto h-[540px] w-full max-w-[336px] rounded-[46px] bg-ink p-[9px] shadow-[0_40px_80px_-40px_rgba(60,35,10,0.55)] sm:h-[600px]">
+    <div className="relative mx-auto h-[560px] w-full max-w-[336px] rounded-[46px] bg-ink p-[9px] shadow-[0_40px_80px_-40px_rgba(60,35,10,0.55)] sm:h-[620px]">
       <div className="relative h-full overflow-hidden rounded-[38px] bg-[#FBFAF7]">
-        <div className="flex items-center justify-between px-7 pb-1 pt-3 text-[13px] font-medium text-ink">
-          <span className="tabular-nums">{clock}</span>
+        <div className="relative flex items-center justify-between px-7 pb-1 pt-3 text-[13px] font-medium text-ink">
+          <span className="tabular-nums">{clockAt(t)}</span>
           <span className="absolute left-1/2 top-2.5 h-[22px] w-[86px] -translate-x-1/2 rounded-full bg-ink" aria-hidden="true" />
           <span className="flex items-center gap-1" aria-hidden="true">
             <span className="h-2 w-3 rounded-[2px] bg-ink/80" />
@@ -564,21 +594,20 @@ function BuyerPhone({ p, t, reduce }) {
           </span>
         </div>
         <div className="relative h-[calc(100%-36px)]">
-          <motion.div
-            className="absolute inset-0"
-            animate={{ x: open ? '-28%' : '0%', opacity: open ? 0.4 : 1 }}
-            transition={{ duration: reduce ? 0 : 0.45, ease: EASE }}
-          >
+          <motion.div className="absolute inset-0" animate={{ x: screen === 'inbox' ? '0%' : '-28%', opacity: screen === 'inbox' ? 1 : 0.4 }} transition={tr}>
             <Inbox p={p} t={t} reduce={reduce} />
+          </motion.div>
+          <motion.div className="absolute inset-0 bg-[#FBFAF7]" initial={false} animate={slide(screen === 'listing')} transition={tr} aria-hidden={screen !== 'listing'}>
+            <Listing p={p} t={t} reduce={reduce} />
           </motion.div>
           <motion.div
             className="absolute inset-0 bg-[#FBFAF7] shadow-[-12px_0_24px_-16px_rgba(10,15,14,0.25)]"
             initial={false}
-            animate={{ x: open ? '0%' : '102%' }}
-            transition={{ duration: reduce ? 0 : 0.45, ease: EASE }}
-            aria-hidden={!open}
+            animate={slide(screen === 'thread')}
+            transition={tr}
+            aria-hidden={screen !== 'thread'}
           >
-            <Thread p={p} t={t} reduce={reduce} />
+            {t >= R.thread ? <Thread p={p} t={t} reduce={reduce} /> : null}
           </motion.div>
         </div>
       </div>
@@ -586,15 +615,73 @@ function BuyerPhone({ p, t, reduce }) {
   );
 }
 
-/** Speed to lead: one buyer texts three agents about the same house. Whoever answers first gets the showing. */
+/** The brokerage's CRM, filling in while Aurora talks. */
+function CrmCard({ c, t, reduce, compact = false }) {
+  const live = t >= R.statusAt[0];
+  const status = c.status[Math.max(0, lastIndex(R.statusAt.map((at) => ({ at })), t))];
+  return (
+    <div className={cn('rounded-[22px] bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_24px_48px_-32px_rgba(90,50,20,0.35)]', compact ? 'p-3.5' : 'p-5')}>
+      <div className="flex items-center justify-between gap-3">
+        <span className="flex items-center gap-2 text-[13px] font-medium text-ink">
+          <Database className="h-4 w-4 text-[#B4471A]" strokeWidth={1.9} aria-hidden="true" />
+          {c.title}
+        </span>
+        {live ? (
+          <motion.span
+            key={status}
+            initial={reduce ? false : { opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            className={cn('rounded-full px-2.5 py-0.5 text-[11.5px] font-medium', status === c.status[2] ? 'bg-[#E4F4E8] text-[#2E7A48]' : 'bg-[#FFF1E4] text-[#B4471A]')}
+          >
+            {status}
+          </motion.span>
+        ) : (
+          <span className="text-[11.5px] text-slate">{c.empty}</span>
+        )}
+      </div>
+      <dl className={cn('mt-3 grid', compact ? 'grid-cols-2 gap-x-3 gap-y-2' : 'gap-2.5')}>
+        {c.fields.map((f) => {
+          const on = t >= R.fill[f.key];
+          return (
+            <div key={f.key} className={cn('min-w-0', compact ? '' : 'flex items-baseline justify-between gap-4 border-b border-ink/[0.06] pb-2.5 last:border-0 last:pb-0')}>
+              <dt className={cn('shrink-0 text-ink/45', compact ? 'text-[10.5px]' : 'text-[12.5px]')}>{f.label}</dt>
+              <dd className={cn('min-w-0 truncate font-medium text-ink', compact ? 'text-[12px]' : 'text-[13.5px]')}>
+                {on ? (
+                  <motion.span
+                    key="v"
+                    className="rounded-[6px] px-1 -mx-1"
+                    initial={reduce ? false : { backgroundColor: 'rgba(255,159,69,0.35)', opacity: 0 }}
+                    animate={{ backgroundColor: 'rgba(255,159,69,0)', opacity: 1 }}
+                    transition={{ duration: 1.4, ease: EASE }}
+                  >
+                    {f.value}
+                  </motion.span>
+                ) : (
+                  <span className={cn('inline-block h-2.5 rounded-full bg-ink/[0.07] align-middle', compact ? 'w-16' : 'w-24')} />
+                )}
+              </dd>
+            </div>
+          );
+        })}
+      </dl>
+      <p className={cn('mt-3 flex items-center gap-2 transition-opacity duration-500', compact ? 'text-[11.5px]' : 'text-[12.5px]', t >= R.assigned ? 'text-ink opacity-100' : 'text-ink opacity-0')}>
+        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-ink text-[10px] font-medium text-white">J</span>
+        {c.assigned}
+      </p>
+    </div>
+  );
+}
+
+/** Speed to lead: a buyer texts four listing agents and waits; the brokerage with Aurora answers in seconds. */
 export function RxRace({ it }) {
   const r = it.v3.race;
   const ref = useRef(null);
   const reduce = !!useReducedMotion();
-  const inView = useInViewport(ref, { threshold: 0.35 });
+  const inView = useInViewport(ref, { threshold: 0.3 });
   const visible = usePageVisible();
   const t = useLoop(R.end, { active: inView && visible, still: reduce });
   const step = lastIndex(R.stepAt.map((at) => ({ at })), t);
+  const s = r.steps[step];
 
   return (
     <section id="race" data-nav-theme="light" aria-labelledby="rx-race-title" className="section relative">
@@ -602,39 +689,35 @@ export function RxRace({ it }) {
         <SectionHeader id="rx-race-title" eyebrow={r.eyebrow} titleA={r.titleA} titleB={r.titleB} text={r.text} layout="split" />
         <div
           ref={ref}
-          className="canvas canvas-grain relative mt-8 grid gap-6 overflow-hidden bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] p-4 xs:p-5 md:mt-14 md:p-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:items-center lg:gap-12 lg:p-12"
+          className="canvas canvas-grain relative mt-8 grid gap-5 overflow-hidden bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] p-4 xs:p-5 md:mt-14 md:p-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:gap-14 lg:p-12"
         >
           <div aria-hidden="true" className="pointer-events-none absolute right-[6%] top-[-10%] h-[70%] w-[45%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.45),rgba(255,200,87,0))] blur-2xl" />
 
-          {/* the story: a list on desktop, a progress bar and the current step on phones */}
-          <div className="relative">
-            <ol className="hidden gap-1 lg:grid">
-              {r.steps.map((s, i) => (
-                <li key={s.title} className={cn('flex gap-4 rounded-[18px] p-4 transition-colors duration-500', i === step ? 'bg-white/80 shadow-[0_0_0_1px_rgba(10,15,14,0.05)]' : 'bg-transparent')}>
-                  <span className={cn('t-data mt-1 w-[54px] shrink-0 text-[11.5px] transition-colors duration-500', i === step ? 'text-[#B4471A]' : 'text-ink/40')}>{s.time}</span>
-                  <span>
-                    <span className={cn('block text-[16px] font-medium tracking-[-0.01em] transition-colors duration-500', i === step ? 'text-ink' : 'text-ink/50')}>{s.title}</span>
-                    <span className={cn('mt-0.5 block text-[14px] leading-snug transition-colors duration-500', i === step ? 'text-graphite' : 'text-ink/35')}>{s.text}</span>
-                  </span>
-                </li>
+          <div className="relative lg:max-w-[460px]">
+            <div className="flex gap-1.5" aria-hidden="true">
+              {r.steps.map((x, i) => (
+                <span key={x.title} className={cn('h-1 flex-1 rounded-full transition-colors duration-500', i <= step ? 'bg-ink' : 'bg-ink/10')} />
               ))}
-            </ol>
-            <div className="lg:hidden">
-              <div className="flex gap-1.5" aria-hidden="true">
-                {r.steps.map((s, i) => (
-                  <span key={s.title} className={cn('h-1 flex-1 rounded-full transition-colors duration-500', i <= step ? 'bg-ink' : 'bg-ink/10')} />
-                ))}
-              </div>
-              <p className="mt-3 text-[16px] font-medium tracking-[-0.01em] text-ink">
-                <span className="t-data mr-2 text-[12px] text-[#B4471A]">{r.steps[step].time}</span>
-                {r.steps[step].title}
-              </p>
-              <p className="mt-0.5 min-h-[2.6em] text-[14px] leading-snug text-graphite">{r.steps[step].text}</p>
+            </div>
+            <div className="mt-4 min-h-[86px] lg:min-h-[120px]" aria-live="polite">
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.div key={step} initial={reduce ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6, transition: { duration: 0.2 } }} transition={{ duration: 0.45, ease: EASE }}>
+                  <p className="t-data text-[12px] text-[#B4471A]">{s.time}</p>
+                  <p className="mt-1 text-[19px] font-medium tracking-[-0.015em] text-ink lg:text-[26px]">{s.title}</p>
+                  <p className="mt-1 text-[14px] leading-snug text-graphite lg:text-[15.5px]">{s.text}</p>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+            <div className="mt-6 hidden lg:block">
+              <CrmCard c={r.crm} t={t} reduce={reduce} />
             </div>
           </div>
 
-          <div className="relative">
+          <div className="relative lg:w-[336px]">
             <BuyerPhone p={r.phone} t={t} reduce={reduce} />
+          </div>
+          <div className="relative lg:hidden">
+            <CrmCard c={r.crm} t={t} reduce={reduce} compact />
           </div>
         </div>
         <p className="mt-4 text-[12px] text-slate">{r.note}</p>
