@@ -24,9 +24,9 @@ const W = 560;
 const H = 240;
 const TARGET_Y = 112;
 const X = (i) => 36 + i * 81; // seven days across
-const LINE = 'M36 84 C 78 82 96 86 117 92 C 150 104 170 150 198 160 C 222 168 248 158 279 140 C 312 120 330 96 360 84 C 400 70 430 66 441 64 C 470 60 500 58 522 56';
-const DIP = { x: 198, y: 160 };
-const END = { x: 522, y: 56 };
+const LINE = 'M36 88 C 78 86 96 90 117 96 C 150 108 170 152 198 162 C 222 170 248 160 279 142 C 312 122 330 100 360 88 C 400 76 430 72 441 70 C 470 66 500 64 522 62';
+const DIP = { x: 198, y: 162 };
+const END = { x: 522, y: 62 };
 const DRAWN = [0.38, 0.38, 0.52, 1]; // step 1 draws to the dip, step 3 starts the recovery, step 4 finishes it
 const AREA_W = [DIP.x, DIP.x, 300, W];
 
@@ -76,7 +76,7 @@ function Chart({ step, calm }) {
         {C.days.map((d, i) => (
           <g key={d}>
             <line x1={X(i)} y1="24" x2={X(i)} y2="200" stroke="rgba(10,15,14,0.05)" />
-            <text x={X(i)} y="226" textAnchor="middle" fill="rgba(10,15,14,0.42)" style={{ fontSize: 11 }}>
+            <text x={X(i)} y="228" textAnchor="middle" fill="rgba(10,15,14,0.45)" style={{ fontSize: 15 }}>
               {d}
             </text>
           </g>
@@ -84,7 +84,7 @@ function Chart({ step, calm }) {
 
         {/* target */}
         <line x1="24" y1={TARGET_Y} x2={W - 16} y2={TARGET_Y} stroke="rgba(10,15,14,0.35)" strokeDasharray="5 5" />
-        <text x={W - 16} y={TARGET_Y - 8} textAnchor="end" fill="rgba(10,15,14,0.5)" style={{ fontSize: 11 }}>
+        <text x="26" y={TARGET_Y - 8} textAnchor="start" fill="rgba(10,15,14,0.5)" style={{ fontSize: 15 }}>
           Target
         </text>
 
@@ -94,7 +94,7 @@ function Chart({ step, calm }) {
           d={LINE}
           pathLength="1"
           stroke="#1A1410"
-          strokeWidth="2.6"
+          strokeWidth="3"
           strokeLinecap="round"
           strokeDasharray="1"
           style={{ strokeDashoffset: 1 - drawn, transition: tr }}
@@ -125,7 +125,7 @@ function Chart({ step, calm }) {
         className="absolute flex -translate-x-full items-center gap-1 whitespace-nowrap rounded-full bg-[#E4F4E8] px-2 py-0.5 text-[11px] font-medium text-[#2E7A48]"
         style={{
           left: `${(END.x / W) * 100}%`,
-          top: `${((END.y + 14) / H) * 100}%`,
+          top: `${((END.y - 36) / H) * 100}%`,
           ...late(recovered),
         }}
       >
@@ -206,7 +206,7 @@ export default function PlatformKpi() {
             {/* the chart, then what happened at this step */}
             <div className="relative grid gap-3">
               <div className="rounded-[22px] bg-white p-4 shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_24px_48px_-32px_rgba(90,50,20,0.35)] md:p-5">
-                <p className="flex items-baseline justify-between gap-3">
+                <p className="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-3">
                   <span className="text-[14px] font-medium text-ink">{C.metric}</span>
                   <span className="text-[12px] text-slate">{C.agent} · this week</span>
                 </p>
