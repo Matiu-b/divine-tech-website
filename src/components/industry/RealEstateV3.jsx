@@ -620,9 +620,9 @@ function ThreadHeader({ name, sub, initials, aurora }) {
     <div className="flex items-center gap-2.5 border-b border-ink/[0.07] px-3 pb-2.5 pt-1">
       <ChevronLeft className="h-5 w-5 text-[#0A84FF]" strokeWidth={2.2} aria-hidden="true" />
       <Avatar initials={initials} aurora={aurora} size="h-8 w-8" />
-      <span className="min-w-0">
+      <span className="min-w-0 flex-1">
         <span className="block truncate text-[13.5px] font-medium leading-tight text-ink">{name}</span>
-        <span className={cn('block text-[11px] font-medium', aurora ? 'text-[#B4471A]' : 'text-ink/40')}>{sub}</span>
+        <span className={cn('block truncate text-[11px] font-medium', aurora ? 'text-[#B4471A]' : 'text-ink/40')}>{sub}</span>
       </span>
     </div>
   );
