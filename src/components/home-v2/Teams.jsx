@@ -124,7 +124,7 @@ function Scene({ t, i }) {
     <div
       ref={ref}
       aria-hidden="true"
-      className="canvas-grain relative aspect-[4/5] overflow-hidden rounded-[28px] sm:aspect-[5/6] lg:aspect-[4/5]"
+      className="canvas-grain relative aspect-[4/5] overflow-hidden rounded-[28px] sm:aspect-[5/6] xl:aspect-square"
       style={{ backgroundImage: tone.glow + ',' + tone.bg }}
     >
       <div className="absolute inset-x-5 top-5 z-[1] flex items-center justify-between gap-3">

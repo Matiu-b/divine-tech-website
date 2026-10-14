@@ -499,7 +499,7 @@ export const teams = {
           { kind: 'in', text: 'Hi, can we see a demo this week?' },
           { kind: 'out', text: 'Sure. Thursday 11:00 or Friday 2:00?' },
           { kind: 'in', text: 'Thursday works.' },
-          { kind: 'card', icon: 'calendar', title: 'Meeting booked', detail: 'Thu 11:00 · with Dana, Sales' },
+          { kind: 'card', icon: 'calendar', title: 'Meeting booked', detail: 'Thu 11:00 · with Dana' },
         ],
       },
       photo: {
