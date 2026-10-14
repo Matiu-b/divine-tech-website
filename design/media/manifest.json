@@ -114,9 +114,10 @@
       "out": "public/media/real-estate/listing-willow"
     },
     {
-      "kind": "image",
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_155128_5a77bbf4-389e-4dc7-bbcc-17e941f33695.png",
-      "out": "public/media/real-estate/emma-frame"
+      "kind": "video",
+      "width": 900,
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_155612_1f141c6a-d102-4848-8f2a-210e5a10164e.mp4",
+      "out": "public/media/real-estate/emma-sofa"
     }
   ]
 }
