@@ -191,8 +191,16 @@ function CallStage({ h }) {
     <div ref={ref} className="relative">
       <div className="relative overflow-hidden rounded-[28px] bg-[#2B3550] shadow-[0_40px_80px_-48px_rgba(30,30,60,0.55)]">
         <div className="relative aspect-[4/5] sm:aspect-[16/10] lg:aspect-[2/1]">
-          <img src={f.poster} alt="" className="absolute inset-0 h-full w-full object-cover object-[30%_50%]" decoding="async" fetchpriority="high" />
-          {wantVideo ? (
+          <img
+            src={f.image ? f.image.src : f.poster}
+            srcSet={f.image ? f.image.srcSet : undefined}
+            sizes="(min-width: 1440px) 1376px, 100vw"
+            alt={f.video ? '' : f.alt}
+            className="absolute inset-0 h-full w-full object-cover object-[30%_50%]"
+            decoding="async"
+            fetchpriority="high"
+          />
+          {wantVideo && f.video ? (
             <video
               ref={videoRef}
               src={f.video}
@@ -205,7 +213,7 @@ function CallStage({ h }) {
               className="absolute inset-0 h-full w-full object-cover object-[30%_50%]"
             />
           ) : null}
-          <span className="sr-only">{f.alt}</span>
+          {f.video ? <span className="sr-only">{f.alt}</span> : null}
           <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(20,24,40,0.25)_0%,rgba(20,24,40,0)_30%,rgba(20,24,40,0)_60%,rgba(20,24,40,0.35)_100%)]" />
 
           <audio ref={audioRef} src={c.audio} preload="none" onEnded={ended} />

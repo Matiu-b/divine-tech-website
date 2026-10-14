@@ -1,7 +1,7 @@
 """Download generated media listed in design/media/manifest.json and write web-ready files.
 
 Videos: <out>.mp4 (H.264, 720 px wide unless the item sets "width", no audio, fast start) and <out>-poster.webp (first frame).
-Images: <out>-600.webp, <out>-900.webp and <out>-1200.webp.
+Images: <out>-600.webp, <out>-900.webp and <out>-1200.webp, or the sizes in the item's "widths".
 Audio: <out>.mp3 with the speakers levelled to one loudness (quiet or whispered lines lifted), and
 <out>-segments.json with the start and end of each stretch of speech, and <out>-words.json with
 each spoken word and its time (when faster-whisper is installed), for timing captions.
@@ -36,8 +36,8 @@ def video(src, out, width=720):
         run('ffmpeg', '-y', '-i', src, '-frames:v', '1', '-vf', f'scale={width}:-2:flags=lanczos', '-quality', '80', poster)
 
 
-def image(src, out):
-    for w in (600, 900, 1200):
+def image(src, out, widths=(600, 900, 1200)):
+    for w in widths:
         dst = f'{out}-{w}.webp'
         if not os.path.exists(dst):
             run('ffmpeg', '-y', '-i', src, '-vf', f'scale={w}:-2:flags=lanczos', '-quality', '80', dst)
@@ -128,6 +128,8 @@ def main():
                 download(item['url'], src)
                 if item['kind'] == 'video' and item.get('width'):
                     video(src, out, item['width'])
+                elif item['kind'] == 'image' and item.get('widths'):
+                    image(src, out, tuple(item['widths']))
                 else:
                     HANDLERS[item['kind']](src, out)
             except Exception:
