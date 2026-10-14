@@ -456,7 +456,7 @@ function Inbox({ p, t, reduce }) {
               </span>
               <span className="min-w-0 flex-1">
                 <span className="flex items-baseline justify-between gap-2">
-                  <span className="truncate text-[14.5px] font-medium text-ink">{th.name}</span>
+                  <span className="truncate text-[14px] font-medium text-ink">{th.name}</span>
                   <span className="shrink-0 text-[12px] text-slate">{st.time}</span>
                 </span>
                 {th.aurora ? <span className="block text-[11px] font-medium text-[#B4471A]">{p.auroraTag}</span> : null}
@@ -464,7 +464,7 @@ function Inbox({ p, t, reduce }) {
                   {st.typing ? (
                     <Dots className="text-ink/40" />
                   ) : st.done ? (
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-[#E4F4E8] px-2 py-0.5 text-[12px] font-medium text-[#2E7A48]">
+                    <span className="inline-flex items-center gap-1 whitespace-nowrap rounded-full bg-[#E4F4E8] px-2 py-0.5 text-[12px] font-medium text-[#2E7A48]">
                       <Check className="h-3.5 w-3.5" strokeWidth={2.6} aria-hidden="true" />
                       {st.preview}
                     </span>
@@ -551,7 +551,7 @@ function BuyerPhone({ p, t, reduce }) {
   const open = t >= R.open && t < R.back;
   const clock = t >= R.answer ? '8:14' : t >= R.morning ? '8:12' : t >= R.open + 2500 ? '9:48' : '9:47';
   return (
-    <div className="relative mx-auto h-[540px] w-full max-w-[320px] rounded-[46px] bg-ink p-[9px] shadow-[0_40px_80px_-40px_rgba(60,35,10,0.55)] sm:h-[600px]">
+    <div className="relative mx-auto h-[540px] w-full max-w-[336px] rounded-[46px] bg-ink p-[9px] shadow-[0_40px_80px_-40px_rgba(60,35,10,0.55)] sm:h-[600px]">
       <div className="relative h-full overflow-hidden rounded-[38px] bg-[#FBFAF7]">
         <div className="flex items-center justify-between px-7 pb-1 pt-3 text-[13px] font-medium text-ink">
           <span className="tabular-nums">{clock}</span>
