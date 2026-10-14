@@ -15,7 +15,9 @@ Higgsfield. When the -bg.webp file is missing, the script downloads that URL fir
 that cannot reach the image host just push covers.json; the "Blog covers" GitHub Action
 (.github/workflows/blog-covers.yml) then downloads, renders and commits the images on the branch.
 
-Writes public/img/blog/<slug>-1600.webp, -800.webp and -og.jpg (1200x675).
+Writes public/img/blog/<file>-1600.webp, -800.webp and -og.jpg (1200x675), where <file> is the
+entry's "file" (default: the slug). Images are cached by browsers for a day, so when a published
+cover is replaced, give it a new "file" (for example <slug>-2) and point the post's image paths at it.
 Needs Python Playwright with Chromium, Pillow and numpy. Not part of the Netlify build.
 """
 import base64, hashlib, html, json, os, sys, io, urllib.request
@@ -107,9 +109,10 @@ def render(page, cover):
     page.evaluate('document.fonts.ready')
     page.wait_for_timeout(200)
     im = Image.open(io.BytesIO(page.screenshot(type='png'))).convert('RGB')
-    im.save(OUT / f'{slug}-1600.webp', quality=82)
-    im.resize((800, 450), Image.LANCZOS).save(OUT / f'{slug}-800.webp', quality=80)
-    im.resize((1200, 675), Image.LANCZOS).save(OUT / f'{slug}-og.jpg', quality=86)
+    name = cover.get('file', slug)
+    im.save(OUT / f'{name}-1600.webp', quality=82)
+    im.resize((800, 450), Image.LANCZOS).save(OUT / f'{name}-800.webp', quality=80)
+    im.resize((1200, 675), Image.LANCZOS).save(OUT / f'{name}-og.jpg', quality=86)
     print('rendered', slug)
 
 if __name__ == '__main__':
@@ -118,7 +121,7 @@ if __name__ == '__main__':
     missing = '--missing' in args
     only = [a for a in args if not a.startswith('--')]
     if missing:
-        covers = [c for c in covers if not (OUT / f"{c['slug']}-og.jpg").exists()]
+        covers = [c for c in covers if not (OUT / f"{c.get('file', c['slug'])}-og.jpg").exists()]
     exe = os.environ.get('CHROMIUM_PATH') or ('/opt/pw-browsers/chromium-1194/chrome-linux/chrome' if Path('/opt/pw-browsers/chromium-1194/chrome-linux/chrome').exists() else None)
     with sync_playwright() as p:
         b = p.chromium.launch(**({'executable_path': exe} if exe else {}))

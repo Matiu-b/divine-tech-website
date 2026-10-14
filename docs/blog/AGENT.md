@@ -103,7 +103,9 @@ The blog must track what is happening in AI right now, not repeat generic explai
    - add at least one new section, table or FAQ that answers a real follow-up question;
    - add links to newer posts on the site.
 4. Set `updated` and the schema `dateModified` to today. Keep the slug and URL.
-5. Do not regenerate the cover unless the title changed.
+5. Do not regenerate the cover unless the title changed. If you do, give the entry a new `"file"` in
+   `covers.json` (for example `<slug>-2`) and update `image.base`, `image.og` and the schema image,
+   because browsers cache images for a day under the same name.
 
 ## 3. Cover image (new articles)
 
