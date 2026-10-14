@@ -215,7 +215,7 @@ export default function TeamsCollage() {
       <div className="shell" ref={ref}>
         <SectionHeader id="teams-title" eyebrow={teams.eyebrow} titleA={teams.titleA} titleB={teams.titleB} text={teams.text} layout="split" />
 
-        <Reveal y={28} className="mt-8 grid gap-7 md:mt-14 lg:grid-cols-12 lg:grid-rows-[auto_1fr] lg:gap-x-12 lg:gap-y-0">
+        <Reveal y={28} className="mt-8 grid gap-5 md:mt-14 lg:grid-cols-12 lg:grid-rows-[auto_1fr] lg:gap-x-12 lg:gap-y-0">
           <div className="lg:col-span-5 lg:col-start-8 lg:row-start-1 lg:self-end">
               <div role="tablist" aria-label="Teams" className="no-scrollbar -mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1">
               {teams.items.map((x, i) => (
@@ -244,25 +244,26 @@ export default function TeamsCollage() {
             </div>
           </div>
 
-          <div className="lg:col-span-7 lg:col-start-1 lg:row-span-2 lg:row-start-1 lg:self-center">
-            <Collage key={t.key} t={t} beat={beat} reduce={reduce} still={reduce || !inView} />
-          </div>
-
           <div className="lg:col-span-5 lg:col-start-8 lg:row-start-2">
             <motion.div key={t.key} initial={reduce || !inView ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: EASE }} role="tabpanel" className="lg:mt-7">
-              <p className="eyebrow">{t.agent}</p>
-              <h3 className="t-h2 balance mt-3">{t.title}</h3>
-              <p className="mt-3 max-w-[40ch] text-[15px] leading-relaxed text-graphite md:text-[16px]">{t.line}</p>
-              <p className="mt-6 text-[12px] font-medium text-slate">What it moves</p>
-              <ul className="mt-2 grid gap-1.5" aria-label="What it moves">
+              <p className="eyebrow hidden lg:block">{t.agent}</p>
+              <h3 className="t-h2 balance lg:mt-3">{t.title}</h3>
+              <p className="mt-1.5 max-w-[40ch] text-[14px] leading-relaxed text-graphite lg:mt-3 lg:text-[16px]">{t.line}</p>
+              <p className="mt-6 hidden text-[12px] font-medium text-slate lg:block">What it moves</p>
+              {/* phones: the outcomes as a single row of chips; desktop: a list */}
+              <ul className="mt-3 flex flex-wrap gap-1.5 lg:mt-2 lg:grid lg:gap-1.5" aria-label="What it moves">
                 {t.kpis.map((k) => (
-                  <li key={k} className="flex items-center gap-2 text-[14px] font-medium text-ink">
+                  <li key={k} className="flex items-center gap-1.5 rounded-full bg-white px-2.5 py-1 text-[12px] font-medium text-ink shadow-[0_0_0_1px_rgba(10,15,14,0.06)] lg:gap-2 lg:rounded-none lg:bg-transparent lg:p-0 lg:text-[14px] lg:shadow-none">
                     <TrendingUp className="h-3.5 w-3.5 shrink-0 text-[#D9481C]" strokeWidth={2} aria-hidden="true" />
                     {k}
                   </li>
                 ))}
               </ul>
             </motion.div>
+          </div>
+
+          <div className="lg:col-span-7 lg:col-start-1 lg:row-span-2 lg:row-start-1 lg:self-center">
+            <Collage key={t.key} t={t} beat={beat} reduce={reduce} still={reduce || !inView} />
           </div>
         </Reveal>
       </div>
