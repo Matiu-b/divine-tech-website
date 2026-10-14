@@ -794,6 +794,37 @@ function CrmCard({ c, T, t, reduce, compact = false }) {
   );
 }
 
+/**
+ * Her evening on the sofa: a clip as long as the scene before her message reaches Aurora's brokerage,
+ * kept in step with the phone's clock. It fades out the moment the lead lands in the CRM.
+ */
+function SofaClip({ film, T, t, reduce, active }) {
+  const ref = useRef(null);
+  const loaded = usePageLoaded();
+  const on = t < T.chat[0].at;
+  useEffect(() => {
+    const v = ref.current;
+    if (!v || reduce) return;
+    if (on && active) {
+      // keep the clip within a fraction of a second of the scene
+      if (Math.abs(v.currentTime - t / 1000) > 0.35) v.currentTime = Math.min(t / 1000, Math.max(0, (v.duration || 15) - 0.05));
+      if (v.paused) v.play().catch(() => {});
+    } else if (!v.paused) v.pause();
+  }, [on, active, t, reduce]);
+  return (
+    <motion.div
+      className="absolute inset-0 overflow-hidden rounded-[24px] bg-[#2A2420] shadow-[0_24px_48px_-32px_rgba(90,50,20,0.45)]"
+      initial={false}
+      animate={{ opacity: on ? 1 : 0, scale: on ? 1 : 0.97 }}
+      transition={{ duration: reduce ? 0 : 0.45, ease: EASE }}
+      aria-hidden="true"
+    >
+      <img src={film.poster} alt="" className="absolute inset-0 h-full w-full object-cover" loading="lazy" decoding="async" />
+      {loaded && !reduce ? <video ref={ref} src={film.video} poster={film.poster} muted playsInline preload="auto" className="absolute inset-0 h-full w-full object-cover" /> : null}
+    </motion.div>
+  );
+}
+
 /** Speed to lead: she messages three listing agents and waits; the brokerage with Aurora answers in seconds. */
 export function RxRace({ it }) {
   const r = it.v3.race;
@@ -831,8 +862,23 @@ export function RxRace({ it }) {
                 </motion.div>
               </AnimatePresence>
             </div>
-            <div className="mt-6 hidden lg:block">
-              <CrmCard c={r.crm} T={T} t={t} reduce={reduce} />
+            {/* desktop: her evening on the sofa until her message reaches the brokerage, then its CRM */}
+            <div className="relative mt-6 hidden aspect-square lg:block">
+              <SofaClip film={r.film} T={T} t={t} reduce={reduce} active={inView && visible} />
+              <AnimatePresence initial={false}>
+                {t >= T.chat[0].at ? (
+                  <motion.div
+                    key="crm"
+                    className="absolute inset-x-0 top-0"
+                    initial={reduce ? false : { opacity: 0, y: 14, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, transition: { duration: 0.2 } }}
+                    transition={{ duration: 0.55, ease: EASE }}
+                  >
+                    <CrmCard c={r.crm} T={T} t={t} reduce={reduce} />
+                  </motion.div>
+                ) : null}
+              </AnimatePresence>
             </div>
           </div>
 

@@ -178,6 +178,11 @@ export const industries = [
             { who: 'aurora', text: 'Sent! See you Thursday, Emma.' },
           ],
         },
+        // her evening on the sofa, as long as the scene before her message reaches Aurora's brokerage (15 s)
+        film: {
+          video: '/media/real-estate/emma-sofa.mp4',
+          poster: '/media/real-estate/emma-sofa-poster.webp',
+        },
         crm: {
           title: 'Harbor Lane CRM',
           empty: 'Waiting for a new lead',
