@@ -357,48 +357,48 @@ export function RxHero({ it }) {
  * Aurora, which answers in seconds while its CRM fills in. She reads and types at a person's pace;
  * Aurora replies quickly.
  */
-const typeMs = (text, min = 700, max = 2000) => Math.min(max, Math.max(min, text.length * 42));
+const typeMs = (text, min = 600, max = 1600) => Math.min(max, Math.max(min, text.length * 34));
 
 function buildRace(p, crm) {
   const screens = [];
   const sends = []; // the agent messages: when each is typed and sent
   let t = 0;
   p.listings.slice(0, 3).forEach((l, i) => {
-    screens.push({ id: 'l' + i, kind: 'listing', i, at: t, tap: t + 1300 });
-    const typeAt = t + 2000;
-    const sent = typeAt + typeMs(l.message, 900, 1700) + 250;
-    screens.push({ id: 't' + i, kind: 'agent', i, at: t + 1600 });
+    screens.push({ id: 'l' + i, kind: 'listing', i, at: t, tap: t + 1100 });
+    const typeAt = t + 1750;
+    const sent = typeAt + typeMs(l.message, 900, 1400) + 250;
+    screens.push({ id: 't' + i, kind: 'agent', i, at: t + 1400 });
     sends.push({ i, typeAt, sent });
-    t = sent + 1500;
+    t = sent + 1200;
   });
   const stale = t;
   screens.push({ id: 'inbox1', kind: 'inbox', at: t });
-  t += 3200;
+  t += 2800;
   const ours = p.listings.length - 1;
-  screens.push({ id: 'l3', kind: 'listing', i: ours, at: t, tap: t + 1400 });
+  screens.push({ id: 'l3', kind: 'listing', i: ours, at: t, tap: t + 1300 });
   const listing4 = t;
-  screens.push({ id: 'chat', kind: 'aurora', at: t + 1700 });
+  screens.push({ id: 'chat', kind: 'aurora', at: t + 1600 });
   // the conversation with Aurora
   const chat = [];
-  let c = t + 2100;
+  let c = t + 1900;
   p.chat.forEach((m, k) => {
     if (m.who === 'buyer') {
       const prev = p.chat[k - 1];
-      const think = k === 0 ? 0 : Math.min(2400, 1100 + (prev ? prev.text.length * 10 : 0));
+      const think = k === 0 ? 0 : Math.min(1700, 800 + (prev ? prev.text.length * 7 : 0));
       const typeAt = c + think;
       const at = typeAt + typeMs(m.text);
       chat.push({ typeAt, at });
       c = at + 250;
     } else {
       const typingAt = c + 400;
-      const at = typingAt + (k === 1 ? 2400 : 1300); // the first reply lands about 3 seconds after her message
+      const at = typingAt + (k === 1 ? 2400 : 1000); // the first reply lands about 3 seconds after her message
       chat.push({ typingAt, at });
       c = at;
     }
   });
-  const done = c + 2600;
+  const done = c + 2200;
   screens.push({ id: 'inbox2', kind: 'inbox', at: done });
-  const end = done + 4200;
+  const end = done + 3800;
 
   const fill = {};
   p.chat.forEach((m, k) => (m.crm || []).forEach((key) => (fill[key] = chat[k].at)));
