@@ -355,7 +355,7 @@ export function RxHero({ it }) {
 // listing, and the brokerage that runs Aurora answers in seconds while its CRM fills in.
 const R = {
   agents: { rachel: 600, tom: 2600, mark: 3800, sarah: 5000 },
-  personal: { mom: 0, lucy: 2000 },
+  personal: { dad: 0, book: 0, jordan: 0, mom: 0, lucy: 2000 },
   stale: 6400, // "No reply" on every agent thread
   listing: 8000, // the listings app slides in
   tap: 9300, // she taps Message agent

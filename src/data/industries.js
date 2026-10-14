@@ -101,6 +101,9 @@ export const industries = [
         phone: {
           title: 'Messages',
           personal: [
+            { key: 'dad', name: 'Dad', initials: 'D', preview: 'Call me when you get a chance', time: 'Yesterday', order: -30 },
+            { key: 'book', name: 'Book club', initials: 'BC', preview: 'Priya: Next week at mine?', time: 'Yesterday', order: -20 },
+            { key: 'jordan', name: 'Jordan', initials: 'J', preview: 'Haha see you tomorrow', time: '5:40 PM', order: -10 },
             { key: 'mom', name: 'Mom', initials: 'M', preview: 'Dinner on Sunday?', time: '6:12 PM', order: 12 },
             { key: 'lucy', name: 'Lucy', initials: 'L', preview: 'Did you see the one on Birch Lane?? 😍', time: '8:30 PM', order: 150 },
           ],
