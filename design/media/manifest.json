@@ -75,6 +75,21 @@
       "kind": "image",
       "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_121811_d0d6a68a-a4b4-4959-b5b9-621bae95a266.png",
       "out": "public/media/real-estate/welcome"
+    },
+    {
+      "kind": "audio",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_125754_57a79045-d54f-4273-b3ea-ed5a3c21d487.mp3",
+      "out": "public/media/real-estate/call-a"
+    },
+    {
+      "kind": "audio",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_125754_d4b22993-e78d-48e7-88bf-3485cc17ba35.mp3",
+      "out": "public/media/real-estate/call-b"
+    },
+    {
+      "kind": "audio",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_125754_23fe57b8-7691-46de-a5de-1fb21e5eee4d.mp3",
+      "out": "public/media/real-estate/call-c"
     }
   ]
 }
