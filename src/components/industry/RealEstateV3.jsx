@@ -190,7 +190,7 @@ function CallStage({ h }) {
   return (
     <div ref={ref} className="relative">
       <div className="relative overflow-hidden rounded-[28px] bg-[#2B3550] shadow-[0_40px_80px_-48px_rgba(30,30,60,0.55)]">
-        <div className="relative aspect-[4/5] sm:aspect-[16/10] lg:aspect-[16/9]">
+        <div className="relative aspect-[4/5] sm:aspect-[16/10] lg:aspect-[2/1]">
           <img src={f.poster} alt="" className="absolute inset-0 h-full w-full object-cover object-[30%_50%]" decoding="async" fetchpriority="high" />
           {wantVideo ? (
             <video
@@ -222,8 +222,8 @@ function CallStage({ h }) {
             {sound ? c.mute : c.listen}
           </LiquidGlass>
 
-          {/* Aurora's notes float over the street on wide screens */}
-          <div className="absolute right-5 top-5 hidden w-[250px] flex-col gap-2 lg:flex" aria-live="polite">
+          {/* Aurora's notes gather over the lawn on wide screens */}
+          <div className="absolute bottom-6 right-6 hidden w-[260px] flex-col gap-2 lg:flex" aria-live="polite">
             <AnimatePresence initial={false}>
               {notes.map((n) => (
                 <Note key={n.title} n={n} reduce={reduce} />
@@ -233,9 +233,9 @@ function CallStage({ h }) {
         </div>
       </div>
 
-      {/* The call: under the clip on phones, over its corner on wide screens */}
+      {/* The call: under the clip on phones, over its top corner on wide screens, so it is in view with the headline */}
       <LiquidGlass
-        className="relative z-[1] mx-3 -mt-28 rounded-[24px] p-4 sm:mx-6 sm:-mt-24 sm:p-5 lg:absolute lg:bottom-6 lg:right-6 lg:mx-0 lg:mt-0 lg:w-[420px]"
+        className="relative z-[1] mx-3 -mt-28 rounded-[24px] p-4 sm:mx-6 sm:-mt-24 sm:p-5 lg:absolute lg:right-6 lg:top-6 lg:mx-0 lg:mt-0 lg:w-[420px]"
         style={{ '--lg-tint-a': 'rgba(255,252,247,0.9)', '--lg-tint-b': 'rgba(255,249,241,0.82)' }}
       >
         <div className="flex items-center gap-3">
@@ -244,9 +244,9 @@ function CallStage({ h }) {
             <img src="/brand/aurora-symbol-color.svg" alt="" width="20" height="20" className="relative h-5 w-5" />
           </span>
           <span className="min-w-0 flex-1">
-            <span className="block text-[14px] font-medium leading-tight text-ink">Aurora · {c.listing}</span>
+            <span className="block text-[14px] font-medium leading-tight text-ink">{c.title}</span>
             <span className="block truncate text-[12px] text-slate">
-              {c.title} · <span className="tabular-nums">{clock(Math.min(t, c.duration))}</span>
+              {c.listing} · <span className="tabular-nums">{clock(Math.min(t, c.duration))}</span>
             </span>
           </span>
           <Wave who={reduce ? null : speaking} />

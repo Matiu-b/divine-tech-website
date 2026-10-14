@@ -42,8 +42,8 @@ export const industries = [
         call: {
           audio: '/media/real-estate/call-c.mp3',
           duration: 62100,
-          title: 'Inbound call · 9:47 pm',
-          listing: 'Maple Street listing',
+          title: 'Aurora · on a call',
+          listing: '9:47 pm · Maple Street',
           caller: 'Buyer',
           waiting: 'Aurora notes what she learns here',
           listen: 'Listen to the call',
