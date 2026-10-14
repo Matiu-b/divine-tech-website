@@ -802,16 +802,18 @@ function CrmCard({ c, T, t, reduce, compact = false }) {
 function SofaClip({ film, T, t, reduce, active, small = false }) {
   const ref = useRef(null);
   const loaded = usePageLoaded();
-  const on = t < T.chat[0].at;
+  const intro = t < T.chat[0].at;
+  // desktop hands over to the CRM at the first message; the small window on phones keeps playing, looping, to the end
+  const on = small || intro;
   useEffect(() => {
     const v = ref.current;
     if (!v || reduce) return;
     if (on && active) {
-      // keep the clip within a fraction of a second of the scene
-      if (Math.abs(v.currentTime - t / 1000) > 0.35) v.currentTime = Math.min(t / 1000, Math.max(0, (v.duration || 15) - 0.05));
+      // in step with the phone until her message lands (the clip is exactly that long); after that it just loops
+      if (intro && Math.abs(v.currentTime - t / 1000) > 0.35) v.currentTime = Math.min(t / 1000, Math.max(0, (v.duration || 15) - 0.05));
       if (v.paused) v.play().catch(() => {});
     } else if (!v.paused) v.pause();
-  }, [on, active, t, reduce]);
+  }, [on, intro, active, t, reduce]);
   return (
     <motion.div
       className={cn(
@@ -824,23 +826,7 @@ function SofaClip({ film, T, t, reduce, active, small = false }) {
       aria-hidden="true"
     >
       <img src={film.poster} alt="" className="absolute inset-0 h-full w-full object-cover" loading="lazy" decoding="async" />
-      {loaded && !reduce ? <video ref={ref} src={film.video} poster={film.poster} muted playsInline preload="auto" className="absolute inset-0 h-full w-full object-cover" /> : null}
-    </motion.div>
-  );
-}
-
-/** Where the sofa clip was on phones, once her message reaches the brokerage: Aurora has the lead. */
-function AuroraTile({ on, reduce }) {
-  return (
-    <motion.div
-      className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 rounded-[20px] bg-ink text-center shadow-[0_18px_36px_-12px_rgba(40,25,10,0.45)]"
-      initial={false}
-      animate={{ opacity: on ? 1 : 0, scale: on ? 1 : 0.94 }}
-      transition={{ duration: reduce ? 0 : 0.45, ease: EASE, delay: on && !reduce ? 0.2 : 0 }}
-      aria-hidden="true"
-    >
-      <img src="/brand/aurora-symbol-color.svg" alt="" width="28" height="28" className="h-7 w-7 sm:h-8 sm:w-8" />
-      <span className="px-1 text-[10px] font-medium leading-tight text-white/80 sm:text-[11px]">Aurora · AI agent</span>
+      {loaded && !reduce ? <video ref={ref} src={film.video} poster={film.poster} muted playsInline loop={small} preload="auto" className="absolute inset-0 h-full w-full object-cover" /> : null}
     </motion.div>
   );
 }
@@ -888,7 +874,6 @@ export function RxRace({ it }) {
               </div>
               {wide ? null : (
                 <div className="relative mt-1 h-[72px] w-[72px] shrink-0 min-[360px]:h-[84px] min-[360px]:w-[84px] xs:h-24 xs:w-24 sm:h-28 sm:w-28 md:h-32 md:w-32">
-                  <AuroraTile on={t >= T.chat[0].at} reduce={reduce} />
                   <SofaClip film={r.film} T={T} t={t} reduce={reduce} active={inView && visible} small />
                 </div>
               )}
