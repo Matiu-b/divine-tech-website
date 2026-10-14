@@ -1,0 +1,38 @@
+# Renders blog cover images on blog branches. A session that cannot download from the image
+# host (for example a scheduled cloud run) commits only design/blog-covers/covers.json with a
+# "bg_url"; this job downloads the background, renders the cover sizes and commits them back.
+name: Blog covers
+
+on:
+  push:
+    branches-ignore: [main]
+    paths: [design/blog-covers/covers.json]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Playwright, Pillow and numpy
+        run: |
+          pip install playwright pillow numpy
+          python -m playwright install --with-deps chromium
+      - name: Render missing covers
+        run: python scripts/make-blog-covers.py --missing
+      - name: Commit images
+        run: |
+          git config user.name "blog-covers[bot]"
+          git config user.email "blog-covers@users.noreply.github.com"
+          git add design/blog-covers public/img/blog
+          if git diff --cached --quiet; then echo "nothing to commit"; exit 0; fi
+          git commit -m "Render blog cover images"
+          git push
