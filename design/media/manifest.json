@@ -110,6 +110,30 @@
       ],
       "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_134408_e09568c8-f3fe-423c-9cf4-e547e6e52ddb.png",
       "out": "public/media/real-estate/house-2"
+    },
+    {
+      "kind": "image",
+      "widths": [
+        600,
+        900,
+        1200,
+        1600,
+        2000
+      ],
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_134649_b01217e4-acb1-4f7c-bf3b-1f9e5449174a.png",
+      "out": "public/media/real-estate/house-3"
+    },
+    {
+      "kind": "image",
+      "widths": [
+        600,
+        900,
+        1200,
+        1600,
+        2000
+      ],
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_134649_a16d0f15-24b5-40f5-81e7-a9e6dbfa4b45.png",
+      "out": "public/media/real-estate/house-4"
     }
   ]
 }
