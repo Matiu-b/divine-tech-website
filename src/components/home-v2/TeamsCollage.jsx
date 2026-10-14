@@ -39,7 +39,7 @@ function GrowIn({ show = true, still, children, className = undefined }) {
       initial={still ? false : { height: 0, opacity: 0 }}
       animate={{ height: 'auto', opacity: 1 }}
       transition={{ height: { duration: 0.6, ease: EASE }, opacity: { duration: 0.45, delay: 0.12 } }}
-      className={cn('overflow-hidden', className)}
+      className={cn('shrink-0 overflow-hidden', className)}
     >
       {children}
     </motion.div>
