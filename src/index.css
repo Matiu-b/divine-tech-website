@@ -956,6 +956,13 @@
   .intro-rise, .intro-slide, .intro-fade, .intro-line { animation: none; }
 }
 
+/* Industry hero conversation: each message pops in once, in order (delays set inline). */
+@keyframes convo-pop { from { opacity: 0; transform: translateY(8px); } }
+.convo-pop { animation: convo-pop 0.5s cubic-bezier(0.22, 1, 0.36, 1) both; }
+@media (prefers-reduced-motion: reduce) {
+  .convo-pop { animation: none; }
+}
+
 /* A saved cookie choice (index.html adds .dt-consented): the prerendered banner never shows. */
 .dt-consented [data-consent-first-view] { display: none; }
 
