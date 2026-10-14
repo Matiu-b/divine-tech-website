@@ -631,25 +631,25 @@ export const platformPage = {
     titleA: 'Every agent measured.',
     titleB: 'Every week a little better.',
     text: 'The KPI Agent tracks every Aurora agent against the numbers your business runs on, spots what is slipping and improves how the agent works. Bigger changes wait for your approval.',
-    points: [
-      { title: 'Your KPIs, not ours', text: 'Speed to lead, meetings booked, resolution rate: each agent is measured on the goals you set for its team.' },
-      { title: 'Finds the cause, not just the drop', text: 'When a number slips, it looks at the conversations behind it and works out what to change.' },
-      { title: 'Every change on record', text: 'Small fixes go live within your rules. Bigger ones go to the right person first, and every change is logged.' },
+    // One week of one agent's KPI, told in four steps. Illustrative: no real figures.
+    steps: [
+      { title: 'Measures', text: 'Tracks every agent against the KPIs you set.' },
+      { title: 'Finds the cause', text: 'Reads the conversations behind a drop.' },
+      { title: 'Suggests a fix', text: 'Bigger changes wait for your approval.' },
+      { title: 'Improves', text: 'The number recovers, and the change is logged.' },
     ],
-    board: {
-      title: 'KPI Agent · Sales agent',
-      rows: [
-        { name: 'Speed to lead', state: 'on', fill: 0.86 },
-        { name: 'Meetings booked', state: 'on', fill: 0.78 },
-        { name: 'Follow-up replies', state: 'slipping', fill: 0.52 },
+    chart: {
+      metric: 'Follow-up replies',
+      agent: 'Sales agent',
+      days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      slipping: 'Below target',
+      recovered: 'Back on target',
+      story: [
+        { tag: 'Measured', text: 'Follow-up replies dropped below your target on Wednesday.' },
+        { tag: 'Cause found', text: 'Leads answer texts, but this week’s follow-ups went out by email.' },
+        { tag: 'Fix suggested', text: 'Send the second follow-up by text.', who: 'Approved by Dana · Sales lead' },
+        { tag: 'Improved', text: 'Replies are back above target. The change is in the log.' },
       ],
-      target: 0.7,
-      change: {
-        tag: 'Suggested change',
-        what: 'Send the second follow-up by text, not email',
-        why: 'Follow-up replies are below your target',
-        who: 'Waiting for approval · Sales lead',
-      },
     },
     note: 'Illustrative example. Metric names and the change are examples.',
   },
