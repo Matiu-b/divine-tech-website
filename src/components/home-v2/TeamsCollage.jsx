@@ -124,7 +124,7 @@ function Collage({ t, beat, reduce, still }) {
       <LiquidGlass
         as={motion.div}
         {...appear(beat >= 4, reduce, 12)}
-        className="absolute right-[3%] top-[36%] flex items-center gap-2.5 rounded-[18px] py-2.5 pl-2.5 pr-4 sm:bottom-[12%] sm:right-[6%] sm:top-auto"
+        className="absolute left-0 top-[44%] flex items-center gap-2.5 rounded-[18px] py-2.5 pl-2.5 pr-4 sm:bottom-[12%] sm:left-auto sm:right-[6%] sm:top-auto"
         style={{ '--lg-tint-a': 'rgba(255,252,247,0.7)', '--lg-tint-b': 'rgba(255,248,236,0.4)' }}
       >
         <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#E4F4E8]">
