@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { m as motion, useReducedMotion } from 'framer-motion';
 import { Check, TrendingUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { teams } from '@/data/site';
@@ -31,6 +31,21 @@ function useBeats(key, still) {
   return state.key === key ? state.beat : 0;
 }
 
+/** Grows from zero height so the glass card extends smoothly instead of holding empty space. */
+function GrowIn({ show, still, children, className = undefined }) {
+  if (!show) return null;
+  return (
+    <motion.div
+      initial={still ? false : { height: 0, opacity: 0 }}
+      animate={{ height: 'auto', opacity: 1 }}
+      transition={{ height: { duration: 0.6, ease: EASE }, opacity: { duration: 0.45, delay: 0.12 } }}
+      className={cn('overflow-hidden', className)}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
 const appear = (on, reduce, y = 10) => ({
   initial: false,
   animate: on ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y, scale: 0.98 },
@@ -38,7 +53,7 @@ const appear = (on, reduce, y = 10) => ({
 });
 
 /** One team's collage: a short clip of the person being helped, an object from their world, and Aurora's glass cards on top. */
-function Collage({ t, beat, reduce }) {
+function Collage({ t, beat, reduce, still }) {
   const c = t.collage;
   const AuroraMark = <img src="/brand/aurora-symbol-color.svg" alt="" width="18" height="18" className="h-[18px] w-[18px]" />;
   return (
@@ -77,26 +92,32 @@ function Collage({ t, beat, reduce }) {
         <p className="ml-auto mt-2 w-fit max-w-[88%] rounded-[16px] rounded-br-[6px] bg-[linear-gradient(135deg,#E2461B,#FF9F45)] px-3.5 py-2 text-[13px] leading-snug text-white shadow-[0_10px_22px_-14px_rgba(226,70,27,0.9)]">
           {c.ask}
         </p>
-        <motion.div {...appear(beat >= 2, reduce, 6)} className="mt-2 rounded-[16px] bg-white/75 p-3 shadow-[0_0_0_1px_rgba(255,255,255,0.8)]">
-          <p className="flex items-start gap-2.5 text-[13px] leading-snug text-ink">
-            <span className="mt-px flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white shadow-[0_1px_3px_rgba(10,15,14,0.12)]">{AuroraMark}</span>
-            {c.reply}
-          </p>
-          <motion.div {...appear(beat >= 3, reduce, 4)} className="mt-2.5 flex flex-wrap gap-1.5 pl-[34px]">
-            {c.options.map((o, i) => (
-              <span
-                key={o}
-                className={cn(
-                  'flex items-center gap-1 rounded-full px-2.5 py-1 text-[11.5px] font-medium',
-                  i === 0 ? 'bg-ink text-white' : 'bg-white text-ink shadow-[0_0_0_1px_rgba(10,15,14,0.1)]'
-                )}
-              >
-                {t.key === 'service' ? <Check className="h-3 w-3 text-[#2E9A58]" strokeWidth={2.6} aria-hidden="true" /> : null}
-                {o}
-              </span>
-            ))}
-          </motion.div>
-        </motion.div>
+        <GrowIn show={beat >= 2} still={still || reduce}>
+          <div className="pt-2">
+            <div className="rounded-[16px] bg-white/75 p-3 shadow-[0_0_0_1px_rgba(255,255,255,0.8)]">
+              <p className="flex items-start gap-2.5 text-[13px] leading-snug text-ink">
+                <span className="mt-px flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white shadow-[0_1px_3px_rgba(10,15,14,0.12)]">{AuroraMark}</span>
+                {c.reply}
+              </p>
+              <GrowIn show={beat >= 3} still={still || reduce}>
+                <div className="flex flex-wrap gap-1.5 pl-[34px] pt-2.5">
+                  {c.options.map((o, i) => (
+                    <span
+                      key={o}
+                      className={cn(
+                        'flex items-center gap-1 rounded-full px-2.5 py-1 text-[11.5px] font-medium',
+                        i === 0 ? 'bg-ink text-white' : 'bg-white text-ink shadow-[0_0_0_1px_rgba(10,15,14,0.1)]'
+                      )}
+                    >
+                      {t.key === 'service' ? <Check className="h-3 w-3 text-[#2E9A58]" strokeWidth={2.6} aria-hidden="true" /> : null}
+                      {o}
+                    </span>
+                  ))}
+                </div>
+              </GrowIn>
+            </div>
+          </div>
+        </GrowIn>
       </LiquidGlass>
 
       {/* what got done */}
@@ -175,11 +196,11 @@ export default function TeamsCollage() {
           </div>
 
           <div className="lg:col-span-7 lg:col-start-1 lg:row-span-2 lg:row-start-1 lg:self-center">
-            <Collage key={t.key} t={t} beat={beat} reduce={reduce} />
+            <Collage key={t.key} t={t} beat={beat} reduce={reduce} still={reduce || !inView} />
           </div>
 
           <div className="lg:col-span-5 lg:col-start-8 lg:row-start-2">
-            <motion.div key={t.key} initial={reduce ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: EASE }} role="tabpanel" className="lg:mt-7">
+            <motion.div key={t.key} initial={reduce || !inView ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: EASE }} role="tabpanel" className="lg:mt-7">
               <p className="eyebrow">{t.agent}</p>
               <h3 className="t-h2 balance mt-3">{t.title}</h3>
               <p className="mt-3 max-w-[40ch] text-[15px] leading-relaxed text-graphite md:text-[16px]">{t.line}</p>
