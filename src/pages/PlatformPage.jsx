@@ -2,7 +2,7 @@ import React from 'react';
 import { platformPage } from '@/data/site';
 import SiteLayout from '@/components/home-v2/SiteLayout';
 import HeroFilm from '@/components/home-v2/HeroFilm';
-import Teams from '@/components/home-v2/Teams';
+import TeamsConcepts from '@/components/home-v2/TeamsConcepts';
 import FinalCTA from '@/components/home-v2/FinalCTA';
 import Faq from '@/components/home-v2/Faq';
 import PlatformArchitecture from '@/components/home-v2/PlatformArchitecture';
@@ -66,7 +66,7 @@ export default function PlatformPage() {
       <ConsoleTour />
       <PlatformArchitecture />
       <PlatformSecurity />
-      <Teams />
+      <TeamsConcepts />
       <Faq id="platform-faq-title" items={platformPage.faq} title="Questions about the platform." className="pt-0" />
       <FinalCTA />
     </SiteLayout>

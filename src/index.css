@@ -972,3 +972,16 @@
   88% { opacity: 1; }
   100% { top: calc(100% - 6px); opacity: 0; }
 }
+
+/* Teams concepts preview: steps tick in one after another, then loop; beams flow; live dot pulses. */
+@keyframes concept-step { 0%, 4% { opacity: 0; transform: translateY(6px); } 10%, 88% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+.concept-step { animation: concept-step 7s ease-out infinite both; }
+@keyframes concept-beam { from { stroke-dashoffset: 24; } to { stroke-dashoffset: 0; } }
+.concept-beam { stroke-dasharray: 4 8; animation: concept-beam 1.2s linear infinite; }
+@keyframes concept-live { 50% { opacity: 0.3; } }
+.concept-live { animation: concept-live 1.6s ease-in-out infinite; }
+@keyframes concept-glow { 50% { opacity: 0.65; transform: translate(-50%, -50%) scale(0.92); } }
+.concept-glow { animation: concept-glow 4s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .concept-step, .concept-beam, .concept-live, .concept-glow { animation: none; }
+}
