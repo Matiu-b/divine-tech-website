@@ -99,7 +99,7 @@ function Caption({ cap, t, dim, c }) {
   return (
     <div className={cn('transition-opacity duration-500', dim ? 'opacity-45' : 'opacity-100')}>
       <p className={cn('text-[10.5px] font-medium uppercase tracking-[0.07em]', mine ? 'text-[#B4471A]' : 'text-slate')}>{mine ? 'Aurora' : c.caller}</p>
-      <p className="mt-0.5 text-[15px] leading-[1.45] tracking-[-0.005em] text-ink md:text-[16px]">
+      <p className="mt-0.5 text-[14.5px] leading-[1.42] tracking-[-0.005em] text-ink sm:text-[15px] md:text-[16px]">
         <span className="sr-only">{cap.text}</span>
         <span aria-hidden="true">
           {words.map((w, i) => (
@@ -190,7 +190,7 @@ function CallStage({ h }) {
   return (
     <div ref={ref} className="relative">
       <div className="relative overflow-hidden rounded-[28px] bg-[#2B3550] shadow-[0_40px_80px_-48px_rgba(30,30,60,0.55)]">
-        <div className="relative aspect-[4/5] sm:aspect-[16/10] lg:aspect-[2/1]">
+        <div className="relative aspect-[4/3] sm:aspect-[16/10] lg:aspect-[2/1]">
           <img
             src={f.image ? f.image.src : f.poster}
             srcSet={f.image ? f.image.srcSet : undefined}
@@ -243,7 +243,7 @@ function CallStage({ h }) {
 
       {/* The call: under the clip on phones, over its top corner on wide screens, so it is in view with the headline */}
       <LiquidGlass
-        className="relative z-[1] mx-3 -mt-28 rounded-[24px] p-4 sm:mx-6 sm:-mt-24 sm:p-5 lg:absolute lg:right-6 lg:top-6 lg:mx-0 lg:mt-0 lg:w-[420px]"
+        className="relative z-[1] mx-3 -mt-10 rounded-[22px] p-3.5 sm:mx-6 sm:-mt-24 sm:p-5 lg:absolute lg:right-6 lg:top-6 lg:mx-0 lg:mt-0 lg:w-[420px]"
         style={{ '--lg-tint-a': 'rgba(255,252,247,0.9)', '--lg-tint-b': 'rgba(255,249,241,0.82)' }}
       >
         <div className="flex items-center gap-3">
@@ -260,12 +260,12 @@ function CallStage({ h }) {
           <Wave who={reduce ? null : speaking} />
         </div>
 
-        <div className="relative mt-4 grid h-[172px] content-end gap-3 overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,#000_22%)] sm:h-[156px]">
+        <div className="relative mt-3 grid h-[128px] content-end gap-2.5 overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,#000_22%)] sm:mt-4 sm:h-[156px] sm:gap-3">
           {prev ? <Caption key={k - 1} cap={prev} t={t} dim c={c} /> : null}
           <Caption key={k} cap={cap} t={t} c={c} />
         </div>
 
-        <ol className="mt-4 grid grid-cols-4 gap-1.5" aria-label="Where the call is">
+        <ol className="mt-3 grid grid-cols-4 gap-1.5 sm:mt-4" aria-label="Where the call is">
           {c.stages.map((s, i) => (
             <li key={s.label} className="min-w-0">
               <span className="block h-1 overflow-hidden rounded-full bg-ink/10">
@@ -283,7 +283,7 @@ function CallStage({ h }) {
         </ol>
 
         {/* phones and tablets: the latest note sits in the card */}
-        <div className="mt-3 h-[46px] lg:hidden" aria-live="polite">
+        <div className="mt-2.5 h-[46px] lg:hidden" aria-live="polite">
           <AnimatePresence initial={false} mode="wait">
             {latest ? (
               <Note key={latest.title} n={latest} reduce={reduce} />
