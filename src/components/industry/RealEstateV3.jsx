@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, m as motion, useReducedMotion } from 'framer-motion';
-import { Check, CircleDollarSign, Hand, MessageCircle, Play, Scale, Volume2 } from 'lucide-react';
+import { CalendarCheck, Check, ChevronLeft, CircleDollarSign, Hand, MessageCircle, Play, Scale, Volume2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import CTAButton from '@/components/home-v2/primitives/CTAButton';
 import SectionHeader from '@/components/home-v2/primitives/SectionHeader';
@@ -11,7 +11,7 @@ import { onAnchorClick, useInViewport, usePageLoaded, usePageVisible } from '@/c
 
 /*
  * Real estate page, v3. One message per section, in this order:
- * the promise and a real call (hero) -> the race for every lead -> your rules. Sections the home and platform pages already tell are left out.
+ * the promise and a real call (hero) -> the race, seen on the buyer's phone for every lead -> your rules. Sections the home and platform pages already tell are left out.
  * Everything sits on the site's warm light ground; the motion is the product at work.
  */
 
@@ -351,71 +351,291 @@ export function RxHero({ it }) {
   );
 }
 
-/** The race for a lead: the same evening inquiry, with and without Aurora. */
+// The buyer's evening, in ms. Aurora's thread is texted first, so it starts at the bottom of the inbox
+// and jumps to the top when it answers.
+const R = {
+  rows: { north: 500, dana: 800, mike: 1100 },
+  typing: 2200,
+  reply: 3200,
+  open: 4600,
+  chat: [0, 0, 5400, 6900, 8500, 10000], // when each message of the open thread appears
+  typingIn: [null, null, null, 6000, null, 9100],
+  back: 12000,
+  morning: 13400,
+  late: 14200,
+  answer: 15900,
+  end: 20500,
+  stepAt: [0, 3200, 10000, 13400],
+};
+
+/** A clock for timed scenes: runs while `active`, loops at `end`, and holds the last frame when `still`. */
+function useLoop(end, { active, still }) {
+  const [t, setT] = useState(still ? end : 0);
+  const now = useRef(t);
+  useEffect(() => {
+    if (still) {
+      now.current = end;
+      setT(end);
+      return undefined;
+    }
+    if (!active) return undefined;
+    let raf = 0;
+    let last = performance.now();
+    let shown = now.current;
+    const tick = (stamp) => {
+      let v = now.current + (stamp - last);
+      last = stamp;
+      if (v > end) v = 0;
+      now.current = v;
+      if (Math.abs(v - shown) >= 60 || v < shown) {
+        shown = v;
+        setT(v);
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [active, still, end]);
+  return t;
+}
+
+function Dots({ className = '' }) {
+  return (
+    <span className={cn('inline-flex items-center gap-[3px]', className)} aria-label="typing">
+      {[0, 1, 2].map((i) => (
+        <span key={i} className="h-[5px] w-[5px] animate-blink rounded-full bg-current" style={{ animationDelay: i * 0.18 + 's' }} />
+      ))}
+    </span>
+  );
+}
+
+/** What each inbox row shows at time t. */
+function rowState(th, p, t) {
+  const you = 'You: ' + p.question;
+  if (th.key === 'north') {
+    if (t >= R.back) return { order: 2, time: '9:49 PM', preview: p.booked, done: true };
+    if (t >= R.reply) return { order: 1, time: '9:47 PM', preview: p.replied, unread: t < R.open };
+    if (t >= R.typing) return { order: 0, time: '9:47 PM', typing: true };
+    return { order: 0, time: '9:47 PM', preview: you };
+  }
+  if (th.key === 'dana') {
+    if (t >= R.answer) return { order: 4, time: '8:14 AM', preview: 'You: ' + p.answer };
+    if (t >= R.late) return { order: 3, time: '8:12 AM', preview: p.late, unread: true };
+    return { order: 0.1, time: '9:47 PM', preview: you };
+  }
+  return { order: 0.2, time: '9:47 PM', preview: you, meta: t >= R.morning ? p.read : null };
+}
+
+function Inbox({ p, t, reduce }) {
+  const rows = p.threads
+    .filter((th) => t >= R.rows[th.key])
+    .map((th) => ({ th, st: rowState(th, p, t) }))
+    .sort((a, b) => b.st.order - a.st.order);
+  return (
+    <div className="px-4 pt-2">
+      <p className="text-[26px] font-medium tracking-[-0.02em] text-ink">{p.title}</p>
+      <ul className="mt-3">
+        <AnimatePresence initial={false}>
+          {rows.map(({ th, st }) => (
+            <motion.li
+              key={th.key}
+              layout={!reduce}
+              initial={reduce ? false : { opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, ease: EASE }}
+              className="relative flex gap-3 border-b border-ink/[0.07] py-3 pl-3"
+            >
+              {st.unread ? <span className="absolute left-0 top-[22px] h-2 w-2 rounded-full bg-[#0A84FF]" aria-label="unread" /> : null}
+              <span
+                className={cn(
+                  'flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-[13px] font-medium',
+                  th.aurora ? 'bg-ink text-white' : 'bg-[linear-gradient(140deg,#E9E4DA,#D9D2C4)] text-ink/70'
+                )}
+              >
+                {th.aurora ? <img src="/brand/aurora-symbol-color.svg" alt="" width="20" height="20" className="h-5 w-5" /> : th.initials}
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="flex items-baseline justify-between gap-2">
+                  <span className="truncate text-[14.5px] font-medium text-ink">{th.name}</span>
+                  <span className="shrink-0 text-[12px] text-slate">{st.time}</span>
+                </span>
+                {th.aurora ? <span className="block text-[11px] font-medium text-[#B4471A]">{p.auroraTag}</span> : null}
+                <span className="mt-0.5 block text-[13px] leading-snug text-graphite">
+                  {st.typing ? (
+                    <Dots className="text-ink/40" />
+                  ) : st.done ? (
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-[#E4F4E8] px-2 py-0.5 text-[12px] font-medium text-[#2E7A48]">
+                      <Check className="h-3.5 w-3.5" strokeWidth={2.6} aria-hidden="true" />
+                      {st.preview}
+                    </span>
+                  ) : (
+                    <span className="line-clamp-2">{st.preview}</span>
+                  )}
+                </span>
+                {st.meta ? <span className="mt-1 block text-[11.5px] text-ink/40">{st.meta}</span> : null}
+              </span>
+            </motion.li>
+          ))}
+        </AnimatePresence>
+      </ul>
+    </div>
+  );
+}
+
+function Thread({ p, t, reduce }) {
+  const th = p.threads.find((x) => x.aurora);
+  const shown = p.chat.filter((m, i) => t >= R.open + 0 && (i < 2 || t >= R.chat[i]));
+  const typing = R.typingIn.some((at, i) => at !== null && t >= at && t < R.chat[i]);
+  return (
+    <div className="flex h-full flex-col">
+      <div className="flex items-center gap-2.5 border-b border-ink/[0.07] px-3 pb-2.5 pt-1">
+        <ChevronLeft className="h-5 w-5 text-[#0A84FF]" strokeWidth={2.2} aria-hidden="true" />
+        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-ink">
+          <img src="/brand/aurora-symbol-color.svg" alt="" width="16" height="16" className="h-4 w-4" />
+        </span>
+        <span className="min-w-0">
+          <span className="block truncate text-[13.5px] font-medium leading-tight text-ink">{th.name}</span>
+          <span className="block text-[11px] font-medium text-[#B4471A]">{p.auroraTag}</span>
+        </span>
+      </div>
+      <div className="flex min-h-0 flex-1 flex-col justify-end gap-1.5 overflow-hidden px-3 pb-3 [mask-image:linear-gradient(to_bottom,transparent,#000_14%)]">
+        <AnimatePresence initial={false}>
+          {shown.map((m, i) => {
+            const mine = m.who === 'buyer';
+            return (
+              <motion.div
+                key={i}
+                layout={!reduce}
+                initial={reduce ? false : { opacity: 0, y: 10, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.4, ease: EASE }}
+                className={cn('flex', mine ? 'justify-end' : 'justify-start')}
+              >
+                <span
+                  className={cn(
+                    'max-w-[82%] px-3 py-2 text-[13.5px] leading-[1.4]',
+                    mine ? 'rounded-[18px] rounded-br-[6px] bg-[#0A84FF] text-white' : 'rounded-[18px] rounded-bl-[6px] bg-[#ECEAE5] text-ink'
+                  )}
+                >
+                  {m.booked ? (
+                    <span className="mb-1.5 flex items-center gap-2 rounded-[12px] bg-white px-2.5 py-2">
+                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#2E9A58] text-white">
+                        <CalendarCheck className="h-3.5 w-3.5" strokeWidth={2.2} aria-hidden="true" />
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block text-[12.5px] font-medium leading-tight text-ink">{m.booked.title}</span>
+                        <span className="block text-[11.5px] leading-tight text-graphite">{m.booked.detail}</span>
+                      </span>
+                    </span>
+                  ) : null}
+                  {m.text}
+                </span>
+              </motion.div>
+            );
+          })}
+          {typing ? (
+            <motion.div key="typing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 0.1 } }} className="flex">
+              <span className="rounded-[18px] rounded-bl-[6px] bg-[#ECEAE5] px-3.5 py-3 text-ink/45">
+                <Dots />
+              </span>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+}
+
+/** The buyer's phone: the inbox, Aurora's thread opening over it, then the inbox the next morning. */
+function BuyerPhone({ p, t, reduce }) {
+  const open = t >= R.open && t < R.back;
+  const clock = t >= R.answer ? '8:14' : t >= R.morning ? '8:12' : t >= R.open + 2500 ? '9:48' : '9:47';
+  return (
+    <div className="relative mx-auto h-[540px] w-full max-w-[320px] rounded-[46px] bg-ink p-[9px] shadow-[0_40px_80px_-40px_rgba(60,35,10,0.55)] sm:h-[600px]">
+      <div className="relative h-full overflow-hidden rounded-[38px] bg-[#FBFAF7]">
+        <div className="flex items-center justify-between px-7 pb-1 pt-3 text-[13px] font-medium text-ink">
+          <span className="tabular-nums">{clock}</span>
+          <span className="absolute left-1/2 top-2.5 h-[22px] w-[86px] -translate-x-1/2 rounded-full bg-ink" aria-hidden="true" />
+          <span className="flex items-center gap-1" aria-hidden="true">
+            <span className="h-2 w-3 rounded-[2px] bg-ink/80" />
+            <span className="h-2.5 w-5 rounded-[3px] border border-ink/50 p-[1.5px]">
+              <span className="block h-full w-3/4 rounded-[1px] bg-ink/80" />
+            </span>
+          </span>
+        </div>
+        <div className="relative h-[calc(100%-36px)]">
+          <motion.div
+            className="absolute inset-0"
+            animate={{ x: open ? '-28%' : '0%', opacity: open ? 0.4 : 1 }}
+            transition={{ duration: reduce ? 0 : 0.45, ease: EASE }}
+          >
+            <Inbox p={p} t={t} reduce={reduce} />
+          </motion.div>
+          <motion.div
+            className="absolute inset-0 bg-[#FBFAF7] shadow-[-12px_0_24px_-16px_rgba(10,15,14,0.25)]"
+            initial={false}
+            animate={{ x: open ? '0%' : '102%' }}
+            transition={{ duration: reduce ? 0 : 0.45, ease: EASE }}
+            aria-hidden={!open}
+          >
+            <Thread p={p} t={t} reduce={reduce} />
+          </motion.div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** Speed to lead: one buyer texts three agents about the same house. Whoever answers first gets the showing. */
 export function RxRace({ it }) {
   const r = it.v3.race;
+  const ref = useRef(null);
   const reduce = !!useReducedMotion();
+  const inView = useInViewport(ref, { threshold: 0.35 });
+  const visible = usePageVisible();
+  const t = useLoop(R.end, { active: inView && visible, still: reduce });
+  const step = lastIndex(R.stepAt.map((at) => ({ at })), t);
+
   return (
     <section id="race" data-nav-theme="light" aria-labelledby="rx-race-title" className="section relative">
       <div className="shell">
         <SectionHeader id="rx-race-title" eyebrow={r.eyebrow} titleA={r.titleA} titleB={r.titleB} text={r.text} layout="split" />
-        <div className="mt-8 grid gap-3 md:mt-14 md:grid-cols-2 md:gap-5">
-          {r.lanes.map((lane) => {
-            const fast = lane.key === 'aurora';
-            const gap = fast ? 0.35 : 0.9;
-            return (
-              <motion.div
-                key={lane.key}
-                initial={reduce ? false : 'off'}
-                whileInView="on"
-                viewport={{ once: true, amount: 0.4 }}
-                className={cn(
-                  'relative overflow-hidden rounded-[24px] p-5 md:p-7',
-                  fast ? 'bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_24px_48px_-32px_rgba(90,50,20,0.35)]' : 'bg-ink/[0.035] shadow-[0_0_0_1px_rgba(10,15,14,0.05)]'
-                )}
-              >
-                {fast ? (
-                  <div aria-hidden="true" className="pointer-events-none absolute right-[-10%] top-[-30%] h-[70%] w-[60%] rounded-full bg-[radial-gradient(closest-side,rgba(255,159,69,0.28),rgba(255,159,69,0))] blur-2xl" />
-                ) : null}
-                <p className={cn('relative flex w-fit items-center gap-2 rounded-full px-3 py-1 text-[12px] font-medium', fast ? 'bg-ink text-white' : 'bg-white text-ink/60 shadow-[0_0_0_1px_rgba(10,15,14,0.08)]')}>
-                  {fast ? <img src="/brand/aurora-symbol-color.svg" alt="" width="14" height="14" className="h-3.5 w-3.5" /> : null}
-                  {lane.label}
-                </p>
-                <ol className="relative mt-5 grid gap-4">
-                  {/* the thread that joins the steps, drawn as they appear */}
-                  <motion.span
-                    aria-hidden="true"
-                    variants={{ off: { scaleY: 0 }, on: { scaleY: 1, transition: { duration: gap * 3 + 0.4, ease: 'linear' } } }}
-                    className={cn('absolute bottom-3 left-[5px] top-3 w-px origin-top', fast ? 'bg-[#F25C2A]/50' : 'border-l border-dashed border-ink/25')}
-                  />
-                  {lane.steps.map((s, i) => {
-                    const lastBad = !fast && i === lane.steps.length - 1;
-                    const lastGood = fast && i === lane.steps.length - 1;
-                    return (
-                      <motion.li
-                        key={s.text}
-                        variants={{ off: { opacity: 0, x: -6 }, on: { opacity: 1, x: 0, transition: { delay: i * gap, duration: 0.5, ease: EASE } } }}
-                        className="relative grid grid-cols-[11px_1fr] items-start gap-3"
-                      >
-                        <span
-                          className={cn(
-                            'mt-[5px] h-[11px] w-[11px] rounded-full ring-4',
-                            fast ? 'bg-[#F25C2A] ring-white' : 'bg-ink/30 ring-[#EFEEEA]',
-                            lastGood && 'bg-[#2E9A58]',
-                            lastBad && 'bg-[#C44B2B]'
-                          )}
-                        />
-                        <span>
-                          <span className={cn('t-data block text-[11.5px]', fast ? 'text-[#B4471A]' : 'text-ink/45')}>{s.time}</span>
-                          <span className={cn('block text-[15px] leading-snug', lastBad ? 'text-[#A33E22]' : fast ? 'text-ink' : 'text-ink/70', (lastGood || lastBad) && 'font-medium')}>{s.text}</span>
-                        </span>
-                      </motion.li>
-                    );
-                  })}
-                </ol>
-              </motion.div>
-            );
-          })}
+        <div
+          ref={ref}
+          className="canvas canvas-grain relative mt-8 grid gap-6 overflow-hidden bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] p-4 xs:p-5 md:mt-14 md:p-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:items-center lg:gap-12 lg:p-12"
+        >
+          <div aria-hidden="true" className="pointer-events-none absolute right-[6%] top-[-10%] h-[70%] w-[45%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.45),rgba(255,200,87,0))] blur-2xl" />
+
+          {/* the story: a list on desktop, a progress bar and the current step on phones */}
+          <div className="relative">
+            <ol className="hidden gap-1 lg:grid">
+              {r.steps.map((s, i) => (
+                <li key={s.title} className={cn('flex gap-4 rounded-[18px] p-4 transition-colors duration-500', i === step ? 'bg-white/80 shadow-[0_0_0_1px_rgba(10,15,14,0.05)]' : 'bg-transparent')}>
+                  <span className={cn('t-data mt-1 w-[54px] shrink-0 text-[11.5px] transition-colors duration-500', i === step ? 'text-[#B4471A]' : 'text-ink/40')}>{s.time}</span>
+                  <span>
+                    <span className={cn('block text-[16px] font-medium tracking-[-0.01em] transition-colors duration-500', i === step ? 'text-ink' : 'text-ink/50')}>{s.title}</span>
+                    <span className={cn('mt-0.5 block text-[14px] leading-snug transition-colors duration-500', i === step ? 'text-graphite' : 'text-ink/35')}>{s.text}</span>
+                  </span>
+                </li>
+              ))}
+            </ol>
+            <div className="lg:hidden">
+              <div className="flex gap-1.5" aria-hidden="true">
+                {r.steps.map((s, i) => (
+                  <span key={s.title} className={cn('h-1 flex-1 rounded-full transition-colors duration-500', i <= step ? 'bg-ink' : 'bg-ink/10')} />
+                ))}
+              </div>
+              <p className="mt-3 text-[16px] font-medium tracking-[-0.01em] text-ink">
+                <span className="t-data mr-2 text-[12px] text-[#B4471A]">{r.steps[step].time}</span>
+                {r.steps[step].title}
+              </p>
+              <p className="mt-0.5 min-h-[2.6em] text-[14px] leading-snug text-graphite">{r.steps[step].text}</p>
+            </div>
+          </div>
+
+          <div className="relative">
+            <BuyerPhone p={r.phone} t={t} reduce={reduce} />
+          </div>
         </div>
         <p className="mt-4 text-[12px] text-slate">{r.note}</p>
       </div>

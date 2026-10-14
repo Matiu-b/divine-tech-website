@@ -89,29 +89,38 @@ export const industries = [
         titleA: 'Leads go to',
         titleB: 'whoever answers first.',
         text: 'Buyers send the same question to several agents. The first one to reply usually gets the showing.',
-        lanes: [
-          {
-            key: 'aurora',
-            label: 'With Aurora',
-            steps: [
-              { time: '9:47 pm', text: 'New lead from a portal' },
-              { time: '9:47 pm', text: 'Aurora replies' },
-              { time: '9:52 pm', text: 'Budget, timing and area qualified' },
-              { time: '9:55 pm', text: 'Showing booked for Saturday' },
-            ],
-          },
-          {
-            key: 'without',
-            label: 'Without Aurora',
-            steps: [
-              { time: '9:47 pm', text: 'New lead from a portal' },
-              { time: 'Overnight', text: 'Waiting for someone to see it' },
-              { time: '8:30 am', text: 'An agent replies' },
-              { time: '8:31 am', text: 'Already booked with another agent' },
-            ],
-          },
+        // One buyer, one question, three agents: seen on the buyer's own phone. Times and names are illustrative.
+        steps: [
+          { time: '9:47 pm', title: 'One question, three agents', text: 'A buyer asks three agents about the same listing.' },
+          { time: '9:47 pm', title: 'Aurora answers in seconds', text: 'The brokerage with Aurora replies before he puts the phone down.' },
+          { time: '9:49 pm', title: 'The showing is booked', text: 'Two questions, two time slots, one booking with the listing agent.' },
+          { time: '8:12 am', title: 'The others reply. Too late.', text: 'By morning, the buyer already has a showing with someone else.' },
         ],
-        note: 'An illustrative evening, not measured data.',
+        phone: {
+          title: 'Messages',
+          question: 'Hi! Is the house on Maple Street still available?',
+          threads: [
+            { key: 'north', name: 'Northside Realty', initials: 'N', aurora: true },
+            { key: 'dana', name: 'Dana Reyes', initials: 'DR' },
+            { key: 'mike', name: 'Mike Torres', initials: 'MT' },
+          ],
+          // the thread with the brokerage that runs Aurora
+          chat: [
+            { who: 'buyer', text: 'Hi! Is the house on Maple Street still available?' },
+            { who: 'aurora', text: "Hi! Yes, it is. It listed on Monday. Are you working with an agent yet?" },
+            { who: 'buyer', text: "Not yet. We're pre-approved." },
+            { who: 'aurora', text: 'Great. Jess, the listing agent, can show it Saturday at 11 or Sunday at 2. Which works?' },
+            { who: 'buyer', text: 'Saturday at 11' },
+            { who: 'aurora', booked: { title: 'Showing booked', detail: 'Sat 11:00 am · with Jess' }, text: "I'll text you the address now." },
+          ],
+          auroraTag: 'Aurora · AI agent',
+          replied: 'Hi! Yes, it is. It listed on Monday…',
+          booked: 'Showing booked · Sat 11:00 am',
+          read: 'Read 10:31 PM',
+          late: 'Good morning! Are you still looking?',
+          answer: 'Thanks, we already booked a showing.',
+        },
+        note: 'An example evening. Names, times and messages are illustrative.',
       },
       rules: {
         eyebrow: 'Your rules',
