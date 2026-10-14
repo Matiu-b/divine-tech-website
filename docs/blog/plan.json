@@ -24,7 +24,8 @@
   ],
   "queue": [
     {
-      "status": "queued",
+      "status": "in_review",
+      "slug": "prepare-your-business-for-ai-agents",
       "cluster": "trends",
       "type": "trend",
       "topic": "When your customer's AI agent calls your business: getting ready for agent-to-agent service",

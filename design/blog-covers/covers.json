@@ -1,5 +1,6 @@
 [
   { "slug": "ai-for-real-estate-lead-follow-up", "title": "The brokerage, on autopilot", "tone": "dark" },
   { "slug": "ai-receptionist-for-clinics", "title": "The front desk that never sleeps", "tone": "light" },
-  { "slug": "ai-answering-service-for-contractors", "title": "Dispatch, without the dispatcher", "tone": "dark" }
+  { "slug": "ai-answering-service-for-contractors", "title": "Dispatch, without the dispatcher", "tone": "dark" },
+  { "slug": "prepare-your-business-for-ai-agents", "title": "When the caller is an agent", "tone": "dark", "bg_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_092104_21527870-d14c-4409-9d75-409f8ded97cf.png", "palette": ["#2A0F3D", "#B8F23A", "#FF6F5E", "#7FE3F0"] }
 ]
