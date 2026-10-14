@@ -85,10 +85,14 @@ def audio(src, out):
             from faster_whisper import WhisperModel
         except ImportError:
             return
-        model = WhisperModel('small.en', device='cpu', compute_type='int8')
-        parts, _ = model.transcribe(mp3, word_timestamps=True, beam_size=5, vad_filter=False)
-        found = [{'w': w.word.strip(), 's': round(w.start, 2), 'e': round(w.end, 2)} for p in parts for w in p.words]
-        json.dump(found, open(words, 'w'), indent=0)
+        try:
+            model = WhisperModel('small.en', device='cpu', compute_type='int8')
+            parts, _ = model.transcribe(mp3, word_timestamps=True, beam_size=5, vad_filter=False)
+            found = [{'w': w.word.strip(), 's': round(w.start, 2), 'e': round(w.end, 2)} for p in parts for w in p.words]
+            json.dump(found, open(words, 'w'), indent=0)
+        except Exception:  # timing is a nice-to-have: keep the audio and leave a note for whoever reads the branch
+            import traceback
+            open(os.path.join(ROOT, 'design/media/last-error.txt'), 'w').write(traceback.format_exc())
 
 
 def audio_done(out):
@@ -114,8 +118,13 @@ def main():
                 continue
             src = os.path.join(tmp, f'src{i}' + os.path.splitext(item['url'])[1])
             print('fetching', item['url'], flush=True)
-            download(item['url'], src)
-            HANDLERS[item['kind']](src, out)
+            try:
+                download(item['url'], src)
+                HANDLERS[item['kind']](src, out)
+            except Exception:
+                import traceback
+                open(os.path.join(ROOT, 'design/media/last-error.txt'), 'a').write(item['out'] + '\n' + traceback.format_exc())
+                continue
             print('wrote', item['out'], flush=True)
 
 
