@@ -583,6 +583,36 @@ export const platformPage = {
       { name: 'Knowledge', examples: 'Docs, website, price book' },
     ],
   },
+  // KPI Agent: measures every agent against the business's KPIs and improves it; bigger changes need approval.
+  // The board is illustrative: metric names only, no figures (no performance numbers until verified).
+  kpi: {
+    eyebrow: 'Patented KPI Agent',
+    badge: 'Patented KPI Agent',
+    titleA: 'Every agent measured.',
+    titleB: 'Every week a little better.',
+    text: 'The KPI Agent tracks every Aurora agent against the numbers your business runs on, spots what is slipping and improves how the agent works. Bigger changes wait for your approval.',
+    points: [
+      { title: 'Your KPIs, not ours', text: 'Speed to lead, meetings booked, resolution rate: each agent is measured on the goals you set for its team.' },
+      { title: 'Finds the cause, not just the drop', text: 'When a number slips, it looks at the conversations behind it and works out what to change.' },
+      { title: 'Every change on record', text: 'Small fixes go live within your rules. Bigger ones go to the right person first, and every change is logged.' },
+    ],
+    board: {
+      title: 'KPI Agent · Sales agent',
+      rows: [
+        { name: 'Speed to lead', state: 'on', fill: 0.86 },
+        { name: 'Meetings booked', state: 'on', fill: 0.78 },
+        { name: 'Follow-up replies', state: 'slipping', fill: 0.52 },
+      ],
+      target: 0.7,
+      change: {
+        tag: 'Suggested change',
+        what: 'Send the second follow-up by text, not email',
+        why: 'Follow-up replies are below your target',
+        who: 'Waiting for approval · Sales lead',
+      },
+    },
+    note: 'Illustrative example. Metric names and the change are examples.',
+  },
   security: {
     eyebrow: 'Security and trust',
     titleA: 'Autonomy you set.',
@@ -636,6 +666,7 @@ export const platformPage = {
     ['What happens when a customer switches channels?', 'The conversation stays one conversation. A request that starts in web chat and continues by phone or email keeps its full history, so neither Aurora nor your team asks the customer to repeat themselves.'],
     ['How does Aurora decide what it can do on its own?', 'You set the rules. Each action is allowed, needs approval or is never allowed, with limits such as refund or discount amounts. When a request crosses a limit, Aurora asks the right person and continues once they decide.'],
     ['Can my team take over a conversation?', 'Yes. Anyone with access can step into a conversation at any moment. Aurora hands off with the full history and picks up again when your team is done.'],
+    ['What does the KPI Agent do?', 'The KPI Agent measures every Aurora agent against the KPIs you set for its team, such as speed to lead or resolution rate. When a number slips, it finds the cause in the conversations behind it and improves how the agent works. Small fixes stay within your rules, bigger changes wait for approval from the right person, and every change is recorded.'],
     ['Is our data used to train AI models?', 'No. Your data is never used to train shared models. Access is set per role and every action is recorded in the audit log.'],
   ],
 };
