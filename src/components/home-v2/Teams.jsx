@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useReducedMotion } from 'framer-motion';
-import { TrendingUp } from 'lucide-react';
+import { Check, TrendingUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { teams } from '@/data/site';
-import LiquidGlass from './primitives/LiquidGlass';
 import SectionHeader from './primitives/SectionHeader';
 import { Reveal } from './primitives/MotionReveal';
 import { EVENT_ICONS } from './eventIcons';
@@ -12,13 +11,143 @@ import { useInViewport, usePageVisible } from './hooks';
 const ADVANCE_MS = 5000;
 const GAP = 12;
 
+// Card colours: Aurora's warm range, one per team, in the spirit of a bento grid.
+const TONE = {
+  sales: {
+    bg: 'linear-gradient(155deg,#E2461B 0%,#F2672E 48%,#FF9F45 100%)',
+    glow: 'radial-gradient(60% 50% at 85% 0%,rgba(255,214,150,0.55),rgba(255,214,150,0) 70%)',
+    head: 'text-white',
+    sub: 'text-white/70',
+    out: 'bg-ink text-white',
+  },
+  service: {
+    bg: 'linear-gradient(155deg,#FFAA3B 0%,#FFC857 52%,#FFE3A8 100%)',
+    glow: 'radial-gradient(60% 50% at 15% 0%,rgba(255,255,255,0.55),rgba(255,255,255,0) 70%)',
+    head: 'text-ink',
+    sub: 'text-ink/60',
+    out: 'bg-ink text-white',
+  },
+  internal: {
+    bg: 'linear-gradient(155deg,#15100D 0%,#2B1A12 55%,#6E3016 100%)',
+    glow: 'radial-gradient(55% 45% at 90% 100%,rgba(242,92,42,0.45),rgba(242,92,42,0) 70%)',
+    head: 'text-white',
+    sub: 'text-white/60',
+    out: 'bg-[#F25C2A] text-white',
+  },
+};
+
+const STEP_MS = 1400;
+const HOLD_MS = 3800;
+
 /**
- * One team, one agent. The photo and its glass status chip share a canvas, so
- * the card can reveal as a whole without the glass losing its backdrop.
+ * Plays a card's steps one by one, holds, and starts again while the card is on screen.
+ * The prerendered HTML shows every step; after hydration the card waits empty until it is seen.
+ */
+function useLoop(n, active, still, offset) {
+  const [shown, setShown] = useState(n);
+  useEffect(() => {
+    if (!still) setShown(0);
+  }, [still]);
+  useEffect(() => {
+    if (still || !active) return undefined;
+    let timers = [];
+    const run = (lead) => {
+      timers = [];
+      setShown(0);
+      for (let k = 1; k <= n; k += 1) timers.push(window.setTimeout(() => setShown(k), lead + 450 + (k - 1) * STEP_MS));
+      timers.push(window.setTimeout(() => run(0), lead + 450 + (n - 1) * STEP_MS + HOLD_MS));
+    };
+    run(offset);
+    return () => timers.forEach((id) => window.clearTimeout(id));
+  }, [active, still, n, offset]);
+  return still ? n : shown;
+}
+
+/** One step of a card's scene: a message, Aurora's reply, its checks, an approval or the result. */
+function Step({ s, tone, on }) {
+  const Icon = s.icon ? EVENT_ICONS[s.icon] : null;
+  const motion = cn('transition-[opacity,transform] duration-500 ease-out', on ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0');
+  if (s.kind === 'in') {
+    return <p className={cn(motion, 'w-fit max-w-[84%] rounded-[16px] rounded-bl-[6px] bg-white px-3.5 py-2 text-[12.5px] leading-snug text-ink shadow-[0_8px_20px_-12px_rgba(40,20,10,0.45)]')}>{s.text}</p>;
+  }
+  if (s.kind === 'out') {
+    return <p className={cn(motion, 'ml-auto w-fit max-w-[84%] rounded-[16px] rounded-br-[6px] px-3.5 py-2 text-[12.5px] leading-snug', tone.out)}>{s.text}</p>;
+  }
+  if (s.kind === 'work') {
+    return (
+      <ul className={cn(motion, 'ml-auto grid w-fit gap-1 rounded-[14px] bg-white/90 px-3 py-2 text-[12px] text-ink shadow-[0_8px_20px_-12px_rgba(40,20,10,0.45)]')}>
+        {s.items.map((x) => (
+          <li key={x} className="flex items-center gap-2">
+            <Check className="h-3.5 w-3.5 text-[#2E9A58]" strokeWidth={2.4} aria-hidden="true" />
+            {x}
+          </li>
+        ))}
+      </ul>
+    );
+  }
+  if (s.kind === 'approve') {
+    return (
+      <div className={cn(motion, 'rounded-[16px] bg-white p-3 shadow-[0_10px_24px_-14px_rgba(40,20,10,0.5)]')}>
+        <p className="text-[12.5px] font-medium text-ink">{s.title}</p>
+        <p className="mt-0.5 text-[11px] text-slate">{s.who}</p>
+        <div className="mt-2 flex gap-1.5">
+          <span className="flex h-7 flex-1 items-center justify-center rounded-full bg-ink text-[11.5px] font-medium text-white">Approve</span>
+          <span className="flex h-7 flex-1 items-center justify-center rounded-full text-[11.5px] font-medium text-ink shadow-[0_0_0_1px_rgba(10,15,14,0.12)]">Decline</span>
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div className={cn(motion, 'flex items-center gap-3 rounded-[16px] bg-white p-3 shadow-[0_12px_28px_-14px_rgba(40,20,10,0.55)]')}>
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[11px] bg-[#FFF1E6] text-[#D9481C]">
+        {Icon ? <Icon className="h-[17px] w-[17px]" strokeWidth={1.8} aria-hidden="true" /> : null}
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block truncate text-[13px] font-medium text-ink">{s.title}</span>
+        <span className="block truncate text-[11.5px] text-slate">{s.detail}</span>
+      </span>
+      <Check className="h-4 w-4 shrink-0 text-[#2E9A58]" strokeWidth={2.4} aria-hidden="true" />
+    </div>
+  );
+}
+
+/** The card's visual: a coloured panel where the agent finishes one task, on a loop. */
+function Scene({ t, i }) {
+  const ref = useRef(null);
+  const reduce = useReducedMotion();
+  const inView = useInViewport(ref, { threshold: 0.35 });
+  const visible = usePageVisible();
+  const steps = t.scene.steps;
+  const shown = useLoop(steps.length, inView && visible, !!reduce, i * 500);
+  const tone = TONE[t.key] || TONE.sales;
+  return (
+    <div
+      ref={ref}
+      aria-hidden="true"
+      className="canvas-grain relative aspect-[4/5] overflow-hidden rounded-[28px] sm:aspect-[5/6] lg:aspect-[4/5]"
+      style={{ backgroundImage: tone.glow + ',' + tone.bg }}
+    >
+      <div className="absolute inset-x-5 top-5 flex items-center justify-between gap-3">
+        <span className={cn('flex items-center gap-2 text-[13px] font-medium', tone.head)}>
+          <img src="/brand/aurora-symbol-color.svg" alt="" width="20" height="20" className="h-5 w-5 rounded-full bg-white p-[3px]" />
+          {t.agent}
+        </span>
+        <span className={cn('text-[11.5px]', tone.sub)}>{t.scene.channel}</span>
+      </div>
+      <div className="absolute inset-x-5 bottom-5 flex flex-col gap-2">
+        {steps.map((s, k) => (
+          <Step key={k} s={s} tone={tone} on={k < shown} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * One team, one agent: a coloured scene of the agent at work, then what the team gets.
  * @param {any} props
  */
 function TeamCard({ t, i, n }) {
-  const Icon = EVENT_ICONS[t.chip.icon];
   return (
     <Reveal
       delay={i * 0.08}
@@ -27,32 +156,12 @@ function TeamCard({ t, i, n }) {
       aria-roledescription="slide"
       aria-label={`${i + 1} of ${n}: ${t.label}`}
     >
-      <div className="canvas relative aspect-[4/3] bg-cover bg-center" style={t.photo.lqip ? { backgroundImage: 'url(' + t.photo.lqip + ')' } : undefined}>
-        <img
-          src={t.photo.src}
-          srcSet={t.photo.srcSet}
-          sizes="(min-width: 1440px) 420px, (min-width: 1024px) 31vw, calc(100vw - 32px)"
-          alt={t.photo.alt}
-          loading="lazy"
-          decoding="async"
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-        <LiquidGlass className="absolute inset-x-3 bottom-3 flex items-center gap-3 rounded-[16px] px-3 py-2.5 xs:inset-x-4 xs:bottom-4">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[11px] bg-white/85 text-ink shadow-[0_1px_2px_rgba(10,15,14,0.08)]">
-            {Icon ? <Icon className="h-[17px] w-[17px]" strokeWidth={1.7} aria-hidden="true" /> : null}
-          </span>
-          <span className="min-w-0 flex-1">
-            <span className="block truncate text-[11px] font-medium text-slate">{t.agent}</span>
-            <span className="block truncate text-[13px] font-medium leading-tight tracking-[-0.01em] text-ink">{t.chip.title}</span>
-          </span>
-          <span className="shrink-0 text-[11.5px] text-graphite lg:hidden xl:inline">{t.chip.detail}</span>
-        </LiquidGlass>
-      </div>
+      <Scene t={t} i={i} />
 
       <div className="flex flex-1 flex-col pt-6 md:pt-7">
         <p className="eyebrow">{t.label}</p>
         <h3 className="t-h3 balance mt-3">{t.title}</h3>
-        <p className="mt-3 max-w-[35.72em] text-[15px] leading-relaxed text-graphite">{t.line}</p>
+        <p className="mt-3 max-w-[40ch] text-[15px] leading-relaxed text-graphite">{t.line}</p>
         <p className="mt-5 text-[12px] font-medium text-slate">What it moves</p>
         <ul className="mt-2 grid gap-1.5" aria-label="What it moves">
           {t.kpis.map((k) => (
