@@ -502,6 +502,8 @@ export const teams = {
           { kind: 'card', icon: 'calendar', title: 'Meeting booked', detail: 'Thu 11:00 · with Dana' },
         ],
       },
+      // Preview: images served from Higgsfield until they are copied into /public.
+      sketch: { src: 'https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_090642_b271fce4-3e2e-4b00-aa5a-3795571a6bf2.png', bg: '#F2672E', alt: 'A sales executive walking and reading a message on her phone against an orange studio wall' },
       photo: {
         src: PHOTOS + 'team-sales2-960.webp',
         srcSet: srcSet('team-sales2', [640, 960, 1440]),
@@ -525,6 +527,8 @@ export const teams = {
           { kind: 'card', icon: 'service', title: 'Request resolved', detail: 'No handoff needed' },
         ],
       },
+      // Preview: images served from Higgsfield until they are copied into /public.
+      sketch: { src: 'https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_090642_9c0c57c6-ed61-4323-bb3c-657a3a07a443.png', bg: '#FFC857', alt: 'A support specialist with a headset laughing mid-conversation against a honey-yellow studio wall' },
       photo: {
         src: PHOTOS + 'team-service2-960.webp',
         srcSet: srcSet('team-service2', [640, 960, 1440]),
@@ -548,6 +552,8 @@ export const teams = {
           { kind: 'card', icon: 'approval', title: 'Invoice approved', detail: 'Sent to Finance' },
         ],
       },
+      // Preview: images served from Higgsfield until they are copied into /public.
+      sketch: { src: 'https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_090643_94229636-c0df-4d38-98ea-a084779d1916.png', bg: '#1B120D', alt: 'Two operations colleagues reviewing a tablet against a dark wall lit by an orange glow' },
       photo: {
         src: PHOTOS + 'team-internal2-960.webp',
         srcSet: srcSet('team-internal2', [640, 960, 1440]),
