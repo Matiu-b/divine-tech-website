@@ -31,7 +31,56 @@ export const industries = [
         titleA: 'The AI ISA for',
         titleB: 'real estate brokerages.',
         text: 'Aurora answers every lead from portals, ads, calls and texts in seconds, qualifies it, books the showing with the right agent and keeps every deal moving. Your agents just sell.',
-        photo: { src: '/media/real-estate/hero-900.webp', srcSet: '/media/real-estate/hero-600.webp 600w, /media/real-estate/hero-900.webp 900w, /media/real-estate/hero-1200.webp 1200w', alt: 'A young couple outside a craftsman house at golden hour, smiling at a reply on their phone' },
+        // A buyer calls about a listing at night and Aurora takes the call. Recorded in ElevenLabs v4;
+        // `at` / `end` are where each caption starts and ends in the recording (ms), `words` when each
+        // word is spoken, from the start of its caption. Names, prices and times are illustrative.
+        film: {
+          video: '/media/real-estate/hero-call.mp4',
+          poster: '/media/real-estate/hero-call-poster.webp',
+          alt: 'A man on the phone on a quiet street at dusk, looking at a craftsman house with a For Sale sign',
+        },
+        call: {
+          audio: '/media/real-estate/call-c.mp3',
+          duration: 62100,
+          title: 'Inbound call · 9:47 pm',
+          listing: 'Maple Street listing',
+          caller: 'Buyer',
+          waiting: 'Aurora notes what she learns here',
+          listen: 'Listen to the call',
+          mute: 'Mute',
+          stages: [
+            { label: 'Greet', at: 0 },
+            { label: 'Qualify', at: 16580 },
+            { label: 'Guide', at: 36560 },
+            { label: 'Book', at: 51860 },
+          ],
+          // what Aurora records while she talks, shown as it happens
+          notes: [
+            { at: 34200, title: 'Pre-approved', detail: 'Up to $550K' },
+            { at: 53500, title: 'Showing booked', detail: 'Sat 11:00 am · with Jess' },
+            { at: 58200, title: 'Text sent', detail: 'Address and agent contact' },
+          ],
+          captions: [
+            { who: 'aurora', at: 0, end: 3140, text: "Hi! Thanks for calling about the house on Maple Street.", words: [0, 880, 1220, 1440, 1680, 1980, 2100, 2320, 2520, 2760] },
+            { who: 'aurora', at: 3500, end: 6860, text: "This is Aurora, the team's AI assistant... how can I help?", words: [0, 80, 260, 900, 960, 1400, 1700, 2660, 2800, 2940, 3080] },
+            { who: 'buyer', at: 7380, end: 11560, text: "Oh, hi. Yeah, I just drove past it. Is it still available?", words: [0, 200, 1100, 1700, 1960, 2140, 2360, 2700, 3360, 3500, 3620, 3860] },
+            { who: 'aurora', at: 12260, end: 15960, text: "It is! It listed on Monday... and it's getting a lot of interest.", words: [0, 140, 780, 1000, 1200, 1480, 2400, 2560, 2760, 2920, 3100, 3260, 3380] },
+            { who: 'aurora', at: 16580, end: 17380, text: "Is it for you?", words: [0, 240, 340, 520] },
+            { who: 'buyer', at: 17760, end: 23540, text: "Yeah, me and my wife. We've been renting for years, so... we're kind of ready for a yard.", words: [0, 680, 860, 980, 1140, 1920, 2160, 2280, 2520, 2820, 3380, 3740, 4620, 4780, 4940, 5140, 5380, 5560] },
+            { who: 'aurora', at: 23540, end: 30580, text: "Oh, I totally get that. It has a big fenced backyard... and a two-car garage.", words: [0, 740, 940, 1260, 1560, 2480, 2680, 2880, 3180, 3440, 4020, 4620, 5580, 5960, 6480] },
+            { who: 'aurora', at: 31120, end: 32440, text: "Have you talked to a lender yet?", words: [0, 180, 320, 500, 700, 820, 940] },
+            { who: 'buyer', at: 32860, end: 35980, text: "Yeah, we're pre-approved. Up to about five-fifty.", words: [0, 460, 800, 1900, 2020, 2200, 2480] },
+            { who: 'aurora', at: 36560, end: 40160, text: "Perfect, it's listed at five-twenty-five, so you're right in range.", words: [0, 1020, 1240, 1440, 1660, 2140, 2660, 2860, 3120, 3300] },
+            { who: 'aurora', at: 40820, end: 44040, text: "The best next step is to see it before the weekend gets busy.", words: [0, 180, 420, 720, 1020, 1220, 1400, 1640, 1800, 2140, 2320, 2520, 2840] },
+            { who: 'aurora', at: 44660, end: 50080, text: "Jess, the listing agent, has Saturday at eleven... or Sunday at two. Which works better?", words: [0, 280, 320, 600, 1220, 1500, 1880, 2200, 2560, 3300, 3680, 3940, 4520, 4800, 5040] },
+            { who: 'buyer', at: 50460, end: 51860, text: "Saturday at eleven works.", words: [0, 380, 700, 1020] },
+            { who: 'aurora', at: 51860, end: 55220, text: "Done! You're booked with Jess, Saturday at eleven.", words: [0, 1380, 1580, 1760, 1980, 2840, 2840, 3120] },
+            { who: 'aurora', at: 55780, end: 59200, text: "I'll text you the address and her number right now. See you Saturday!", words: [0, 240, 420, 640, 760, 1060, 1380, 1540, 1780, 2080, 2940, 3020, 3140] },
+            { who: 'buyer', at: 59880, end: 61500, text: "Great... thanks, Aurora.", words: [0, 980, 1480] },
+          ],
+          transcriptLabel: 'Read the full call',
+          note: 'An example call. Names, prices and times are illustrative.',
+        },
       },
       race: {
         eyebrow: 'Speed to lead',

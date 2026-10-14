@@ -82,14 +82,10 @@
       "out": "public/media/real-estate/call-c"
     },
     {
-      "kind": "image",
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_124535_c7da2eef-93b9-4f56-a78f-38b9af98d2ea.png",
-      "out": "public/media/real-estate/frame-1"
-    },
-    {
-      "kind": "image",
-      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_124535_ad78f184-9b0f-457e-8467-9700328119ba.png",
-      "out": "public/media/real-estate/frame-2"
+      "kind": "video",
+      "width": 1280,
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_132736_e574e8f1-b3a3-40e9-b13c-ca7c8031c0f7.mp4",
+      "out": "public/media/real-estate/hero-call"
     }
   ]
 }

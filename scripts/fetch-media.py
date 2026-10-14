@@ -1,6 +1,6 @@
 """Download generated media listed in design/media/manifest.json and write web-ready files.
 
-Videos: <out>.mp4 (H.264, 720 px wide, no audio, fast start) and <out>-poster.webp (first frame).
+Videos: <out>.mp4 (H.264, 720 px wide unless the item sets "width", no audio, fast start) and <out>-poster.webp (first frame).
 Images: <out>-600.webp, <out>-900.webp and <out>-1200.webp.
 Audio: <out>.mp3 with the speakers levelled to one loudness (quiet or whispered lines lifted), and
 <out>-segments.json with the start and end of each stretch of speech, and <out>-words.json with
@@ -27,13 +27,13 @@ def download(url, path):
         f.write(r.read())
 
 
-def video(src, out):
+def video(src, out, width=720):
     mp4, poster = out + '.mp4', out + '-poster.webp'
     if not os.path.exists(mp4):
-        run('ffmpeg', '-y', '-i', src, '-an', '-vf', 'scale=720:-2:flags=lanczos,fps=30', '-c:v', 'libx264', '-profile:v', 'high',
+        run('ffmpeg', '-y', '-i', src, '-an', '-vf', f'scale={width}:-2:flags=lanczos,fps=30', '-c:v', 'libx264', '-profile:v', 'high',
             '-pix_fmt', 'yuv420p', '-crf', '26', '-preset', 'slow', '-movflags', '+faststart', mp4)
     if not os.path.exists(poster):
-        run('ffmpeg', '-y', '-i', src, '-frames:v', '1', '-vf', 'scale=720:-2:flags=lanczos', '-quality', '80', poster)
+        run('ffmpeg', '-y', '-i', src, '-frames:v', '1', '-vf', f'scale={width}:-2:flags=lanczos', '-quality', '80', poster)
 
 
 def image(src, out):
@@ -126,7 +126,10 @@ def main():
             print('fetching', item['url'], flush=True)
             try:
                 download(item['url'], src)
-                HANDLERS[item['kind']](src, out)
+                if item['kind'] == 'video' and item.get('width'):
+                    video(src, out, item['width'])
+                else:
+                    HANDLERS[item['kind']](src, out)
             except Exception:
                 import traceback
                 open(os.path.join(ROOT, 'design/media/last-error.txt'), 'a').write(item['out'] + '\n' + traceback.format_exc())
