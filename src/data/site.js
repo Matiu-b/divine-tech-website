@@ -487,11 +487,26 @@ export const teams = {
     {
       key: 'sales',
       label: 'Sales',
-      title: 'Your sales development rep.',
+      title: 'Your SDR.',
       line: 'Answers every lead, qualifies it and books the meeting with the right rep.',
       kpis: ['Speed to lead', 'Meetings booked', 'Conversion rate'],
       agent: 'Sales agent',
       chip: { icon: 'calendar', title: 'Meeting booked', detail: 'Thu 11:00' },
+      // Collage media lives in /public/media/teams (see design/media/manifest.json). Names and times are illustrative.
+      collage: {
+        video: '/media/teams/sales.mp4',
+        poster: '/media/teams/sales-poster.webp',
+        object: { src: '/media/teams/sales-object-900.webp', srcSet: '/media/teams/sales-object-600.webp 600w, /media/teams/sales-object-900.webp 900w, /media/teams/sales-object-1200.webp 1200w', alt: 'A client signing a sales contract with a fountain pen, a folded stack of dollar bills beside the papers' },
+        channel: 'Web chat',
+        messages: [
+          { from: 'in', text: 'Hi, can we see a demo this week?' },
+          { from: 'aurora', text: 'Happy to. How big is the team that would use it?' },
+          { from: 'in', text: 'About 25 people, mostly in sales.' },
+          { from: 'aurora', text: 'Thursday 11:00 or Friday 2:00?', chips: ['Thu 11:00', 'Fri 2:00'] },
+          { from: 'in', text: 'Thursday works.' },
+        ],
+        result: { title: 'Meeting booked', detail: 'Thu 11:00 · with Dana' },
+      },
       photo: {
         src: PHOTOS + 'team-sales2-960.webp',
         srcSet: srcSet('team-sales2', [640, 960, 1440]),
@@ -506,6 +521,20 @@ export const teams = {
       kpis: ['First response time', 'Resolution rate', 'Customer satisfaction'],
       agent: 'Service agent',
       chip: { icon: 'service', title: 'Request resolved', detail: 'Moved to Thu' },
+      collage: {
+        video: '/media/teams/service.mp4',
+        poster: '/media/teams/service-poster.webp',
+        object: { src: '/media/teams/service-object-900.webp', srcSet: '/media/teams/service-object-600.webp 600w, /media/teams/service-object-900.webp 900w, /media/teams/service-object-1200.webp 1200w', alt: 'A delivery box waiting on the doormat of a honey-yellow front door' },
+        channel: 'Email',
+        messages: [
+          { from: 'in', text: 'Can my delivery move to Thursday? Order #4471' },
+          { from: 'aurora', text: 'Sure. Can you confirm the delivery zip code?' },
+          { from: 'in', text: '10013' },
+          { from: 'aurora', text: 'Done. It now arrives Thursday, Oct 16.', checks: ['Order found', 'Carrier slot moved'] },
+          { from: 'in', text: 'Perfect, thank you!' },
+        ],
+        result: { title: 'Request resolved', detail: 'No handoff needed' },
+      },
       photo: {
         src: PHOTOS + 'team-service2-960.webp',
         srcSet: srcSet('team-service2', [640, 960, 1440]),
@@ -520,6 +549,20 @@ export const teams = {
       kpis: ['Cycle time', 'Manual work hours', 'On-time completion'],
       agent: 'Operations agent',
       chip: { icon: 'approval', title: 'Invoice approved', detail: 'To Finance' },
+      collage: {
+        video: '/media/teams/internal.mp4',
+        poster: '/media/teams/internal-poster.webp',
+        object: { src: '/media/teams/internal-object-900.webp', srcSet: '/media/teams/internal-object-600.webp 600w, /media/teams/internal-object-900.webp 900w, /media/teams/internal-object-1200.webp 1200w', alt: 'A printed invoice with a brass approval stamp on a walnut desk' },
+        channel: 'Slack · #finance',
+        messages: [
+          { from: 'in', name: 'Mia', text: 'New invoice INV-2291 from Northwind, $4,800' },
+          { from: 'aurora', text: 'It matches PO-118 and fits the Q4 budget.', checks: ['PO matched', 'Within budget'] },
+          { from: 'aurora', text: 'Dana, approve $4,800?', chips: ['Approve', 'Decline'] },
+          { from: 'in', name: 'Dana', text: 'Approved.' },
+          { from: 'aurora', text: 'Sent to Finance for Friday’s payment run.' },
+        ],
+        result: { title: 'Invoice approved', detail: 'Sent to Finance' },
+      },
       photo: {
         src: PHOTOS + 'team-internal2-960.webp',
         srcSet: srcSet('team-internal2', [640, 960, 1440]),
@@ -583,6 +626,36 @@ export const platformPage = {
       { name: 'Knowledge', examples: 'Docs, website, price book' },
     ],
   },
+  // KPI Agent: measures every agent against the business's KPIs and improves it; bigger changes need approval.
+  // The board is illustrative: metric names only, no figures (no performance numbers until verified).
+  kpi: {
+    eyebrow: 'Patented KPI Agent',
+    badge: 'Patented KPI Agent',
+    titleA: 'Every agent measured.',
+    titleB: 'Every week a little better.',
+    text: 'The KPI Agent tracks every Aurora agent against the numbers your business runs on, spots what is slipping and improves how the agent works. Bigger changes wait for your approval.',
+    // One week of one agent's KPI, told in four steps. Illustrative: no real figures.
+    steps: [
+      { title: 'Measures', text: 'Tracks every agent against the KPIs you set.' },
+      { title: 'Finds the cause', text: 'Reads the conversations behind a drop.' },
+      { title: 'Suggests a fix', text: 'Bigger changes wait for your approval.' },
+      { title: 'Improves', text: 'The number recovers, and the change is logged.' },
+    ],
+    chart: {
+      metric: 'Follow-up replies',
+      agent: 'Sales agent',
+      days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      slipping: 'Below target',
+      recovered: 'Back on target',
+      story: [
+        { tag: 'Measured', text: 'Follow-up replies dropped below your target on Wednesday.' },
+        { tag: 'Cause found', text: 'Leads answer texts, but this week’s follow-ups went out by email.' },
+        { tag: 'Fix suggested', text: 'Send the second follow-up by text.', who: 'Approved by Dana · Sales lead' },
+        { tag: 'Improved', text: 'Replies are back above target. The change is in the log.' },
+      ],
+    },
+    note: 'Illustrative example. Metric names and the change are examples.',
+  },
   security: {
     eyebrow: 'Security and trust',
     titleA: 'Autonomy you set.',
@@ -636,6 +709,7 @@ export const platformPage = {
     ['What happens when a customer switches channels?', 'The conversation stays one conversation. A request that starts in web chat and continues by phone or email keeps its full history, so neither Aurora nor your team asks the customer to repeat themselves.'],
     ['How does Aurora decide what it can do on its own?', 'You set the rules. Each action is allowed, needs approval or is never allowed, with limits such as refund or discount amounts. When a request crosses a limit, Aurora asks the right person and continues once they decide.'],
     ['Can my team take over a conversation?', 'Yes. Anyone with access can step into a conversation at any moment. Aurora hands off with the full history and picks up again when your team is done.'],
+    ['What does the KPI Agent do?', 'The KPI Agent measures every Aurora agent against the KPIs you set for its team, such as speed to lead or resolution rate. When a number slips, it finds the cause in the conversations behind it and improves how the agent works. Small fixes stay within your rules, bigger changes wait for approval from the right person, and every change is recorded.'],
     ['Is our data used to train AI models?', 'No. Your data is never used to train shared models. Access is set per role and every action is recorded in the audit log.'],
   ],
 };

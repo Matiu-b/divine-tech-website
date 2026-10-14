@@ -2,10 +2,11 @@ import React from 'react';
 import { platformPage } from '@/data/site';
 import SiteLayout from '@/components/home-v2/SiteLayout';
 import HeroFilm from '@/components/home-v2/HeroFilm';
-import Teams from '@/components/home-v2/Teams';
+import Teams from '@/components/home-v2/TeamsCollage';
 import FinalCTA from '@/components/home-v2/FinalCTA';
 import Faq from '@/components/home-v2/Faq';
 import PlatformArchitecture from '@/components/home-v2/PlatformArchitecture';
+import PlatformKpi from '@/components/home-v2/PlatformKpi';
 import PlatformSecurity from '@/components/home-v2/PlatformSecurity';
 import ConsoleTour from '@/components/home-v2/ConsoleTour';
 import CTAButton from '@/components/home-v2/primitives/CTAButton';
@@ -65,6 +66,7 @@ export default function PlatformPage() {
       <PlatformHero />
       <ConsoleTour />
       <PlatformArchitecture />
+      <PlatformKpi />
       <PlatformSecurity />
       <Teams />
       <Faq id="platform-faq-title" items={platformPage.faq} title="Questions about the platform." className="pt-0" />

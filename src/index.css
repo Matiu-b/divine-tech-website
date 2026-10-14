@@ -972,3 +972,17 @@
   88% { opacity: 1; }
   100% { top: calc(100% - 6px); opacity: 0; }
 }
+
+/* KPI Agent board: bars grow to their value as the board scrolls into view. Scroll-driven and
+   transform-only, so it costs no JavaScript; browsers without view timelines show the bars still. */
+@keyframes kpi-fill { from { transform: scaleX(0); } }
+.kpi-fill { transform-origin: left center; }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .kpi-fill {
+      animation: kpi-fill linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 40%;
+    }
+  }
+}
