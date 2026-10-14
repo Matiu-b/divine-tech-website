@@ -264,14 +264,14 @@
     {
       "role": "hero",
       "file_name": "prepare-your-business-for-ai-agents-1600.webp",
-      "alt": "Soft teal light with rose and peach glows, the Divine Tech AI wordmark and the headline When the caller is an agent",
+      "alt": "Soft violet-blue light with golden yellow and pink glows, the Divine Tech AI wordmark and the headline When the caller is an agent",
       "placement": "top",
       "generation_prompt": "Higgsfield nano_banana_2_1 text-free background (plum, acid lime, coral, cyan; hairline node networks meeting at a checkpoint) + headline 'When the caller is an agent' rendered by scripts/make-blog-covers.py"
     },
     {
       "role": "og",
       "file_name": "prepare-your-business-for-ai-agents-og.jpg",
-      "alt": "Soft teal light with rose and peach glows, the Divine Tech AI wordmark and the headline When the caller is an agent",
+      "alt": "Soft violet-blue light with golden yellow and pink glows, the Divine Tech AI wordmark and the headline When the caller is an agent",
       "placement": "og"
     }
   ],
