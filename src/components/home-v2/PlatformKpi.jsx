@@ -76,7 +76,7 @@ function Chart({ step, calm }) {
         {C.days.map((d, i) => (
           <g key={d}>
             <line x1={X(i)} y1="24" x2={X(i)} y2="200" stroke="rgba(10,15,14,0.05)" />
-            <text x={X(i)} y="228" textAnchor="middle" fill="rgba(10,15,14,0.45)" style={{ fontSize: 15 }}>
+            <text x={X(i)} y="228" textAnchor="middle" fill="rgba(10,15,14,0.45)" className="text-[15px] lg:text-[11px]">
               {d}
             </text>
           </g>
@@ -84,7 +84,7 @@ function Chart({ step, calm }) {
 
         {/* target */}
         <line x1="24" y1={TARGET_Y} x2={W - 16} y2={TARGET_Y} stroke="rgba(10,15,14,0.35)" strokeDasharray="5 5" />
-        <text x="26" y={TARGET_Y - 8} textAnchor="start" fill="rgba(10,15,14,0.5)" style={{ fontSize: 15 }}>
+        <text x="26" y={TARGET_Y - 8} textAnchor="start" fill="rgba(10,15,14,0.5)" className="text-[15px] lg:text-[11px]">
           Target
         </text>
 
