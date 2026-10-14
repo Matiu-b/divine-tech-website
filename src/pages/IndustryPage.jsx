@@ -16,6 +16,7 @@ import SmartLink from '@/components/home-v2/primitives/SmartLink';
 import { Reveal, RevealGroup, RevealItem, RevealLines } from '@/components/home-v2/primitives/MotionReveal';
 import { useLead } from '@/components/home-v2/LeadDrawer';
 import { onAnchorClick } from '@/components/home-v2/hooks';
+import { RxHero, RxRace, RxRules } from '@/components/industry/RealEstateV3';
 
 /** @param {any} props */
 function IndustryHero({ it }) {
@@ -260,6 +261,18 @@ export default function IndustryPage() {
   const { slug } = useParams();
   const it = industryBySlug[slug];
   if (!it) return <Navigate to="/" replace />;
+  if (it.v3) {
+    return (
+      <SiteLayout key={it.slug} industry={it.leadIndustry} meta={it.meta}>
+        <RxHero it={it} />
+        <RxRace it={it} />
+        <RxRules it={it} />
+        <Faq id="ind-faq-title" items={it.faq} className="pt-0" />
+        <OtherIndustries it={it} />
+        <FinalCTA industry={it.leadIndustry} />
+      </SiteLayout>
+    );
+  }
   return (
     <SiteLayout key={it.slug} industry={it.leadIndustry} meta={it.meta}>
       <IndustryHero it={it} />

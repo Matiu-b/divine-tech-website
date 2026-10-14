@@ -8,7 +8,6 @@ import SectionHeader from './primitives/SectionHeader';
 import { Reveal } from './primitives/MotionReveal';
 import { useInViewport, usePageVisible } from './hooks';
 
-const N = teams.items.length;
 const ADVANCE_MS = 12000;
 // when each beat of a scene appears (ms after the tab opens)
 const BEATS = [0, 500, 1800, 3100, 4400, 5700, 7000]; // tiles, five messages, the result
@@ -18,7 +17,7 @@ const EASE = [0.22, 1, 0.36, 1];
 const TILE = { sales: '#F2672E', service: '#FFC857', internal: '#2B1A12' };
 
 /** The latest beat reached for `key`. A new key starts from beat 0 on its very first render, so nothing flashes. */
-function useBeats(key, still) {
+export function useBeats(key, still) {
   const last = BEATS.length - 1;
   const [state, setState] = useState({ key, beat: last });
   useEffect(() => {
@@ -32,7 +31,7 @@ function useBeats(key, still) {
 }
 
 /** Grows from zero height so the glass card extends smoothly instead of holding empty space. */
-function GrowIn({ show = true, still, children, className = undefined }) {
+export function GrowIn({ show = true, still, children, className = undefined }) {
   if (!show) return null;
   return (
     <motion.div
@@ -52,7 +51,7 @@ const appear = (on, reduce, y = 10) => ({
   transition: { duration: reduce ? 0 : 0.6, ease: EASE },
 });
 
-function Message({ m, still, last }) {
+export function Message({ m, still, last }) {
   const AuroraMark = <img src="/brand/aurora-symbol-color.svg" alt="" width="18" height="18" className="h-[18px] w-[18px]" />;
   return (
     <GrowIn show still={still}>
@@ -101,7 +100,7 @@ function Message({ m, still, last }) {
   );
 }
 
-function ResultRow({ r, className = undefined }) {
+export function ResultRow({ r, className = undefined }) {
   return (
     <span className={cn('flex items-center gap-2.5', className)}>
       <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#E4F4E8]">
@@ -119,8 +118,9 @@ function ResultRow({ r, className = undefined }) {
  * One team's collage: a short clip of the person being helped, an object from their world, and the conversation
  * with Aurora in glass. Phones stack the media above the conversation; wider screens overlap them.
  */
-function Collage({ t, beat, reduce, still }) {
+export function Collage({ t, beat, reduce, still }) {
   const c = t.collage;
+  const tile = c.tile || TILE[t.key] || '#EDE3D4';
   const msgs = c.messages;
   const shownMsgs = msgs.slice(0, Math.max(0, beat));
   const done = beat > msgs.length;
@@ -132,7 +132,7 @@ function Collage({ t, beat, reduce, still }) {
         <motion.div
           {...appear(true, reduce, 0)}
           className="relative aspect-[4/5] w-[41%] shrink-0 overflow-hidden rounded-[20px] sm:absolute sm:bottom-0 sm:left-[8%] sm:aspect-auto sm:h-[46%] sm:w-[40%] sm:rounded-[24px]"
-          style={{ background: TILE[t.key] }}
+          style={{ background: tile }}
         >
           {c.object.src ? <img key={c.object.src} src={c.object.src} srcSet={c.object.srcSet} sizes="(min-width: 1024px) 300px, (min-width: 640px) 40vw, 42vw" alt={c.object.alt} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" /> : null}
         </motion.div>
@@ -140,10 +140,12 @@ function Collage({ t, beat, reduce, still }) {
         <motion.div
           {...appear(true, reduce, 0)}
           className="relative aspect-[3/4] min-w-0 flex-1 overflow-hidden rounded-[20px] sm:absolute sm:right-0 sm:top-[4%] sm:aspect-auto sm:h-[86%] sm:w-[46%] sm:rounded-[24px]"
-          style={{ background: TILE[t.key] }}
+          style={{ background: tile }}
         >
           {c.video ? (
             <video key={c.video} src={c.video} poster={c.poster} autoPlay muted loop playsInline preload="metadata" className="absolute inset-0 h-full w-full object-cover" aria-hidden="true" />
+          ) : c.image ? (
+            <img key={c.image.src} src={c.image.src} srcSet={c.image.srcSet} sizes="(min-width: 1024px) 340px, (min-width: 640px) 46vw, 58vw" alt={c.image.alt} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" />
           ) : null}
         </motion.div>
       </div>
@@ -188,22 +190,27 @@ function Collage({ t, beat, reduce, still }) {
   );
 }
 
-/** Teams: one tab per team. Each shows a collage of the work Aurora finishes for that team, and what it moves. */
-export default function TeamsCollage() {
+/**
+ * A section of tabs, one collage each: the person's title and line, then the clip or photo, an object and the thread.
+ * Tabs move on by themselves while the section is on screen, until a visitor picks one.
+ * @param {{ id: string, eyebrow?: string, titleA: string, titleB?: string, text?: string, items: any[], tabsLabel?: string }} props
+ */
+export function CollageTabs({ id, eyebrow = undefined, titleA, titleB = undefined, text = undefined, items, tabsLabel = 'Examples' }) {
   const ref = useRef(null);
   const reduce = !!useReducedMotion();
   const inView = useInViewport(ref, { threshold: 0.35 });
   const visible = usePageVisible();
   const [active, setActive] = useState(0);
   const [touched, setTouched] = useState(false);
-  const t = teams.items[active];
+  const n = items.length;
+  const t = items[active];
   const beat = useBeats(active + (inView ? ':on' : ':off'), reduce || !inView);
 
   useEffect(() => {
     if (reduce || touched || !inView || !visible) return undefined;
-    const id = window.setTimeout(() => setActive((a) => (a + 1) % N), ADVANCE_MS);
-    return () => window.clearTimeout(id);
-  }, [active, touched, inView, visible, reduce]);
+    const tid = window.setTimeout(() => setActive((a) => (a + 1) % n), ADVANCE_MS);
+    return () => window.clearTimeout(tid);
+  }, [active, touched, inView, visible, reduce, n]);
 
   const pick = (i) => {
     setTouched(true);
@@ -211,14 +218,14 @@ export default function TeamsCollage() {
   };
 
   return (
-    <section id="teams" data-nav-theme="light" aria-labelledby="teams-title" className="section relative">
+    <section id={id} data-nav-theme="light" aria-labelledby={id + '-title'} className="section relative">
       <div className="shell" ref={ref}>
-        <SectionHeader id="teams-title" eyebrow={teams.eyebrow} titleA={teams.titleA} titleB={teams.titleB} text={teams.text} layout="split" />
+        <SectionHeader id={id + '-title'} eyebrow={eyebrow} titleA={titleA} titleB={titleB} text={text} layout="split" />
 
         <Reveal y={28} className="mt-8 grid gap-5 md:mt-14 lg:grid-cols-12 lg:grid-rows-[auto_1fr] lg:gap-x-12 lg:gap-y-0">
           <div className="lg:col-span-5 lg:col-start-8 lg:row-start-1 lg:self-end">
-              <div role="tablist" aria-label="Teams" className="no-scrollbar -mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1">
-              {teams.items.map((x, i) => (
+            <div role="tablist" aria-label={tabsLabel} className="no-scrollbar -mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1">
+              {items.map((x, i) => (
                 <button
                   key={x.key}
                   type="button"
@@ -226,7 +233,7 @@ export default function TeamsCollage() {
                   aria-selected={i === active}
                   onClick={() => pick(i)}
                   className={cn(
-                    'relative h-10 shrink-0 overflow-hidden rounded-full px-4 text-[13.5px] font-medium transition-colors duration-300',
+                    'relative h-9 shrink-0 overflow-hidden rounded-full px-4 text-[13.5px] font-medium transition-colors duration-300 lg:h-10',
                     i === active ? 'bg-ink text-white' : 'bg-white text-ink/70 shadow-[0_0_0_1px_rgba(10,15,14,0.08)] hover:text-ink'
                   )}
                 >
@@ -259,4 +266,9 @@ export default function TeamsCollage() {
       </div>
     </section>
   );
+}
+
+/** Teams on /platform: one tab per team. */
+export default function TeamsCollage() {
+  return <CollageTabs id="teams" eyebrow={teams.eyebrow} titleA={teams.titleA} titleB={teams.titleB} text={teams.text} items={teams.items} tabsLabel="Teams" />;
 }

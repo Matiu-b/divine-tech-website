@@ -21,13 +21,19 @@ jobs:
           ref: ${{ github.ref }}
       - name: Install ffmpeg
         run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install speech timing (only when the manifest has audio)
+        run: |
+          if grep -q '"kind": "audio"' design/media/manifest.json; then pip install --quiet faster-whisper; fi
       - name: Download and compress
         run: python3 scripts/fetch-media.py
       - name: Commit media
         run: |
           git config user.name "site-media[bot]"
           git config user.email "site-media@users.noreply.github.com"
-          git add public/media
+          git add public/media design/media
           if git diff --cached --quiet; then echo "nothing to commit"; exit 0; fi
           git commit -m "Add compressed site media"
           git push
