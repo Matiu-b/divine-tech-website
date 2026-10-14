@@ -16,10 +16,12 @@ import SmartLink from '@/components/home-v2/primitives/SmartLink';
 import { Reveal, RevealGroup, RevealItem, RevealLines } from '@/components/home-v2/primitives/MotionReveal';
 import { useLead } from '@/components/home-v2/LeadDrawer';
 import { onAnchorClick } from '@/components/home-v2/hooks';
+import { AgentsGrid, ConversationStage, DayTimeline, RulesPanel, Scenarios } from '@/components/industry/IndustryScenes';
 
 /** @param {any} props */
 function IndustryHero({ it }) {
   const { open } = useLead();
+  const second = it.hero.second || { label: 'How it works', href: '#how' };
   // Entrances are CSS animations (.intro-* in index.css), so they run on the prerendered HTML's first paint.
 
   return (
@@ -41,20 +43,20 @@ function IndustryHero({ it }) {
             <CTAButton
               size="lg"
               variant="glass"
-              href="#how"
+              href={second.href}
               arrow={false}
-              onClick={(e) => onAnchorClick(e, '#how')}
+              onClick={(e) => onAnchorClick(e, second.href)}
               style={{ animationDelay: '0.48s' }}
               className="intro-fade max-sm:h-12 max-sm:px-5 max-sm:text-[15px]"
             >
-              How it works
+              {second.label}
             </CTAButton>
           </div>
         </div>
       </div>
       <div className="shell relative mt-10 md:mt-12">
         <SafeBoundary>
-          <PhotoStage photo={it.how.photo} events={it.events} caption={it.caption} />
+          {it.convo ? <ConversationStage photo={it.how.photo} convo={it.convo} /> : <PhotoStage photo={it.how.photo} events={it.events} caption={it.caption} />}
         </SafeBoundary>
       </div>
     </section>
@@ -68,7 +70,7 @@ function Problem({ it }) {
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(45%_55%_at_88%_0%,rgba(242,92,42,0.2),rgba(242,92,42,0)_70%),radial-gradient(35%_45%_at_70%_8%,rgba(255,200,87,0.1),rgba(255,200,87,0)_70%)]" />
       <div className="shell relative">
         <SectionHeader id="ind-problem-title" eyebrow="The problem" titleA={it.problem.titleA} titleB={it.problem.titleB} dark size="t-h1" />
-        <RevealGroup className="mt-10 grid gap-x-10 md:mt-20 md:grid-cols-3" amount={0.15}>
+        <RevealGroup className={'mt-10 grid gap-x-10 md:mt-20 ' + (it.problem.points.length === 4 ? 'md:grid-cols-2 lg:grid-cols-4' : 'md:grid-cols-3')} amount={0.15}>
           {it.problem.points.map(([title, text], i) => (
             <RevealItem key={title} className="grid grid-cols-[28px_1fr] gap-x-3 border-t border-white/15 py-5 md:block md:py-9">
               <p className="pt-1 text-[12px] font-medium tabular-nums text-white/40">{'0' + (i + 1)}</p>
@@ -256,6 +258,28 @@ function OtherIndustries({ it }) {
   );
 }
 
+/** What changes, as one quiet row (v2 pages; the original pages show it beside the control card). */
+function Value({ it }) {
+  return (
+    <section data-nav-theme="light" aria-labelledby="ind-value-title" className="section relative pt-0">
+      <div className="shell">
+        <p className="eyebrow">What changes</p>
+        <h2 id="ind-value-title" className="t-h1 balance mt-4">
+          {it.success}
+        </h2>
+        <Reveal as="ul" className="mt-10 grid grid-cols-2 gap-x-7 lg:grid-cols-4" amount={0.2}>
+          {it.value.map(([k, v]) => (
+            <li key={k} className="border-t border-ink/[0.14] py-5">
+              <p className="text-[13px] font-medium text-ink">{k}</p>
+              <p className="mt-1.5 text-[13.5px] leading-relaxed text-graphite">{v}</p>
+            </li>
+          ))}
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
 export default function IndustryPage() {
   const { slug } = useParams();
   const it = industryBySlug[slug];
@@ -263,13 +287,26 @@ export default function IndustryPage() {
   return (
     <SiteLayout key={it.slug} industry={it.leadIndustry} meta={it.meta}>
       <IndustryHero it={it} />
-      <Problem it={it} />
-      <How it={it} />
-      <ControlAndValue it={it} />
+      {it.agents ? (
+        <>
+          <DayTimeline day={it.day} />
+          <Problem it={it} />
+          <AgentsGrid agents={it.agents} />
+          <Scenarios scenarios={it.scenarios} />
+          <RulesPanel control={it.control} />
+          <Value it={it} />
+        </>
+      ) : (
+        <>
+          <Problem it={it} />
+          <How it={it} />
+          <ControlAndValue it={it} />
+        </>
+      )}
       <GoLive it={it} />
       <Faq id="ind-faq-title" items={it.faq} className="pt-0" />
       <OtherIndustries it={it} />
-      <FinalCTA industry={it.leadIndustry} />
+      <FinalCTA industry={it.leadIndustry} {...(it.closing || {})} />
     </SiteLayout>
   );
 }
