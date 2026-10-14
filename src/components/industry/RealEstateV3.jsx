@@ -7,7 +7,7 @@ import SectionHeader from '@/components/home-v2/primitives/SectionHeader';
 import { RevealGroup, RevealItem, RevealLines } from '@/components/home-v2/primitives/MotionReveal';
 import { useLead } from '@/components/home-v2/LeadDrawer';
 import LiquidGlass from '@/components/home-v2/primitives/LiquidGlass';
-import { onAnchorClick, useInViewport, usePageLoaded, usePageVisible } from '@/components/home-v2/hooks';
+import { onAnchorClick, useInViewport, useMediaQuery, usePageLoaded, usePageVisible } from '@/components/home-v2/hooks';
 
 /*
  * Real estate page, v3. One message per section, in this order:
@@ -685,7 +685,7 @@ function AuroraThread({ p, T, t, reduce }) {
 }
 
 /** The buyer's phone: each screen pushes in from the right, the way apps and threads open. */
-function BuyerPhone({ p, T, t, reduce }) {
+function BuyerPhone({ p, T, t, reduce, children = null }) {
   const active = T.screens.filter((x) => t >= x.at).length - 1;
   const prev = useRef(active);
   const back = active < prev.current; // the loop starting over: jump, don't slide
@@ -733,6 +733,7 @@ function BuyerPhone({ p, T, t, reduce }) {
           })}
         </div>
       </div>
+      {children}
     </div>
   );
 }
@@ -798,7 +799,7 @@ function CrmCard({ c, T, t, reduce, compact = false }) {
  * Her evening on the sofa: a clip as long as the scene before her message reaches Aurora's brokerage,
  * kept in step with the phone's clock. It fades out the moment the lead lands in the CRM.
  */
-function SofaClip({ film, T, t, reduce, active }) {
+function SofaClip({ film, T, t, reduce, active, small = false }) {
   const ref = useRef(null);
   const loaded = usePageLoaded();
   const on = t < T.chat[0].at;
@@ -813,7 +814,10 @@ function SofaClip({ film, T, t, reduce, active }) {
   }, [on, active, t, reduce]);
   return (
     <motion.div
-      className="absolute inset-0 overflow-hidden rounded-[24px] bg-[#2A2420] shadow-[0_24px_48px_-32px_rgba(90,50,20,0.45)]"
+      className={cn(
+        'absolute inset-0 overflow-hidden bg-[#2A2420]',
+        small ? 'rounded-[20px] shadow-[0_0_0_3px_#FBFAF7,0_18px_36px_-12px_rgba(40,25,10,0.55)]' : 'rounded-[24px] shadow-[0_24px_48px_-32px_rgba(90,50,20,0.45)]'
+      )}
       initial={false}
       animate={{ opacity: on ? 1 : 0, scale: on ? 1 : 0.97 }}
       transition={{ duration: reduce ? 0 : 0.45, ease: EASE }}
@@ -836,6 +840,8 @@ export function RxRace({ it }) {
   const t = useLoop(T.end, { active: inView && visible, still: reduce });
   const step = lastIndex(T.stepAt.map((at) => ({ at })), t);
   const s = r.steps[step];
+  // one copy of the clip: beside the phone on desktop, a small floating window on the phone elsewhere
+  const wide = useMediaQuery('(min-width: 1024px)');
 
   return (
     <section id="race" data-nav-theme="light" aria-labelledby="rx-race-title" className="section relative">
@@ -864,7 +870,7 @@ export function RxRace({ it }) {
             </div>
             {/* desktop: her evening on the sofa until her message reaches the brokerage, then its CRM */}
             <div className="relative mt-6 hidden aspect-square lg:block">
-              <SofaClip film={r.film} T={T} t={t} reduce={reduce} active={inView && visible} />
+              {wide ? <SofaClip film={r.film} T={T} t={t} reduce={reduce} active={inView && visible} /> : null}
               <AnimatePresence initial={false}>
                 {t >= T.chat[0].at ? (
                   <motion.div
@@ -883,7 +889,13 @@ export function RxRace({ it }) {
           </div>
 
           <div className="relative lg:w-[336px]">
-            <BuyerPhone p={r.phone} T={T} t={t} reduce={reduce} />
+            <BuyerPhone p={r.phone} T={T} t={t} reduce={reduce}>
+              {wide ? null : (
+                <div className="pointer-events-none absolute -right-3 -top-5 z-[2] h-[92px] w-[92px] xs:h-[104px] xs:w-[104px]">
+                  <SofaClip film={r.film} T={T} t={t} reduce={reduce} active={inView && visible} small />
+                </div>
+              )}
+            </BuyerPhone>
           </div>
         </div>
         <p className="mt-4 text-[12px] text-slate">{r.note}</p>
