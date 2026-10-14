@@ -117,7 +117,8 @@ palette, so titles stay editable and nothing is downloaded.
 2. Choose a **new palette** of 4 colours, darkest first, clearly different from the covers already
    in `design/blog-covers/covers.json`. A hint of the brand kit is welcome (Divine green `#14A36B` /
    `#3DDC97`, Aurora `#FFC857` / `#FF9F45` / `#F25C2A`) but not required. Keep the middle of the
-   frame calm enough for the headline.
+   frame calm enough for the headline. Use saturated, lively colours: no greyed-out, dusty or tired
+   mixes (Yuri's note). Recent examples: violet-blue + yellow + pink, crimson + violet + tangerine.
 3. Add the entry to `design/blog-covers/covers.json`:
    ```json
    { "slug": "<slug>", "title": "<headline>", "tone": "dark", "seed": "<any word>", "palette": ["#0B3B40", "#127A78", "#F27BA0", "#FFC9A8"] }
