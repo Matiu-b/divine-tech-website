@@ -3,7 +3,8 @@
 Videos: <out>.mp4 (H.264, 720 px wide, no audio, fast start) and <out>-poster.webp (first frame).
 Images: <out>-600.webp, <out>-900.webp and <out>-1200.webp.
 Audio: <out>.mp3 with the speakers levelled to one loudness (quiet or whispered lines lifted), and
-<out>-segments.json with the start and end of each stretch of speech, for timing captions.
+<out>-segments.json with the start and end of each stretch of speech, and <out>-words.json with
+each spoken word and its time (when faster-whisper is installed), for timing captions.
 Files that already exist are skipped, so the job only does new work. Needs ffmpeg on PATH.
 """
 import json
@@ -78,9 +79,28 @@ def audio(src, out):
         if dur - t > 0.05:
             speech.append([round(t, 2), round(dur, 2)])
         json.dump({'duration': round(dur, 2), 'speech': speech}, open(seg, 'w'), indent=1)
+    words = out + '-words.json'
+    if not os.path.exists(words):
+        try:
+            from faster_whisper import WhisperModel
+        except ImportError:
+            return
+        model = WhisperModel('small.en', device='cpu', compute_type='int8')
+        parts, _ = model.transcribe(mp3, word_timestamps=True, beam_size=5, vad_filter=False)
+        found = [{'w': w.word.strip(), 's': round(w.start, 2), 'e': round(w.end, 2)} for p in parts for w in p.words]
+        json.dump(found, open(words, 'w'), indent=0)
 
 
-DONE = {'video': '.mp4', 'image': '-1200.webp', 'audio': '.mp3'}
+def audio_done(out):
+    try:
+        import faster_whisper  # noqa: F401
+        need = ('.mp3', '-segments.json', '-words.json')
+    except ImportError:
+        need = ('.mp3', '-segments.json')
+    return all(os.path.exists(out + n) for n in need)
+
+
+DONE = {'video': '.mp4', 'image': '-1200.webp'}
 HANDLERS = {'video': video, 'image': image, 'audio': audio}
 
 
@@ -90,7 +110,7 @@ def main():
         for i, item in enumerate(manifest['items']):
             out = os.path.join(ROOT, item['out'])
             os.makedirs(os.path.dirname(out), exist_ok=True)
-            if os.path.exists(out + DONE[item['kind']]) and (item['kind'] != 'audio' or os.path.exists(out + '-segments.json')):
+            if audio_done(out) if item['kind'] == 'audio' else os.path.exists(out + DONE[item['kind']]):
                 continue
             src = os.path.join(tmp, f'src{i}' + os.path.splitext(item['url'])[1])
             print('fetching', item['url'], flush=True)

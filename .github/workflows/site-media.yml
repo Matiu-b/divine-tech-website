@@ -21,6 +21,9 @@ jobs:
           ref: ${{ github.ref }}
       - name: Install ffmpeg
         run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - name: Install speech timing (only when the manifest has audio)
+        run: |
+          if grep -q '"kind": "audio"' design/media/manifest.json; then pip install --quiet faster-whisper; fi
       - name: Download and compress
         run: python3 scripts/fetch-media.py
       - name: Commit media
