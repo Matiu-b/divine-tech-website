@@ -829,6 +829,22 @@ function SofaClip({ film, T, t, reduce, active, small = false }) {
   );
 }
 
+/** Where the sofa clip was on phones, once her message reaches the brokerage: Aurora has the lead. */
+function AuroraTile({ on, reduce }) {
+  return (
+    <motion.div
+      className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 rounded-[20px] bg-ink text-center shadow-[0_18px_36px_-12px_rgba(40,25,10,0.45)]"
+      initial={false}
+      animate={{ opacity: on ? 1 : 0, scale: on ? 1 : 0.94 }}
+      transition={{ duration: reduce ? 0 : 0.45, ease: EASE, delay: on && !reduce ? 0.2 : 0 }}
+      aria-hidden="true"
+    >
+      <img src="/brand/aurora-symbol-color.svg" alt="" width="28" height="28" className="h-7 w-7 sm:h-8 sm:w-8" />
+      <span className="px-1 text-[10px] font-medium leading-tight text-white/80 sm:text-[11px]">Aurora · AI agent</span>
+    </motion.div>
+  );
+}
+
 /** Speed to lead: she messages three listing agents and waits; the brokerage with Aurora answers in seconds. */
 export function RxRace({ it }) {
   const r = it.v3.race;
@@ -859,14 +875,23 @@ export function RxRace({ it }) {
                 <span key={x.title} className={cn('h-1 flex-1 rounded-full transition-colors duration-500', i <= step ? 'bg-ink' : 'bg-ink/10')} />
               ))}
             </div>
-            <div className="mt-4 min-h-[86px] lg:min-h-[120px]" aria-live="polite">
-              <AnimatePresence mode="wait" initial={false}>
-                <motion.div key={step} initial={reduce ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6, transition: { duration: 0.2 } }} transition={{ duration: 0.45, ease: EASE }}>
-                  <p className="t-data text-[12px] text-[#B4471A]">{s.time}</p>
-                  <p className="mt-1 text-[19px] font-medium tracking-[-0.015em] text-ink lg:text-[26px]">{s.title}</p>
-                  <p className="mt-1 text-[14px] leading-snug text-graphite lg:text-[15.5px]">{s.text}</p>
-                </motion.div>
-              </AnimatePresence>
+            {/* the step; on phones and tablets the sofa clip sits beside it, so it never covers the phone */}
+            <div className="mt-4 flex items-start gap-3 sm:gap-4 lg:block">
+              <div className="min-h-[112px] min-w-0 flex-1 sm:min-h-[116px] md:min-h-[128px] lg:min-h-[120px]" aria-live="polite">
+                <AnimatePresence mode="wait" initial={false}>
+                  <motion.div key={step} initial={reduce ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6, transition: { duration: 0.2 } }} transition={{ duration: 0.45, ease: EASE }}>
+                    <p className="t-data text-[12px] text-[#B4471A]">{s.time}</p>
+                    <p className="balance mt-1 text-[17px] font-medium leading-tight tracking-[-0.015em] text-ink xs:text-[18px] sm:text-[20px] lg:text-[26px]">{s.title}</p>
+                    <p className="pretty mt-1 max-w-[34ch] text-[13.5px] leading-snug text-graphite sm:text-[14.5px] lg:max-w-none lg:text-[15.5px]">{s.text}</p>
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+              {wide ? null : (
+                <div className="relative mt-1 h-[84px] w-[84px] shrink-0 xs:h-24 xs:w-24 sm:h-28 sm:w-28 md:h-32 md:w-32">
+                  <AuroraTile on={t >= T.chat[0].at} reduce={reduce} />
+                  <SofaClip film={r.film} T={T} t={t} reduce={reduce} active={inView && visible} small />
+                </div>
+              )}
             </div>
             {/* desktop: her evening on the sofa until her message reaches the brokerage, then its CRM */}
             <div className="relative mt-6 hidden aspect-square lg:block">
@@ -889,13 +914,7 @@ export function RxRace({ it }) {
           </div>
 
           <div className="relative lg:w-[336px]">
-            <BuyerPhone p={r.phone} T={T} t={t} reduce={reduce}>
-              {wide ? null : (
-                <div className="pointer-events-none absolute -right-3 -top-5 z-[2] h-[92px] w-[92px] xs:h-[104px] xs:w-[104px]">
-                  <SofaClip film={r.film} T={T} t={t} reduce={reduce} active={inView && visible} small />
-                </div>
-              )}
-            </BuyerPhone>
+            <BuyerPhone p={r.phone} T={T} t={t} reduce={reduce} />
           </div>
         </div>
         <p className="mt-4 text-[12px] text-slate">{r.note}</p>
