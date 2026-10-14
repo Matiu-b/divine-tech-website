@@ -2,7 +2,7 @@ import React from 'react';
 import { platformPage } from '@/data/site';
 import SiteLayout from '@/components/home-v2/SiteLayout';
 import HeroFilm from '@/components/home-v2/HeroFilm';
-import Teams from '@/components/home-v2/Teams';
+import Teams from '@/components/home-v2/TeamsCollage';
 import FinalCTA from '@/components/home-v2/FinalCTA';
 import Faq from '@/components/home-v2/Faq';
 import PlatformArchitecture from '@/components/home-v2/PlatformArchitecture';

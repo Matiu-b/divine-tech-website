@@ -492,6 +492,16 @@ export const teams = {
       kpis: ['Speed to lead', 'Meetings booked', 'Conversion rate'],
       agent: 'Sales agent',
       chip: { icon: 'calendar', title: 'Meeting booked', detail: 'Thu 11:00' },
+      // Collage (preview: media served from Higgsfield until copied into /public). Names and times are illustrative.
+      collage: {
+        video: 'https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_093114_3bc73eed-d110-4a49-a8ea-af79f3491196.mp4',
+        object: { src: 'https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_093120_e8971362-7e15-4fec-bfb2-64a171dc5145.png', alt: 'A meeting room set for a product demo, two coffee cups beside a laptop' },
+        channel: 'Web chat',
+        ask: 'Can we see a demo this week?',
+        reply: 'Sure. Thursday 11:00 or Friday 2:00?',
+        options: ['Thu 11:00', 'Fri 2:00'],
+        result: { title: 'Meeting booked', detail: 'Thu 11:00 · with Dana' },
+      },
       photo: {
         src: PHOTOS + 'team-sales2-960.webp',
         srcSet: srcSet('team-sales2', [640, 960, 1440]),
@@ -506,6 +516,15 @@ export const teams = {
       kpis: ['First response time', 'Resolution rate', 'Customer satisfaction'],
       agent: 'Service agent',
       chip: { icon: 'service', title: 'Request resolved', detail: 'Moved to Thu' },
+      collage: {
+        video: 'https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_093115_bd836d35-4e15-47c3-b773-f9b04f02447d.mp4',
+        object: { src: 'https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_093120_be81e52b-a13f-465d-8d8a-2c2d89bd3ff5.png', alt: 'A delivery box waiting on the doormat of a honey-yellow front door' },
+        channel: 'Email',
+        ask: 'Can my delivery move to Thursday? Order #4471',
+        reply: 'Done. It now arrives Thursday, Oct 16.',
+        options: ['Order found', 'Carrier slot moved'],
+        result: { title: 'Request resolved', detail: 'No handoff needed' },
+      },
       photo: {
         src: PHOTOS + 'team-service2-960.webp',
         srcSet: srcSet('team-service2', [640, 960, 1440]),
@@ -520,6 +539,15 @@ export const teams = {
       kpis: ['Cycle time', 'Manual work hours', 'On-time completion'],
       agent: 'Operations agent',
       chip: { icon: 'approval', title: 'Invoice approved', detail: 'To Finance' },
+      collage: {
+        video: 'https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_093129_461f1f41-739d-4b52-ad69-551137902dd3.mp4',
+        object: { src: 'https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_093122_13c7bcce-2d7d-48f3-9fdc-0bad66a5a329.png', alt: 'A printed invoice with a brass approval stamp on a walnut desk' },
+        channel: 'Slack · #finance',
+        ask: 'New invoice INV-2291 from Northwind, $4,800',
+        reply: 'Matches PO-118 and the budget. Approve?',
+        options: ['Approve', 'Decline'],
+        result: { title: 'Invoice approved', detail: 'Sent to Finance' },
+      },
       photo: {
         src: PHOTOS + 'team-internal2-960.webp',
         srcSet: srcSet('team-internal2', [640, 960, 1440]),
