@@ -92,6 +92,26 @@
       ],
       "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_134649_a16d0f15-24b5-40f5-81e7-a9e6dbfa4b45.png",
       "out": "public/media/real-estate/house-4"
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_145552_d5ab1271-0a48-45a2-be9f-2a3fd272e02a.png",
+      "out": "public/media/real-estate/listing-elm"
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_145552_80840e7d-5384-4fc9-82bf-4c959e286642.png",
+      "out": "public/media/real-estate/listing-birch"
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_145552_9894de06-417c-4f5b-9855-075d9b6bfe01.png",
+      "out": "public/media/real-estate/listing-oak"
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_145853_663f9916-2c51-4234-bf03-62d303fb1a1a.png",
+      "out": "public/media/real-estate/listing-willow"
     }
   ]
 }
