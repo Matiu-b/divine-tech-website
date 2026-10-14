@@ -862,11 +862,11 @@ export function RxRace({ it }) {
         <SectionHeader id="rx-race-title" eyebrow={r.eyebrow} titleA={r.titleA} titleB={r.titleB} text={r.text} layout="split" />
         <div
           ref={ref}
-          className="canvas canvas-grain relative mt-8 grid gap-5 overflow-hidden bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] p-4 xs:p-5 md:mt-14 md:p-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:gap-12 lg:p-10 lg:[--stage-h:clamp(440px,calc(100svh_-_200px),620px)] xl:gap-16 lg:[@media(max-height:820px)]:py-7"
+          className="canvas canvas-grain relative mt-8 grid gap-5 overflow-hidden bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] p-4 xs:p-5 md:mt-14 md:p-8 lg:grid-cols-[max(332px,calc(var(--stage-h)_-_176px))_auto] lg:items-center lg:justify-center lg:gap-16 lg:p-10 lg:[--stage-h:clamp(440px,calc(100svh_-_200px),620px)] xl:gap-24 lg:[@media(max-height:820px)]:py-7"
         >
           <div aria-hidden="true" className="pointer-events-none absolute right-[6%] top-[-10%] h-[70%] w-[45%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.45),rgba(255,200,87,0))] blur-2xl" />
 
-          <div className="relative lg:max-w-[460px]">
+          <div className="relative">
             <div className="flex gap-1.5" aria-hidden="true">
               {r.steps.map((x, i) => (
                 <span key={x.title} className={cn('h-1 flex-1 rounded-full transition-colors duration-500', i <= step ? 'bg-ink' : 'bg-ink/10')} />
@@ -874,7 +874,7 @@ export function RxRace({ it }) {
             </div>
             {/* the step; on phones and tablets the sofa clip sits beside it, so it never covers the phone */}
             <div className="mt-4 flex items-start gap-3 sm:gap-4 lg:block">
-              <div className="min-h-[150px] min-w-0 flex-1 min-[360px]:min-h-[126px] min-[385px]:min-h-[112px] sm:min-h-[116px] md:min-h-[128px] lg:min-h-[120px]" aria-live="polite">
+              <div className="min-h-[150px] min-w-0 flex-1 min-[360px]:min-h-[126px] min-[385px]:min-h-[112px] sm:min-h-[116px] md:min-h-[128px] lg:min-h-[132px]" aria-live="polite">
                 <AnimatePresence mode="wait" initial={false}>
                   <motion.div key={step} initial={reduce ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6, transition: { duration: 0.2 } }} transition={{ duration: 0.45, ease: EASE }}>
                     <p className="t-data text-[12px] text-[#B4471A]">{s.time}</p>
@@ -890,7 +890,7 @@ export function RxRace({ it }) {
               )}
             </div>
             {/* desktop: her evening on the sofa until her message reaches the brokerage, then its CRM */}
-            <div ref={boxRef} className="relative mt-5 hidden lg:block lg:h-[max(332px,calc(var(--stage-h)_-_176px))] lg:max-w-[max(332px,calc(var(--stage-h)_-_176px))]">
+            <div ref={boxRef} className="relative mt-5 hidden lg:block lg:h-[max(332px,calc(var(--stage-h)_-_176px))] lg:w-full">
               {wide ? <SofaClip film={r.film} T={T} t={t} reduce={reduce} active={inView && visible} /> : null}
               <AnimatePresence initial={false}>
                 {t >= T.chat[0].at ? (
