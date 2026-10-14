@@ -877,7 +877,7 @@ export function RxRace({ it }) {
             </div>
             {/* the step; on phones and tablets the sofa clip sits beside it, so it never covers the phone */}
             <div className="mt-4 flex items-start gap-3 sm:gap-4 lg:block">
-              <div className="min-h-[150px] min-w-0 flex-1 min-[360px]:min-h-[112px] sm:min-h-[116px] md:min-h-[128px] lg:min-h-[120px]" aria-live="polite">
+              <div className="min-h-[150px] min-w-0 flex-1 min-[360px]:min-h-[126px] min-[385px]:min-h-[112px] sm:min-h-[116px] md:min-h-[128px] lg:min-h-[120px]" aria-live="polite">
                 <AnimatePresence mode="wait" initial={false}>
                   <motion.div key={step} initial={reduce ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6, transition: { duration: 0.2 } }} transition={{ duration: 0.45, ease: EASE }}>
                     <p className="t-data text-[12px] text-[#B4471A]">{s.time}</p>
