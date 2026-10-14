@@ -832,9 +832,6 @@ export function RxRace({ it }) {
           <div className="relative lg:w-[336px]">
             <BuyerPhone p={r.phone} T={T} t={t} reduce={reduce} />
           </div>
-          <div className="relative lg:hidden">
-            <CrmCard c={r.crm} T={T} t={t} reduce={reduce} compact />
-          </div>
         </div>
         <p className="mt-4 text-[12px] text-slate">{r.note}</p>
       </div>
