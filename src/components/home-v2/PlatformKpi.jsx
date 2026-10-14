@@ -115,8 +115,8 @@ function Chart({ step, calm }) {
 
       {/* labels on the chart */}
       <span
-        className="absolute flex -translate-x-1/2 items-center gap-1 whitespace-nowrap rounded-full bg-[#FFF1E4] px-2 py-0.5 text-[11px] font-medium text-[#B4471A]"
-        style={{ left: `${(DIP.x / W) * 100}%`, top: `${((DIP.y + 14) / H) * 100}%`, ...late(dipped) }}
+        className="absolute flex -translate-x-full -translate-y-1/2 items-center gap-1 whitespace-nowrap rounded-full bg-[#FFF1E4] px-2 py-0.5 text-[11px] font-medium text-[#B4471A]"
+        style={{ left: `${((DIP.x - 14) / W) * 100}%`, top: `${(DIP.y / H) * 100}%`, ...late(dipped) }}
       >
         <ArrowDownRight className="h-3 w-3" strokeWidth={2.2} aria-hidden="true" />
         {C.slipping}
