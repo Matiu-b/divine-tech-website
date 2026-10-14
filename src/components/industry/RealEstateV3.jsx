@@ -890,7 +890,7 @@ export function RxRace({ it }) {
               )}
             </div>
             {/* desktop: her evening on the sofa until her message reaches the brokerage, then its CRM */}
-            <div ref={boxRef} className="relative mt-5 hidden lg:block lg:h-[max(300px,calc(var(--stage-h)_-_176px))] lg:max-w-[max(300px,calc(var(--stage-h)_-_176px))]">
+            <div ref={boxRef} className="relative mt-5 hidden lg:block lg:h-[max(332px,calc(var(--stage-h)_-_176px))] lg:max-w-[max(332px,calc(var(--stage-h)_-_176px))]">
               {wide ? <SofaClip film={r.film} T={T} t={t} reduce={reduce} active={inView && visible} /> : null}
               <AnimatePresence initial={false}>
                 {t >= T.chat[0].at ? (
