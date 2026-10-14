@@ -50,8 +50,8 @@ function useCallClock(c, { active, still, audioRef }) {
       const a = audioRef.current;
       let v = now.current;
       if (soundRef.current && a && !a.paused) v = a.currentTime * 1000;
-      else v += stamp - last;
-      last = stamp;
+      else v += Math.max(0, stamp - last);
+      last = Math.max(last, stamp);
       if (v > c.duration + HOLD) v = still ? c.duration : 0;
       now.current = v;
       // ~20 updates a second is plenty for word timing and keeps React work small
@@ -382,7 +382,7 @@ const CLOCK = [
   [19000, '9:49'],
   [22000, '9:50'],
 ];
-const clockAt = (t) => CLOCK.filter(([at]) => t >= at).pop()[1];
+const clockAt = (t) => (CLOCK.filter(([at]) => t >= at).pop() || CLOCK[0])[1];
 
 /** A clock for timed scenes: runs while `active`, loops at `end`, and holds the last frame when `still`. */
 function useLoop(end, { active, still }) {
@@ -399,8 +399,9 @@ function useLoop(end, { active, still }) {
     let last = performance.now();
     let shown = now.current;
     const tick = (stamp) => {
-      let v = now.current + (stamp - last);
-      last = stamp;
+      // a frame's timestamp can be a little older than the moment the loop started: never step backwards
+      let v = now.current + Math.max(0, stamp - last);
+      last = Math.max(last, stamp);
       if (v > end) v = 0;
       now.current = v;
       if (Math.abs(v - shown) >= 60 || v < shown) {
