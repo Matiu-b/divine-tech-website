@@ -127,14 +127,14 @@ function Scene({ t, i }) {
       className="canvas-grain relative aspect-[4/5] overflow-hidden rounded-[28px] sm:aspect-[5/6] lg:aspect-[4/5]"
       style={{ backgroundImage: tone.glow + ',' + tone.bg }}
     >
-      <div className="absolute inset-x-5 top-5 flex items-center justify-between gap-3">
+      <div className="absolute inset-x-5 top-5 z-[1] flex items-center justify-between gap-3">
         <span className={cn('flex items-center gap-2 text-[13px] font-medium', tone.head)}>
           <img src="/brand/aurora-symbol-color.svg" alt="" width="20" height="20" className="h-5 w-5 rounded-full bg-white p-[3px]" />
           {t.agent}
         </span>
         <span className={cn('text-[11.5px]', tone.sub)}>{t.scene.channel}</span>
       </div>
-      <div className="absolute inset-x-5 bottom-5 flex flex-col gap-2">
+      <div className="absolute inset-x-5 bottom-5 z-[1] flex flex-col gap-2">
         {steps.map((s, k) => (
           <Step key={k} s={s} tone={tone} on={k < shown} />
         ))}
