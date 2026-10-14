@@ -115,7 +115,7 @@ export const industries = [
           ],
           auroraTag: 'Aurora · AI agent',
           replied: 'Hi! Yes, it is. It listed on Monday…',
-          booked: 'Showing booked · Sat 11 am',
+          booked: 'Booked · Sat 11 am',
           read: 'Read 10:31 PM',
           late: 'Good morning! Are you still looking?',
           answer: 'Thanks, we already booked a showing.',
