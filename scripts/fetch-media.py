@@ -87,7 +87,10 @@ def audio(src, out):
             return
         try:
             model = WhisperModel('small.en', device='cpu', compute_type='int8')
-            parts, _ = model.transcribe(mp3, word_timestamps=True, beam_size=5, vad_filter=False)
+            import numpy as np  # decode with ffmpeg: faster-whisper's own decoder breaks with some PyAV versions
+            pcm = subprocess.run(['ffmpeg', '-v', 'error', '-i', mp3, '-f', 'f32le', '-ac', '1', '-ar', '16000', '-'],
+                                 check=True, capture_output=True).stdout
+            parts, _ = model.transcribe(np.frombuffer(pcm, np.float32), word_timestamps=True, beam_size=5, vad_filter=False)
             found = [{'w': w.word.strip(), 's': round(w.start, 2), 'e': round(w.end, 2)} for p in parts for w in p.words]
             json.dump(found, open(words, 'w'), indent=0)
         except Exception:  # timing is a nice-to-have: keep the audio and leave a note for whoever reads the branch
@@ -110,6 +113,9 @@ HANDLERS = {'video': video, 'image': image, 'audio': audio}
 
 def main():
     manifest = json.load(open(os.path.join(ROOT, 'design/media/manifest.json')))
+    note = os.path.join(ROOT, 'design/media/last-error.txt')
+    if os.path.exists(note):
+        os.remove(note)
     with tempfile.TemporaryDirectory() as tmp:
         for i, item in enumerate(manifest['items']):
             out = os.path.join(ROOT, item['out'])
