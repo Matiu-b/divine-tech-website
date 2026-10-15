@@ -1333,7 +1333,6 @@ export function RxRules({ it }) {
 // how long each job stays in the spotlight, and when inside it the job resolves (ms)
 const AFTER_MS = 3400;
 const AFTER_RESOLVE = 1100;
-const KPI_MS = 2800;
 
 const STAGE_TONES = {
   blue: 'bg-[#E8EEF9] text-[#3A5A9A]',
@@ -1571,42 +1570,165 @@ function JobSeller({ x, on, done, reduce }) {
 
 const JOBS = { remind: JobRemind, nurture: JobNurture, revive: JobRevive, seller: JobSeller };
 
+const GOAL_MS = 6400;
+
+/** Weeks that meet the goal, and the first week from which every week meets it. */
+function goalState(g) {
+  const met = g.values.map((v) => (g.better === 'lower' ? v <= g.goal : v >= g.goal));
+  let since = met.length;
+  for (let i = met.length - 1; i >= 0 && met[i]; i -= 1) since = i;
+  return { met, since: since < met.length ? since : -1 };
+}
+
 /**
- * The KPI Agent: one week of improvement in four steps that light up in turn. A strip under the jobs up to 1279 px,
- * a tall tile beside them on wide screens.
+ * The KPI Agent, built around the brokerage's own goals: pick a goal and see eight weeks against it, the change the
+ * agent made and from when the goal is met. The goals take turns while on screen; a tap holds one.
  */
-function KpiPanel({ a, k, run, tall = false }) {
+function KpiGoals({ a, run, reduce }) {
+  const K = a.kpi;
+  const [g, setG] = useState(0);
+  const [held, setHeld] = useState(false);
+  useEffect(() => {
+    if (!run || held) return undefined;
+    const id = setTimeout(() => setG((x) => (x + 1) % K.goals.length), GOAL_MS);
+    return () => clearTimeout(id);
+  }, [g, run, held, K.goals.length]);
+
+  const goal = K.goals[g];
+  const { met, since } = goalState(goal);
+  const n = goal.values.length;
+  const cut = ((goal.change.after + 1) / n) * 100;
+
   return (
-    <div className={cn('relative rounded-[22px] bg-[#FFF8F1] shadow-[0_0_0_1px_rgba(242,92,42,0.18)]', tall ? 'flex h-full flex-col p-5' : 'grid gap-5 p-5 lg:grid-cols-[minmax(0,300px)_minmax(0,1fr)] lg:items-center lg:gap-6 lg:px-5 lg:py-4')}>
-      <div>
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#FFE7D3] px-2.5 py-1 text-[11.5px] font-medium text-[#B4471A]">
+    <div className="relative grid gap-5 rounded-[22px] bg-white p-4 shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_24px_48px_-36px_rgba(90,50,20,0.4)] md:p-5 lg:grid-cols-[minmax(0,300px)_minmax(0,1fr)] lg:gap-8 lg:p-6">
+      {/* what it is, and the goals */}
+      <div className="flex min-w-0 flex-col">
+        <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-ink px-2.5 py-1 text-[11.5px] font-medium text-white">
           <TrendingUp className="h-3.5 w-3.5" strokeWidth={2.2} aria-hidden="true" />
-          {a.kpi.badge}
+          {K.badge}
         </span>
-        <p className="mt-2 text-[18px] font-medium leading-snug tracking-[-0.01em] text-ink">{a.kpi.title}</p>
-        <p className="mt-1 text-[13px] leading-snug text-graphite lg:sr-only">{a.kpi.text}</p>
+        <p className="mt-3 text-[19px] font-medium leading-snug tracking-[-0.01em] text-ink">{K.title}</p>
+        <p className="mt-1.5 text-[13px] leading-snug text-graphite">{K.text}</p>
+        <div role="tablist" aria-label={K.badge} className="-mx-4 mt-4 flex gap-1.5 overflow-x-auto px-4 [scrollbar-width:none] md:mx-0 md:px-0 lg:mt-auto lg:grid lg:gap-1 lg:overflow-visible lg:pt-4 [&::-webkit-scrollbar]:hidden">
+          {K.goals.map((x, i) => {
+            const cur = i === g;
+            return (
+              <button
+                key={x.key}
+                type="button"
+                role="tab"
+                aria-selected={cur}
+                onClick={() => {
+                  setG(i);
+                  setHeld(true);
+                }}
+                className={cn(
+                  'flex shrink-0 items-center justify-between gap-4 rounded-[12px] px-3 py-2 text-left transition-colors duration-300',
+                  cur ? 'bg-[#F6F1E8]' : 'bg-transparent shadow-[inset_0_0_0_1px_rgba(10,15,14,0.08)] hover:bg-ink/[0.03] lg:shadow-none'
+                )}
+              >
+                <span className="min-w-0">
+                  <span className={cn('block whitespace-nowrap text-[13.5px] font-medium transition-colors', cur ? 'text-ink' : 'text-ink/55')}>{x.name}</span>
+                  <span className="block whitespace-nowrap text-[11.5px] text-slate">
+                    {K.goalLabel}: {x.target}
+                  </span>
+                </span>
+                <span aria-hidden="true" className={cn('hidden h-2 w-2 shrink-0 rounded-full transition-colors lg:block', cur ? 'bg-[#F25C2A]' : 'bg-ink/15')} />
+              </button>
+            );
+          })}
+        </div>
       </div>
-      <ol className={cn('grid gap-2', tall ? 'mt-4 flex-1 content-end' : 'grid-cols-2 lg:grid-cols-4')} aria-label={a.kpi.badge}>
-        {a.kpi.steps.map((x, i) => {
-          const on = i === k;
-          const done = i < k;
-          return (
-            <li key={x.tag} className={cn('relative overflow-hidden rounded-[14px] px-3 py-2.5 transition-colors duration-500', on ? 'bg-white shadow-[0_8px_20px_-14px_rgba(90,50,20,0.5)]' : 'bg-white/50')}>
-              <span aria-hidden="true" className={cn('absolute bg-ink/[0.06]', tall ? 'inset-y-0 left-0 w-[2px]' : 'inset-x-0 top-0 h-[2px]')}>
-                <span
-                  className={cn('absolute bg-[#F25C2A]', tall ? 'inset-x-0 top-0' : 'inset-y-0 left-0', on && run ? (tall ? 'transition-[height] ease-linear' : 'transition-[width] ease-linear') : '')}
-                  style={{ [tall ? 'height' : 'width']: done || on ? '100%' : '0%', transitionDuration: on && run ? KPI_MS + 'ms' : '0ms' }}
+
+      {/* the goal, week by week */}
+      <div className="min-w-0 rounded-[18px] bg-[#FBF8F3] p-3.5 shadow-[inset_0_0_0_1px_rgba(10,15,14,0.05)] md:p-4">
+        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+          <p className="min-w-0">
+            <span className="block text-[15px] font-medium text-ink">{goal.name}</span>
+            <span className="block text-[12px] text-slate">
+              {K.goalLabel}: {goal.target}
+            </span>
+          </p>
+          <AnimatePresence mode="wait">
+            {since >= 0 ? (
+              <motion.span
+                key={goal.key}
+                initial={reduce ? false : { opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ delay: reduce ? 0 : 0.9, duration: 0.35 }}
+                className="inline-flex items-center gap-1 rounded-full bg-[#E4F4E8] px-2.5 py-1 text-[11.5px] font-medium text-[#2E7A48]"
+              >
+                <Check className="h-3 w-3" strokeWidth={2.6} aria-hidden="true" />
+                {K.since} {since + 1}
+              </motion.span>
+            ) : null}
+          </AnimatePresence>
+        </div>
+
+        <div className="relative mt-4 h-[132px] sm:h-[150px]" role="img" aria-label={goal.name + ', ' + K.goalLabel.toLowerCase() + ' ' + goal.target.toLowerCase() + (since >= 0 ? '. ' + K.since + ' ' + (since + 1) + '.' : '.')}>
+          {/* the weeks */}
+          <div className="absolute inset-0 grid items-end" style={{ gridTemplateColumns: `repeat(${n}, minmax(0, 1fr))` }}>
+            {goal.values.map((v, i) => (
+              <span key={goal.key + i} className="flex h-full items-end justify-center">
+                <motion.span
+                  className={cn('block w-[54%] max-w-[44px] rounded-t-[7px] rounded-b-[2px]', met[i] ? 'bg-[#F25C2A]' : 'bg-ink/[0.13]')}
+                  style={{ height: v * 100 + '%', transformOrigin: 'bottom' }}
+                  initial={reduce ? false : { scaleY: 0 }}
+                  animate={{ scaleY: 1 }}
+                  transition={{ duration: 0.55, ease: EASE, delay: reduce ? 0 : 0.05 * i }}
                 />
               </span>
-              <p className={cn('t-data text-[10.5px] uppercase tracking-[0.08em] transition-colors', on ? 'text-[#D9481C]' : 'text-ink/35')}>
-                {String(i + 1).padStart(2, '0')} · {x.tag}
-              </p>
-              <p className={cn('mt-1 text-[13px] leading-snug transition-colors', on ? 'text-ink' : 'text-ink/55')}>{x.text}</p>
-              {x.who ? <p className="mt-1 text-[11.5px] font-medium text-[#2E7A48]">{x.who}</p> : null}
-            </li>
-          );
-        })}
-      </ol>
+            ))}
+          </div>
+          {/* the goal */}
+          <span aria-hidden="true" className="absolute inset-x-0 border-t-[1.5px] border-dashed border-ink/45 transition-[bottom] duration-500" style={{ bottom: goal.goal * 100 + '%' }} />
+          {/* the change */}
+          <span aria-hidden="true" className="absolute -top-1 bottom-0 border-l-[1.5px] border-dotted border-[#F25C2A] transition-[left] duration-500" style={{ left: cut + '%' }}>
+            <span className="absolute -left-[5px] -top-1 h-2.5 w-2.5 rounded-full bg-[#F25C2A] shadow-[0_0_0_3px_#FBF8F3]" />
+          </span>
+        </div>
+        <div aria-hidden="true" className="mt-1.5 grid border-t border-ink/10 pt-1.5" style={{ gridTemplateColumns: `repeat(${n}, minmax(0, 1fr))` }}>
+          {K.weeks.map((w) => (
+            <span key={w} className="t-data text-center text-[10.5px] text-ink/40">
+              {w}
+            </span>
+          ))}
+        </div>
+
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.p
+            key={goal.key}
+            initial={reduce ? false : { opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, transition: { duration: 0.2 } }}
+            transition={{ duration: 0.4, ease: EASE, delay: reduce ? 0 : 0.5 }}
+            className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[12.5px] leading-snug text-graphite"
+          >
+            <span className="inline-flex items-center gap-1.5 font-medium text-[#C2410C]">
+              <span className="h-2 w-2 rounded-full bg-[#F25C2A]" aria-hidden="true" />
+              {K.changeLabel} {goal.change.after + 1}
+            </span>
+            <span className="min-w-0">{goal.change.text}</span>
+            {goal.change.who ? <span className="rounded-full bg-[#E4F4E8] px-2 py-0.5 text-[11px] font-medium text-[#2E7A48]">{goal.change.who}</span> : null}
+          </motion.p>
+        </AnimatePresence>
+
+        <p aria-hidden="true" className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-slate">
+          <span className="inline-flex items-center gap-1.5">
+            <span className="h-2.5 w-2.5 rounded-[3px] bg-[#F25C2A]" />
+            {K.legend.met}
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span className="h-2.5 w-2.5 rounded-[3px] bg-ink/[0.13]" />
+            {K.legend.not}
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span className="w-4 border-t-[1.5px] border-dashed border-ink/45" />
+            {K.legend.goal}
+          </span>
+        </p>
+      </div>
     </div>
   );
 }
@@ -1614,7 +1736,7 @@ function KpiPanel({ a, k, run, tall = false }) {
 /**
  * After the first reply: four jobs Aurora keeps doing for a lead, each drawn as the thing it is, in four equal cards. A spotlight
  * moves from one to the next, and each resolves in its own way (a stamp, a heart, a status flip, a slot). Then the KPI
- * Agent improving it, one week in four steps that light up in turn.
+ * Agent, measured against the brokerage's own goals week by week.
  */
 export function RxAfter({ it }) {
   const a = it.v3.after;
@@ -1639,12 +1761,6 @@ export function RxAfter({ it }) {
     };
   }, [j, run, n]);
 
-  const [k, setK] = useState(0);
-  useEffect(() => {
-    if (!run) return undefined;
-    const id = setTimeout(() => setK((x) => (x + 1) % a.kpi.steps.length), KPI_MS);
-    return () => clearTimeout(id);
-  }, [k, run, a.kpi.steps.length]);
   const show = (d) => (reduce ? {} : { initial: { opacity: 0, y: 16 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, amount: 'some' }, transition: { duration: 0.6, ease: EASE, delay: d } });
 
   return (
@@ -1683,9 +1799,9 @@ export function RxAfter({ it }) {
             })}
           </ol>
 
-          {/* the KPI Agent: a strip under the jobs */}
+          {/* the KPI Agent: the brokerage's goals, week by week */}
           <motion.div {...show(0.3)} className="relative mt-3 lg:mt-3.5">
-            <KpiPanel a={a} k={k} run={run} />
+            <KpiGoals a={a} run={run} reduce={reduce} />
           </motion.div>
         </div>
         <p className="mt-4 text-[12px] text-slate">{a.note}</p>

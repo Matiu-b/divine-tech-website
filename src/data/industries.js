@@ -291,16 +291,33 @@ export const industries = [
         ],
         kpi: {
           badge: 'Patented KPI Agent',
-          title: 'And it gets better every week.',
-          text: 'It measures Aurora against your numbers, like speed to lead, showings and no-shows, and improves how it works. Bigger changes wait for your approval.',
-          steps: [
-            { tag: 'Measured', text: 'No-shows rose on Saturday showings.' },
-            { tag: 'Cause found', text: 'Reminders went out by email. Buyers read texts.' },
-            { tag: 'Fix suggested', text: 'A text reminder two hours before.', who: 'Approved by Marcus' },
-            { tag: 'Improved', text: 'No-shows back on target. The change is logged.' },
+          title: 'Measured against your goals.',
+          text: 'You set the numbers that matter to the brokerage. Every week the KPI Agent measures Aurora against them, finds what holds a number back and changes how Aurora works. Bigger changes wait for your approval.',
+          goalLabel: 'Goal',
+          legend: { met: 'Goal met', not: 'Not yet', goal: 'Your goal' },
+          since: 'On goal since week',
+          changeLabel: 'After week',
+          weeks: ['W1', 'W2', 'W3', 'W4', 'W5', 'W6', 'W7', 'W8'],
+          // illustrative weekly values, 0 to 1 of the chart height; `better` says which side of the goal counts as met
+          goals: [
+            {
+              key: 'noshow', name: 'No-show rate', target: 'under 10%', better: 'lower', goal: 0.42,
+              values: [0.62, 0.58, 0.66, 0.4, 0.34, 0.3, 0.32, 0.27],
+              change: { after: 2, text: 'Showing reminders move from email to a text two hours before.', who: 'Approved by Marcus' },
+            },
+            {
+              key: 'speed', name: 'Speed to lead', target: 'under 1 minute', better: 'lower', goal: 0.45,
+              values: [0.8, 0.76, 0.72, 0.41, 0.36, 0.33, 0.3, 0.29],
+              change: { after: 2, text: 'After-hours calls are answered by Aurora’s voice agent instead of voicemail.' },
+            },
+            {
+              key: 'showings', name: 'Showings booked', target: '12 a week', better: 'higher', goal: 0.68,
+              values: [0.42, 0.47, 0.44, 0.5, 0.7, 0.74, 0.77, 0.82],
+              change: { after: 3, text: 'Aurora offers two showing times in the first reply instead of asking when suits.' },
+            },
           ],
         },
-        note: 'An example. Names, messages and the change are illustrative.',
+        note: 'An example. Names, messages, goals and the weekly figures are illustrative.',
       },
       // the closing call to action, for a brokerage
       closing: {
