@@ -48,8 +48,13 @@ export const industries = [
           listing: '9:47 pm · Maple Street',
           caller: 'Buyer',
           waiting: 'Aurora notes what she learns here',
-          listen: 'Listen to the call',
-          mute: 'Mute',
+          // the call plays only when the visitor presses play
+          listen: 'Play the call',
+          again: 'Play it again',
+          prompt: 'A buyer calls about the Maple Street listing at 9:47 pm. Hear how Aurora answers.',
+          sound: 'Sound on',
+          pause: 'Pause the call',
+          resume: 'Resume the call',
           stages: [
             { label: 'Greet', at: 0 },
             { label: 'Qualify', at: 16580 },
