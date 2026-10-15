@@ -1469,7 +1469,7 @@ function JobRevive({ x, on, done, reduce }) {
   return (
     <div className="flex h-full flex-col">
       <JobHead x={x} on={on} />
-      <div className={cn('mt-3 flex items-center gap-3 rounded-[14px] px-3 py-2.5 transition-colors duration-500', done ? 'bg-[#FFF3E8]' : 'bg-ink/[0.04]')}>
+      <div className={cn('mb-3 mt-3 flex items-center gap-3 rounded-[14px] px-3 py-2.5 transition-colors duration-500', done ? 'bg-[#FFF3E8]' : 'bg-ink/[0.04]')}>
         <span className={cn('relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[12px] font-medium transition-colors duration-500', done ? 'bg-ink text-white' : 'bg-ink/10 text-ink/45')}>
           {x.initials}
           {done && !reduce ? <span className="ring-ping absolute inset-0 rounded-full bg-[#F25C2A]/30" /> : null}
@@ -1489,17 +1489,24 @@ function JobRevive({ x, on, done, reduce }) {
           </motion.span>
         </span>
       </div>
-      <p className="mt-2.5 flex items-start gap-2 text-[13px] leading-snug text-graphite">
-        <img src="/brand/aurora-symbol-color.svg" alt="" width="12" height="12" className="mt-[3px] h-3 w-3 shrink-0" />
-        “{x.msg}”
-      </p>
-      <AnimatePresence>
-        {done ? (
-          <motion.p key="r" initial={reduce ? false : { opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: reduce ? 0 : 0.25 }} className="mt-2 self-end rounded-[14px] rounded-br-[4px] bg-ink px-3 py-1.5 text-[13px] text-white">
-            {x.reply}
-          </motion.p>
-        ) : null}
-      </AnimatePresence>
+      <div className="mt-auto flex flex-col rounded-[16px] bg-[#F6F1E8] p-3">
+        <p className="rounded-[14px] rounded-bl-[4px] bg-white px-3 py-2 text-[13px] leading-snug text-ink shadow-[0_1px_2px_rgba(10,15,14,0.06)]">
+          <span className="mb-0.5 flex items-center gap-1.5 text-[10.5px] font-medium uppercase tracking-[0.06em] text-ink/40">
+            <img src="/brand/aurora-symbol-color.svg" alt="" width="11" height="11" className="h-[11px] w-[11px]" />
+            Aurora
+          </span>
+          {x.msg}
+        </p>
+        <div className="mt-2 flex min-h-[30px] justify-end">
+          <AnimatePresence>
+            {done ? (
+              <motion.span key="r" initial={reduce ? false : { opacity: 0, y: 8, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ delay: reduce ? 0 : 0.25 }} className="rounded-[14px] rounded-br-[4px] bg-ink px-3 py-1.5 text-[13px] text-white">
+                {x.reply}
+              </motion.span>
+            ) : null}
+          </AnimatePresence>
+        </div>
+      </div>
     </div>
   );
 }
@@ -1518,17 +1525,25 @@ function JobSeller({ x, on, done, reduce }) {
           <span className="block text-[11.5px] text-slate">{x.tag}</span>
         </span>
       </p>
-      <p className="mt-2.5 text-[13px] leading-snug text-graphite">“{x.msg}”</p>
-      <div className="mt-2.5 flex flex-wrap gap-1.5">
+      <div className="mt-3 rounded-[16px] bg-[#F6F1E8] p-3">
+      <p className="rounded-[14px] rounded-bl-[4px] bg-white px-3 py-2 text-[13px] leading-snug text-ink shadow-[0_1px_2px_rgba(10,15,14,0.06)]">
+          <span className="mb-0.5 flex items-center gap-1.5 text-[10.5px] font-medium uppercase tracking-[0.06em] text-ink/40">
+            <img src="/brand/aurora-symbol-color.svg" alt="" width="11" height="11" className="h-[11px] w-[11px]" />
+            Aurora
+          </span>
+          {x.msg}
+      </p>
+      <div className="mt-2 flex flex-wrap gap-1.5">
         {x.slots.map((sl, i) => {
           const picked = done && i === x.pick;
           return (
-            <span key={sl} className={cn('relative rounded-[10px] px-2.5 py-1.5 text-[12px] font-medium transition-colors duration-300', picked ? 'text-white' : 'bg-ink/[0.05] text-ink/60')}>
+            <span key={sl} className={cn('relative rounded-[10px] px-2.5 py-1.5 text-[12px] font-medium transition-colors duration-300', picked ? 'text-white' : 'bg-white/70 text-ink/60')}>
               {picked ? <motion.span layoutId={reduce ? undefined : 'seller-slot'} className="absolute inset-0 rounded-[10px] bg-ink" /> : null}
               <span className="relative">{sl}</span>
             </span>
           );
         })}
+      </div>
       </div>
       <AnimatePresence>
         {done ? (

@@ -257,7 +257,7 @@ export const industries = [
             text: 'Confirms each showing the day before, so fewer tours end in a no-show.',
             msg: 'Reminder: tomorrow at 11 am, 18 Willow Court with Marcus. Reply C to confirm.', reply: 'C',
             event: { day: 'Saturday', time: '11:00', title: 'Showing · 18 Willow Court', who: 'with Marcus' },
-            hours: ['10:00', '11:00', '12:00'], pending: 'Unconfirmed', result: 'Confirmed',
+            hours: ['10:00', '11:00'], pending: 'Unconfirmed', result: 'Confirmed',
           },
           {
             key: 'nurture', stage: 'In progress', tone: 'amber', when: 'Weeks 1–8', title: 'Follow-up cadence',
