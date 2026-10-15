@@ -30,7 +30,7 @@ export const industries = [
         eyebrow: 'Aurora for real estate',
         titleA: 'The AI ISA for',
         titleB: 'real estate brokerages.',
-        text: 'Aurora answers every lead from portals, ads, calls and texts in seconds, qualifies it, books the showing with the right agent and keeps every deal moving. Your agents just sell.',
+        text: 'Aurora answers every lead from portals, ads, calls and texts in seconds, qualifies it, books the showing with the right broker and keeps every deal moving. Your brokers just sell.',
         // The listing from the call, and the call itself: a buyer phones about it at night and Aurora answers. Recorded in ElevenLabs v4;
         // `at` / `end` are where each caption starts and ends in the recording (ms), `words` when each
         // word is spoken, from the start of its caption. Names, prices and times are illustrative.
@@ -65,7 +65,7 @@ export const industries = [
           notes: [
             { at: 34200, title: 'Pre-approved', detail: 'Up to $550K' },
             { at: 53500, title: 'Showing booked', detail: 'Sat 11:00 am · with Jess' },
-            { at: 58200, title: 'Text sent', detail: 'Address and agent contact' },
+            { at: 58200, title: 'Text sent', detail: 'Address and broker contact' },
           ],
           captions: [
             { who: 'aurora', at: 0, end: 3140, text: "Hi! Thanks for calling about the house on Maple Street.", words: [0, 880, 1220, 1440, 1680, 1980, 2100, 2320, 2520, 2760] },
@@ -93,21 +93,21 @@ export const industries = [
         eyebrow: 'Speed to lead',
         titleA: 'Leads go to',
         titleB: 'whoever answers first.',
-        text: 'Buyers text several agents about the homes they like. The first one to reply usually gets the showing.',
-        // One evening on a buyer's phone: she messages the listing agents of three homes and hears nothing;
+        text: 'Buyers text several brokers about the homes they like. The first one to reply usually gets the showing.',
+        // One evening on a buyer's phone: she messages the listing brokers of three homes and hears nothing;
         // the fourth home is listed by a brokerage that runs Aurora. Every name, address, number and message is illustrative.
         // the evening as a brokerage would read it in an activity log; also the step captions on phones and tablets
         steps: [
-          { time: '7:58 pm', title: '3 homes, 3 inquiries', text: 'One message to each listing agent: Elm & Co., Summit Homes, Keystone.' },
+          { time: '7:58 pm', title: '3 homes, 3 inquiries', text: 'One message to each listing broker: Elm & Co., Summit Homes, Keystone.' },
           { time: '9:46 pm', title: '0 of 3 replied', text: 'The first inquiry has waited 1h 48m. All three still say Delivered.' },
           { time: '9:47 pm', title: 'A 4th inquiry', text: '18 Willow Court, listed by Harbor Lane Realty. They run Aurora.' },
           { time: '+3 sec', title: 'Aurora replies', text: 'In her thread: the answer to her question, then a question back.' },
-          { time: '9:52 pm', title: 'Tour booked, in the CRM', text: 'Qualified, booked with Marcus and filed. No other agent has replied.' },
+          { time: '9:52 pm', title: 'Tour booked, in the CRM', text: 'Qualified, booked with Marcus and filed. No other broker has replied.' },
         ],
         phone: {
           title: 'Messages',
           app: 'Homes',
-          cta: 'Message agent',
+          cta: 'Message broker',
           personal: [
             { key: 'dad', name: 'Dad', initials: 'D', preview: 'Call me when you get a chance', time: 'Yesterday', order: -30 },
             { key: 'book', name: 'Book club', initials: 'BC', preview: 'Priya: Next week at mine?', time: 'Yesterday', order: -20 },
@@ -164,7 +164,7 @@ export const industries = [
             },
           ],
           listedBy: 'Listed by',
-          agentTag: 'Listing agent',
+          agentTag: 'Listing broker',
           delivered: 'Delivered',
           noReply: 'No reply',
           typingField: 'Text Message',
@@ -177,7 +177,7 @@ export const industries = [
             { who: 'buyer', text: 'Emma Clarke', crm: ['name'] },
             { who: 'aurora', text: 'Thanks, Emma! When are you hoping to move, and have you talked to a lender yet?' },
             { who: 'buyer', text: 'In about two months. Pre-approved up to $450K', crm: ['timeline', 'budget'] },
-            { who: 'aurora', text: "You're well within range. Marcus, the listing agent, can give you a tour Thursday at 6:30 pm. Does that work?" },
+            { who: 'aurora', text: "You're well within range. Marcus, the listing broker, can give you a tour Thursday at 6:30 pm. Does that work?" },
             { who: 'buyer', text: 'Thursday works for me' },
             { who: 'aurora', booked: { title: 'Tour booked', detail: 'Thu 6:30 pm · with Marcus' }, text: "You're all set. What's the best email for the details?", crm: ['tour'] },
             { who: 'buyer', text: 'emma.c@example.com', crm: ['email'] },
@@ -213,37 +213,37 @@ export const industries = [
         titleA: 'It follows your rules.',
         titleB: 'Every time.',
         items: [
-          { icon: 'price', title: 'No final prices', text: 'Offers a showing or a call with an agent instead of quoting a price.' },
+          { icon: 'price', title: 'No final prices', text: 'Offers a showing or a call with a broker instead of quoting a price.' },
           { icon: 'fair', title: 'Questions about the home', text: 'Budget, timing, area and needs. Never about who the buyer is.' },
           { icon: 'consent', title: 'Contact on their terms', text: 'Replies on the channel the lead chose, and stops when asked.' },
-          { icon: 'handoff', title: 'Hot leads to a person', text: 'Ready buyers and sellers go to the right agent with the full history.' },
+          { icon: 'handoff', title: 'Hot leads to a person', text: 'Ready buyers and sellers go to the right broker with the full history.' },
         ],
       },
     },
     meta: {
       title: 'AI ISA for Real Estate Brokerages | Aurora by Divine Tech AI',
       description:
-        'Aurora is the AI ISA for real estate brokerages: it answers every lead in seconds by phone, text and chat, qualifies it and books showings with your agents.',
+        'Aurora is the AI ISA for real estate brokerages: it answers every lead in seconds by phone, text and chat, qualifies it and books showings with your brokers.',
     },
     short: 'Answer every lead in seconds, book viewings, and handle the follow-up emails and paperwork.',
     hero: {
       eyebrow: 'Aurora for real estate',
-      titleA: 'The first agent to reply wins the lead.',
+      titleA: 'The first broker to reply wins the lead.',
       titleB: 'Aurora replies in seconds.',
-      text: 'Aurora answers every inquiry from portals, ads, calls and texts, qualifies budget, timeline and area, books the viewing into the right agent’s calendar and follows up until the client shows.',
+      text: 'Aurora answers every inquiry from portals, ads, calls and texts, qualifies budget, timeline and area, books the viewing into the right broker’s calendar and follows up until the client shows.',
     },
     problem: {
       titleA: 'You pay for every lead.',
       titleB: 'Most are answered too late.',
       points: [
-        ['Leads arrive around the clock', 'Portals, ads, calls and texts bring inquiries at every hour, and the first agent to answer usually wins.'],
-        ['Agents chase instead of showing', 'Hours go to qualifying, scheduling and follow-ups instead of time with buyers and tenants.'],
+        ['Leads arrive around the clock', 'Portals, ads, calls and texts bring inquiries at every hour, and the first broker to answer usually wins.'],
+        ['Brokers chase instead of showing', 'Hours go to qualifying, scheduling and follow-ups instead of time with buyers and tenants.'],
         ['Follow-up slips', 'A viewing without a reminder or a next step is a lead that quietly goes cold.'],
       ],
       cost: 'Leads you paid for, answered first by someone else.',
     },
-    caption: 'Your agents are out showing homes. Aurora answers every new lead.',
-    card: { icon: 'calendar', title: 'Viewing booked', detail: 'Sat 11:00, right agent, confirmation sent' },
+    caption: 'Your brokers are out showing homes. Aurora answers every new lead.',
+    card: { icon: 'calendar', title: 'Viewing booked', detail: 'Sat 11:00, right broker, confirmation sent' },
     events: [
       { icon: 'message', title: 'New lead answered', detail: 'Text message, 2BR inquiry' },
       { icon: 'mail', title: 'Listing email written and sent', detail: '12 matching buyers, personal intro' },
@@ -258,36 +258,36 @@ export const industries = [
       steps: [
         ['Answers in seconds', 'Every inquiry gets a reply on the channel it came from, day or night.'],
         ['Qualifies the lead', 'Budget, timeline and area, asked naturally and logged to your CRM.'],
-        ['Books the viewing', 'Into the right agent’s calendar, with the confirmation and address sent to the client.'],
+        ['Books the viewing', 'Into the right broker’s calendar, with the confirmation and address sent to the client.'],
         ['Follows up', 'A reminder the day before and a next step after the viewing, until the deal moves.'],
       ],
       chips: ['New lead · 2BR Maple St', 'Qualified · $3k, May, Downtown', 'Viewing booked · Sat 11:00', 'Follow-up · Fri 18:00'],
       photo: {
         src: PHOTOS + 're-agent-960.webp',
         srcSet: srcSet('re-agent', [640, 960, 1440]),
-        alt: 'A real-estate agent with a tablet showing a couple around a bright, newly staged apartment',
+        alt: 'A real-estate broker with a tablet showing a couple around a bright, newly staged apartment',
         position: 'object-[35%_40%]',
       },
     },
     control: {
       title: 'Your rules on every price and exception.',
-      text: 'Tell Aurora what it may never do, like quoting a final price, and what needs a person, like waiving a fee. It asks, your agent approves, and every step is on record.',
+      text: 'Tell Aurora what it may never do, like quoting a final price, and what needs a person, like waiving a fee. It asks, your broker approves, and every step is on record.',
     },
     value: [
       ['Revenue', 'More booked viewings from the same ad spend.'],
       ['Time', 'First response in seconds instead of hours.'],
-      ['Team', 'Agents show properties instead of chasing leads.'],
+      ['Team', 'Brokers show properties instead of chasing leads.'],
       ['Operations', 'Every lead handled the same way, every time.'],
     ],
     success: 'From chasing leads to showing properties.',
-    systems: ['Your CRM', 'Agent calendars', 'Listing portals', 'Phone', 'SMS', 'Email', 'Web chat', 'WhatsApp'],
+    systems: ['Your CRM', 'Broker calendars', 'Listing portals', 'Phone', 'SMS', 'Email', 'Web chat', 'WhatsApp'],
     faq: [
-      ['What is an AI ISA for real estate?', 'An AI ISA (inside sales agent) answers and qualifies a brokerage’s leads the way a human ISA does, by phone, text, chat and email. Aurora replies to every new lead in seconds, asks about budget, timing and area, books the showing or listing appointment with the right agent and follows up until the lead is ready.'],
+      ['What is an AI ISA for real estate?', 'An AI ISA (inside sales agent) answers and qualifies a brokerage’s leads the way a human ISA does, by phone, text, chat and email. Aurora replies to every new lead in seconds, asks about budget, timing and area, books the showing or listing appointment with the right broker and follows up until the lead is ready.'],
       ['How fast does Aurora reply to a new lead?', 'Within seconds, on the channel the lead came from, at any hour. A portal inquiry at 9:47 pm gets an answer at 9:47 pm, not the next morning.'],
-      ['Can Aurora book showings in my agents’ calendars?', 'Yes. During setup Aurora is connected to your agents’ calendars and your routing rules, so it books the showing with the right agent, sends the confirmation and address, and reminds the client the day before.'],
-      ['Does Aurora work with our CRM and lead sources?', 'Aurora works inside the systems your team already uses. During setup it is connected to your CRM, your lead sources and your agents’ calendars, and every conversation is logged to the lead’s record.'],
-      ['Will Aurora quote prices or negotiate?', 'Only within the rules you set. You can tell it never to quote a final price and to offer a showing or a call with an agent instead. Anything outside your rules goes to an agent for approval.'],
-      ['What happens when a lead is ready to talk to an agent?', 'Aurora hands the lead to the right agent with the full conversation, and your team can step into any conversation at any moment.'],
+      ['Can Aurora book showings in my brokers’ calendars?', 'Yes. During setup Aurora is connected to your brokers’ calendars and your routing rules, so it books the showing with the right broker, sends the confirmation and address, and reminds the client the day before.'],
+      ['Does Aurora work with our CRM and lead sources?', 'Aurora works inside the systems your team already uses. During setup it is connected to your CRM, your lead sources and your brokers’ calendars, and every conversation is logged to the lead’s record.'],
+      ['Will Aurora quote prices or negotiate?', 'Only within the rules you set. You can tell it never to quote a final price and to offer a showing or a call with a broker instead. Anything outside your rules goes to a broker for approval.'],
+      ['What happens when a lead is ready to talk to a broker?', 'Aurora hands the lead to the right broker with the full conversation, and your team can step into any conversation at any moment.'],
     ],
   },
   {
