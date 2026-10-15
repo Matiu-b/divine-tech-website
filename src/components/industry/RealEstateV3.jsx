@@ -975,7 +975,10 @@ export function RxRace({ it }) {
               </h2>
               <p className="pretty mt-4 max-w-[30em] text-[15.5px] leading-[1.6] text-graphite">{r.text}</p>
             </div>
-            <StepTimeline steps={r.steps} T={T} t={t} step={step} reduce={reduce} />
+            {/* a fixed height for the timeline, so the group stays put while steps open and close */}
+            <div className="min-h-[316px] [@media(max-height:760px)]:min-h-[276px]">
+              <StepTimeline steps={r.steps} T={T} t={t} step={step} reduce={reduce} />
+            </div>
           </div>
 
           {/* the step and, on laptops, the stage box: her clip, then the brokerage's CRM once her message lands. From 1280 px the box alone, as tall as the phone */}
