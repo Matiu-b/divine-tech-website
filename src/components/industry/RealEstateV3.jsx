@@ -856,7 +856,8 @@ export function RxRace({ it }) {
         >
           <div aria-hidden="true" className="pointer-events-none absolute right-[6%] top-[-10%] h-[70%] w-[45%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.45),rgba(255,200,87,0))] blur-2xl" />
 
-          <div className="relative">
+          {/* wide screens: the column runs the phone's full height, so the step lines up with its top and the CRM with its bottom */}
+          <div className="relative xl:flex xl:flex-col xl:self-stretch">
             <div className="mx-auto flex max-w-[352px] gap-1.5 lg:max-w-none" aria-hidden="true">
               {r.steps.map((x, i) => (
                 <span key={x.title} className={cn('h-1 flex-1 rounded-full transition-colors duration-500', i <= step ? 'bg-ink' : 'bg-ink/10')} />
@@ -896,13 +897,13 @@ export function RxRace({ it }) {
               {wide && !xl ? clip : null}
             </div>
             {/* wide screens: the brokerage's CRM fills in as Aurora qualifies her */}
-            <div className="relative mt-5 hidden xl:block">
+            <div className="relative hidden pt-5 xl:mt-auto xl:block">
               <CrmCard c={r.crm} T={T} t={t} reduce={reduce} short={short} />
             </div>
           </div>
 
-          {/* wide screens: her evening on the sofa, between the CRM and her phone */}
-          <div className="relative hidden xl:block">
+          {/* wide screens: her evening on the sofa, between the CRM and her phone, sitting on the same bottom line */}
+          <div className="relative hidden xl:block xl:self-end">
             <div className="relative mx-auto aspect-square max-h-[var(--stage-h)] w-full">{xl ? clip : null}</div>
           </div>
           <div className="relative">
