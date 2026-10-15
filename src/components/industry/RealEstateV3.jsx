@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, m as motion, useReducedMotion } from 'framer-motion';
-import { ArrowUp, CalendarCheck, Check, ChevronLeft, CircleDollarSign, Database, Hand, Pause, Play, Scale, Volume2, Send, Clock, House, BellOff, Hourglass, ShieldCheck, User, RefreshCw, ArrowRight, TrendingUp } from 'lucide-react';
+import { ArrowUp, CalendarCheck, Check, ChevronLeft, CircleDollarSign, Database, Hand, Pause, Play, Scale, Volume2, Send, Clock, House, BellOff, Hourglass, ShieldCheck, User, ArrowRight, TrendingUp, Heart } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import CTAButton from '@/components/home-v2/primitives/CTAButton';
 import SectionHeader from '@/components/home-v2/primitives/SectionHeader';
@@ -1330,14 +1330,202 @@ export function RxRules({ it }) {
   );
 }
 
-const AFTER_ICONS = { remind: CalendarCheck, nurture: Send, revive: RefreshCw, seller: House };
-// how long each KPI step stays highlighted (ms)
+// how long each job stays in the spotlight, and when inside it the job resolves (ms)
+const AFTER_MS = 3400;
+const AFTER_RESOLVE = 1100;
 const KPI_MS = 2800;
 
+/** The label every job card shares: when it happens and what it is. */
+function JobLabel({ x, on, dark = false }) {
+  return (
+    <p className="flex items-baseline gap-2">
+      <span className={cn('t-data text-[10.5px] uppercase tracking-[0.08em] transition-colors', on ? 'text-[#D9481C]' : dark ? 'text-white/40' : 'text-ink/35')}>{x.when}</span>
+      <span className={cn('text-[15px] font-medium tracking-[-0.01em]', dark ? 'text-white' : 'text-ink')}>{x.title}</span>
+    </p>
+  );
+}
+
+/** Day 1: the reminder as it lands on the buyer's lock screen; the buyer answers C and it is confirmed. */
+function JobRemind({ x, on, done, reduce }) {
+  return (
+    <div className="flex h-full flex-col">
+      <JobLabel x={x} on={on} dark />
+      <div className="relative mt-4 flex flex-1 flex-col items-center overflow-hidden rounded-[18px] bg-[radial-gradient(120%_80%_at_50%_0%,#3A4A78_0%,#1A2238_70%)] px-3 pb-4 pt-5">
+        <p className="text-[11px] font-medium text-white/60">{x.date}</p>
+        <p className="text-[40px] font-medium leading-none tracking-[-0.02em] text-white">{x.clock}</p>
+        <div className="mt-4 w-full rounded-[14px] bg-white/[0.14] p-2.5 backdrop-blur-md">
+          <p className="flex items-center gap-1.5 text-[10.5px] font-medium uppercase tracking-[0.04em] text-white/70">
+            <span className="flex h-4 w-4 items-center justify-center rounded-[4px] bg-white">
+              <img src="/brand/aurora-symbol-color.svg" alt="" width="10" height="10" className="h-2.5 w-2.5" />
+            </span>
+            {x.app}
+            <span className="ml-auto normal-case tracking-normal text-white/50">now</span>
+          </p>
+          <p className="mt-1 text-[12.5px] leading-snug text-white">{x.msg}</p>
+        </div>
+        <div className="mt-2 flex w-full justify-end">
+          <AnimatePresence>
+            {done ? (
+              <motion.span key="c" initial={reduce ? false : { opacity: 0, y: 8, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }} className="rounded-[14px] rounded-br-[4px] bg-[#2F7CF6] px-3 py-1 text-[13px] font-medium text-white">
+                {x.reply}
+              </motion.span>
+            ) : null}
+          </AnimatePresence>
+        </div>
+        <AnimatePresence>
+          {done ? (
+            <motion.span
+              key="stamp"
+              initial={reduce ? false : { opacity: 0, scale: 1.6, rotate: -14 }}
+              animate={{ opacity: 1, scale: 1, rotate: -8 }}
+              transition={{ duration: 0.4, ease: EASE, delay: reduce ? 0 : 0.35 }}
+              className="absolute bottom-4 left-4 rounded-[8px] border-2 border-[#7FD49B] px-2.5 py-0.5 text-[13px] font-semibold uppercase tracking-[0.08em] text-[#7FD49B]"
+            >
+              {x.result}
+            </motion.span>
+          ) : null}
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+}
+
+/** Week 2: two homes that match, sent with a question; the buyer hearts one and asks to see it. */
+function JobNurture({ x, on, done, reduce }) {
+  return (
+    <div className="flex h-full flex-col gap-4 lg:flex-row lg:items-stretch">
+      <div className="flex min-w-0 flex-col lg:w-[44%]">
+        <JobLabel x={x} on={on} />
+        <p className="mt-3 rounded-[16px] rounded-bl-[4px] bg-[#F6F1E8] px-3 py-2.5 text-[13.5px] leading-snug text-ink">
+          <span className="mb-1 flex items-center gap-1.5 text-[10.5px] font-medium uppercase tracking-[0.06em] text-ink/40">
+            <img src="/brand/aurora-symbol-color.svg" alt="" width="11" height="11" className="h-[11px] w-[11px]" />
+            Aurora
+          </span>
+          {x.msg}
+        </p>
+        <AnimatePresence>
+          {done ? (
+            <motion.span key="r" initial={reduce ? false : { opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: reduce ? 0 : 0.3 }} className="mt-auto inline-flex items-center gap-1.5 self-start pt-3 text-[12.5px] font-medium text-[#B4471A]">
+              <CalendarCheck className="h-3.5 w-3.5" strokeWidth={2.2} aria-hidden="true" />
+              {x.result}
+            </motion.span>
+          ) : null}
+        </AnimatePresence>
+      </div>
+      <div className="grid flex-1 grid-cols-2 gap-2.5">
+        {x.homes.map((h, i) => {
+          const picked = done && i === x.pick;
+          return (
+            <div key={h.price} className={cn('relative overflow-hidden rounded-[14px] bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.08)] transition-transform duration-500', picked ? '-translate-y-1 shadow-[0_0_0_2px_#F25C2A,0_16px_30px_-18px_rgba(242,92,42,0.6)]' : '')}>
+              <img src={h.image} alt="" className="h-[92px] w-full object-cover" loading="lazy" decoding="async" />
+              <span className={cn('absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full transition-colors duration-300', picked ? 'bg-[#F25C2A] text-white' : 'bg-white/90 text-ink/50')}>
+                <motion.span animate={picked && !reduce ? { scale: [1, 1.35, 1] } : { scale: 1 }} transition={{ duration: 0.4 }}>
+                  <Heart className={cn('h-3.5 w-3.5', picked ? 'fill-current' : '')} strokeWidth={2.2} aria-hidden="true" />
+                </motion.span>
+              </span>
+              <p className="px-2.5 pb-2 pt-1.5">
+                <span className="block text-[14px] font-medium text-ink">{h.price}</span>
+                <span className="block text-[11.5px] text-slate">{h.meta}</span>
+              </p>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/** Month 3: a lead that went quiet in the CRM, a question, a reply, and the row comes back to life. */
+function JobRevive({ x, on, done, reduce }) {
+  return (
+    <div className="flex h-full flex-col">
+      <JobLabel x={x} on={on} />
+      <div className={cn('mt-3 flex items-center gap-3 rounded-[14px] px-3 py-2.5 transition-colors duration-500', done ? 'bg-[#FFF3E8]' : 'bg-ink/[0.04]')}>
+        <span className={cn('relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[12px] font-medium transition-colors duration-500', done ? 'bg-ink text-white' : 'bg-ink/10 text-ink/45')}>
+          {x.initials}
+          {done && !reduce ? <span className="ring-ping absolute inset-0 rounded-full bg-[#F25C2A]/30" /> : null}
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className={cn('block text-[14px] font-medium transition-colors', done ? 'text-ink' : 'text-ink/50')}>{x.name}</span>
+          <span className="block truncate text-[11.5px] text-slate">{done ? x.after : x.before}</span>
+        </span>
+        <span className="relative h-6 w-[58px] shrink-0 [perspective:400px]">
+          <motion.span
+            className="absolute inset-0 [transform-style:preserve-3d]"
+            animate={{ rotateX: done ? 180 : 0 }}
+            transition={{ duration: reduce ? 0 : 0.6, ease: EASE }}
+          >
+            <span className="absolute inset-0 flex items-center justify-center rounded-full bg-ink/[0.08] text-[11.5px] font-medium text-ink/55 [backface-visibility:hidden]">{x.cold}</span>
+            <span className="absolute inset-0 flex items-center justify-center rounded-full bg-[#E4F4E8] text-[11.5px] font-medium text-[#2E7A48] [backface-visibility:hidden] [transform:rotateX(180deg)]">{x.active}</span>
+          </motion.span>
+        </span>
+      </div>
+      <p className="mt-2.5 flex items-start gap-2 text-[13px] leading-snug text-graphite">
+        <img src="/brand/aurora-symbol-color.svg" alt="" width="12" height="12" className="mt-[3px] h-3 w-3 shrink-0" />
+        “{x.msg}”
+      </p>
+      <AnimatePresence>
+        {done ? (
+          <motion.p key="r" initial={reduce ? false : { opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: reduce ? 0 : 0.25 }} className="mt-2 self-end rounded-[14px] rounded-br-[4px] bg-ink px-3 py-1.5 text-[13px] text-white">
+            {x.reply}
+          </motion.p>
+        ) : null}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+/** Any day: a homeowner asks for a valuation; Aurora offers times and one is booked with the listing broker. */
+function JobSeller({ x, on, done, reduce }) {
+  return (
+    <div className="flex h-full flex-col">
+      <JobLabel x={x} on={on} />
+      <p className="mt-3 flex items-center gap-2.5">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-[#F6F1E8] text-[#D9481C]">
+          <House className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
+        </span>
+        <span className="min-w-0">
+          <span className="block text-[14px] font-medium text-ink">{x.address}</span>
+          <span className="block text-[11.5px] text-slate">{x.tag}</span>
+        </span>
+      </p>
+      <p className="mt-2.5 text-[13px] leading-snug text-graphite">“{x.msg}”</p>
+      <div className="mt-2.5 flex flex-wrap gap-1.5">
+        {x.slots.map((sl, i) => {
+          const picked = done && i === x.pick;
+          return (
+            <span key={sl} className={cn('relative rounded-[10px] px-2.5 py-1.5 text-[12px] font-medium transition-colors duration-300', picked ? 'text-white' : 'bg-ink/[0.05] text-ink/60')}>
+              {picked ? <motion.span layoutId={reduce ? undefined : 'seller-slot'} className="absolute inset-0 rounded-[10px] bg-ink" /> : null}
+              <span className="relative">{sl}</span>
+            </span>
+          );
+        })}
+      </div>
+      <AnimatePresence>
+        {done ? (
+          <motion.p key="r" initial={reduce ? false : { opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: reduce ? 0 : 0.3 }} className="mt-auto flex items-center gap-2 pt-3 text-[12.5px] font-medium text-[#2E7A48]">
+            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-ink text-[10px] text-white">M</span>
+            {x.result}
+          </motion.p>
+        ) : null}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+const JOBS = { remind: JobRemind, nurture: JobNurture, revive: JobRevive, seller: JobSeller };
+// bento placement on laptops: the reminder tall on the left, listings wide on top, the CRM row and the booking below
+const JOB_PLACE = {
+  remind: 'lg:col-span-2 lg:row-span-2 bg-ink',
+  nurture: 'lg:col-span-4',
+  revive: 'lg:col-span-2',
+  seller: 'lg:col-span-2',
+};
+
 /**
- * After the first reply: what Aurora keeps doing for a lead over the following weeks (reminders, follow-up, old leads,
- * seller leads), each with the message it sends and what came of it; then the KPI Agent improving it, one week told
- * in four steps that light up in turn.
+ * After the first reply: four jobs Aurora keeps doing for a lead, each drawn as the thing it is, in a bento. A spotlight
+ * moves from one to the next, and each resolves in its own way (a stamp, a heart, a status flip, a slot). Then the KPI
+ * Agent improving it, one week in four steps that light up in turn.
  */
 export function RxAfter({ it }) {
   const a = it.v3.after;
@@ -1345,13 +1533,29 @@ export function RxAfter({ it }) {
   const reduce = !!useReducedMotion();
   const inView = useInViewport(ref, { threshold: 0.25 });
   const visible = usePageVisible();
+  const run = !reduce && inView && visible;
+
+  // the spotlight: job j is on; it resolves AFTER_RESOLVE ms in; every job before it stays resolved
+  const n = a.steps.length;
+  const [j, setJ] = useState(0);
+  const [resolved, setResolved] = useState(false);
+  useEffect(() => {
+    if (!run) return undefined;
+    setResolved(false);
+    const r = setTimeout(() => setResolved(true), AFTER_RESOLVE);
+    const nx = setTimeout(() => setJ((x) => (x + 1) % (n + 1)), AFTER_MS);
+    return () => {
+      clearTimeout(r);
+      clearTimeout(nx);
+    };
+  }, [j, run, n]);
+
   const [k, setK] = useState(0);
   useEffect(() => {
-    if (reduce || !inView || !visible) return undefined;
+    if (!run) return undefined;
     const id = setTimeout(() => setK((x) => (x + 1) % a.kpi.steps.length), KPI_MS);
     return () => clearTimeout(id);
-  }, [k, reduce, inView, visible, a.kpi.steps.length]);
-  // amount 'some': on phones the next step only peeks in from the side, and must still appear
+  }, [k, run, a.kpi.steps.length]);
   const show = (d) => (reduce ? {} : { initial: { opacity: 0, y: 16 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, amount: 'some' }, transition: { duration: 0.6, ease: EASE, delay: d } });
 
   return (
@@ -1367,65 +1571,57 @@ export function RxAfter({ it }) {
             <p className="pretty text-[15px] leading-[1.6] text-graphite md:text-[15.5px]">{a.text}</p>
           </div>
 
-          {/* the weeks after the first reply (phones: a row to swipe through) */}
-          <ol className="relative mt-7 grid gap-3 max-sm:-mx-4 max-sm:flex max-sm:snap-x max-sm:snap-mandatory max-sm:overflow-x-auto max-sm:px-4 max-sm:pb-1 max-sm:[scrollbar-width:none] xs:max-sm:-mx-5 xs:max-sm:px-5 sm:grid-cols-2 lg:mt-8 lg:grid-cols-4 lg:gap-4 [&::-webkit-scrollbar]:hidden">
-            <span aria-hidden="true" className="absolute left-4 right-4 top-[27px] hidden h-px bg-[linear-gradient(90deg,rgba(242,92,42,0.5),rgba(10,15,14,0.1))] lg:block" />
+          {/* the jobs, as a bento on laptops and a row to swipe on phones */}
+          <ol className="relative mt-7 grid gap-3 max-sm:-mx-4 max-sm:flex max-sm:snap-x max-sm:snap-mandatory max-sm:overflow-x-auto max-sm:px-4 max-sm:pb-1 max-sm:[scrollbar-width:none] xs:max-sm:-mx-5 xs:max-sm:px-5 sm:grid-cols-2 lg:mt-8 lg:grid-cols-6 lg:grid-rows-[auto_auto] lg:gap-4 [&::-webkit-scrollbar]:hidden">
             {a.steps.map((x, i) => {
-              const Icon = AFTER_ICONS[x.key] || Check;
+              const Job = JOBS[x.key];
+              const on = run ? i === j : false;
+              const done = reduce || !run ? true : i < j || (i === j && resolved);
               return (
-                <motion.li key={x.key} {...show(0.08 * i)} className="relative flex flex-col rounded-[20px] bg-white p-4 shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_24px_48px_-36px_rgba(90,50,20,0.4)] max-sm:w-[84%] max-sm:shrink-0 max-sm:snap-center">
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="relative flex h-[30px] w-[30px] items-center justify-center rounded-full bg-[linear-gradient(140deg,#FF8A3D,#F25C2A)] text-white">
-                      <Icon className="h-[14px] w-[14px]" strokeWidth={2} aria-hidden="true" />
-                    </span>
-                    <span className="t-data text-[11px] uppercase tracking-[0.08em] text-ink/40">{x.when}</span>
-                  </div>
-                  <p className="mt-3 text-[16px] font-medium leading-snug tracking-[-0.01em] text-ink">{x.title}</p>
-                  <p className="mt-1 text-[13.5px] leading-snug text-graphite lg:sr-only">{x.text}</p>
-                  {/* the message Aurora sends */}
-                  <p className="mt-3 flex-1 rounded-[12px] bg-[#F6F1E8] px-3 py-2.5 text-[13.5px] leading-snug text-ink">
-                    <span className="mb-1 flex items-center gap-1.5 text-[10.5px] font-medium uppercase tracking-[0.06em] text-ink/40">
-                      <img src="/brand/aurora-symbol-color.svg" alt="" width="11" height="11" className="h-[11px] w-[11px]" />
-                      Aurora
-                    </span>
-                    “{x.msg}”
-                  </p>
-                  <span className="mt-3 inline-flex items-center gap-1.5 self-start rounded-full bg-[#E4F4E8] px-2.5 py-1 text-[12px] font-medium text-[#2E7A48]">
-                    <Check className="h-3.5 w-3.5" strokeWidth={2.4} aria-hidden="true" />
-                    {x.result}
-                  </span>
+                <motion.li
+                  key={x.key}
+                  {...show(0.08 * i)}
+                  aria-label={x.when + ': ' + x.title + '. ' + x.text}
+                  className={cn(
+                    'relative rounded-[22px] p-4 transition-shadow duration-500 max-sm:w-[86%] max-sm:shrink-0 max-sm:snap-center lg:p-5',
+                    x.key === 'remind' ? 'bg-ink text-white' : 'bg-white',
+                    on ? 'shadow-[0_0_0_2px_#F25C2A,0_30px_60px_-34px_rgba(242,92,42,0.55)]' : 'shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_24px_48px_-36px_rgba(90,50,20,0.4)]',
+                    JOB_PLACE[x.key]
+                  )}
+                >
+                  <Job x={x} on={on} done={done} reduce={reduce} />
                 </motion.li>
               );
             })}
           </ol>
 
           {/* the KPI Agent: one week of improvement in four steps */}
-          <motion.div {...show(0.3)} className="relative mt-3 grid gap-5 rounded-[22px] bg-ink p-5 text-white lg:mt-4 lg:grid-cols-[minmax(0,380px)_minmax(0,1fr)] lg:items-center lg:gap-8 lg:px-6 lg:py-5">
+          <motion.div {...show(0.3)} className="relative mt-3 grid gap-5 rounded-[22px] bg-[#FFF8F1] p-5 shadow-[0_0_0_1px_rgba(242,92,42,0.18)] lg:mt-4 lg:grid-cols-[minmax(0,360px)_minmax(0,1fr)] lg:items-center lg:gap-8 lg:px-6 lg:py-5">
             <div>
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1 text-[11.5px] font-medium text-white/80">
-                <TrendingUp className="h-3.5 w-3.5 text-[#FF8A3D]" strokeWidth={2.2} aria-hidden="true" />
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#FFE7D3] px-2.5 py-1 text-[11.5px] font-medium text-[#B4471A]">
+                <TrendingUp className="h-3.5 w-3.5" strokeWidth={2.2} aria-hidden="true" />
                 {a.kpi.badge}
               </span>
-              <p className="mt-2.5 text-[19px] font-medium leading-snug tracking-[-0.01em]">{a.kpi.title}</p>
-              <p className="mt-1 text-[13.5px] leading-snug text-white/60">{a.kpi.text}</p>
+              <p className="mt-2.5 text-[19px] font-medium leading-snug tracking-[-0.01em] text-ink">{a.kpi.title}</p>
+              <p className="mt-1 text-[13.5px] leading-snug text-graphite">{a.kpi.text}</p>
             </div>
             <ol className="grid grid-cols-2 gap-2 lg:grid-cols-4" aria-label={a.kpi.badge}>
               {a.kpi.steps.map((x, i) => {
                 const on = i === k;
                 const done = i < k;
                 return (
-                  <li key={x.tag} className={cn('relative overflow-hidden rounded-[14px] p-3 transition-colors duration-500', on ? 'bg-white/[0.12]' : 'bg-white/[0.04]')}>
-                    <span aria-hidden="true" className="absolute inset-x-0 top-0 h-[2px] bg-white/10">
+                  <li key={x.tag} className={cn('relative overflow-hidden rounded-[14px] p-3 transition-colors duration-500', on ? 'bg-white shadow-[0_8px_20px_-14px_rgba(90,50,20,0.5)]' : 'bg-white/50')}>
+                    <span aria-hidden="true" className="absolute inset-x-0 top-0 h-[2px] bg-ink/[0.06]">
                       <span
-                        className={cn('absolute inset-y-0 left-0 bg-[#F25C2A]', on && !reduce ? 'transition-[width] ease-linear' : '')}
-                        style={{ width: done ? '100%' : on ? '100%' : '0%', transitionDuration: on && !reduce ? KPI_MS + 'ms' : '0ms' }}
+                        className={cn('absolute inset-y-0 left-0 bg-[#F25C2A]', on && run ? 'transition-[width] ease-linear' : '')}
+                        style={{ width: done || on ? '100%' : '0%', transitionDuration: on && run ? KPI_MS + 'ms' : '0ms' }}
                       />
                     </span>
-                    <p className={cn('t-data text-[10.5px] uppercase tracking-[0.08em] transition-colors', on ? 'text-[#FF8A3D]' : 'text-white/40')}>
+                    <p className={cn('t-data text-[10.5px] uppercase tracking-[0.08em] transition-colors', on ? 'text-[#D9481C]' : 'text-ink/35')}>
                       {String(i + 1).padStart(2, '0')} · {x.tag}
                     </p>
-                    <p className={cn('mt-1.5 text-[13.5px] leading-snug transition-colors', on ? 'text-white' : 'text-white/55')}>{x.text}</p>
-                    {x.who ? <p className="mt-1.5 text-[11.5px] font-medium text-[#7FD49B]">{x.who}</p> : null}
+                    <p className={cn('mt-1.5 text-[13.5px] leading-snug transition-colors', on ? 'text-ink' : 'text-ink/55')}>{x.text}</p>
+                    {x.who ? <p className="mt-1.5 text-[11.5px] font-medium text-[#2E7A48]">{x.who}</p> : null}
                   </li>
                 );
               })}

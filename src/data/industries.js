@@ -250,11 +250,32 @@ export const industries = [
         titleA: 'The first reply is day one.',
         titleB: 'Aurora keeps every lead moving.',
         text: 'Most buyers aren’t ready this week. Aurora reminds, follows up, revives and books, on your rules, until they are.',
+        // one card per job, each drawn as the thing it is (a lock-screen reminder, listings, a CRM row, a booking)
         steps: [
-          { key: 'remind', when: 'Day 1', title: 'Showing reminders', text: 'Confirms the tour and reminds the buyer the day before.', msg: 'Reminder: tomorrow at 11 am, 18 Willow Court with Marcus. Reply C to confirm.', result: 'Confirmed' },
-          { key: 'nurture', when: 'Week 2', title: 'Leads not ready yet', text: 'Sends homes that match and checks in on the timing they gave.', msg: 'Two new homes in your range just listed near Oak Park. Want to see either one?', result: 'Tour requested' },
-          { key: 'revive', when: 'Month 3', title: 'Old leads, back to life', text: 'Works through the leads in your CRM that went quiet.', msg: 'Hi Dan, are you still thinking about a move this spring?', result: 'Back in the pipeline' },
-          { key: 'seller', when: 'Any day', title: 'Seller leads', text: 'Qualifies homeowners and books the listing appointment.', msg: 'Happy to help. Marcus can come by for a home valuation on Thursday. Does 5 pm work?', result: 'Listing appointment booked' },
+          {
+            key: 'remind', when: 'Day 1', title: 'Showing reminders', text: 'Confirms the tour and reminds the buyer the day before.',
+            app: 'Harbor Lane Realty', clock: '8:02', date: 'Friday, October 17',
+            msg: 'Reminder: tomorrow at 11 am, 18 Willow Court with Marcus. Reply C to confirm.', reply: 'C', result: 'Confirmed',
+          },
+          {
+            key: 'nurture', when: 'Week 2', title: 'Leads not ready yet', text: 'Sends homes that match and checks in on the timing they gave.',
+            msg: 'Two new homes in your range just listed near Oak Park. Want to see either one?',
+            homes: [
+              { image: '/media/real-estate/listing-birch-600.webp', price: '$452K', meta: '3 bd · 2 ba' },
+              { image: '/media/real-estate/listing-oak-600.webp', price: '$478K', meta: '4 bd · 3 ba' },
+            ],
+            pick: 1, result: 'Tour requested',
+          },
+          {
+            key: 'revive', when: 'Month 3', title: 'Old leads, back to life', text: 'Works through the leads in your CRM that went quiet.',
+            name: 'Dan Morales', initials: 'DM', before: 'Last contact 94 days ago', after: 'Replied just now', cold: 'Cold', active: 'Active',
+            msg: 'Hi Dan, are you still thinking about a move this spring?', reply: 'Yes, probably April.',
+          },
+          {
+            key: 'seller', when: 'Any day', title: 'Seller leads', text: 'Qualifies homeowners and books the listing appointment.',
+            address: '214 Cedar Lane', tag: 'Home valuation', msg: 'Marcus can come by on Thursday. Which time works?',
+            slots: ['Thu 3:00', 'Thu 5:00', 'Fri 10:00'], pick: 1, result: 'Listing appointment booked',
+          },
         ],
         kpi: {
           badge: 'Patented KPI Agent',
