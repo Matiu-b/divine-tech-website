@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, m as motion, useReducedMotion } from 'framer-motion';
-import { ArrowUp, CalendarCheck, Check, ChevronLeft, CircleDollarSign, Database, Hand, MessageCircle, Pause, Play, Scale, Volume2 } from 'lucide-react';
+import { ArrowUp, CalendarCheck, Check, ChevronLeft, CircleDollarSign, Database, Hand, MessageCircle, Pause, Play, Scale, Volume2, Send, Clock, House } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import CTAButton from '@/components/home-v2/primitives/CTAButton';
 import SectionHeader from '@/components/home-v2/primitives/SectionHeader';
@@ -893,9 +893,11 @@ function StepBars({ steps, T, t, className = '' }) {
   );
 }
 
+const STEP_ICONS = [Send, Clock, House, null, CalendarCheck];
+
 /**
- * Wide screens: the evening as a timeline under the headline. Each step is a time and a name on a thin rail that fills
- * as the step plays; the current step opens with its line of text. Aurora's steps fill in her orange.
+ * Wide screens: the evening as an activity log under the headline, the way a brokerage would read it. Each event has
+ * an icon on a line that fills as the event plays; the current one opens with its detail. Aurora's events are orange.
  */
 function StepTimeline({ steps, T, t, step, reduce }) {
   return (
@@ -905,30 +907,56 @@ function StepTimeline({ steps, T, t, step, reduce }) {
         const to = i < steps.length - 1 ? T.stepAt[i + 1] : T.end;
         const f = Math.min(1, Math.max(0, (t - from) / Math.max(1, to - from)));
         const cur = i === step;
+        const past = i < step;
         const aurora = i >= 3;
+        const Icon = STEP_ICONS[i];
+        const last = i === steps.length - 1;
         return (
-          <li key={x.title} className="relative pb-5 pl-5 last:pb-0 [@media(max-height:760px)]:pb-3.5" aria-current={cur ? 'step' : undefined}>
-            <span aria-hidden="true" className="absolute bottom-1 left-0 top-1 w-[2px] overflow-hidden rounded-full bg-ink/[0.09]">
-              <span className={cn('absolute inset-x-0 top-0 rounded-full', aurora ? 'bg-[linear-gradient(180deg,#FF8A3D,#F25C2A)]' : 'bg-ink/75')} style={{ height: f * 100 + '%' }} />
+          <li key={x.title} className="grid grid-cols-[30px_minmax(0,1fr)] gap-x-3.5" aria-current={cur ? 'step' : undefined}>
+            <span aria-hidden="true" className="flex flex-col items-center">
+              <span
+                className={cn(
+                  'relative flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-full transition-colors duration-500',
+                  cur || past
+                    ? aurora
+                      ? 'bg-[linear-gradient(140deg,#FF8A3D,#F25C2A)] text-white'
+                      : cur
+                        ? 'bg-ink text-white'
+                        : 'bg-ink/[0.12] text-ink/60'
+                    : 'bg-white/70 text-ink/30 shadow-[inset_0_0_0_1px_rgba(10,15,14,0.1)]'
+                )}
+              >
+                {cur && !reduce ? <span className={cn('ring-ping absolute inset-0 rounded-full', aurora ? 'bg-[#F25C2A]/25' : 'bg-ink/15')} /> : null}
+                {Icon ? (
+                  <Icon className="relative h-[14px] w-[14px]" strokeWidth={2} />
+                ) : (
+                  <img src="/brand/aurora-symbol-color.svg" alt="" width="14" height="14" className={cn('relative h-[14px] w-[14px]', cur || past ? 'brightness-0 invert' : 'opacity-40')} />
+                )}
+              </span>
+              {last ? null : (
+                <span className="relative my-1 w-[2px] flex-1 overflow-hidden rounded-full bg-ink/[0.09]">
+                  <span className={cn('absolute inset-x-0 top-0 rounded-full', aurora || i === 2 ? 'bg-[linear-gradient(180deg,#FF8A3D,#F25C2A)]' : 'bg-ink/60')} style={{ height: f * 100 + '%' }} />
+                </span>
+              )}
             </span>
-            <p className="flex items-baseline gap-3">
-              <span className={cn('t-data w-[80px] shrink-0 whitespace-nowrap text-[11px] transition-colors duration-500', cur ? 'text-[#B4471A]' : i < step ? 'text-ink/40' : 'text-ink/25')}>{x.time}</span>
-              <span className={cn('text-[16px] font-medium leading-snug tracking-[-0.01em] transition-colors duration-500', cur ? 'text-ink' : i < step ? 'text-ink/45' : 'text-ink/30')}>{x.title}</span>
-            </p>
-            <AnimatePresence initial={false}>
-              {cur ? (
-                <motion.p
-                  key="text"
-                  className="overflow-hidden pl-[92px] text-[14px] leading-snug text-graphite"
-                  initial={reduce ? false : { height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.4, ease: EASE }}
-                >
-                  <span className="block min-h-[4.125em] pt-1">{x.text}</span>
-                </motion.p>
-              ) : null}
-            </AnimatePresence>
+            <div className={cn('min-w-0 pt-[3px]', last ? '' : 'pb-4 [@media(max-height:760px)]:pb-2.5')}>
+              <p className={cn('t-data text-[11px] transition-colors duration-500', cur ? (aurora ? 'text-[#D9481C]' : 'text-[#B4471A]') : 'text-ink/35')}>{x.time}</p>
+              <p className={cn('mt-0.5 text-[16px] font-medium leading-snug tracking-[-0.01em] transition-colors duration-500', cur ? 'text-ink' : past ? 'text-ink/50' : 'text-ink/30')}>{x.title}</p>
+              <AnimatePresence initial={false}>
+                {cur ? (
+                  <motion.p
+                    key="text"
+                    className="overflow-hidden text-[14px] leading-snug text-graphite"
+                    initial={reduce ? false : { height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.4, ease: EASE }}
+                  >
+                    <span className="block min-h-[4.125em] pt-1">{x.text}</span>
+                  </motion.p>
+                ) : null}
+              </AnimatePresence>
+            </div>
           </li>
         );
       })}
@@ -976,7 +1004,7 @@ export function RxRace({ it }) {
               <p className="pretty mt-4 max-w-[30em] text-[15.5px] leading-[1.6] text-graphite">{r.text}</p>
             </div>
             {/* a fixed height for the timeline, so the group stays put while steps open and close */}
-            <div className="min-h-[300px] [@media(max-height:760px)]:min-h-[270px]">
+            <div className="min-h-[330px] [@media(max-height:760px)]:min-h-[280px]">
               <StepTimeline steps={r.steps} T={T} t={t} step={step} reduce={reduce} />
             </div>
           </div>

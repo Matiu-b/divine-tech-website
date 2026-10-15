@@ -96,12 +96,13 @@ export const industries = [
         text: 'Buyers text several agents about the homes they like. The first one to reply usually gets the showing.',
         // One evening on a buyer's phone: she messages the listing agents of three homes and hears nothing;
         // the fourth home is listed by a brokerage that runs Aurora. Every name, address, number and message is illustrative.
+        // the evening as a brokerage would read it in an activity log; also the step captions on phones and tablets
         steps: [
-          { time: '7:58 pm', title: 'She messages the listing agents', text: 'Three homes, three listing agents, three messages.' },
-          { time: '9:46 pm', title: 'No one replies', text: 'Two hours later, every message still says Delivered.' },
-          { time: '9:47 pm', title: 'One more listing', text: 'This one is listed by a brokerage that runs Aurora.' },
-          { time: '3 sec later', title: 'Aurora answers', text: 'A reply in seconds, right in her conversation.' },
-          { time: '9:52 pm', title: 'Qualified, booked, in your CRM', text: 'Name, email, budget, timing and a tour, all filed.' },
+          { time: '7:58 pm', title: '3 homes, 3 inquiries', text: 'Elm & Co., Summit Homes and Keystone Realty. One message to each listing agent.' },
+          { time: '9:46 pm', title: '0 of 3 replied', text: 'The first inquiry has waited 1h 48m. All three still say Delivered.' },
+          { time: '9:47 pm', title: 'A 4th inquiry', text: '18 Willow Court, listed by Harbor Lane Realty. They run Aurora.' },
+          { time: '+3 sec', title: 'Aurora replies', text: 'In her thread: the answer to her question, then a question back.' },
+          { time: '9:52 pm', title: 'Tour booked, lead in the CRM', text: 'Qualified, scheduled with Marcus and filed, before any other agent replied.' },
         ],
         phone: {
           title: 'Messages',
