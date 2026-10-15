@@ -130,7 +130,7 @@ function Wave({ who }) {
         return (
           <span
             key={i}
-            className={cn('wave-bar w-[2px] rounded-full', who === 'aurora' ? 'bg-[#F25C2A]' : who ? 'bg-ink/70' : 'bg-ink/20', (i < 6 || i >= 22) && 'max-sm:hidden lg:hidden')}
+            className={cn('wave-bar w-[2px] rounded-full', who === 'aurora' ? 'bg-[#F25C2A]' : who ? 'bg-ink/70' : 'bg-ink/20', (i < 6 || i >= 22) && 'max-sm:hidden lg:hidden', (i < 9 || i >= 19) && 'max-[400px]:hidden')}
             style={/** @type {any} */ ({ height: 8 + env * 16 * (0.5 + r * 0.5) + 'px', '--d': (0.6 + r * 0.7).toFixed(2) + 's', '--dl': (-r * 1.3).toFixed(2) + 's' })}
           />
         );
@@ -267,7 +267,7 @@ function CallStage({ h, header }) {
                 {c.listing} · <span className="tabular-nums">{clock(live ? Math.min(t, c.duration) : c.duration)}</span>
               </span>
             </span>
-            <Wave who={reduce ? null : speaking} />
+            {live ? <Wave who={reduce ? null : speaking} /> : null}
             {live ? (
               <button
                 type="button"
