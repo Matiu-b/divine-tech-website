@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, m as motion, useReducedMotion } from 'framer-motion';
-import { ArrowUp, CalendarCheck, Check, ChevronLeft, CircleDollarSign, Database, Hand, Pause, Play, Scale, Volume2, Send, Clock, House, BellOff, Hourglass, ShieldCheck } from 'lucide-react';
+import { ArrowUp, CalendarCheck, Check, ChevronLeft, CircleDollarSign, Database, Hand, Pause, Play, Scale, Volume2, Send, Clock, House, BellOff, Hourglass, ShieldCheck, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import CTAButton from '@/components/home-v2/primitives/CTAButton';
 import SectionHeader from '@/components/home-v2/primitives/SectionHeader';
@@ -1146,9 +1146,13 @@ function RuleFlow({ r, sc, reduce }) {
     <div className="relative" aria-live="polite">
       {/* when */}
       <motion.div {...enter(0)} className="rounded-[18px] bg-white p-4 shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_18px_40px_-28px_rgba(90,50,20,0.35)]">
-        <p className="flex items-center justify-between gap-3">
-          <span className={label}>{r.flow.when}</span>
-          <span className="truncate text-[11.5px] text-slate">{sc.channel}</span>
+        {/* who wrote it: the buyer, and how it reached the brokerage */}
+        <p className="flex items-center gap-2">
+          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-ink/[0.07] text-ink/60">
+            <User className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
+          </span>
+          <span className="text-[13px] font-medium text-ink">{r.flow.when}</span>
+          <span className="truncate text-[12.5px] text-slate">{sc.channel}</span>
         </p>
         <p className="mt-2 text-[16px] font-medium leading-snug tracking-[-0.01em] text-ink sm:text-[17px] xl:text-[18px]">“{sc.trigger}”</p>
       </motion.div>
