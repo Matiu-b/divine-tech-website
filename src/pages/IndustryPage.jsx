@@ -270,7 +270,7 @@ export default function IndustryPage() {
         {it.v3.after ? <RxAfter it={it} /> : null}
         {it.v3.after ? <RxKpi it={it} /> : null}
         {it.v3.stack ? <RxStack it={it} /> : null}
-        <Faq id="ind-faq-title" items={it.faq} className="pt-0" more={it.v3.faqMore ? <RxFaqMore m={it.v3.faqMore} guide={it.article ? postPath(it.article) : null} /> : null} />
+        <Faq id="ind-faq-title" items={it.faq} visible={it.faqVisible || 0} className="pt-0" more={it.v3.faqMore ? <RxFaqMore m={it.v3.faqMore} guide={it.article ? postPath(it.article) : null} /> : null} />
         <OtherIndustries it={it} />
         {it.v3.closing ? <RxClosing it={it} /> : <FinalCTA industry={it.leadIndustry} />}
       </SiteLayout>
