@@ -903,7 +903,7 @@ export function RxRace({ it }) {
 
           {/* wide screens: her evening on the sofa, between the CRM and her phone */}
           <div className="relative hidden xl:block">
-            <div className="relative mx-auto aspect-[4/5] max-h-[var(--stage-h)] w-full">{xl ? clip : null}</div>
+            <div className="relative mx-auto aspect-square max-h-[var(--stage-h)] w-full">{xl ? clip : null}</div>
           </div>
           <div className="relative">
             <BuyerPhone p={r.phone} T={T} t={t} reduce={reduce} />
