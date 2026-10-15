@@ -1912,6 +1912,34 @@ function StackTile({ x }) {
   );
 }
 
+/** The last tile of each kind: a + that opens into "and more" on hover, on keyboard focus or on a tap. */
+function MoreTile({ label }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <li>
+      <button
+        type="button"
+        aria-label={label}
+        aria-expanded={open}
+        onClick={() => setOpen((o) => !o)}
+        onBlur={() => setOpen(false)}
+        className="group/more flex h-10 items-center rounded-[12px] border border-dashed border-ink/20 px-[11px] text-ink/45 transition-colors duration-300 hover:border-ink/35 hover:text-ink/70 focus-visible:border-ink/35 focus-visible:text-ink/70 focus-visible:outline-none"
+      >
+        <Plus className={cn('h-4 w-4 shrink-0 transition-transform duration-300 group-hover/more:rotate-90 group-focus-visible/more:rotate-90', open ? 'rotate-90' : '')} strokeWidth={2} aria-hidden="true" />
+        <span
+          aria-hidden="true"
+          className={cn(
+            'overflow-hidden whitespace-nowrap text-[13.5px] transition-all duration-300 group-hover/more:ml-1.5 group-hover/more:max-w-[90px] group-hover/more:opacity-100 group-focus-visible/more:ml-1.5 group-focus-visible/more:max-w-[90px] group-focus-visible/more:opacity-100',
+            open ? 'ml-1.5 max-w-[90px] opacity-100' : 'max-w-0 opacity-0'
+          )}
+        >
+          {label}
+        </span>
+      </button>
+    </li>
+  );
+}
+
 /**
  * The tools Aurora connects to, by kind (CRM, lead sources, calendars, phone systems, email, channels), each as its
  * brand icon and name and each kind ending in a + ("and more"), then the languages it speaks. Brand icons only name the tools.
@@ -1938,10 +1966,7 @@ export function RxStack({ it }) {
                   {g.items.map((x) => (
                     <StackTile key={x.name} x={x} />
                   ))}
-                  <li title={st.more} className="flex h-10 w-10 items-center justify-center rounded-[12px] border border-dashed border-ink/20 text-ink/45">
-                    <Plus className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
-                    <span className="sr-only">{st.more}</span>
-                  </li>
+                  <MoreTile label={st.more} />
                 </ul>
               </div>
             ))}
