@@ -2021,16 +2021,58 @@ export function RxFaqMore({ m, guide = null }) {
   );
 }
 
-// the growth bars behind the closing headline: heights as a share of their box, rising left to right
-const SCALE_BARS = [0.22, 0.3, 0.27, 0.38, 0.46, 0.43, 0.56, 0.64, 0.72, 0.84, 1];
+// The closing illustration: one modern family home drawn as an architect's elevation, in thin Amber-to-Gold line:
+// a two-storey gable, a garage wing, a flat-roofed wing, lit windows. The lines draw themselves in when the section shows.
+const HOUSE_MAIN = ['M10 270H630', 'M86 270L58 298M184 270L206 298', 'M214 270V122M426 122V270', 'M196 128L320 56L444 128', 'M206 128L320 62L434 128', 'M378 93V70H398V104', 'M374 70H402', 'M62 270V176H214', 'M48 182L136 140L214 168', 'M86 270V198H184V270', 'M426 186H580V270', 'M420 180H586', 'M250 132H390V186H250Z', 'M216 192H424', 'M302 270V206H338V270', 'M286 198H354', 'M230 209H285V251H230Z', 'M356 209H411V251H356Z', 'M450 204H560V256H450Z'];
+const HOUSE_DETAIL = ['M296.7 132V186M343.3 132V186', 'M257.5 209V251M383.5 209V251', 'M486.7 204V256M523.3 204V256', 'M86 214H184M86 230H184M86 246H184', 'M98 205H172', 'M311 92H329V104H311Z', 'M330 214V262', 'M292 198V204M348 198V204', 'M216 270C216 258 230 254 236 262C240 254 252 258 250 270', 'M412 270C412 256 428 252 434 262C438 254 452 258 448 270', 'M582 270C582 262 594 258 600 266C604 260 614 262 612 270'];
+const HOUSE_BOARDS = 'M260 128V122M280 128V108M300 128V97M340 128V97M360 128V108M380 128V120';
+const HOUSE_LIT = [
+  [252, 134, 136, 50],
+  [452, 206, 106, 48],
+  [232, 211, 51, 38],
+];
+
+function HouseArt({ grow, reduce }) {
+  const draw = (delay, dur = 1.2) => ({
+    pathLength: 1,
+    strokeDasharray: 1,
+    style: { strokeDashoffset: grow ? 0 : 1, transition: reduce ? 'none' : `stroke-dashoffset ${dur}s cubic-bezier(0.65,0,0.35,1) ${delay}s` },
+  });
+  return (
+    <svg viewBox="0 0 640 300" className="block h-auto w-full" fill="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="rx-house-line" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="640" y2="0">
+          <stop offset="0" stopColor="#FF9F45" stopOpacity="0.55" />
+          <stop offset="1" stopColor="#FFC857" stopOpacity="0.95" />
+        </linearGradient>
+      </defs>
+      <g fill="#FFC857" style={{ fillOpacity: grow ? 0.16 : 0, transition: reduce ? 'none' : 'fill-opacity 1s ease 1.9s' }}>
+        {HOUSE_LIT.map(([x, y, w, h]) => (
+          <rect key={x} x={x} y={y} width={w} height={h} />
+        ))}
+      </g>
+      <g stroke="url(#rx-house-line)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        {HOUSE_MAIN.map((d, i) => (
+          <path key={i} d={d} {...draw(i * 0.07)} />
+        ))}
+      </g>
+      <g stroke="url(#rx-house-line)" strokeWidth="1" strokeOpacity="0.7" strokeLinecap="round">
+        {HOUSE_DETAIL.map((d, i) => (
+          <path key={i} d={d} {...draw(1 + i * 0.06, 0.9)} />
+        ))}
+        <path d={HOUSE_BOARDS} strokeOpacity="0.5" {...draw(1.6, 0.8)} />
+      </g>
+    </svg>
+  );
+}
 
 /**
- * The closing for a brokerage, in Aurora's colours only: an ink night with a warm dawn rising from below and growth
- * bars climbing behind the headline; then a SOLD sign on a street of homes at sunrise, with the demo form as glass over it.
+ * The closing for a brokerage, in Aurora's colours only: an ink night with a warm dawn. On the left the headline, the
+ * line under it and a family home drawn as an architect's elevation; on the right the demo form in glass. Phones and
+ * tablets: headline, drawing, form.
  */
 export function RxClosing({ it }) {
   const c = it.v3.closing;
-  const img = c.image || it.v3.hero.film.image;
   const reduce = !!useReducedMotion();
   const ref = useRef(null);
   const seen = useInViewport(ref, { threshold: 0.2, once: true });
@@ -2038,45 +2080,28 @@ export function RxClosing({ it }) {
   return (
     <section ref={ref} id="contact" data-nav-theme="dark" aria-labelledby="contact-title" className="on-dark relative overflow-hidden bg-ink pb-[clamp(72px,7vw,112px)] pt-[clamp(88px,8vw,128px)] text-white">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-        {/* the dawn: Sun, Amber and Gold rising from below */}
-        <div className="absolute bottom-[8%] left-1/2 h-[75%] w-[120%] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(closest-side,rgba(242,92,42,0.42),rgba(255,159,69,0.16)_45%,rgba(255,200,87,0)_75%)] blur-2xl" />
-        <div className="absolute right-[-10%] top-[-20%] h-[60%] w-[50%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.12),rgba(255,200,87,0))] blur-2xl" />
-        {/* growth bars behind the headline */}
-        <div className="absolute right-[4%] top-[10%] flex h-[34%] w-[46%] items-end gap-[1.4%] max-lg:right-[-6%] max-lg:top-[3%] max-lg:h-[16%] max-lg:w-[70%] max-lg:opacity-50">
-          {SCALE_BARS.map((v, i) => (
-            <span
-              key={i}
-              className="flex-1 rounded-t-[6px] bg-[linear-gradient(180deg,rgba(255,159,69,0.28),rgba(242,92,42,0.06))]"
-              style={{ height: v * 100 + '%', transform: grow ? 'scaleY(1)' : 'scaleY(0)', transformOrigin: 'bottom', transition: reduce ? 'none' : `transform 0.9s cubic-bezier(0.22,1,0.36,1) ${0.15 + i * 0.07}s` }}
-            />
-          ))}
-        </div>
+        {/* the dawn: Sun, Amber and Gold glowing low across the section */}
+        <div className="absolute bottom-[4%] left-[18%] h-[70%] w-[90%] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(closest-side,rgba(242,92,42,0.30),rgba(255,159,69,0.10)_50%,rgba(255,200,87,0)_75%)] blur-2xl" />
+        <div className="absolute right-[-10%] top-[-20%] h-[60%] w-[50%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.10),rgba(255,200,87,0))] blur-2xl" />
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
         {/* the dawn settles back to plain ink before the footer, so the two meet without a seam */}
-        <div className="absolute inset-x-0 bottom-0 h-[38%] bg-gradient-to-b from-ink/0 via-ink/80 to-ink" />
+        <div className="absolute inset-x-0 bottom-0 h-[22%] bg-gradient-to-b from-ink/0 to-ink" />
       </div>
 
-      <div className="shell relative">
-        <div className="grid gap-5 lg:grid-cols-12 lg:items-end lg:gap-12">
-          <h2 id="contact-title" className="t-display balance lg:col-span-7 lg:text-[clamp(2.4rem,0.6rem+3vw,3.9rem)]">
+      <div className="shell relative grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,500px)] lg:items-end lg:gap-14 xl:grid-cols-[minmax(0,1fr)_minmax(0,540px)]">
+        <div className="min-w-0">
+          <h2 id="contact-title" className="t-display balance lg:text-[clamp(2.4rem,0.6rem+3vw,3.9rem)]">
             <RevealLines lines={[c.titleA, c.titleB]} lineClassNames={['', '']} />
           </h2>
-          <p className="t-lead pretty max-w-[34em] !text-white/70 lg:col-span-5">{c.text}</p>
-        </div>
-
-        {/* the street at sunrise, with the form as glass over it (phones: the photo above, the form overlapping it) */}
-        <div className="relative mt-10 md:mt-12 md:overflow-hidden md:rounded-[clamp(24px,2.6vw,34px)]">
-          <div className="relative aspect-[16/10] overflow-hidden rounded-[24px] md:absolute md:inset-0 md:aspect-auto md:rounded-none">
-            <img src={img.src} srcSet={img.srcSet} sizes="(min-width: 1280px) 1200px, 100vw" alt="" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover object-[22%_30%] md:object-[50%_30%]" />
-            <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,159,69,0.10)_0%,rgba(242,92,42,0.12)_40%,rgba(10,15,14,0.55)_75%,rgba(10,15,14,0.9)_100%)] md:bg-[linear-gradient(180deg,rgba(255,159,69,0.08)_0%,rgba(10,15,14,0.25)_40%,rgba(10,15,14,0.85)_100%)]" />
-          </div>
-          <div className="relative -mt-16 px-2 xs:px-3 md:mt-0 md:px-6 md:pb-6 md:pt-[clamp(200px,22vw,300px)]">
-            <LiquidGlass tone="dark" className="rounded-[clamp(20px,2.2vw,28px)] p-5 xs:p-6 md:p-7">
-              <p className="mb-5 text-[15px] leading-snug text-white/70">Leave your details and Aurora, our AI agent, will call you right away.</p>
-              <LeadForm dark wide industry={it.leadIndustry} />
-            </LiquidGlass>
+          <p className="t-lead pretty mt-5 max-w-[32em] !text-white/70">{c.text}</p>
+          <div className="mt-8 max-w-[560px] lg:mt-12">
+            <HouseArt grow={grow} reduce={reduce} />
           </div>
         </div>
+        <LiquidGlass tone="dark" className="rounded-[clamp(20px,2.2vw,28px)] p-5 xs:p-6 md:p-7">
+          <p className="mb-5 text-[15px] leading-snug text-white/75">Leave your details and Aurora, our AI agent, will call you right away.</p>
+          <LeadForm dark columns={2} industry={it.leadIndustry} />
+        </LiquidGlass>
       </div>
     </section>
   );
