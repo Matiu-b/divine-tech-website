@@ -1356,7 +1356,7 @@ export function RxAfter({ it }) {
   return (
     <section data-nav-theme="light" aria-labelledby="rx-after-title" className="section relative pt-0">
       <div className="shell">
-        <div ref={ref} className="canvas canvas-grain relative overflow-hidden bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] p-4 xs:p-5 md:p-8 lg:p-10 xl:px-14">
+        <div ref={ref} className="canvas canvas-grain relative overflow-hidden bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] p-4 xs:p-5 md:p-8 lg:px-10 lg:py-8 xl:px-14">
           <div aria-hidden="true" className="pointer-events-none absolute right-[4%] top-[-14%] h-[55%] w-[40%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.4),rgba(255,200,87,0))] blur-2xl" />
 
           <div className="relative grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)] lg:items-end lg:gap-12">
@@ -1367,7 +1367,7 @@ export function RxAfter({ it }) {
           </div>
 
           {/* the weeks after the first reply */}
-          <ol className="relative mt-7 grid gap-3 sm:grid-cols-2 lg:mt-9 lg:grid-cols-4 lg:gap-4">
+          <ol className="relative mt-7 grid gap-3 sm:grid-cols-2 lg:mt-8 lg:grid-cols-4 lg:gap-4">
             <span aria-hidden="true" className="absolute left-4 right-4 top-[27px] hidden h-px bg-[linear-gradient(90deg,rgba(242,92,42,0.5),rgba(10,15,14,0.1))] lg:block" />
             {a.steps.map((x, i) => {
               const Icon = AFTER_ICONS[x.key] || Check;
@@ -1380,7 +1380,7 @@ export function RxAfter({ it }) {
                     <span className="t-data text-[11px] uppercase tracking-[0.08em] text-ink/40">{x.when}</span>
                   </div>
                   <p className="mt-3 text-[16px] font-medium leading-snug tracking-[-0.01em] text-ink">{x.title}</p>
-                  <p className="mt-1 text-[13.5px] leading-snug text-graphite">{x.text}</p>
+                  <p className="mt-1 text-[13.5px] leading-snug text-graphite lg:sr-only">{x.text}</p>
                   {/* the message Aurora sends */}
                   <p className="mt-3 flex-1 rounded-[12px] bg-[#F6F1E8] px-3 py-2.5 text-[13.5px] leading-snug text-ink">
                     <span className="mb-1 flex items-center gap-1.5 text-[10.5px] font-medium uppercase tracking-[0.06em] text-ink/40">
@@ -1399,14 +1399,14 @@ export function RxAfter({ it }) {
           </ol>
 
           {/* the KPI Agent: one week of improvement in four steps */}
-          <motion.div {...show(0.3)} className="relative mt-3 grid gap-5 rounded-[22px] bg-ink p-5 text-white lg:mt-4 lg:grid-cols-[minmax(0,300px)_minmax(0,1fr)] lg:items-center lg:gap-10 lg:p-6">
+          <motion.div {...show(0.3)} className="relative mt-3 grid gap-5 rounded-[22px] bg-ink p-5 text-white lg:mt-4 lg:grid-cols-[minmax(0,380px)_minmax(0,1fr)] lg:items-center lg:gap-8 lg:px-6 lg:py-5">
             <div>
               <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1 text-[11.5px] font-medium text-white/80">
                 <TrendingUp className="h-3.5 w-3.5 text-[#FF8A3D]" strokeWidth={2.2} aria-hidden="true" />
                 {a.kpi.badge}
               </span>
-              <p className="mt-3 text-[19px] font-medium leading-snug tracking-[-0.01em]">{a.kpi.title}</p>
-              <p className="mt-1.5 text-[13.5px] leading-relaxed text-white/60">{a.kpi.text}</p>
+              <p className="mt-2.5 text-[19px] font-medium leading-snug tracking-[-0.01em]">{a.kpi.title}</p>
+              <p className="mt-1 text-[13.5px] leading-snug text-white/60">{a.kpi.text}</p>
             </div>
             <ol className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4" aria-label={a.kpi.badge}>
               {a.kpi.steps.map((x, i) => {

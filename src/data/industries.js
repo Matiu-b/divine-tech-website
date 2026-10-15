@@ -259,7 +259,7 @@ export const industries = [
         kpi: {
           badge: 'Patented KPI Agent',
           title: 'And it gets better every week.',
-          text: 'The KPI Agent measures Aurora against the numbers your brokerage runs on, like speed to lead, showings booked and no-shows, and improves how it works. Bigger changes wait for your approval.',
+          text: 'It measures Aurora against your numbers, like speed to lead, showings and no-shows, and improves how it works. Bigger changes wait for your approval.',
           steps: [
             { tag: 'Measured', text: 'No-shows rose on Saturday showings.' },
             { tag: 'Cause found', text: 'Reminders went out by email. Buyers read texts.' },
