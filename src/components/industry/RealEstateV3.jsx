@@ -1515,12 +1515,53 @@ function JobSeller({ x, on, done, reduce }) {
 
 const JOBS = { remind: JobRemind, nurture: JobNurture, revive: JobRevive, seller: JobSeller };
 // bento placement on laptops: the reminder tall on the left, listings wide on top, the CRM row and the booking below
+// wide screens (xl): twelve columns, the KPI Agent as a tall tile on the right
 const JOB_PLACE = {
-  remind: 'lg:col-span-2 lg:row-span-2 bg-ink',
-  nurture: 'lg:col-span-4',
-  revive: 'lg:col-span-2',
-  seller: 'lg:col-span-2',
+  remind: 'lg:col-span-2 lg:row-span-2 xl:col-span-3 xl:col-start-1 xl:row-start-1',
+  nurture: 'lg:col-span-4 xl:col-span-6 xl:col-start-4 xl:row-start-1',
+  revive: 'lg:col-span-2 xl:col-span-3 xl:col-start-4 xl:row-start-2',
+  seller: 'lg:col-span-2 xl:col-span-3 xl:col-start-7 xl:row-start-2',
 };
+
+/**
+ * The KPI Agent: one week of improvement in four steps that light up in turn. A strip under the jobs up to 1279 px,
+ * a tall tile beside them on wide screens.
+ */
+function KpiPanel({ a, k, run, tall = false }) {
+  return (
+    <div className={cn('relative rounded-[22px] bg-[#FFF8F1] shadow-[0_0_0_1px_rgba(242,92,42,0.18)]', tall ? 'flex h-full flex-col p-5' : 'grid gap-5 p-5 lg:grid-cols-[minmax(0,300px)_minmax(0,1fr)] lg:items-center lg:gap-6 lg:px-5 lg:py-4')}>
+      <div>
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#FFE7D3] px-2.5 py-1 text-[11.5px] font-medium text-[#B4471A]">
+          <TrendingUp className="h-3.5 w-3.5" strokeWidth={2.2} aria-hidden="true" />
+          {a.kpi.badge}
+        </span>
+        <p className="mt-2 text-[18px] font-medium leading-snug tracking-[-0.01em] text-ink">{a.kpi.title}</p>
+        <p className="mt-1 text-[13px] leading-snug text-graphite">{a.kpi.text}</p>
+      </div>
+      <ol className={cn('grid gap-2', tall ? 'mt-4 flex-1 content-end' : 'grid-cols-2 lg:grid-cols-4')} aria-label={a.kpi.badge}>
+        {a.kpi.steps.map((x, i) => {
+          const on = i === k;
+          const done = i < k;
+          return (
+            <li key={x.tag} className={cn('relative overflow-hidden rounded-[14px] px-3 py-2.5 transition-colors duration-500', on ? 'bg-white shadow-[0_8px_20px_-14px_rgba(90,50,20,0.5)]' : 'bg-white/50')}>
+              <span aria-hidden="true" className={cn('absolute bg-ink/[0.06]', tall ? 'inset-y-0 left-0 w-[2px]' : 'inset-x-0 top-0 h-[2px]')}>
+                <span
+                  className={cn('absolute bg-[#F25C2A]', tall ? 'inset-x-0 top-0' : 'inset-y-0 left-0', on && run ? (tall ? 'transition-[height] ease-linear' : 'transition-[width] ease-linear') : '')}
+                  style={{ [tall ? 'height' : 'width']: done || on ? '100%' : '0%', transitionDuration: on && run ? KPI_MS + 'ms' : '0ms' }}
+                />
+              </span>
+              <p className={cn('t-data text-[10.5px] uppercase tracking-[0.08em] transition-colors', on ? 'text-[#D9481C]' : 'text-ink/35')}>
+                {String(i + 1).padStart(2, '0')} · {x.tag}
+              </p>
+              <p className={cn('mt-1 text-[13px] leading-snug transition-colors', on ? 'text-ink' : 'text-ink/55')}>{x.text}</p>
+              {x.who ? <p className="mt-1 text-[11.5px] font-medium text-[#2E7A48]">{x.who}</p> : null}
+            </li>
+          );
+        })}
+      </ol>
+    </div>
+  );
+}
 
 /**
  * After the first reply: four jobs Aurora keeps doing for a lead, each drawn as the thing it is, in a bento. A spotlight
@@ -1572,7 +1613,7 @@ export function RxAfter({ it }) {
           </div>
 
           {/* the jobs, as a bento on laptops and a row to swipe on phones */}
-          <ol className="relative mt-6 grid gap-3 max-sm:-mx-4 max-sm:flex max-sm:snap-x max-sm:snap-mandatory max-sm:overflow-x-auto max-sm:px-4 max-sm:pb-1 max-sm:[scrollbar-width:none] xs:max-sm:-mx-5 xs:max-sm:px-5 sm:grid-cols-2 lg:mt-7 lg:grid-cols-6 lg:grid-rows-[auto_auto] lg:gap-3.5 [&::-webkit-scrollbar]:hidden">
+          <ol className="relative mt-6 grid gap-3 max-sm:-mx-4 max-sm:flex max-sm:snap-x max-sm:snap-mandatory max-sm:overflow-x-auto max-sm:px-4 max-sm:pb-1 max-sm:[scrollbar-width:none] xs:max-sm:-mx-5 xs:max-sm:px-5 sm:grid-cols-2 lg:mt-7 lg:grid-cols-6 lg:grid-rows-[auto_auto] lg:gap-3.5 xl:grid-cols-12 [&::-webkit-scrollbar]:hidden">
             {a.steps.map((x, i) => {
               const Job = JOBS[x.key];
               const on = run ? i === j : false;
@@ -1593,39 +1634,15 @@ export function RxAfter({ it }) {
                 </motion.li>
               );
             })}
+            {/* wide screens: the KPI Agent as a tall tile on the right */}
+            <li className="hidden xl:col-span-3 xl:col-start-10 xl:row-span-2 xl:row-start-1 xl:block">
+              <KpiPanel a={a} k={k} run={run} tall />
+            </li>
           </ol>
 
-          {/* the KPI Agent: one week of improvement in four steps */}
-          <motion.div {...show(0.3)} className="relative mt-3 grid gap-5 rounded-[22px] bg-[#FFF8F1] p-5 shadow-[0_0_0_1px_rgba(242,92,42,0.18)] lg:mt-3.5 lg:grid-cols-[minmax(0,300px)_minmax(0,1fr)] lg:items-center lg:gap-6 lg:px-5 lg:py-4">
-            <div>
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#FFE7D3] px-2.5 py-1 text-[11.5px] font-medium text-[#B4471A]">
-                <TrendingUp className="h-3.5 w-3.5" strokeWidth={2.2} aria-hidden="true" />
-                {a.kpi.badge}
-              </span>
-              <p className="mt-2 text-[18px] font-medium leading-snug tracking-[-0.01em] text-ink">{a.kpi.title}</p>
-              <p className="mt-1 text-[13.5px] leading-snug text-graphite lg:text-[12.5px]">{a.kpi.text}</p>
-            </div>
-            <ol className="grid grid-cols-2 gap-2 lg:grid-cols-4" aria-label={a.kpi.badge}>
-              {a.kpi.steps.map((x, i) => {
-                const on = i === k;
-                const done = i < k;
-                return (
-                  <li key={x.tag} className={cn('relative overflow-hidden rounded-[14px] p-3 transition-colors duration-500 lg:px-3 lg:py-2.5', on ? 'bg-white shadow-[0_8px_20px_-14px_rgba(90,50,20,0.5)]' : 'bg-white/50')}>
-                    <span aria-hidden="true" className="absolute inset-x-0 top-0 h-[2px] bg-ink/[0.06]">
-                      <span
-                        className={cn('absolute inset-y-0 left-0 bg-[#F25C2A]', on && run ? 'transition-[width] ease-linear' : '')}
-                        style={{ width: done || on ? '100%' : '0%', transitionDuration: on && run ? KPI_MS + 'ms' : '0ms' }}
-                      />
-                    </span>
-                    <p className={cn('t-data text-[10.5px] uppercase tracking-[0.08em] transition-colors', on ? 'text-[#D9481C]' : 'text-ink/35')}>
-                      {String(i + 1).padStart(2, '0')} · {x.tag}
-                    </p>
-                    <p className={cn('mt-1 text-[13.5px] leading-snug transition-colors lg:text-[13px]', on ? 'text-ink' : 'text-ink/55')}>{x.text}</p>
-                    {x.who ? <p className="mt-1 text-[11.5px] font-medium text-[#2E7A48]">{x.who}</p> : null}
-                  </li>
-                );
-              })}
-            </ol>
+          {/* up to 1279 px: the KPI Agent as a strip under the jobs */}
+          <motion.div {...show(0.3)} className="relative mt-3 lg:mt-3.5 xl:hidden">
+            <KpiPanel a={a} k={k} run={run} />
           </motion.div>
         </div>
         <p className="mt-4 text-[12px] text-slate">{a.note}</p>
