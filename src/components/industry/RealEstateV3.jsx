@@ -1664,7 +1664,7 @@ function KpiGoals({ a, run, reduce, titleId }) {
                   cur ? 'bg-[#F6F1E8]' : 'shadow-[inset_0_0_0_1px_rgba(10,15,14,0.1)] hover:bg-ink/[0.03] lg:shadow-none'
                 )}
               >
-                <span className={cn('whitespace-nowrap text-[12.5px] font-medium transition-colors lg:w-[78px] lg:shrink-0 lg:text-[10.5px] lg:uppercase lg:tracking-[0.06em]', cur ? 'text-ink lg:text-[#C2410C]' : 'text-ink/55 lg:text-ink/40')}>{x.area}</span>
+                <span className={cn('whitespace-nowrap text-[12.5px] font-medium transition-colors lg:w-[98px] lg:shrink-0 lg:text-[10.5px] lg:uppercase lg:tracking-[0.06em]', cur ? 'text-ink lg:text-[#C2410C]' : 'text-ink/55 lg:text-ink/40')}>{x.area}</span>
                 <span className={cn('hidden min-w-0 truncate text-[13.5px] font-medium transition-colors lg:block', cur ? 'text-ink' : 'text-ink/55')}>{x.name}</span>
               </button>
             );
