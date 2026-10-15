@@ -207,7 +207,7 @@ function CallStage({ h, header }) {
           The frame, from 560 px (small tablets) up: the header sits in the photo's evening sky, whose colours continue
           upward behind it. Tablets: header, then the whole photo at its own shape. Laptops: as tall as the screen allows,
           the header on the left, the call card on the right. Phones: there isn't room (the house would shrink to a strip
-          under a tall block of text), so the header sits above a 4:3 photo.
+          under a tall block of text), so the header sits above a 3:2 photo.
         */}
         <div
           className={cn(
@@ -221,7 +221,7 @@ function CallStage({ h, header }) {
           <div className="relative z-[2] min-[560px]:px-7 min-[560px]:pt-7 sm:px-8 sm:pt-8 lg:pr-[calc(var(--card-w)_+_72px)] lg:[@media(max-height:760px)]:pt-6">{header}</div>
 
           {/* the photo: from 560 px its tree line meets the header and its top edge fades into the sky */}
-          <div className="relative mt-7 aspect-[4/3] overflow-hidden rounded-[24px] bg-[#2B3550] shadow-[0_40px_80px_-48px_rgba(30,30,60,0.55)] min-[560px]:mt-0 min-[560px]:aspect-auto min-[560px]:h-[46.71cqw] min-[560px]:overflow-visible min-[560px]:rounded-none min-[560px]:bg-transparent min-[560px]:shadow-none lg:h-auto lg:flex-1">
+          <div className="relative mt-5 aspect-[3/2] overflow-hidden rounded-[24px] bg-[#2B3550] shadow-[0_40px_80px_-48px_rgba(30,30,60,0.55)] min-[560px]:mt-0 min-[560px]:aspect-auto min-[560px]:h-[46.71cqw] min-[560px]:overflow-visible min-[560px]:rounded-none min-[560px]:bg-transparent min-[560px]:shadow-none lg:h-auto lg:flex-1">
             <img
               src={f.image ? f.image.src : f.poster}
               srcSet={f.image ? f.image.srcSet : undefined}
@@ -342,7 +342,7 @@ export function RxHero({ it }) {
   const { open } = useLead();
 
   return (
-    <section id="top" data-nav-theme="light" aria-labelledby="rx-hero-title" className="relative overflow-hidden pb-0 pt-[calc(var(--nav-h)+36px)] min-[560px]:pt-[calc(var(--nav-h)+16px)]">
+    <section id="top" data-nav-theme="light" aria-labelledby="rx-hero-title" className="relative overflow-hidden pb-0 pt-[calc(var(--nav-h)+20px)] min-[560px]:pt-[calc(var(--nav-h)+16px)]">
       <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[760px] bg-[radial-gradient(55%_55%_at_82%_0%,rgba(255,214,170,0.75),rgba(246,245,241,0)_70%),radial-gradient(40%_50%_at_10%_10%,rgba(240,232,218,0.7),rgba(246,245,241,0)_70%)]" />
       <div className="shell relative">
         <CallStage
@@ -352,11 +352,11 @@ export function RxHero({ it }) {
             <div>
               <div>
                 <p className="intro-rise eyebrow min-[560px]:text-white/75">{h.eyebrow}</p>
-                <h1 id="rx-hero-title" className="t-display balance mt-5 min-[560px]:mt-3 min-[560px]:text-white min-[560px]:[text-shadow:0_2px_24px_rgba(10,16,40,0.35)] lg:text-[clamp(2.2rem,0.4rem+2.7vw,3.4rem)] lg:[@media(max-height:760px)]:mt-2">
+                <h1 id="rx-hero-title" className="t-display balance mt-3 min-[560px]:mt-3 min-[560px]:text-white min-[560px]:[text-shadow:0_2px_24px_rgba(10,16,40,0.35)] lg:text-[clamp(2.2rem,0.4rem+2.7vw,3.4rem)] lg:[@media(max-height:760px)]:mt-2">
                   <RevealLines lines={[h.titleA, h.titleB]} lineClassNames={['', '']} immediate delay={0.08} stagger={0.14} />
                 </h1>
               </div>
-              <div className="mt-6 min-[560px]:mt-4 lg:[@media(max-height:760px)]:mt-3">
+              <div className="mt-4 min-[560px]:mt-4 lg:[@media(max-height:760px)]:mt-3">
                 <p className="intro-slide t-lead pretty max-w-[36em] min-[560px]:!text-white/[0.88] lg:text-[15.5px] lg:leading-[1.55]" style={{ animationDelay: '0.3s' }}>
                   {h.textShort ? (
                     <>
@@ -367,7 +367,7 @@ export function RxHero({ it }) {
                     h.text
                   )}
                 </p>
-                <div className="intro-slide mt-6 flex flex-wrap items-center gap-2 min-[560px]:mt-5 min-[560px]:gap-2.5 sm:gap-3 lg:[@media(max-height:760px)]:mt-4" style={{ animationDelay: '0.42s' }}>
+                <div className="intro-slide mt-5 flex flex-wrap items-center gap-2 min-[560px]:mt-5 min-[560px]:gap-2.5 sm:gap-3 lg:[@media(max-height:760px)]:mt-4" style={{ animationDelay: '0.42s' }}>
                   <CTAButton size="lg" onClick={open} className="max-sm:h-12 max-sm:px-3.5 max-sm:text-[14px] max-sm:[&_.btn-arrow]:hidden lg:h-12 lg:px-5 lg:text-[15px] lg:[@media(max-height:760px)]:h-11">
                     Book a demo
                   </CTAButton>
