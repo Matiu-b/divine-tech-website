@@ -1286,8 +1286,8 @@ export function RxRules({ it }) {
 
           {/* the headline and the rule in force (first on phones) */}
           <div className="relative min-w-0 lg:col-start-2 lg:row-start-1">
-            <h2 id="rx-rules-title" className="balance text-[clamp(28px,2.6vw,42px)] font-medium leading-[1.08] tracking-[-0.022em] text-ink">
-              {r.titleA} {r.titleB}
+            <h2 id="rx-rules-title" className="text-[clamp(28px,2.6vw,42px)] font-medium leading-[1.08] tracking-[-0.022em] text-ink">
+              {r.titleA} <span className="text-[#D9481C] sm:block">{r.titleB}</span>
             </h2>
             <p className="pretty mt-3 max-w-[34em] text-[15px] leading-[1.6] text-graphite md:text-[15.5px]">{r.text}</p>
             <div className="mt-5 lg:hidden">
