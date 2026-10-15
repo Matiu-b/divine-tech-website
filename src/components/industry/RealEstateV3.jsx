@@ -951,7 +951,7 @@ export function RxRace({ it }) {
               <div className="mt-3">
                 <div className="relative aspect-[16/10] max-h-[340px] w-full overflow-hidden rounded-[20px] bg-[#2A2420] shadow-[0_18px_36px_-18px_rgba(40,25,10,0.5)]">
                   <SofaClip film={r.film} T={T} t={t} reduce={reduce} active={inView && visible} small />
-                  <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-[38%] bg-[linear-gradient(180deg,rgba(20,14,10,0)_0%,rgba(20,14,10,0.72)_100%)]" />
+                  <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-[45%] bg-[linear-gradient(180deg,rgba(20,14,10,0)_0%,rgba(20,14,10,0.75)_100%)]" />
                   <div className="absolute inset-x-0 bottom-0 px-3.5 pb-3 sm:px-5 sm:pb-4">
                     <AnimatePresence mode="wait" initial={false}>
                       <motion.p
@@ -963,7 +963,7 @@ export function RxRace({ it }) {
                         className="flex items-baseline gap-2 text-white"
                       >
                         <span className="t-data shrink-0 text-[11.5px] text-[#FFC69A]">{s.time}</span>
-                        <span className="truncate text-[15.5px] font-medium tracking-[-0.01em] min-[400px]:text-[16.5px] sm:text-[19px]">{s.title}</span>
+                        <span className="balance min-w-0 text-[15.5px] font-medium leading-tight tracking-[-0.01em] min-[400px]:text-[16.5px] sm:text-[19px]">{s.title}</span>
                       </motion.p>
                     </AnimatePresence>
                   </div>
