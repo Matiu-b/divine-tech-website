@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, m as motion, useReducedMotion } from 'framer-motion';
-import { ArrowUp, CalendarCheck, Check, ChevronLeft, CircleDollarSign, Database, Hand, Pause, Play, Scale, Volume2, Send, Clock, House, BellOff, Hourglass, ShieldCheck, User, ArrowRight, TrendingUp, Heart, MessageSquareText, MessagesSquare } from 'lucide-react';
+import { ArrowUp, CalendarCheck, Check, ChevronLeft, CircleDollarSign, Database, Hand, Pause, Play, Scale, Volume2, Send, Clock, House, BellOff, Hourglass, ShieldCheck, User, ArrowRight, TrendingUp, Heart, MessageSquareText, MessagesSquare, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import CTAButton from '@/components/home-v2/primitives/CTAButton';
 import SectionHeader from '@/components/home-v2/primitives/SectionHeader';
@@ -1914,7 +1914,7 @@ function StackTile({ x }) {
 
 /**
  * The tools Aurora connects to, by kind (CRM, lead sources, calendars, phone systems, email, channels), each as its
- * brand icon and name and each kind ending in "and more", then the languages it speaks. Brand icons only name the tools.
+ * brand icon and name and each kind ending in a + ("and more"), then the languages it speaks. Brand icons only name the tools.
  */
 export function RxStack({ it }) {
   const st = it.v3.stack;
@@ -1938,7 +1938,10 @@ export function RxStack({ it }) {
                   {g.items.map((x) => (
                     <StackTile key={x.name} x={x} />
                   ))}
-                  <li className="flex h-10 items-center rounded-[12px] border border-dashed border-ink/20 px-3.5 text-[13.5px] text-slate">{st.more}</li>
+                  <li title={st.more} className="flex h-10 w-10 items-center justify-center rounded-[12px] border border-dashed border-ink/20 text-ink/45">
+                    <Plus className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
+                    <span className="sr-only">{st.more}</span>
+                  </li>
                 </ul>
               </div>
             ))}
