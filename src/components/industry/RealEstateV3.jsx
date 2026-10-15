@@ -2025,8 +2025,8 @@ export function RxFaqMore({ m, guide = null }) {
 const SCALE_BARS = [0.22, 0.3, 0.27, 0.38, 0.46, 0.43, 0.56, 0.64, 0.72, 0.84, 1];
 
 /**
- * The closing for a brokerage, in Aurora's colours only: an ink night with a warm dawn rising from below and growth
- * bars climbing behind the headline; then a SOLD sign on a street of homes at sunrise, with the demo form as glass over it.
+ * The closing for a brokerage, in Aurora's colours only: an ink night with a warm dawn, growth bars rising under the
+ * headline, then a SOLD sign on a street of homes at sunrise whose panel points to the demo form, set in glass beside it.
  */
 export function RxClosing({ it }) {
   const c = it.v3.closing;
@@ -2038,19 +2038,9 @@ export function RxClosing({ it }) {
   return (
     <section ref={ref} id="contact" data-nav-theme="dark" aria-labelledby="contact-title" className="on-dark relative overflow-hidden bg-ink pb-[clamp(72px,7vw,112px)] pt-[clamp(88px,8vw,128px)] text-white">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-        {/* the dawn: Sun, Amber and Gold rising from below */}
+        {/* the dawn: Sun, Amber and Gold glowing behind the photo */}
         <div className="absolute bottom-[8%] left-1/2 h-[75%] w-[120%] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(closest-side,rgba(242,92,42,0.42),rgba(255,159,69,0.16)_45%,rgba(255,200,87,0)_75%)] blur-2xl" />
         <div className="absolute right-[-10%] top-[-20%] h-[60%] w-[50%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.12),rgba(255,200,87,0))] blur-2xl" />
-        {/* growth bars behind the headline */}
-        <div className="absolute right-[4%] top-[10%] flex h-[34%] w-[46%] items-end gap-[1.4%] max-lg:right-[-6%] max-lg:top-[3%] max-lg:h-[16%] max-lg:w-[70%] max-lg:opacity-50">
-          {SCALE_BARS.map((v, i) => (
-            <span
-              key={i}
-              className="flex-1 rounded-t-[6px] bg-[linear-gradient(180deg,rgba(255,159,69,0.28),rgba(242,92,42,0.06))]"
-              style={{ height: v * 100 + '%', transform: grow ? 'scaleY(1)' : 'scaleY(0)', transformOrigin: 'bottom', transition: reduce ? 'none' : `transform 0.9s cubic-bezier(0.22,1,0.36,1) ${0.15 + i * 0.07}s` }}
-            />
-          ))}
-        </div>
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
         {/* the dawn settles back to plain ink before the footer, so the two meet without a seam */}
         <div className="absolute inset-x-0 bottom-0 h-[38%] bg-gradient-to-b from-ink/0 via-ink/80 to-ink" />
@@ -2064,16 +2054,31 @@ export function RxClosing({ it }) {
           <p className="t-lead pretty max-w-[34em] !text-white/70 lg:col-span-5">{c.text}</p>
         </div>
 
-        {/* the street at sunrise, with the form as glass over it (phones: the photo above, the form overlapping it) */}
-        <div className="relative mt-10 md:mt-12 md:overflow-hidden md:rounded-[clamp(24px,2.6vw,34px)]">
-          <div className="relative aspect-[16/10] overflow-hidden rounded-[24px] md:absolute md:inset-0 md:aspect-auto md:rounded-none">
-            <img src={img.src} srcSet={img.srcSet} sizes="(min-width: 1280px) 1200px, 100vw" alt="" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover object-[22%_30%] md:object-[50%_30%]" />
-            <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,159,69,0.10)_0%,rgba(242,92,42,0.12)_40%,rgba(10,15,14,0.55)_75%,rgba(10,15,14,0.9)_100%)] md:bg-[linear-gradient(180deg,rgba(255,159,69,0.08)_0%,rgba(10,15,14,0.25)_40%,rgba(10,15,14,0.85)_100%)]" />
+        {/* growth bars on their own line under the headline, rising left to right */}
+        <div aria-hidden="true" className="mt-8 flex h-10 items-end gap-1.5 sm:h-12 lg:ml-auto lg:w-[41.6%]">
+          {SCALE_BARS.map((v, i) => (
+            <span
+              key={i}
+              className="flex-1 rounded-t-[5px] bg-[linear-gradient(180deg,rgba(255,159,69,0.55),rgba(242,92,42,0.12))]"
+              style={{ height: v * 100 + '%', transform: grow ? 'scaleY(1)' : 'scaleY(0)', transformOrigin: 'bottom', transition: reduce ? 'none' : `transform 0.9s cubic-bezier(0.22,1,0.36,1) ${0.15 + i * 0.07}s` }}
+            />
+          ))}
+        </div>
+
+        {/*
+          The street at sunrise with the SOLD sign, whose panel says "Leave your details" and points to the form.
+          From 1280 px: the sign on the left, the form as glass on the right, side by side, so nothing covers the sign.
+          Below that: the photo above, the form overlapping only its bottom edge, under the sign.
+        */}
+        <div className="relative mt-3 xl:grid xl:min-h-[560px] xl:grid-cols-[minmax(0,1fr)_minmax(0,520px)] xl:overflow-hidden xl:rounded-[34px]">
+          <div className="relative aspect-[3/2] overflow-hidden rounded-[24px] sm:aspect-[2/1] xl:absolute xl:inset-0 xl:aspect-auto xl:rounded-none">
+            <img src={img.src} srcSet={img.srcSet} sizes="(min-width: 1280px) 1400px, 100vw" alt="" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover object-[20%_40%] xl:object-[0%_40%]" />
+            <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,15,14,0)_55%,rgba(10,15,14,0.7)_100%)] xl:bg-[linear-gradient(90deg,rgba(10,15,14,0)_35%,rgba(10,15,14,0.45)_70%,rgba(10,15,14,0.6)_100%)]" />
           </div>
-          <div className="relative -mt-16 px-2 xs:px-3 md:mt-0 md:px-6 md:pb-6 md:pt-[clamp(200px,22vw,300px)]">
-            <LiquidGlass tone="dark" className="rounded-[clamp(20px,2.2vw,28px)] p-5 xs:p-6 md:p-7">
-              <p className="mb-5 text-[15px] leading-snug text-white/70">Leave your details and Aurora, our AI agent, will call you right away.</p>
-              <LeadForm dark wide industry={it.leadIndustry} />
+          <div className="relative -mt-12 px-2 xs:px-3 sm:px-6 xl:col-start-2 xl:mt-0 xl:flex xl:items-center xl:p-6">
+            <LiquidGlass tone="dark" className="w-full rounded-[clamp(20px,2.2vw,28px)] p-5 xs:p-6 md:p-7">
+              <p className="mb-5 text-[15px] leading-snug text-white/75">Leave your details and Aurora, our AI agent, will call you right away.</p>
+              <LeadForm dark columns={2} industry={it.leadIndustry} />
             </LiquidGlass>
           </div>
         </div>
