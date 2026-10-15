@@ -31,6 +31,8 @@ export const industries = [
         titleA: 'The AI ISA for',
         titleB: 'real estate brokerages.',
         text: 'Aurora answers every lead from portals, ads, calls and texts in seconds, qualifies it, books the showing with the right broker and keeps every deal moving. Your brokers just sell.',
+        // phones: the same promise in one line, so the call card fits on the first screen
+        textShort: 'Aurora answers every lead in seconds, qualifies it and books the showing. Your brokers just sell.',
         // The listing from the call, and the call itself: a buyer phones about it at night and Aurora answers. Recorded in ElevenLabs v4;
         // `at` / `end` are where each caption starts and ends in the recording (ms), `words` when each
         // word is spoken, from the start of its caption. Names, prices and times are illustrative.
@@ -43,7 +45,7 @@ export const industries = [
         },
         call: {
           audio: '/media/real-estate/call-c.mp3',
-          duration: 62100,
+          duration: 62580,
           title: 'Aurora · AI voice agent',
           listing: 'Call about a home for sale',
           caller: 'Buyer',
@@ -59,13 +61,13 @@ export const industries = [
             { label: 'Greet', at: 0 },
             { label: 'Qualify', at: 16580 },
             { label: 'Guide', at: 36560 },
-            { label: 'Book', at: 51860 },
+            { label: 'Book', at: 52330 },
           ],
           // what Aurora records while she talks, shown as it happens
           notes: [
             { at: 34200, title: 'Pre-approved', detail: 'Up to $550K' },
-            { at: 53500, title: 'Showing booked', detail: 'Sat 11:00 am · with Jess' },
-            { at: 58200, title: 'Text sent', detail: 'Address and broker contact' },
+            { at: 53970, title: 'Showing booked', detail: 'Sat 11:00 am · with Jess' },
+            { at: 58670, title: 'Text sent', detail: 'Address and broker contact' },
           ],
           captions: [
             { who: 'aurora', at: 0, end: 3140, text: "Hi! Thanks for calling about the house on Maple Street.", words: [0, 880, 1220, 1440, 1680, 1980, 2100, 2320, 2520, 2760] },
@@ -79,11 +81,11 @@ export const industries = [
             { who: 'buyer', at: 32860, end: 35980, text: "Yeah, we're pre-approved. Up to about five-fifty.", words: [0, 460, 800, 1900, 2020, 2200, 2480] },
             { who: 'aurora', at: 36560, end: 40160, text: "Perfect, it's listed at five-twenty-five, so you're right in range.", words: [0, 1020, 1240, 1440, 1660, 2140, 2660, 2860, 3120, 3300] },
             { who: 'aurora', at: 40820, end: 44040, text: "The best next step is to see it before the weekend gets busy.", words: [0, 180, 420, 720, 1020, 1220, 1400, 1640, 1800, 2140, 2320, 2520, 2840] },
-            { who: 'aurora', at: 44660, end: 50080, text: "Jess, the listing agent, has Saturday at eleven... or Sunday at two. Which works better?", words: [0, 280, 320, 600, 1220, 1500, 1880, 2200, 2560, 3300, 3680, 3940, 4520, 4800, 5040] },
-            { who: 'buyer', at: 50460, end: 51860, text: "Saturday at eleven works.", words: [0, 380, 700, 1020] },
-            { who: 'aurora', at: 51860, end: 55220, text: "Done! You're booked with Jess, Saturday at eleven.", words: [0, 1380, 1580, 1760, 1980, 2840, 2840, 3120] },
-            { who: 'aurora', at: 55780, end: 59200, text: "I'll text you the address and her number right now. See you Saturday!", words: [0, 240, 420, 640, 760, 1060, 1380, 1540, 1780, 2080, 2940, 3020, 3140] },
-            { who: 'buyer', at: 59880, end: 61500, text: "Great... thanks, Aurora.", words: [0, 980, 1480] },
+            { who: 'aurora', at: 44740, end: 50550, text: "Jess, the listing broker, has Saturday at eleven... or Sunday at two. Which works better?", words: [0, 260, 540, 860, 1180, 1560, 1940, 2220, 3210, 3340, 3700, 4160, 5040, 5320, 5560] },
+            { who: 'buyer', at: 50930, end: 52330, text: "Saturday at eleven works.", words: [0, 380, 700, 1020] },
+            { who: 'aurora', at: 52330, end: 55690, text: "Done! You're booked with Jess, Saturday at eleven.", words: [0, 1380, 1580, 1760, 1980, 2840, 2840, 3120] },
+            { who: 'aurora', at: 56250, end: 59670, text: "I'll text you the address and her number right now. See you Saturday!", words: [0, 240, 420, 640, 760, 1060, 1380, 1540, 1780, 2080, 2940, 3020, 3140] },
+            { who: 'buyer', at: 60350, end: 61970, text: "Great... thanks, Aurora.", words: [0, 980, 1480] },
           ],
           note: 'An example call. Names, prices and times are illustrative.',
         },
@@ -345,11 +347,76 @@ export const industries = [
       },
       // the closing call to action, for a brokerage
       closing: {
-        titleA: 'Send us one listing.',
-        titleB: 'Hear Aurora answer a buyer about it.',
-        text: 'Share one of your listings. We set Aurora up on it, and you hear it answer a buyer, qualify them and book the showing.',
+        titleA: 'Ready to scale with us?',
+        titleB: 'Book a demo.',
+        text: 'Aurora answers, qualifies, books and follows up on every lead, so the brokers you have handle more deals. Bring one of your listings and hear it work.',
+        // a SOLD sign on a street of homes at sunrise: plainly real estate, in Aurora's dawn colours; its panel points down
+        // to the form ('Leave your details' and an arrow, printed onto the photo)
+        image: {
+          src: '/media/real-estate/closing-sold-1600.webp',
+          srcSet: '/media/real-estate/closing-sold-900.webp 900w, /media/real-estate/closing-sold-1200.webp 1200w, /media/real-estate/closing-sold-1600.webp 1600w, /media/real-estate/closing-sold-2000.webp 2000w',
+        },
       },
-      faqMore: { text: 'Want the full picture of how Aurora works?', link: 'See the platform', href: '/platform' },
+      // the tools Aurora connects to, by kind, with their brand icons (shown only to name them); each kind ends in 'and more'
+      stack: {
+        titleA: 'Works with the tools',
+        titleB: 'your brokerage runs on.',
+        text: 'During setup Aurora is connected to your CRM, your lead sources and your brokers’ calendars. Leads keep arriving where they do now, and every conversation is logged to the lead’s record.',
+        more: 'and more',
+        groups: [
+          {
+            label: 'CRM',
+            items: [
+              { name: 'Follow Up Boss', icon: '/media/logos/followupboss-96.webp' },
+              { name: 'BoldTrail (kvCORE)', icon: '/media/logos/boldtrail-96.webp' },
+              { name: 'Lofty', icon: '/media/logos/lofty-96.webp' },
+              { name: 'HubSpot', mark: 'hubspot' },
+              { name: 'Salesforce', icon: '/img/logos/salesforce.svg' },
+            ],
+          },
+          {
+            label: 'Lead sources',
+            items: [
+              { name: 'Zillow', icon: '/media/logos/zillow-96.webp' },
+              { name: 'Realtor.com', icon: '/media/logos/realtor-96.webp' },
+              { name: 'Homes.com', icon: '/media/logos/homes-96.webp' },
+            ],
+          },
+          {
+            label: 'Calendars',
+            items: [
+              { name: 'Google Calendar', icon: '/img/logos/google-calendar.svg' },
+              { name: 'Outlook', icon: '/img/logos/outlook.svg' },
+            ],
+          },
+          {
+            label: 'Phone systems',
+            items: [
+              { name: 'RingCentral', icon: '/img/logos/ringcentral.svg', wordmark: true },
+              { name: '3CX', icon: '/img/logos/3cx.svg' },
+            ],
+          },
+          {
+            label: 'Email',
+            items: [
+              { name: 'Gmail', icon: '/img/logos/gmail.svg' },
+              { name: 'Outlook', icon: '/img/logos/outlook.svg' },
+            ],
+          },
+          {
+            label: 'Channels',
+            items: [
+              { name: 'Phone', mark: 'phone' },
+              { name: 'Text', glyph: 'text' },
+              { name: 'WhatsApp', mark: 'whatsapp' },
+              { name: 'Web chat', glyph: 'chat' },
+            ],
+          },
+        ],
+        languages: { label: 'Languages', items: ['English', 'Español'] },
+        note: 'Product names and logos belong to their owners and are shown only to name the tools Aurora connects to.',
+      },
+      faqMore: { text: 'Want the full picture?', guide: 'Read our guide to AI lead follow-up for brokerages', link: 'see the platform', join: 'or', href: '/platform' },
     },
     meta: {
       title: 'AI ISA for Real Estate Brokerages | Aurora by Divine Tech AI',
@@ -412,16 +479,21 @@ export const industries = [
     ],
     success: 'From chasing leads to showing properties.',
     systems: ['Your CRM', 'Broker calendars', 'Listing portals', 'Phone', 'SMS', 'Email', 'Web chat', 'WhatsApp'],
+    // the first six show on the page; the rest open with a button (all of them stay in the HTML and the FAQ schema)
+    faqVisible: 6,
     faq: [
       ['What is an AI ISA for real estate?', 'An AI ISA (inside sales agent) answers and qualifies a brokerage’s leads the way a human ISA does, by phone, text, chat and email. Aurora replies to every new lead in seconds, asks about budget, timing and area, books the showing or listing appointment with the right broker and follows up until the lead is ready.'],
-      ['How fast does Aurora reply to a new lead?', 'Within seconds, on the channel the lead came from, at any hour. A portal inquiry at 9:47 pm gets an answer at 9:47 pm, not the next morning.'],
+      ['Does Aurora work with our CRM and lead sources?', 'Yes. During setup Aurora is connected to the CRM your brokerage runs on, such as Follow Up Boss, BoldTrail (kvCORE), Lofty, HubSpot or Salesforce, to lead sources like Zillow, Realtor.com and Homes.com, and to your brokers’ Google or Outlook calendars. Leads keep arriving where they do now, and every conversation is logged to the lead’s record.'],
       ['Can Aurora book showings in my brokers’ calendars?', 'Yes. During setup Aurora is connected to your brokers’ calendars and your routing rules, so it books the showing with the right broker, sends the confirmation and address, and reminds the client the day before.'],
-      ['Does Aurora work with our CRM and lead sources?', 'Aurora works inside the systems your team already uses. During setup it is connected to your CRM, such as HubSpot or Salesforce, your lead sources and your brokers’ Google or Outlook calendars, and every conversation is logged to the lead’s record.'],
-      ['Will Aurora quote prices or negotiate?', 'Only within the rules you set. You can tell it never to quote a final price and to offer a showing or a call with a broker instead. Anything outside your rules goes to a broker for approval.'],
-      ['What happens when a lead is ready to talk to a broker?', 'Aurora hands the lead to the right broker with the full conversation, and your team can step into any conversation at any moment.'],
-      FAQ_CHANNELS,
+      ['Can Aurora talk to buyers in Spanish?', 'Yes. Aurora talks to buyers and sellers in Spanish as well as English, on calls and in texts, so a Spanish-speaking lead gets the same fast answer, qualification and booked showing.'],
       FAQ_LIVE,
       ['How much does Aurora cost for a brokerage?', 'Aurora is priced for each brokerage. The price depends on what Aurora takes on, from new leads to follow-up and showings, the channels it covers and the systems it connects to. We map your process first, then send a proposal based on that plan.'],
+      ['How fast does Aurora reply to a new lead?', 'Within seconds, on the channel the lead came from, at any hour. A portal inquiry at 9:47 pm gets an answer at 9:47 pm, not the next morning.'],
+      ['Will Aurora quote prices or negotiate?', 'Only within the rules you set. You can tell it never to quote a final price and to offer a showing or a call with a broker instead. Anything outside your rules goes to a broker for approval.'],
+      ['What happens when a lead is ready to talk to a broker?', 'Aurora hands the lead to the right broker with the full conversation, and your team can step into any conversation at any moment.'],
+      ['Do buyers know they’re talking to AI?', 'Yes. Aurora introduces itself as your team’s AI assistant, as in the call at the top of this page, and brings in a broker whenever a buyer asks for a person.'],
+      ['How does Aurora handle Fair Housing and opt-outs?', 'Both are rules in your playbook. Aurora talks about the home, the schools and the commute, never about who lives in an area, and stops messaging anyone who opts out at once. Have your broker of record review the scripts and consent language before launch, as with any outreach.'],
+      FAQ_CHANNELS,
     ],
   },
   {

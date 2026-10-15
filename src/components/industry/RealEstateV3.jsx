@@ -1,14 +1,15 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, m as motion, useReducedMotion } from 'framer-motion';
-import { ArrowUp, CalendarCheck, Check, ChevronLeft, CircleDollarSign, Database, Hand, Pause, Play, Scale, Volume2, Send, Clock, House, BellOff, Hourglass, ShieldCheck, User, ArrowRight, TrendingUp, Heart } from 'lucide-react';
+import { ArrowUp, CalendarCheck, Check, ChevronLeft, CircleDollarSign, Database, Hand, Pause, Play, Scale, Volume2, Send, Clock, House, BellOff, Hourglass, ShieldCheck, User, ArrowRight, TrendingUp, Heart, MessageSquareText, MessagesSquare, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import CTAButton from '@/components/home-v2/primitives/CTAButton';
 import SectionHeader from '@/components/home-v2/primitives/SectionHeader';
 import { RevealLines } from '@/components/home-v2/primitives/MotionReveal';
-import { useLead } from '@/components/home-v2/LeadDrawer';
+import { LeadForm, useLead } from '@/components/home-v2/LeadDrawer';
 import LiquidGlass from '@/components/home-v2/primitives/LiquidGlass';
 import { onAnchorClick, useInViewport, useMediaQuery, usePageLoaded, usePageVisible } from '@/components/home-v2/hooks';
 import { useNavigate } from 'react-router-dom';
+import { HubSpotMark, PhoneTile, WhatsAppMark } from '@/components/home-v2/BrandMarks';
 
 /*
  * Real estate page, v3. One message per section, in this order:
@@ -206,7 +207,7 @@ function CallStage({ h, header }) {
           The frame, from 560 px (small tablets) up: the header sits in the photo's evening sky, whose colours continue
           upward behind it. Tablets: header, then the whole photo at its own shape. Laptops: as tall as the screen allows,
           the header on the left, the call card on the right. Phones: there isn't room (the house would shrink to a strip
-          under a tall block of text), so the header sits above a 4:3 photo.
+          under a tall block of text), so the header sits above a 3:2 photo.
         */}
         <div
           className={cn(
@@ -220,7 +221,7 @@ function CallStage({ h, header }) {
           <div className="relative z-[2] min-[560px]:px-7 min-[560px]:pt-7 sm:px-8 sm:pt-8 lg:pr-[calc(var(--card-w)_+_72px)] lg:[@media(max-height:760px)]:pt-6">{header}</div>
 
           {/* the photo: from 560 px its tree line meets the header and its top edge fades into the sky */}
-          <div className="relative mt-7 aspect-[4/3] overflow-hidden rounded-[24px] bg-[#2B3550] shadow-[0_40px_80px_-48px_rgba(30,30,60,0.55)] min-[560px]:mt-0 min-[560px]:aspect-auto min-[560px]:h-[46.71cqw] min-[560px]:overflow-visible min-[560px]:rounded-none min-[560px]:bg-transparent min-[560px]:shadow-none lg:h-auto lg:flex-1">
+          <div className="relative mt-5 aspect-[3/2] overflow-hidden rounded-[24px] bg-[#2B3550] shadow-[0_40px_80px_-48px_rgba(30,30,60,0.55)] min-[560px]:mt-0 min-[560px]:aspect-auto min-[560px]:h-[46.71cqw] min-[560px]:overflow-visible min-[560px]:rounded-none min-[560px]:bg-transparent min-[560px]:shadow-none lg:h-auto lg:flex-1">
             <img
               src={f.image ? f.image.src : f.poster}
               srcSet={f.image ? f.image.srcSet : undefined}
@@ -341,7 +342,7 @@ export function RxHero({ it }) {
   const { open } = useLead();
 
   return (
-    <section id="top" data-nav-theme="light" aria-labelledby="rx-hero-title" className="relative overflow-hidden pb-0 pt-[calc(var(--nav-h)+36px)] min-[560px]:pt-[calc(var(--nav-h)+16px)]">
+    <section id="top" data-nav-theme="light" aria-labelledby="rx-hero-title" className="relative overflow-hidden pb-0 pt-[calc(var(--nav-h)+20px)] min-[560px]:pt-[calc(var(--nav-h)+16px)]">
       <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[760px] bg-[radial-gradient(55%_55%_at_82%_0%,rgba(255,214,170,0.75),rgba(246,245,241,0)_70%),radial-gradient(40%_50%_at_10%_10%,rgba(240,232,218,0.7),rgba(246,245,241,0)_70%)]" />
       <div className="shell relative">
         <CallStage
@@ -351,15 +352,22 @@ export function RxHero({ it }) {
             <div>
               <div>
                 <p className="intro-rise eyebrow min-[560px]:text-white/75">{h.eyebrow}</p>
-                <h1 id="rx-hero-title" className="t-display balance mt-5 min-[560px]:mt-3 min-[560px]:text-white min-[560px]:[text-shadow:0_2px_24px_rgba(10,16,40,0.35)] lg:text-[clamp(2.2rem,0.4rem+2.7vw,3.4rem)] lg:[@media(max-height:760px)]:mt-2">
+                <h1 id="rx-hero-title" className="t-display balance mt-3 min-[560px]:mt-3 min-[560px]:text-white min-[560px]:[text-shadow:0_2px_24px_rgba(10,16,40,0.35)] lg:text-[clamp(2.2rem,0.4rem+2.7vw,3.4rem)] lg:[@media(max-height:760px)]:mt-2">
                   <RevealLines lines={[h.titleA, h.titleB]} lineClassNames={['', '']} immediate delay={0.08} stagger={0.14} />
                 </h1>
               </div>
-              <div className="mt-6 min-[560px]:mt-4 lg:[@media(max-height:760px)]:mt-3">
+              <div className="mt-4 min-[560px]:mt-4 lg:[@media(max-height:760px)]:mt-3">
                 <p className="intro-slide t-lead pretty max-w-[36em] min-[560px]:!text-white/[0.88] lg:text-[15.5px] lg:leading-[1.55]" style={{ animationDelay: '0.3s' }}>
-                  {h.text}
+                  {h.textShort ? (
+                    <>
+                      <span className="sm:hidden">{h.textShort}</span>
+                      <span className="max-sm:hidden">{h.text}</span>
+                    </>
+                  ) : (
+                    h.text
+                  )}
                 </p>
-                <div className="intro-slide mt-6 flex flex-wrap items-center gap-2 min-[560px]:mt-5 min-[560px]:gap-2.5 sm:gap-3 lg:[@media(max-height:760px)]:mt-4" style={{ animationDelay: '0.42s' }}>
+                <div className="intro-slide mt-5 flex flex-wrap items-center gap-2 min-[560px]:mt-5 min-[560px]:gap-2.5 sm:gap-3 lg:[@media(max-height:760px)]:mt-4" style={{ animationDelay: '0.42s' }}>
                   <CTAButton size="lg" onClick={open} className="max-sm:h-12 max-sm:px-3.5 max-sm:text-[14px] max-sm:[&_.btn-arrow]:hidden lg:h-12 lg:px-5 lg:text-[15px] lg:[@media(max-height:760px)]:h-11">
                     Book a demo
                   </CTAButton>
@@ -1656,7 +1664,7 @@ function KpiGoals({ a, run, reduce, titleId }) {
                   cur ? 'bg-[#F6F1E8]' : 'shadow-[inset_0_0_0_1px_rgba(10,15,14,0.1)] hover:bg-ink/[0.03] lg:shadow-none'
                 )}
               >
-                <span className={cn('whitespace-nowrap text-[12.5px] font-medium transition-colors lg:w-[78px] lg:shrink-0 lg:text-[10.5px] lg:uppercase lg:tracking-[0.06em]', cur ? 'text-ink lg:text-[#C2410C]' : 'text-ink/55 lg:text-ink/40')}>{x.area}</span>
+                <span className={cn('whitespace-nowrap text-[12.5px] font-medium transition-colors lg:w-[98px] lg:shrink-0 lg:text-[10.5px] lg:uppercase lg:tracking-[0.06em]', cur ? 'text-ink lg:text-[#C2410C]' : 'text-ink/55 lg:text-ink/40')}>{x.area}</span>
                 <span className={cn('hidden min-w-0 truncate text-[13.5px] font-medium transition-colors lg:block', cur ? 'text-ink' : 'text-ink/55')}>{x.name}</span>
               </button>
             );
@@ -1875,23 +1883,201 @@ export function RxKpi({ it }) {
 }
 
 /** Under the FAQ: one line pointing to the platform page, for anyone who wants the whole picture. */
-export function RxFaqMore({ m }) {
-  const navigate = useNavigate();
+const MARKS = { hubspot: HubSpotMark, whatsapp: WhatsAppMark, phone: PhoneTile };
+const GLYPHS = { text: MessageSquareText, chat: MessagesSquare };
+
+/** One tool: its brand icon and name (a wordmark stands alone), or a plain glyph for a channel. */
+function StackTile({ x }) {
+  const Mark = x.mark ? MARKS[x.mark] : null;
+  const Glyph = x.glyph ? GLYPHS[x.glyph] : null;
   return (
-    <p className="mt-6 flex flex-wrap items-center gap-x-2 gap-y-1 text-[14px] text-graphite">
-      {m.text}
-      <a
-        href={m.href}
-        onClick={(e) => {
-          if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
-          e.preventDefault();
-          navigate(m.href);
-        }}
-        className="inline-flex items-center gap-1 font-medium text-ink underline decoration-ink/25 underline-offset-4 hover:decoration-ink"
+    <li className="flex h-10 items-center gap-2.5 rounded-[12px] bg-paper pl-2.5 pr-3.5 shadow-[inset_0_0_0_1px_rgba(10,15,14,0.05)]" title={x.name}>
+      {x.wordmark ? (
+        <img src={x.icon} alt={x.name} height="16" loading="lazy" decoding="async" className="h-4 w-auto px-1" />
+      ) : (
+        <>
+          {Mark ? (
+            <Mark className="h-[22px] w-[22px] shrink-0" />
+          ) : Glyph ? (
+            <span className="flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-[6px] bg-ink text-white">
+              <Glyph className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
+            </span>
+          ) : (
+            <img src={x.icon} alt="" width="22" height="22" loading="lazy" decoding="async" className="h-[22px] w-[22px] shrink-0 rounded-[5px] object-contain" />
+          )}
+          <span className="whitespace-nowrap text-[13.5px] font-medium text-ink">{x.name}</span>
+        </>
+      )}
+    </li>
+  );
+}
+
+/**
+ * The last tile of each kind: a + square. Its label ("and more") shows as a small tag above it on hover, keyboard focus
+ * or a tap, laid over the page so the row never changes size.
+ */
+function MoreTile({ label }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <li className="relative">
+      <button
+        type="button"
+        aria-label={label}
+        aria-expanded={open}
+        onClick={() => setOpen((o) => !o)}
+        onBlur={() => setOpen(false)}
+        className="group/more flex h-10 w-10 items-center justify-center rounded-[12px] border border-dashed border-ink/20 text-ink/45 transition-colors duration-300 hover:border-ink/35 hover:text-ink/70 focus-visible:border-ink/35 focus-visible:text-ink/70 focus-visible:outline-none"
       >
+        <Plus className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
+        <span
+          aria-hidden="true"
+          className={cn(
+            'pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap rounded-[8px] bg-ink px-2.5 py-1 text-[12px] font-medium text-white shadow-[0_8px_20px_-10px_rgba(10,15,14,0.5)] transition-[opacity,transform] duration-200 group-hover/more:translate-y-0 group-hover/more:opacity-100 group-focus-visible/more:translate-y-0 group-focus-visible/more:opacity-100',
+            open ? 'translate-y-0 opacity-100' : 'translate-y-1 opacity-0'
+          )}
+        >
+          {label}
+        </span>
+      </button>
+    </li>
+  );
+}
+
+/**
+ * The tools Aurora connects to, by kind (CRM, lead sources, calendars, phone systems, email, channels), each as its
+ * brand icon and name and each kind ending in a + ("and more"), then the languages it speaks. Brand icons only name the tools.
+ */
+export function RxStack({ it }) {
+  const st = it.v3.stack;
+  if (!st) return null;
+  const label = 't-data text-[10.5px] uppercase tracking-[0.08em] text-ink/45';
+  return (
+    <section data-nav-theme="light" aria-labelledby="rx-stack-title" className="section relative pt-0">
+      <div className="shell">
+        <div className="rounded-[28px] bg-white p-5 shadow-[0_0_0_1px_rgba(10,15,14,0.06)] xs:p-6 md:p-8 lg:p-10">
+          <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,460px)] lg:items-end lg:gap-12">
+            <h2 id="rx-stack-title" className="text-[clamp(26px,2.2vw,34px)] font-medium leading-[1.1] tracking-[-0.022em] text-ink">
+              {st.titleA} <span className="sm:block">{st.titleB}</span>
+            </h2>
+            <p className="pretty text-[15px] leading-[1.6] text-graphite">{st.text}</p>
+          </div>
+          <div className="mt-7 grid gap-x-10 gap-y-6 lg:grid-cols-2">
+            {st.groups.map((g) => (
+              <div key={g.label}>
+                <p className={label}>{g.label}</p>
+                <ul className="mt-2.5 flex flex-wrap gap-2">
+                  {g.items.map((x) => (
+                    <StackTile key={x.name} x={x} />
+                  ))}
+                  <MoreTile label={st.more} />
+                </ul>
+              </div>
+            ))}
+            {st.languages ? (
+              <div>
+                <p className={label}>{st.languages.label}</p>
+                <ul className="mt-2.5 flex flex-wrap gap-2">
+                  {st.languages.items.map((l) => (
+                    <li key={l} className="flex h-10 items-center rounded-[12px] bg-ink px-3.5 text-[13.5px] font-medium text-white">
+                      {l}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+          </div>
+          <p className="mt-7 text-[11.5px] leading-snug text-slate">{st.note}</p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/** Under the FAQ: the blog guide and the platform page, as links in one line. */
+export function RxFaqMore({ m, guide = null }) {
+  const navigate = useNavigate();
+  const go = (href) => (e) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
+    e.preventDefault();
+    navigate(href);
+  };
+  const link = 'font-medium text-ink underline decoration-ink/25 underline-offset-4 hover:decoration-ink';
+  return (
+    <p className="mt-6 text-[14px] leading-relaxed text-graphite">
+      {m.text}{' '}
+      {guide && m.guide ? (
+        <>
+          <a href={guide} onClick={go(guide)} className={link}>
+            {m.guide}
+          </a>{' '}
+          {m.join}{' '}
+        </>
+      ) : null}
+      <a href={m.href} onClick={go(m.href)} className={cn('inline-flex items-center gap-1', link)}>
         {m.link}
         <ArrowRight className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
       </a>
     </p>
+  );
+}
+
+// the growth bars behind the closing headline: heights as a share of their box, rising left to right
+const SCALE_BARS = [0.22, 0.3, 0.27, 0.38, 0.46, 0.43, 0.56, 0.64, 0.72, 0.84, 1];
+
+/**
+ * The closing for a brokerage, in Aurora's colours only: an ink night with a warm dawn rising from below and growth
+ * bars climbing behind the headline; then a SOLD sign on a street of homes at sunrise, with the demo form as glass over it.
+ */
+export function RxClosing({ it }) {
+  const c = it.v3.closing;
+  const img = c.image || it.v3.hero.film.image;
+  const reduce = !!useReducedMotion();
+  const ref = useRef(null);
+  const seen = useInViewport(ref, { threshold: 0.2, once: true });
+  const grow = reduce || seen;
+  return (
+    <section ref={ref} id="contact" data-nav-theme="dark" aria-labelledby="contact-title" className="on-dark relative overflow-hidden bg-ink pb-[clamp(72px,7vw,112px)] pt-[clamp(88px,8vw,128px)] text-white">
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+        {/* the dawn: Sun, Amber and Gold rising from below */}
+        <div className="absolute bottom-[8%] left-1/2 h-[75%] w-[120%] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(closest-side,rgba(242,92,42,0.42),rgba(255,159,69,0.16)_45%,rgba(255,200,87,0)_75%)] blur-2xl" />
+        <div className="absolute right-[-10%] top-[-20%] h-[60%] w-[50%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.12),rgba(255,200,87,0))] blur-2xl" />
+        {/* growth bars behind the headline */}
+        <div className="absolute right-[4%] top-[10%] flex h-[34%] w-[46%] items-end gap-[1.4%] max-lg:right-[-6%] max-lg:top-[3%] max-lg:h-[16%] max-lg:w-[70%] max-lg:opacity-50">
+          {SCALE_BARS.map((v, i) => (
+            <span
+              key={i}
+              className="flex-1 rounded-t-[6px] bg-[linear-gradient(180deg,rgba(255,159,69,0.28),rgba(242,92,42,0.06))]"
+              style={{ height: v * 100 + '%', transform: grow ? 'scaleY(1)' : 'scaleY(0)', transformOrigin: 'bottom', transition: reduce ? 'none' : `transform 0.9s cubic-bezier(0.22,1,0.36,1) ${0.15 + i * 0.07}s` }}
+            />
+          ))}
+        </div>
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
+        {/* the dawn settles back to plain ink before the footer, so the two meet without a seam */}
+        <div className="absolute inset-x-0 bottom-0 h-[38%] bg-gradient-to-b from-ink/0 via-ink/80 to-ink" />
+      </div>
+
+      <div className="shell relative">
+        <div className="grid gap-5 lg:grid-cols-12 lg:items-end lg:gap-12">
+          <h2 id="contact-title" className="t-display balance lg:col-span-7 lg:text-[clamp(2.4rem,0.6rem+3vw,3.9rem)]">
+            <RevealLines lines={[c.titleA, c.titleB]} lineClassNames={['', '']} />
+          </h2>
+          <p className="t-lead pretty max-w-[34em] !text-white/70 lg:col-span-5">{c.text}</p>
+        </div>
+
+        {/* the street at sunrise, with the form as glass over it (phones: the photo above, the form overlapping it) */}
+        <div className="relative mt-10 md:mt-12 md:overflow-hidden md:rounded-[clamp(24px,2.6vw,34px)]">
+          <div className="relative aspect-[16/10] overflow-hidden rounded-[24px] md:absolute md:inset-0 md:aspect-auto md:rounded-none">
+            <img src={img.src} srcSet={img.srcSet} sizes="(min-width: 1280px) 1200px, 100vw" alt="" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover object-[22%_30%] md:object-[50%_30%]" />
+            <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,159,69,0.10)_0%,rgba(242,92,42,0.12)_40%,rgba(10,15,14,0.55)_75%,rgba(10,15,14,0.9)_100%)] md:bg-[linear-gradient(180deg,rgba(255,159,69,0.08)_0%,rgba(10,15,14,0.25)_40%,rgba(10,15,14,0.85)_100%)]" />
+          </div>
+          <div className="relative -mt-16 px-2 xs:px-3 md:mt-0 md:px-6 md:pb-6 md:pt-[clamp(200px,22vw,300px)]">
+            <LiquidGlass tone="dark" className="rounded-[clamp(20px,2.2vw,28px)] p-5 xs:p-6 md:p-7">
+              <p className="mb-5 text-[15px] leading-snug text-white/70">Leave your details and Aurora, our AI agent, will call you right away.</p>
+              <LeadForm dark wide industry={it.leadIndustry} />
+            </LiquidGlass>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
