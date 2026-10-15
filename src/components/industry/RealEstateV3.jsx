@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, m as motion, useReducedMotion } from 'framer-motion';
-import { ArrowUp, CalendarCheck, Check, ChevronLeft, CircleDollarSign, Database, Hand, Pause, Play, Scale, Volume2, Send, Clock, House, BellOff, Hourglass, ShieldCheck, User, ArrowRight, TrendingUp, Heart } from 'lucide-react';
+import { ArrowUp, CalendarCheck, Check, ChevronLeft, CircleDollarSign, Database, Hand, Pause, Play, Scale, Volume2, Send, Clock, House, BellOff, Hourglass, ShieldCheck, User, ArrowRight, ArrowUpRight, TrendingUp, Heart } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import CTAButton from '@/components/home-v2/primitives/CTAButton';
 import SectionHeader from '@/components/home-v2/primitives/SectionHeader';
@@ -9,6 +9,8 @@ import { useLead } from '@/components/home-v2/LeadDrawer';
 import LiquidGlass from '@/components/home-v2/primitives/LiquidGlass';
 import { onAnchorClick, useInViewport, useMediaQuery, usePageLoaded, usePageVisible } from '@/components/home-v2/hooks';
 import { useNavigate } from 'react-router-dom';
+import SmartLink from '@/components/home-v2/primitives/SmartLink';
+import { HubSpotMark } from '@/components/home-v2/BrandMarks';
 
 /*
  * Real estate page, v3. One message per section, in this order:
@@ -357,7 +359,14 @@ export function RxHero({ it }) {
               </div>
               <div className="mt-6 min-[560px]:mt-4 lg:[@media(max-height:760px)]:mt-3">
                 <p className="intro-slide t-lead pretty max-w-[36em] min-[560px]:!text-white/[0.88] lg:text-[15.5px] lg:leading-[1.55]" style={{ animationDelay: '0.3s' }}>
-                  {h.text}
+                  {h.textShort ? (
+                    <>
+                      <span className="sm:hidden">{h.textShort}</span>
+                      <span className="max-sm:hidden">{h.text}</span>
+                    </>
+                  ) : (
+                    h.text
+                  )}
                 </p>
                 <div className="intro-slide mt-6 flex flex-wrap items-center gap-2 min-[560px]:mt-5 min-[560px]:gap-2.5 sm:gap-3 lg:[@media(max-height:760px)]:mt-4" style={{ animationDelay: '0.42s' }}>
                   <CTAButton size="lg" onClick={open} className="max-sm:h-12 max-sm:px-3.5 max-sm:text-[14px] max-sm:[&_.btn-arrow]:hidden lg:h-12 lg:px-5 lg:text-[15px] lg:[@media(max-height:760px)]:h-11">
@@ -1875,6 +1884,82 @@ export function RxKpi({ it }) {
 }
 
 /** Under the FAQ: one line pointing to the platform page, for anyone who wants the whole picture. */
+const MARKS = { hubspot: HubSpotMark };
+
+/**
+ * The tools Aurora connects to, by kind (CRM, lead sources, calendars), each as its brand icon and name, the
+ * languages it speaks, and the industry guide from the blog beside them. Brand icons only name the tools.
+ */
+export function RxStack({ it, guide = null }) {
+  const st = it.v3.stack;
+  if (!st) return null;
+  return (
+    <section data-nav-theme="light" aria-labelledby="rx-stack-title" className="section relative pt-0">
+      <div className="shell grid gap-4 lg:grid-cols-12">
+        <div className={cn('rounded-[28px] bg-white p-5 shadow-[0_0_0_1px_rgba(10,15,14,0.06)] xs:p-6 md:p-8', guide ? 'lg:col-span-8' : 'lg:col-span-12')}>
+          <h2 id="rx-stack-title" className="text-[clamp(26px,2.2vw,34px)] font-medium leading-[1.1] tracking-[-0.022em] text-ink">
+            {st.titleA} <span className="sm:block">{st.titleB}</span>
+          </h2>
+          <p className="pretty mt-3 max-w-[40em] text-[15px] leading-[1.6] text-graphite">{st.text}</p>
+          <div className="mt-6 grid gap-5">
+            {st.groups.map((g) => (
+              <div key={g.label} className="grid gap-2 md:grid-cols-[120px_minmax(0,1fr)] md:items-center md:gap-4">
+                <p className="t-data text-[10.5px] uppercase tracking-[0.08em] text-ink/45">{g.label}</p>
+                <ul className="flex flex-wrap gap-2">
+                  {g.items.map((x) => {
+                    const Mark = x.mark ? MARKS[x.mark] : null;
+                    return (
+                      <li key={x.name} className="flex items-center gap-2.5 rounded-[12px] bg-paper py-2 pl-2.5 pr-3.5 shadow-[inset_0_0_0_1px_rgba(10,15,14,0.05)]">
+                        {Mark ? (
+                          <Mark className="h-[22px] w-[22px] shrink-0" />
+                        ) : (
+                          <img src={x.icon} alt="" width="22" height="22" loading="lazy" decoding="async" className="h-[22px] w-[22px] shrink-0 rounded-[5px] object-contain" />
+                        )}
+                        <span className="whitespace-nowrap text-[13.5px] font-medium text-ink">{x.name}</span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            ))}
+            {st.languages ? (
+              <div className="grid gap-2 md:grid-cols-[120px_minmax(0,1fr)] md:items-center md:gap-4">
+                <p className="t-data text-[10.5px] uppercase tracking-[0.08em] text-ink/45">{st.languages.label}</p>
+                <ul className="flex flex-wrap gap-2">
+                  {st.languages.items.map((l) => (
+                    <li key={l} className="rounded-[12px] bg-ink px-3.5 py-2 text-[13.5px] font-medium text-white">
+                      {l}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+          </div>
+          <p className="mt-6 text-[11.5px] leading-snug text-slate">{st.note}</p>
+        </div>
+        {guide ? (
+          <SmartLink
+            href={guide.href}
+            className="group flex flex-col overflow-hidden rounded-[28px] bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.06)] transition-shadow hover:shadow-[0_0_0_1px_rgba(10,15,14,0.12)] max-lg:sm:flex-row lg:col-span-4"
+          >
+            <img src={guide.image} alt="" width="800" height="450" loading="lazy" decoding="async" className="aspect-[16/9] w-full object-cover max-lg:sm:aspect-auto max-lg:sm:w-[42%]" />
+            <span className="flex flex-1 flex-col p-6">
+              <span className="text-[12px] font-medium text-slate">
+                {st.guide} · {guide.minutes} min read
+              </span>
+              <span className="mt-2 text-[17px] font-medium leading-snug tracking-[-0.01em] text-ink">{guide.title}</span>
+              <span className="mt-auto flex items-center gap-1.5 pt-4 text-[13.5px] font-medium text-ink">
+                {st.read}
+                <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" strokeWidth={1.8} aria-hidden="true" />
+              </span>
+            </span>
+          </SmartLink>
+        ) : null}
+      </div>
+    </section>
+  );
+}
+
 export function RxFaqMore({ m }) {
   const navigate = useNavigate();
   return (

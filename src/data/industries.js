@@ -31,6 +31,8 @@ export const industries = [
         titleA: 'The AI ISA for',
         titleB: 'real estate brokerages.',
         text: 'Aurora answers every lead from portals, ads, calls and texts in seconds, qualifies it, books the showing with the right broker and keeps every deal moving. Your brokers just sell.',
+        // phones: the same promise in one line, so the call card fits on the first screen
+        textShort: 'Aurora answers every lead in seconds, qualifies it and books the showing. Your brokers just sell.',
         // The listing from the call, and the call itself: a buyer phones about it at night and Aurora answers. Recorded in ElevenLabs v4;
         // `at` / `end` are where each caption starts and ends in the recording (ms), `words` when each
         // word is spoken, from the start of its caption. Names, prices and times are illustrative.
@@ -347,7 +349,44 @@ export const industries = [
       closing: {
         titleA: 'Send us one listing.',
         titleB: 'Hear Aurora answer a buyer about it.',
-        text: 'Share one of your listings. We set Aurora up on it, and you hear it answer a buyer, qualify them and book the showing.',
+        text: 'Pick one of your listings and we’ll prepare Aurora on it. Then you play the buyer: ask about the home, push on the price, and hear Aurora qualify you and book the showing.',
+      },
+      // the tools Aurora connects to, with their brand icons (shown only to name them), and the blog guide beside them
+      stack: {
+        titleA: 'Works with the tools',
+        titleB: 'your brokerage runs on.',
+        text: 'During setup Aurora is connected to your CRM, your lead sources and your brokers’ calendars. Leads keep arriving where they do now, and every conversation is logged to the lead’s record.',
+        groups: [
+          {
+            label: 'CRM',
+            items: [
+              { name: 'Follow Up Boss', icon: '/media/logos/followupboss-96.webp' },
+              { name: 'BoldTrail (kvCORE)', icon: '/media/logos/boldtrail-96.webp' },
+              { name: 'Lofty', icon: '/media/logos/lofty-96.webp' },
+              { name: 'HubSpot', mark: 'hubspot' },
+              { name: 'Salesforce', icon: '/img/logos/salesforce.svg' },
+            ],
+          },
+          {
+            label: 'Lead sources',
+            items: [
+              { name: 'Zillow', icon: '/media/logos/zillow-96.webp' },
+              { name: 'Realtor.com', icon: '/media/logos/realtor-96.webp' },
+              { name: 'Homes.com', icon: '/media/logos/homes-96.webp' },
+            ],
+          },
+          {
+            label: 'Calendars',
+            items: [
+              { name: 'Google Calendar', icon: '/img/logos/google-calendar.svg' },
+              { name: 'Outlook', icon: '/img/logos/outlook.svg' },
+            ],
+          },
+        ],
+        languages: { label: 'Languages', items: ['English', 'Español'] },
+        note: 'Product names and logos belong to their owners and are shown only to name the tools Aurora connects to.',
+        guide: 'From the blog',
+        read: 'Read the guide',
       },
       faqMore: { text: 'Want the full picture of how Aurora works?', link: 'See the platform', href: '/platform' },
     },
@@ -416,9 +455,12 @@ export const industries = [
       ['What is an AI ISA for real estate?', 'An AI ISA (inside sales agent) answers and qualifies a brokerage’s leads the way a human ISA does, by phone, text, chat and email. Aurora replies to every new lead in seconds, asks about budget, timing and area, books the showing or listing appointment with the right broker and follows up until the lead is ready.'],
       ['How fast does Aurora reply to a new lead?', 'Within seconds, on the channel the lead came from, at any hour. A portal inquiry at 9:47 pm gets an answer at 9:47 pm, not the next morning.'],
       ['Can Aurora book showings in my brokers’ calendars?', 'Yes. During setup Aurora is connected to your brokers’ calendars and your routing rules, so it books the showing with the right broker, sends the confirmation and address, and reminds the client the day before.'],
-      ['Does Aurora work with our CRM and lead sources?', 'Aurora works inside the systems your team already uses. During setup it is connected to your CRM, such as HubSpot or Salesforce, your lead sources and your brokers’ Google or Outlook calendars, and every conversation is logged to the lead’s record.'],
+      ['Does Aurora work with our CRM and lead sources?', 'Yes. During setup Aurora is connected to the CRM your brokerage runs on, such as Follow Up Boss, BoldTrail (kvCORE), Lofty, HubSpot or Salesforce, to lead sources like Zillow, Realtor.com and Homes.com, and to your brokers’ Google or Outlook calendars. Leads keep arriving where they do now, and every conversation is logged to the lead’s record.'],
+      ['Can Aurora talk to buyers in Spanish?', 'Yes. Aurora talks to buyers and sellers in Spanish as well as English, on calls and in texts, so a Spanish-speaking lead gets the same fast answer, qualification and booked showing.'],
       ['Will Aurora quote prices or negotiate?', 'Only within the rules you set. You can tell it never to quote a final price and to offer a showing or a call with a broker instead. Anything outside your rules goes to a broker for approval.'],
       ['What happens when a lead is ready to talk to a broker?', 'Aurora hands the lead to the right broker with the full conversation, and your team can step into any conversation at any moment.'],
+      ['Do buyers know they’re talking to AI?', 'Yes. Aurora introduces itself as your team’s AI assistant, as in the call at the top of this page, and brings in a broker whenever a buyer asks for a person.'],
+      ['How does Aurora handle Fair Housing and opt-outs?', 'Both are rules in your playbook. Aurora talks about the home, the schools and the commute, never about who lives in an area, and stops messaging anyone who opts out at once. Have your broker of record review the scripts and consent language before launch, as with any outreach.'],
       FAQ_CHANNELS,
       FAQ_LIVE,
       ['How much does Aurora cost for a brokerage?', 'Aurora is priced for each brokerage. The price depends on what Aurora takes on, from new leads to follow-up and showings, the channels it covers and the systems it connects to. We map your process first, then send a proposal based on that plan.'],
