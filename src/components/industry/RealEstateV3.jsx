@@ -1219,7 +1219,7 @@ export function RxRules({ it }) {
               {r.titleA} {r.titleB}
             </h2>
             <p className="pretty mt-3 max-w-[34em] text-[15px] leading-[1.6] text-graphite md:text-[15.5px]">{r.text}</p>
-            <div className="mt-6 max-w-[520px] lg:mt-8 lg:min-h-[300px]">
+            <div className="mt-6 max-w-[600px] lg:mt-8 lg:min-h-[300px]">
               <AnimatePresence mode="wait" initial={false}>
                 <motion.div key={i} exit={reduce ? undefined : { opacity: 0, transition: { duration: 0.2 } }}>
                   <RuleFlow r={r} sc={sc} reduce={reduce} />
