@@ -1912,25 +1912,28 @@ function StackTile({ x }) {
   );
 }
 
-/** The last tile of each kind: a + that opens into "and more" on hover, on keyboard focus or on a tap. */
+/**
+ * The last tile of each kind: a + square. Its label ("and more") shows as a small tag above it on hover, keyboard focus
+ * or a tap, laid over the page so the row never changes size.
+ */
 function MoreTile({ label }) {
   const [open, setOpen] = useState(false);
   return (
-    <li>
+    <li className="relative">
       <button
         type="button"
         aria-label={label}
         aria-expanded={open}
         onClick={() => setOpen((o) => !o)}
         onBlur={() => setOpen(false)}
-        className="group/more flex h-10 items-center rounded-[12px] border border-dashed border-ink/20 px-[11px] text-ink/45 transition-colors duration-300 hover:border-ink/35 hover:text-ink/70 focus-visible:border-ink/35 focus-visible:text-ink/70 focus-visible:outline-none"
+        className="group/more flex h-10 w-10 items-center justify-center rounded-[12px] border border-dashed border-ink/20 text-ink/45 transition-colors duration-300 hover:border-ink/35 hover:text-ink/70 focus-visible:border-ink/35 focus-visible:text-ink/70 focus-visible:outline-none"
       >
-        <Plus className={cn('h-4 w-4 shrink-0 transition-transform duration-300 group-hover/more:rotate-90 group-focus-visible/more:rotate-90', open ? 'rotate-90' : '')} strokeWidth={2} aria-hidden="true" />
+        <Plus className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
         <span
           aria-hidden="true"
           className={cn(
-            'overflow-hidden whitespace-nowrap text-[13.5px] transition-all duration-300 group-hover/more:ml-1.5 group-hover/more:max-w-[90px] group-hover/more:opacity-100 group-focus-visible/more:ml-1.5 group-focus-visible/more:max-w-[90px] group-focus-visible/more:opacity-100',
-            open ? 'ml-1.5 max-w-[90px] opacity-100' : 'max-w-0 opacity-0'
+            'pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap rounded-[8px] bg-ink px-2.5 py-1 text-[12px] font-medium text-white shadow-[0_8px_20px_-10px_rgba(10,15,14,0.5)] transition-[opacity,transform] duration-200 group-hover/more:translate-y-0 group-hover/more:opacity-100 group-focus-visible/more:translate-y-0 group-focus-visible/more:opacity-100',
+            open ? 'translate-y-0 opacity-100' : 'translate-y-1 opacity-0'
           )}
         >
           {label}
