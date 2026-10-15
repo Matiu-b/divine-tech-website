@@ -156,8 +156,12 @@ function Note({ n, reduce }) {
   );
 }
 
-/** The stage: the listing, and a buyer's call about it as live captions. Takes a still image or a muted clip. */
-function CallStage({ h }) {
+/**
+ * The stage: the listing, and a buyer's call about it as live captions. Takes a still image or a muted clip.
+ * Phones and tablets: the header sits above the photo and the call under it. Laptops and up: one frame as tall
+ * as the screen allows, the header in the evening sky above the house, the call card over the field on the right.
+ */
+function CallStage({ h, header }) {
   const c = h.call;
   const f = h.film;
   const ref = useRef(null);
@@ -189,112 +193,123 @@ function CallStage({ h }) {
 
   return (
     <div ref={ref} className="relative">
-      <div className="relative overflow-hidden rounded-[28px] bg-[#2B3550] shadow-[0_40px_80px_-48px_rgba(30,30,60,0.55)]">
-        <div className="relative aspect-[4/3] sm:aspect-[16/10] lg:aspect-[2/1]">
-          <img
-            src={f.image ? f.image.src : f.poster}
-            srcSet={f.image ? f.image.srcSet : undefined}
-            sizes="(min-width: 1440px) 1376px, 100vw"
-            alt={f.video ? '' : f.alt}
-            className="absolute inset-0 h-full w-full object-cover object-[30%_50%]"
-            decoding="async"
-            fetchpriority="high"
-          />
-          {wantVideo && f.video ? (
-            <video
-              ref={videoRef}
-              src={f.video}
-              poster={f.poster}
-              muted
-              loop
-              playsInline
-              preload="auto"
-              aria-hidden="true"
-              className="absolute inset-0 h-full w-full object-cover object-[30%_50%]"
-            />
-          ) : null}
-          {f.video ? <span className="sr-only">{f.alt}</span> : null}
-          <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(20,24,40,0.25)_0%,rgba(20,24,40,0)_30%,rgba(20,24,40,0)_60%,rgba(20,24,40,0.35)_100%)]" />
+      <div
+        className={cn(
+          'relative [container-type:inline-size]',
+          // laptops: the sky colours of the photo's top edge continue upward behind the header
+          'lg:flex lg:h-[clamp(600px,calc(100svh_-_var(--nav-h)_-_40px),860px)] lg:flex-col lg:overflow-hidden lg:rounded-[28px] lg:shadow-[0_40px_80px_-48px_rgba(30,30,60,0.55)]',
+          'lg:bg-[linear-gradient(180deg,rgba(22,34,72,0.45),rgba(22,34,72,0)_220px),linear-gradient(90deg,#396299,#4e72aa_20%,#4e6ea8_40%,#536ea7_60%,#6371a8_80%,#737aac)]'
+        )}
+      >
+        {/* laptops: a soft shade under the header and along the bottom edge */}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[1] hidden bg-[linear-gradient(180deg,rgba(16,22,46,0.38)_0%,rgba(16,22,46,0)_42%,rgba(16,22,46,0)_72%,rgba(16,22,46,0.3)_100%)] lg:block" />
+        <div className="relative z-[2] lg:px-8 lg:pt-8">{header}</div>
 
-          <audio ref={audioRef} src={c.audio} preload="none" onEnded={ended} />
-          <LiquidGlass
-            as="button"
-            type="button"
-            onClick={toggle}
-            aria-pressed={sound}
-            className="absolute left-3 top-3 flex h-10 items-center gap-2 rounded-full pl-1.5 pr-4 text-[13px] font-medium text-ink sm:left-5 sm:top-5"
-          >
-            <span className={cn('flex h-7 w-7 items-center justify-center rounded-full text-white transition-colors', sound ? 'bg-[#F25C2A]' : 'bg-ink')}>
-              {sound ? <Volume2 className="h-3.5 w-3.5" strokeWidth={2.2} aria-hidden="true" /> : <Play className="ml-0.5 h-3.5 w-3.5 fill-current" strokeWidth={2.2} aria-hidden="true" />}
-            </span>
-            {sound ? c.mute : c.listen}
-          </LiquidGlass>
+        {/* laptops: no fade on this box (it would lift the card under the shade); the photo fades in by itself */}
+        <div className="intro-fade relative mt-10 md:mt-14 lg:mt-0 lg:flex-1 lg:[animation:none]" style={{ animationDelay: '0.2s' }}>
+          <div className="relative overflow-hidden rounded-[28px] bg-[#2B3550] shadow-[0_40px_80px_-48px_rgba(30,30,60,0.55)] lg:static lg:overflow-visible lg:rounded-none lg:bg-transparent lg:shadow-none">
+            <div className="relative aspect-[4/3] sm:aspect-[16/10] lg:static lg:aspect-auto">
+              <img
+                src={f.image ? f.image.src : f.poster}
+                srcSet={f.image ? f.image.srcSet : undefined}
+                sizes="(min-width: 1440px) 1376px, 100vw"
+                alt={f.video ? '' : f.alt}
+                className={cn(
+                  'absolute inset-0 h-full w-full object-cover object-[30%_50%]',
+                  // laptops: full width at its own shape, the tree line meeting the header; the top edge fades into the sky
+                  'lg:inset-auto lg:left-0 lg:top-[-9.16cqw] lg:h-[calc(100%_+_9.16cqw)] lg:min-h-[55.87cqw] lg:object-[30%_0%] lg:[mask-image:linear-gradient(to_bottom,transparent,#000_7%)] lg:motion-safe:animate-[intro-fade_0.9s_cubic-bezier(0.22,1,0.36,1)_0.2s_both]'
+                )}
+                decoding="async"
+                fetchpriority="high"
+              />
+              {wantVideo && f.video ? (
+                <video
+                  ref={videoRef}
+                  src={f.video}
+                  poster={f.poster}
+                  muted
+                  loop
+                  playsInline
+                  preload="auto"
+                  aria-hidden="true"
+                  className="absolute inset-0 h-full w-full object-cover object-[30%_50%] lg:inset-auto lg:left-0 lg:top-[-9.16cqw] lg:h-[calc(100%_+_9.16cqw)] lg:min-h-[55.87cqw] lg:object-[30%_0%] lg:[mask-image:linear-gradient(to_bottom,transparent,#000_7%)] lg:motion-safe:animate-[intro-fade_0.9s_cubic-bezier(0.22,1,0.36,1)_0.2s_both]"
+                />
+              ) : null}
+              {f.video ? <span className="sr-only">{f.alt}</span> : null}
+              <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(20,24,40,0.25)_0%,rgba(20,24,40,0)_30%,rgba(20,24,40,0)_60%,rgba(20,24,40,0.35)_100%)] lg:hidden" />
 
-          {/* Aurora's notes gather over the lawn on wide screens */}
-          <div className="absolute bottom-6 right-6 hidden w-[260px] flex-col gap-2 lg:flex" aria-live="polite">
-            <AnimatePresence initial={false}>
-              {notes.map((n) => (
-                <Note key={n.title} n={n} reduce={reduce} />
-              ))}
-            </AnimatePresence>
+              <audio ref={audioRef} src={c.audio} preload="none" onEnded={ended} />
+              <LiquidGlass
+                as="button"
+                type="button"
+                onClick={toggle}
+                aria-pressed={sound}
+                className="absolute left-3 top-3 z-[3] flex h-10 items-center gap-2 rounded-full pl-1.5 pr-4 text-[13px] font-medium text-ink sm:left-5 sm:top-5 lg:bottom-6 lg:left-8 lg:top-auto"
+              >
+                <span className={cn('flex h-7 w-7 items-center justify-center rounded-full text-white transition-colors', sound ? 'bg-[#F25C2A]' : 'bg-ink')}>
+                  {sound ? <Volume2 className="h-3.5 w-3.5" strokeWidth={2.2} aria-hidden="true" /> : <Play className="ml-0.5 h-3.5 w-3.5 fill-current" strokeWidth={2.2} aria-hidden="true" />}
+                </span>
+                {sound ? c.mute : c.listen}
+              </LiquidGlass>
+            </div>
           </div>
+
+          {/* The call: under the photo on phones and tablets, over the field on the right on laptops */}
+          <LiquidGlass
+            className="relative z-[3] mx-3 -mt-10 rounded-[22px] p-3.5 sm:mx-6 sm:-mt-24 sm:p-5 lg:absolute lg:right-8 lg:top-5 lg:mx-0 lg:mt-0 lg:w-[400px] lg:p-4 xl:p-5"
+            style={{ '--lg-tint-a': 'rgba(255,252,247,0.9)', '--lg-tint-b': 'rgba(255,249,241,0.82)' }}
+          >
+            <div className="flex items-center gap-3">
+              <span className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.06)]">
+                {speaking === 'aurora' ? <span className="ring-ping absolute inset-0 rounded-full bg-[#F25C2A]/25" /> : null}
+                <img src="/brand/aurora-symbol-color.svg" alt="" width="20" height="20" className="relative h-5 w-5" />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block text-[14px] font-medium leading-tight text-ink">{c.title}</span>
+                <span className="block truncate text-[12px] text-slate">
+                  {c.listing} · <span className="tabular-nums">{clock(Math.min(t, c.duration))}</span>
+                </span>
+              </span>
+              <Wave who={reduce ? null : speaking} />
+            </div>
+
+            <div className="relative mt-3 grid h-[128px] content-end gap-2.5 overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,#000_22%)] sm:mt-4 sm:h-[156px] sm:gap-3 lg:mt-3 lg:h-[124px] xl:mt-4 xl:h-[148px]">
+              {prev ? <Caption key={k - 1} cap={prev} t={t} dim c={c} /> : null}
+              <Caption key={k} cap={cap} t={t} c={c} />
+            </div>
+
+            <ol className="mt-3 grid grid-cols-4 gap-1.5 sm:mt-4 lg:mt-3 xl:mt-4" aria-label="Where the call is">
+              {c.stages.map((s, i) => (
+                <li key={s.label} className="min-w-0">
+                  <span className="block h-1 overflow-hidden rounded-full bg-ink/10">
+                    <span
+                      className="block h-full rounded-full bg-ink transition-[width] duration-300 ease-linear"
+                      style={{
+                        width:
+                          i < stage ? '100%' : i > stage ? '0%' : Math.min(100, ((t - s.at) / ((i < c.stages.length - 1 ? c.stages[i + 1].at : c.duration) - s.at)) * 100) + '%',
+                      }}
+                    />
+                  </span>
+                  <span className={cn('mt-1.5 block truncate text-[11.5px] font-medium transition-colors', i === stage ? 'text-ink' : i < stage ? 'text-ink/55' : 'text-ink/35')}>{s.label}</span>
+                </li>
+              ))}
+            </ol>
+
+            {/* the latest note Aurora wrote down sits in the card */}
+            <div className="mt-2.5 h-[46px]" aria-live="polite">
+              <AnimatePresence initial={false} mode="wait">
+                {latest ? (
+                  <Note key={latest.title} n={latest} reduce={reduce} />
+                ) : (
+                  <motion.p key="none" initial={false} exit={{ opacity: 0 }} className="flex h-full items-center text-[12px] text-slate">
+                    {c.waiting}
+                  </motion.p>
+                )}
+              </AnimatePresence>
+            </div>
+          </LiquidGlass>
         </div>
       </div>
-
-      {/* The call: under the clip on phones, over its top corner on wide screens, so it is in view with the headline */}
-      <LiquidGlass
-        className="relative z-[1] mx-3 -mt-10 rounded-[22px] p-3.5 sm:mx-6 sm:-mt-24 sm:p-5 lg:absolute lg:right-6 lg:top-6 lg:mx-0 lg:mt-0 lg:w-[420px]"
-        style={{ '--lg-tint-a': 'rgba(255,252,247,0.9)', '--lg-tint-b': 'rgba(255,249,241,0.82)' }}
-      >
-        <div className="flex items-center gap-3">
-          <span className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.06)]">
-            {speaking === 'aurora' ? <span className="ring-ping absolute inset-0 rounded-full bg-[#F25C2A]/25" /> : null}
-            <img src="/brand/aurora-symbol-color.svg" alt="" width="20" height="20" className="relative h-5 w-5" />
-          </span>
-          <span className="min-w-0 flex-1">
-            <span className="block text-[14px] font-medium leading-tight text-ink">{c.title}</span>
-            <span className="block truncate text-[12px] text-slate">
-              {c.listing} · <span className="tabular-nums">{clock(Math.min(t, c.duration))}</span>
-            </span>
-          </span>
-          <Wave who={reduce ? null : speaking} />
-        </div>
-
-        <div className="relative mt-3 grid h-[128px] content-end gap-2.5 overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,#000_22%)] sm:mt-4 sm:h-[156px] sm:gap-3">
-          {prev ? <Caption key={k - 1} cap={prev} t={t} dim c={c} /> : null}
-          <Caption key={k} cap={cap} t={t} c={c} />
-        </div>
-
-        <ol className="mt-3 grid grid-cols-4 gap-1.5 sm:mt-4" aria-label="Where the call is">
-          {c.stages.map((s, i) => (
-            <li key={s.label} className="min-w-0">
-              <span className="block h-1 overflow-hidden rounded-full bg-ink/10">
-                <span
-                  className="block h-full rounded-full bg-ink transition-[width] duration-300 ease-linear"
-                  style={{
-                    width:
-                      i < stage ? '100%' : i > stage ? '0%' : Math.min(100, ((t - s.at) / ((i < c.stages.length - 1 ? c.stages[i + 1].at : c.duration) - s.at)) * 100) + '%',
-                  }}
-                />
-              </span>
-              <span className={cn('mt-1.5 block truncate text-[11.5px] font-medium transition-colors', i === stage ? 'text-ink' : i < stage ? 'text-ink/55' : 'text-ink/35')}>{s.label}</span>
-            </li>
-          ))}
-        </ol>
-
-        {/* phones and tablets: the latest note sits in the card */}
-        <div className="mt-2.5 h-[46px] lg:hidden" aria-live="polite">
-          <AnimatePresence initial={false} mode="wait">
-            {latest ? (
-              <Note key={latest.title} n={latest} reduce={reduce} />
-            ) : (
-              <motion.p key="none" initial={false} exit={{ opacity: 0 }} className="flex h-full items-center text-[12px] text-slate">
-                {c.waiting}
-              </motion.p>
-            )}
-          </AnimatePresence>
-        </div>
-      </LiquidGlass>
 
       <div className="mt-4 flex flex-col gap-2 px-1 sm:flex-row sm:items-start sm:justify-between">
         <p className="text-[12px] text-slate">{c.note}</p>
@@ -313,39 +328,42 @@ function CallStage({ h }) {
   );
 }
 
-/** Hero: Aurora takes a buyer's call at night. The promise above, the call itself below. */
+/** Hero: Aurora takes a buyer's call at night. On laptops the promise sits in the photo's sky, the call beside it. */
 export function RxHero({ it }) {
   const h = it.v3.hero;
   const { open } = useLead();
 
   return (
-    <section id="top" data-nav-theme="light" aria-labelledby="rx-hero-title" className="relative overflow-hidden pb-[clamp(56px,7vw,104px)] pt-[calc(var(--nav-h)+36px)] md:pt-[calc(var(--nav-h)+56px)]">
+    <section id="top" data-nav-theme="light" aria-labelledby="rx-hero-title" className="relative overflow-hidden pb-[clamp(56px,7vw,104px)] pt-[calc(var(--nav-h)+36px)] md:pt-[calc(var(--nav-h)+56px)] lg:pt-[calc(var(--nav-h)+16px)]">
       <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[760px] bg-[radial-gradient(55%_55%_at_82%_0%,rgba(255,214,170,0.75),rgba(246,245,241,0)_70%),radial-gradient(40%_50%_at_10%_10%,rgba(240,232,218,0.7),rgba(246,245,241,0)_70%)]" />
       <div className="shell relative">
-        <div className="grid gap-6 lg:grid-cols-12 lg:items-end lg:gap-10">
-          <div className="lg:col-span-7">
-            <p className="intro-rise eyebrow">{h.eyebrow}</p>
-            <h1 id="rx-hero-title" className="t-display balance mt-5 md:mt-6">
-              <RevealLines lines={[h.titleA, h.titleB]} lineClassNames={['', '']} immediate delay={0.08} stagger={0.14} />
-            </h1>
-          </div>
-          <div className="lg:col-span-5 lg:pb-2">
-            <p className="intro-slide t-lead pretty max-w-[34em]" style={{ animationDelay: '0.3s' }}>
-              {h.text}
-            </p>
-            <div className="intro-slide mt-6 flex flex-wrap items-center gap-2.5 sm:gap-3" style={{ animationDelay: '0.42s' }}>
-              <CTAButton size="lg" onClick={open} className="max-sm:h-12 max-sm:px-4 max-sm:text-[14px]">
-                Book a demo
-              </CTAButton>
-              <CTAButton size="lg" variant="glass" href="#race" arrow={false} onClick={(e) => onAnchorClick(e, '#race')} className="max-sm:h-12 max-sm:px-4 max-sm:text-[14px]">
-                Why speed wins
-              </CTAButton>
+        <CallStage
+          h={h}
+          header={
+            // above the photo on phones and tablets; in its evening sky on laptops, the call card's column on the right
+            <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_400px] lg:items-start lg:gap-10">
+              <div>
+                <p className="intro-rise eyebrow lg:text-white/75">{h.eyebrow}</p>
+                <h1 id="rx-hero-title" className="t-display balance mt-5 md:mt-6 lg:mt-3 lg:text-[clamp(2.4rem,0.5rem+3vw,3.6rem)] lg:text-white lg:[text-shadow:0_2px_24px_rgba(10,16,40,0.35)]">
+                  <RevealLines lines={[h.titleA, h.titleB]} lineClassNames={['', '']} immediate delay={0.08} stagger={0.14} />
+                </h1>
+              </div>
+              <div>
+                <p className="intro-slide t-lead pretty max-w-[34em] lg:text-[15.5px] lg:leading-[1.55] lg:text-white/[0.88]" style={{ animationDelay: '0.3s' }}>
+                  {h.text}
+                </p>
+                <div className="intro-slide mt-6 flex flex-wrap items-center gap-2.5 sm:gap-3 lg:mt-5" style={{ animationDelay: '0.42s' }}>
+                  <CTAButton size="lg" onClick={open} className="max-sm:h-12 max-sm:px-4 max-sm:text-[14px]">
+                    Book a demo
+                  </CTAButton>
+                  <CTAButton size="lg" variant="glass" href="#race" arrow={false} onClick={(e) => onAnchorClick(e, '#race')} className="max-sm:h-12 max-sm:px-4 max-sm:text-[14px]">
+                    Why speed wins
+                  </CTAButton>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <div className="intro-fade mt-10 md:mt-14" style={{ animationDelay: '0.2s' }}>
-          <CallStage h={h} />
-        </div>
+          }
+        />
       </div>
     </section>
   );
