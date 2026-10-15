@@ -249,31 +249,37 @@ export const industries = [
         eyebrow: 'After the first reply',
         titleA: 'The first reply is day one.',
         titleB: 'Aurora keeps every lead moving.',
-        text: 'Most buyers aren’t ready this week. Aurora reminds, follows up, revives and books, on your rules, until they are.',
-        // one card per job, each drawn as the thing it is (a lock-screen reminder, listings, a CRM row, a booking)
+        text: 'Most leads aren’t ready this week. Aurora runs the confirmations, follow-up and reactivation your team never gets to, on your rules.',
+        // one card per stage of the pipeline: its stage, a clear name, what Aurora does, and the moment itself
         steps: [
           {
-            key: 'remind', when: 'Day 1', title: 'Showing reminders', text: 'Confirms the tour and reminds the buyer the day before.',
-            app: 'Harbor Lane Realty', clock: '8:02', date: 'Friday, October 17',
-            msg: 'Reminder: tomorrow at 11 am, 18 Willow Court with Marcus. Reply C to confirm.', reply: 'C', result: 'Confirmed',
+            key: 'remind', stage: 'Showing scheduled', tone: 'blue', when: 'Day before', title: 'Showing confirmation',
+            text: 'Confirms every showing and reminds the buyer the day before, so fewer tours end in a no-show.',
+            msg: 'Reminder: tomorrow at 11 am, 18 Willow Court with Marcus. Reply C to confirm.', reply: 'C',
+            event: { day: 'Saturday', time: '11:00', title: 'Showing · 18 Willow Court', who: 'with Marcus' },
+            hours: ['10:00', '11:00', '12:00'], pending: 'Unconfirmed', result: 'Confirmed',
           },
           {
-            key: 'nurture', when: 'Week 2', title: 'Leads not ready yet', text: 'Sends homes that match and checks in on the timing they gave.',
+            key: 'nurture', stage: 'Nurture', tone: 'amber', when: 'Weeks 1–8', title: 'Follow-up cadence',
+            text: 'Buyers who aren’t ready get new listings that match, on a set cadence, until they are.',
             msg: 'Two new homes in your range just listed near Oak Park. Want to see either one?',
+            cadence: ['Day 3', 'Day 7', 'Day 14', 'Day 30'], at: 2,
             homes: [
               { image: '/media/real-estate/listing-birch-600.webp', price: '$452K', meta: '3 bd · 2 ba' },
               { image: '/media/real-estate/listing-oak-600.webp', price: '$478K', meta: '4 bd · 3 ba' },
             ],
-            pick: 1, result: 'Tour requested',
+            pick: 1, result: 'Showing requested',
           },
           {
-            key: 'revive', when: 'Month 3', title: 'Old leads, back to life', text: 'Works through the leads in your CRM that went quiet.',
+            key: 'revive', stage: 'Cold lead', tone: 'slate', when: 'Month 3', title: 'Database reactivation',
+            text: 'Re-engages quiet leads in your CRM and moves the ones who reply back into the pipeline.',
             name: 'Dan Morales', initials: 'DM', before: 'Last contact 94 days ago', after: 'Replied just now', cold: 'Cold', active: 'Active',
             msg: 'Hi Dan, are you still thinking about a move this spring?', reply: 'Yes, probably April.',
           },
           {
-            key: 'seller', when: 'Any day', title: 'Seller leads', text: 'Qualifies homeowners and books the listing appointment.',
-            address: '214 Cedar Lane', tag: 'Home valuation', msg: 'Marcus can come by on Thursday. Which time works?',
+            key: 'seller', stage: 'Seller lead', tone: 'orange', when: 'Any day', title: 'Listing appointments',
+            text: 'Qualifies homeowners who want to sell and books the listing appointment with your broker.',
+            address: '214 Cedar Lane', tag: 'Wants a home valuation', msg: 'Marcus can come by on Thursday. Which time works?',
             slots: ['Thu 3:00', 'Thu 5:00', 'Fri 10:00'], pick: 1, result: 'Listing appointment booked',
           },
         ],

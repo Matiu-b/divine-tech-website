@@ -1335,35 +1335,45 @@ const AFTER_MS = 3400;
 const AFTER_RESOLVE = 1100;
 const KPI_MS = 2800;
 
-/** The label every job card shares: when it happens and what it is. */
-function JobLabel({ x, on, dark = false }) {
+const STAGE_TONES = {
+  blue: 'bg-[#E8EEF9] text-[#3A5A9A]',
+  amber: 'bg-[#FFF1E4] text-[#B4471A]',
+  slate: 'bg-ink/[0.06] text-ink/60',
+  orange: 'bg-[#FFE7D3] text-[#C2410C]',
+};
+
+/** What every job card opens with: the pipeline stage, when it happens, the job's name and one line on what Aurora does. */
+function JobHead({ x, on }) {
   return (
-    <p className="flex items-baseline gap-2">
-      <span className={cn('t-data text-[10.5px] uppercase tracking-[0.08em] transition-colors', on ? 'text-[#D9481C]' : dark ? 'text-white/40' : 'text-ink/35')}>{x.when}</span>
-      <span className={cn('text-[15px] font-medium tracking-[-0.01em]', dark ? 'text-white' : 'text-ink')}>{x.title}</span>
-    </p>
+    <div>
+      <p className="flex items-center justify-between gap-3">
+        <span className={cn('inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium', STAGE_TONES[x.tone] || STAGE_TONES.slate)}>
+          <span className="h-1.5 w-1.5 rounded-full bg-current" aria-hidden="true" />
+          {x.stage}
+        </span>
+        <span className={cn('t-data text-[10.5px] uppercase tracking-[0.08em] transition-colors', on ? 'text-[#D9481C]' : 'text-ink/35')}>{x.when}</span>
+      </p>
+      <p className="mt-3 text-[17px] font-medium leading-snug tracking-[-0.01em] text-ink">{x.title}</p>
+      <p className="mt-1 text-[13px] leading-snug text-graphite">{x.text}</p>
+    </div>
   );
 }
 
-/** Day 1: the reminder as it lands on the buyer's lock screen; the buyer answers C and it is confirmed. */
+/** Showing confirmation: the reminder text and the buyer's C, then the showing on the day's calendar turns confirmed. */
 function JobRemind({ x, on, done, reduce }) {
   return (
     <div className="flex h-full flex-col">
-      <JobLabel x={x} on={on} dark />
-      <div className="relative mt-4 flex flex-1 flex-col items-center overflow-hidden rounded-[18px] bg-[radial-gradient(120%_80%_at_50%_0%,#3A4A78_0%,#1A2238_70%)] px-3 pb-4 pt-5">
-        <p className="text-[11px] font-medium text-white/60">{x.date}</p>
-        <p className="text-[40px] font-medium leading-none tracking-[-0.02em] text-white">{x.clock}</p>
-        <div className="mt-4 w-full rounded-[14px] bg-white/[0.14] p-2.5 backdrop-blur-md">
-          <p className="flex items-center gap-1.5 text-[10.5px] font-medium uppercase tracking-[0.04em] text-white/70">
-            <span className="flex h-4 w-4 items-center justify-center rounded-[4px] bg-white">
-              <img src="/brand/aurora-symbol-color.svg" alt="" width="10" height="10" className="h-2.5 w-2.5" />
-            </span>
-            {x.app}
-            <span className="ml-auto normal-case tracking-normal text-white/50">now</span>
-          </p>
-          <p className="mt-1 text-[12.5px] leading-snug text-white">{x.msg}</p>
-        </div>
-        <div className="mt-2 flex w-full justify-end">
+      <JobHead x={x} on={on} />
+      {/* the text thread */}
+      <div className="mt-4 rounded-[16px] bg-[#F6F1E8] p-3">
+        <p className="rounded-[14px] rounded-bl-[4px] bg-white px-3 py-2 text-[13px] leading-snug text-ink shadow-[0_1px_2px_rgba(10,15,14,0.06)]">
+          <span className="mb-0.5 flex items-center gap-1.5 text-[10.5px] font-medium uppercase tracking-[0.06em] text-ink/40">
+            <img src="/brand/aurora-symbol-color.svg" alt="" width="11" height="11" className="h-[11px] w-[11px]" />
+            Aurora
+          </span>
+          {x.msg}
+        </p>
+        <div className="mt-2 flex h-7 justify-end">
           <AnimatePresence>
             {done ? (
               <motion.span key="c" initial={reduce ? false : { opacity: 0, y: 8, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }} className="rounded-[14px] rounded-br-[4px] bg-[#2F7CF6] px-3 py-1 text-[13px] font-medium text-white">
@@ -1372,74 +1382,93 @@ function JobRemind({ x, on, done, reduce }) {
             ) : null}
           </AnimatePresence>
         </div>
-        <AnimatePresence>
-          {done ? (
-            <motion.span
-              key="stamp"
-              initial={reduce ? false : { opacity: 0, scale: 1.6, rotate: -14 }}
-              animate={{ opacity: 1, scale: 1, rotate: -8 }}
-              transition={{ duration: 0.4, ease: EASE, delay: reduce ? 0 : 0.35 }}
-              className="absolute bottom-4 left-4 rounded-[8px] border-2 border-[#7FD49B] px-2.5 py-0.5 text-[13px] font-semibold uppercase tracking-[0.08em] text-[#7FD49B]"
-            >
-              {x.result}
-            </motion.span>
-          ) : null}
-        </AnimatePresence>
+      </div>
+      {/* the broker's calendar for that day */}
+      <div className="mt-3 flex-1 rounded-[16px] p-3 shadow-[inset_0_0_0_1px_rgba(10,15,14,0.08)]">
+        <p className="text-[11.5px] font-medium text-ink/50">{x.event.day}</p>
+        <div className="mt-2 grid gap-0">
+          {x.hours.map((h) => (
+            <div key={h} className="flex items-start gap-2 border-t border-ink/[0.06] py-1.5 first:border-0">
+              <span className="t-data w-10 shrink-0 pt-0.5 text-[10.5px] text-ink/35">{h}</span>
+              {h === x.event.time ? (
+                <span className={cn('flex min-w-0 flex-1 items-center justify-between gap-2 rounded-[10px] px-2.5 py-1.5 transition-colors duration-500', done ? 'bg-[#E4F4E8] shadow-[inset_3px_0_0_#2E9A58]' : 'bg-[#FFF8E6] shadow-[inset_3px_0_0_#E3A93B]')}>
+                  <span className="min-w-0">
+                    <span className="block truncate text-[12.5px] font-medium text-ink">{x.event.title}</span>
+                    <span className="block text-[11px] text-slate">{x.event.who}</span>
+                  </span>
+                  <span className={cn('inline-flex shrink-0 items-center gap-1 text-[11px] font-medium', done ? 'text-[#2E7A48]' : 'text-[#A46A12]')}>
+                    {done ? <Check className="h-3 w-3" strokeWidth={2.6} aria-hidden="true" /> : <Clock className="h-3 w-3" strokeWidth={2.2} aria-hidden="true" />}
+                    {done ? x.result : x.pending}
+                  </span>
+                </span>
+              ) : (
+                <span className="h-[34px] flex-1" />
+              )}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
 }
 
-/** Week 2: two homes that match, sent with a question; the buyer hearts one and asks to see it. */
+/** Follow-up cadence: where this touch sits in the cadence, two homes that match, and the buyer hearts one. */
 function JobNurture({ x, on, done, reduce }) {
   return (
     <div className="flex h-full flex-col gap-4 lg:flex-row lg:items-stretch">
-      <div className="flex min-w-0 flex-col lg:w-[44%]">
-        <JobLabel x={x} on={on} />
-        <p className="mt-3 rounded-[16px] rounded-bl-[4px] bg-[#F6F1E8] px-3 py-2.5 text-[13.5px] leading-snug text-ink">
-          <span className="mb-1 flex items-center gap-1.5 text-[10.5px] font-medium uppercase tracking-[0.06em] text-ink/40">
+      <div className="flex min-w-0 flex-col lg:w-[46%]">
+        <JobHead x={x} on={on} />
+        {/* the cadence: where this message sits */}
+        <div className="mt-3 flex items-center gap-1" aria-hidden="true">
+          {x.cadence.map((c, i) => (
+            <React.Fragment key={c}>
+              <span className={cn('rounded-full px-2 py-0.5 text-[10.5px] font-medium transition-colors', i < x.at ? 'bg-ink/[0.07] text-ink/50' : i === x.at ? 'bg-[#F25C2A] text-white' : 'text-ink/30 shadow-[inset_0_0_0_1px_rgba(10,15,14,0.1)]')}>{c}</span>
+              {i < x.cadence.length - 1 ? <span className="h-px w-2 bg-ink/15" /> : null}
+            </React.Fragment>
+          ))}
+        </div>
+        <p className="mt-3 rounded-[14px] rounded-bl-[4px] bg-[#F6F1E8] px-3 py-2 text-[13px] leading-snug text-ink">
+          <span className="mb-0.5 flex items-center gap-1.5 text-[10.5px] font-medium uppercase tracking-[0.06em] text-ink/40">
             <img src="/brand/aurora-symbol-color.svg" alt="" width="11" height="11" className="h-[11px] w-[11px]" />
             Aurora
           </span>
           {x.msg}
         </p>
-        <AnimatePresence>
-          {done ? (
-            <motion.span key="r" initial={reduce ? false : { opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: reduce ? 0 : 0.3 }} className="mt-auto inline-flex items-center gap-1.5 self-start pt-3 text-[12.5px] font-medium text-[#B4471A]">
-              <CalendarCheck className="h-3.5 w-3.5" strokeWidth={2.2} aria-hidden="true" />
-              {x.result}
-            </motion.span>
-          ) : null}
-        </AnimatePresence>
       </div>
-      <div className="grid flex-1 grid-cols-2 gap-2.5">
-        {x.homes.map((h, i) => {
-          const picked = done && i === x.pick;
-          return (
-            <div key={h.price} className={cn('relative overflow-hidden rounded-[14px] bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.08)] transition-transform duration-500', picked ? '-translate-y-1 shadow-[0_0_0_2px_#F25C2A,0_16px_30px_-18px_rgba(242,92,42,0.6)]' : '')}>
-              <img src={h.image} alt="" className="h-[84px] w-full object-cover xl:h-[92px]" loading="lazy" decoding="async" />
-              <span className={cn('absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full transition-colors duration-300', picked ? 'bg-[#F25C2A] text-white' : 'bg-white/90 text-ink/50')}>
-                <motion.span animate={picked && !reduce ? { scale: [1, 1.35, 1] } : { scale: 1 }} transition={{ duration: 0.4 }}>
-                  <Heart className={cn('h-3.5 w-3.5', picked ? 'fill-current' : '')} strokeWidth={2.2} aria-hidden="true" />
-                </motion.span>
-              </span>
-              <p className="px-2.5 pb-2 pt-1.5">
-                <span className="block text-[14px] font-medium text-ink">{h.price}</span>
-                <span className="block text-[11.5px] text-slate">{h.meta}</span>
-              </p>
-            </div>
-          );
-        })}
+      <div className="flex flex-1 flex-col">
+        <div className="grid flex-1 grid-cols-2 gap-2.5">
+          {x.homes.map((h, i) => {
+            const picked = done && i === x.pick;
+            return (
+              <div key={h.price} className={cn('relative overflow-hidden rounded-[14px] bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.08)] transition-transform duration-500', picked ? '-translate-y-1 shadow-[0_0_0_2px_#F25C2A,0_16px_30px_-18px_rgba(242,92,42,0.6)]' : '')}>
+                <img src={h.image} alt="" className="h-[96px] w-full object-cover" loading="lazy" decoding="async" />
+                <span className={cn('absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full transition-colors duration-300', picked ? 'bg-[#F25C2A] text-white' : 'bg-white/90 text-ink/50')}>
+                  <motion.span animate={picked && !reduce ? { scale: [1, 1.35, 1] } : { scale: 1 }} transition={{ duration: 0.4 }}>
+                    <Heart className={cn('h-3.5 w-3.5', picked ? 'fill-current' : '')} strokeWidth={2.2} aria-hidden="true" />
+                  </motion.span>
+                </span>
+                <p className="px-2.5 pb-2 pt-1.5">
+                  <span className="block text-[14px] font-medium text-ink">{h.price}</span>
+                  <span className="block text-[11.5px] text-slate">{h.meta}</span>
+                </p>
+              </div>
+            );
+          })}
+        </div>
+        <p className={cn('mt-2.5 flex h-6 items-center gap-1.5 text-[12.5px] font-medium text-[#B4471A] transition-opacity duration-500', done ? 'opacity-100' : 'opacity-0')}>
+          <CalendarCheck className="h-3.5 w-3.5" strokeWidth={2.2} aria-hidden="true" />
+          {x.result}
+        </p>
       </div>
     </div>
   );
 }
 
-/** Month 3: a lead that went quiet in the CRM, a question, a reply, and the row comes back to life. */
+/** Database reactivation: a lead that went quiet in the CRM, a question, a reply, and the row comes back to life. */
 function JobRevive({ x, on, done, reduce }) {
   return (
     <div className="flex h-full flex-col">
-      <JobLabel x={x} on={on} />
+      <JobHead x={x} on={on} />
       <div className={cn('mt-3 flex items-center gap-3 rounded-[14px] px-3 py-2.5 transition-colors duration-500', done ? 'bg-[#FFF3E8]' : 'bg-ink/[0.04]')}>
         <span className={cn('relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[12px] font-medium transition-colors duration-500', done ? 'bg-ink text-white' : 'bg-ink/10 text-ink/45')}>
           {x.initials}
@@ -1475,11 +1504,11 @@ function JobRevive({ x, on, done, reduce }) {
   );
 }
 
-/** Any day: a homeowner asks for a valuation; Aurora offers times and one is booked with the listing broker. */
+/** Listing appointments: a homeowner wants a valuation; Aurora offers times and one is booked with the broker. */
 function JobSeller({ x, on, done, reduce }) {
   return (
     <div className="flex h-full flex-col">
-      <JobLabel x={x} on={on} />
+      <JobHead x={x} on={on} />
       <p className="mt-3 flex items-center gap-2.5">
         <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-[#F6F1E8] text-[#D9481C]">
           <House className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
@@ -1624,7 +1653,7 @@ export function RxAfter({ it }) {
                   aria-label={x.when + ': ' + x.title + '. ' + x.text}
                   className={cn(
                     'relative rounded-[22px] p-4 transition-shadow duration-500 max-sm:w-[86%] max-sm:shrink-0 max-sm:snap-center',
-                    x.key === 'remind' ? 'bg-ink text-white' : 'bg-white',
+                    'bg-white',
                     on ? 'shadow-[0_0_0_2px_#F25C2A,0_30px_60px_-34px_rgba(242,92,42,0.55)]' : 'shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_24px_48px_-36px_rgba(90,50,20,0.4)]',
                     JOB_PLACE[x.key]
                   )}
