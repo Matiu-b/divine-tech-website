@@ -739,10 +739,10 @@ function BuyerPhone({ p, T, t, reduce, children = null }) {
 }
 
 /** The brokerage's CRM, filling in while Aurora talks. */
-function CrmCard({ c, T, t, reduce, compact = false, fit = 0 }) {
+function CrmCard({ c, T, t, reduce, compact = false, short = false }) {
   const live = t >= T.statusAt[0];
   // on short laptop screens the card gets less room: tighter rows, still one field per line
-  const tight = !compact && fit > 0 && fit < 430;
+  const tight = !compact && short;
   const status = c.status[lastIndex(T.statusAt.map((at) => ({ at })), t)];
   return (
     <div className={cn('rounded-[22px] bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_24px_48px_-32px_rgba(90,50,20,0.35)]', compact ? 'p-3.5' : tight ? 'px-4 py-3.5' : 'p-5')}>
@@ -799,99 +799,31 @@ function CrmCard({ c, T, t, reduce, compact = false, fit = 0 }) {
 
 /**
  * Her evening on the sofa: a clip as long as the scene before her message reaches Aurora's brokerage,
- * kept in step with the phone's clock. It fades out the moment the lead lands in the CRM.
+ * kept in step with the phone's clock until then. After that it loops to the end of the conversation.
  */
 function SofaClip({ film, T, t, reduce, active, small = false }) {
   const ref = useRef(null);
   const loaded = usePageLoaded();
   const intro = t < T.chat[0].at;
-  // desktop hands over to the CRM at the first message; the small window on phones keeps playing, looping, to the end
-  const on = small || intro;
   useEffect(() => {
     const v = ref.current;
     if (!v || reduce) return;
-    if (on && active) {
+    if (active) {
       // in step with the phone until her message lands (the clip is exactly that long); after that it just loops
       if (intro && Math.abs(v.currentTime - t / 1000) > 0.35) v.currentTime = Math.min(t / 1000, Math.max(0, (v.duration || 15) - 0.05));
       if (v.paused) v.play().catch(() => {});
     } else if (!v.paused) v.pause();
-  }, [on, intro, active, t, reduce]);
+  }, [intro, active, t, reduce]);
   return (
-    <motion.div
+    <div
       className={cn(
         'absolute inset-0 overflow-hidden bg-[#2A2420]',
         small ? 'rounded-[inherit]' : 'rounded-[24px] shadow-[0_24px_48px_-32px_rgba(90,50,20,0.45)]'
       )}
-      initial={false}
-      animate={{ opacity: on ? 1 : 0, scale: on ? 1 : 0.97 }}
-      transition={{ duration: reduce ? 0 : 0.45, ease: EASE }}
       aria-hidden="true"
     >
       <img src={film.poster} alt="" className="absolute inset-0 h-full w-full object-cover object-[50%_40%]" loading="lazy" decoding="async" />
-      {loaded && !reduce ? <video ref={ref} src={film.video} poster={film.poster} muted playsInline loop={small} preload="auto" className="absolute inset-0 h-full w-full object-cover object-[50%_40%]" /> : null}
-    </motion.div>
-  );
-}
-
-/** Minutes since 7:00 pm for a clock string like "9:46" or "9:10 PM". */
-const minutesOf = (clock) => {
-  const [h, m] = clock.replace(/ ?[AP]M$/, '').split(':').map(Number);
-  return (h - 7) * 60 + m;
-};
-const waited = (min) => (min < 60 ? min + 'm' : Math.floor(min / 60) + 'h ' + String(min % 60).padStart(2, '0') + 'm');
-
-/**
- * Wide screens: who answered her, and how long the others have kept her waiting. Each agent joins the
- * board when her message is sent; the brokerage with Aurora answers in seconds and books the tour.
- */
-function ReplyBoard({ p, b, T, t, reduce }) {
-  const now = minutesOf(clockOf(p, T, t));
-  const ours = p.listings.length - 1;
-  const rows = [];
-  T.sends.forEach((s) => {
-    if (t < s.sent) return;
-    const l = p.listings[s.i];
-    rows.push({ key: l.key, name: l.agent.name, address: l.address, state: 'wait', note: b.noReply + ' · ' + waited(Math.max(1, now - minutesOf(l.time))) });
-  });
-  if (t >= T.chat[0].at) {
-    const l = p.listings[ours];
-    const booked = t >= T.statusAt[2];
-    const replied = t >= T.chat[1].at;
-    rows.push({ key: l.key, name: l.agent.name, address: l.address, aurora: true, state: booked ? 'booked' : replied ? 'replied' : 'typing', note: booked ? b.booked : replied ? b.replied : b.typing });
-  }
-  return (
-    <div className="rounded-[22px] bg-white/70 p-4 shadow-[0_0_0_1px_rgba(10,15,14,0.06)] backdrop-blur-sm">
-      <div className="flex items-baseline justify-between gap-3">
-        <p className="text-[13px] font-medium text-ink">{b.title}</p>
-        <p className="text-[11.5px] text-slate">{b.sub}</p>
-      </div>
-      <ul className="mt-3 grid gap-2">
-        <AnimatePresence initial={false}>
-          {rows.map((r) => (
-            <motion.li
-              key={r.key}
-              layout={!reduce}
-              initial={reduce ? false : { opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.45, ease: EASE }}
-              className={cn(
-                'flex items-center gap-3 rounded-[14px] px-3 py-2.5 transition-colors duration-500',
-                r.aurora ? (r.state === 'booked' ? 'bg-[#E4F4E8]' : 'bg-[#FFF3E8]') : 'bg-white'
-              )}
-            >
-              <span className={cn('h-2 w-2 shrink-0 rounded-full', r.aurora ? (r.state === 'typing' ? 'animate-blink bg-[#F25C2A]' : 'bg-[#2E9A58]') : 'bg-ink/20')} />
-              <span className="min-w-0 flex-1">
-                <span className="block truncate text-[13px] font-medium leading-tight text-ink">{r.name}</span>
-                <span className="block truncate text-[11.5px] leading-tight text-slate">{r.address}</span>
-                {/* Aurora's row has the longest name: its status goes on its own line */}
-                {r.aurora ? <span className={cn('mt-1 block text-[11.5px] font-medium', r.state === 'booked' ? 'text-[#2E7A48]' : 'text-[#B4471A]')}>{r.note}</span> : null}
-              </span>
-              {r.aurora ? null : <span className="shrink-0 text-right text-[11.5px] font-medium tabular-nums text-ink/45">{r.note}</span>}
-            </motion.li>
-          ))}
-        </AnimatePresence>
-        {rows.length === 0 ? <li className="rounded-[14px] bg-white/60 px-3 py-2.5 text-[12px] text-ink/40">{b.empty}</li> : null}
-      </ul>
+      {loaded && !reduce ? <video ref={ref} src={film.video} poster={film.poster} muted playsInline loop preload="auto" className="absolute inset-0 h-full w-full object-cover object-[50%_40%]" /> : null}
     </div>
   );
 }
@@ -907,17 +839,12 @@ export function RxRace({ it }) {
   const t = useLoop(T.end, { active: inView && visible, still: reduce });
   const step = lastIndex(T.stepAt.map((at) => ({ at })), t);
   const s = r.steps[step];
-  // one copy of the clip: beside the phone on desktop, beside the step text elsewhere
+  // one copy of the clip: beside the step text on phones and tablets, under it on small laptops,
+  // and in the middle (between the CRM and the phone) on wide screens
   const wide = useMediaQuery('(min-width: 1024px)');
-  const boxRef = useRef(null);
-  const [boxH, setBoxH] = useState(0);
-  useEffect(() => {
-    const el = boxRef.current;
-    if (!el || typeof ResizeObserver === 'undefined') return undefined;
-    const ro = new ResizeObserver(([e]) => setBoxH(Math.round(e.contentRect.height)));
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
+  const xl = useMediaQuery('(min-width: 1280px)');
+  const short = useMediaQuery('(max-height: 760px)');
+  const clip = <SofaClip film={r.film} T={T} t={t} reduce={reduce} active={inView && visible} />;
 
   return (
     <section id="race" data-nav-theme="light" aria-labelledby="rx-race-title" className="section relative">
@@ -925,7 +852,7 @@ export function RxRace({ it }) {
         <SectionHeader id="rx-race-title" eyebrow={r.eyebrow} titleA={r.titleA} titleB={r.titleB} text={r.text} layout="split" />
         <div
           ref={ref}
-          className="canvas canvas-grain relative mt-8 grid gap-3 overflow-hidden md:gap-5 bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] p-4 xs:p-5 md:mt-14 md:p-8 lg:grid-cols-[max(332px,calc(var(--stage-h)_-_176px))_auto] lg:items-center lg:justify-center lg:gap-14 lg:p-8 lg:[--stage-h:clamp(440px,calc(100svh_-_200px),620px)] xl:grid-cols-[max(332px,calc(var(--stage-h)_-_176px))_minmax(260px,320px)_auto] xl:gap-10 2xl:gap-14 lg:[@media(max-height:820px)]:py-7"
+          className="canvas canvas-grain relative mt-8 grid gap-3 overflow-hidden md:gap-5 bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] p-4 xs:p-5 md:mt-14 md:p-8 lg:grid-cols-[max(332px,calc(var(--stage-h)_-_176px))_auto] lg:items-center lg:justify-center lg:gap-14 lg:p-8 lg:[--stage-h:clamp(440px,calc(100svh_-_200px),620px)] xl:grid-cols-[minmax(300px,340px)_minmax(0,calc(var(--stage-h)_*_0.8))_auto] xl:gap-10 2xl:gap-14 lg:[@media(max-height:820px)]:py-7"
         >
           <div aria-hidden="true" className="pointer-events-none absolute right-[6%] top-[-10%] h-[70%] w-[45%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.45),rgba(255,200,87,0))] blur-2xl" />
 
@@ -964,29 +891,19 @@ export function RxRace({ it }) {
                 </div>
               </div>
             )}
-            {/* desktop: her evening on the sofa until her message reaches the brokerage, then its CRM */}
-            <div ref={boxRef} className="relative mt-5 hidden lg:block lg:h-[max(332px,calc(var(--stage-h)_-_176px))] lg:w-full">
-              {wide ? <SofaClip film={r.film} T={T} t={t} reduce={reduce} active={inView && visible} /> : null}
-              <AnimatePresence initial={false}>
-                {t >= T.chat[0].at ? (
-                  <motion.div
-                    key="crm"
-                    className="absolute inset-x-0 top-0"
-                    initial={reduce ? false : { opacity: 0, y: 14, scale: 0.98 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, transition: { duration: 0.2 } }}
-                    transition={{ duration: 0.55, ease: EASE }}
-                  >
-                    <CrmCard c={r.crm} T={T} t={t} reduce={reduce} fit={boxH} />
-                  </motion.div>
-                ) : null}
-              </AnimatePresence>
+            {/* small laptops: her clip under the step; there is no room for the CRM as well */}
+            <div className="relative mt-5 hidden lg:block lg:h-[max(332px,calc(var(--stage-h)_-_176px))] lg:w-full xl:hidden">
+              {wide && !xl ? clip : null}
+            </div>
+            {/* wide screens: the brokerage's CRM fills in as Aurora qualifies her */}
+            <div className="relative mt-5 hidden xl:block">
+              <CrmCard c={r.crm} T={T} t={t} reduce={reduce} short={short} />
             </div>
           </div>
 
-          {/* wide screens: the reply board fills the space between her and her phone */}
+          {/* wide screens: her evening on the sofa, between the CRM and her phone */}
           <div className="relative hidden xl:block">
-            <ReplyBoard p={r.phone} b={r.board} T={T} t={t} reduce={reduce} />
+            <div className="relative mx-auto aspect-[4/5] max-h-[var(--stage-h)] w-full">{xl ? clip : null}</div>
           </div>
           <div className="relative">
             <BuyerPhone p={r.phone} T={T} t={t} reduce={reduce} />

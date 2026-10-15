@@ -179,15 +179,6 @@ export const industries = [
           ],
         },
         // wide screens: who answered her, beside the phone
-        board: {
-          title: 'Who answered',
-          sub: 'Her messages tonight',
-          empty: 'No messages sent yet',
-          noReply: 'No reply',
-          typing: 'Aurora is typing…',
-          replied: 'Replied in 3 sec',
-          booked: 'Tour booked',
-        },
         // her evening on the sofa, as long as the scene before her message reaches Aurora's brokerage (15 s)
         film: {
           video: '/media/real-estate/emma-sofa.mp4',
