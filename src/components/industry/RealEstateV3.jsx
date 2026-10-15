@@ -1391,18 +1391,18 @@ function JobRemind({ x, on, done, reduce }) {
             <div key={h} className="flex items-start gap-2 border-t border-ink/[0.06] py-1.5 first:border-0">
               <span className="t-data w-10 shrink-0 pt-0.5 text-[10.5px] text-ink/35">{h}</span>
               {h === x.event.time ? (
-                <span className={cn('flex min-w-0 flex-1 items-center justify-between gap-2 rounded-[10px] px-2.5 py-1.5 transition-colors duration-500', done ? 'bg-[#E4F4E8] shadow-[inset_3px_0_0_#2E9A58]' : 'bg-[#FFF8E6] shadow-[inset_3px_0_0_#E3A93B]')}>
-                  <span className="min-w-0">
-                    <span className="block truncate text-[12.5px] font-medium text-ink">{x.event.title}</span>
-                    <span className="block text-[11px] text-slate">{x.event.who}</span>
-                  </span>
+                <span className={cn('block min-w-0 flex-1 rounded-[10px] px-2.5 py-1.5 transition-colors duration-500', done ? 'bg-[#E4F4E8] shadow-[inset_3px_0_0_#2E9A58]' : 'bg-[#FFF8E6] shadow-[inset_3px_0_0_#E3A93B]')}>
+                  <span className="block truncate text-[12.5px] font-medium text-ink">{x.event.title}</span>
+                  <span className="mt-0.5 flex items-center justify-between gap-2">
+                    <span className="truncate text-[11px] text-slate">{x.event.who}</span>
                   <span className={cn('inline-flex shrink-0 items-center gap-1 text-[11px] font-medium', done ? 'text-[#2E7A48]' : 'text-[#A46A12]')}>
                     {done ? <Check className="h-3 w-3" strokeWidth={2.6} aria-hidden="true" /> : <Clock className="h-3 w-3" strokeWidth={2.2} aria-hidden="true" />}
                     {done ? x.result : x.pending}
                   </span>
+                  </span>
                 </span>
               ) : (
-                <span className="h-[34px] flex-1" />
+                <span className="h-[42px] flex-1" />
               )}
             </div>
           ))}
@@ -1422,8 +1422,8 @@ function JobNurture({ x, on, done, reduce }) {
         <div className="mt-3 flex items-center gap-1" aria-hidden="true">
           {x.cadence.map((c, i) => (
             <React.Fragment key={c}>
-              <span className={cn('rounded-full px-2 py-0.5 text-[10.5px] font-medium transition-colors', i < x.at ? 'bg-ink/[0.07] text-ink/50' : i === x.at ? 'bg-[#F25C2A] text-white' : 'text-ink/30 shadow-[inset_0_0_0_1px_rgba(10,15,14,0.1)]')}>{c}</span>
-              {i < x.cadence.length - 1 ? <span className="h-px w-2 bg-ink/15" /> : null}
+              <span className={cn('whitespace-nowrap rounded-full px-1.5 py-0.5 text-[10.5px] font-medium transition-colors', i < x.at ? 'bg-ink/[0.07] text-ink/50' : i === x.at ? 'bg-[#F25C2A] text-white' : 'text-ink/30 shadow-[inset_0_0_0_1px_rgba(10,15,14,0.1)]')}>{c}</span>
+              {i < x.cadence.length - 1 ? <span className="h-px w-1.5 shrink-0 bg-ink/15" /> : null}
             </React.Fragment>
           ))}
         </div>
