@@ -1417,7 +1417,7 @@ function JobNurture({ x, on, done, reduce }) {
           const picked = done && i === x.pick;
           return (
             <div key={h.price} className={cn('relative overflow-hidden rounded-[14px] bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.08)] transition-transform duration-500', picked ? '-translate-y-1 shadow-[0_0_0_2px_#F25C2A,0_16px_30px_-18px_rgba(242,92,42,0.6)]' : '')}>
-              <img src={h.image} alt="" className="h-[92px] w-full object-cover" loading="lazy" decoding="async" />
+              <img src={h.image} alt="" className="h-[84px] w-full object-cover xl:h-[92px]" loading="lazy" decoding="async" />
               <span className={cn('absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full transition-colors duration-300', picked ? 'bg-[#F25C2A] text-white' : 'bg-white/90 text-ink/50')}>
                 <motion.span animate={picked && !reduce ? { scale: [1, 1.35, 1] } : { scale: 1 }} transition={{ duration: 0.4 }}>
                   <Heart className={cn('h-3.5 w-3.5', picked ? 'fill-current' : '')} strokeWidth={2.2} aria-hidden="true" />
@@ -1572,7 +1572,7 @@ export function RxAfter({ it }) {
           </div>
 
           {/* the jobs, as a bento on laptops and a row to swipe on phones */}
-          <ol className="relative mt-7 grid gap-3 max-sm:-mx-4 max-sm:flex max-sm:snap-x max-sm:snap-mandatory max-sm:overflow-x-auto max-sm:px-4 max-sm:pb-1 max-sm:[scrollbar-width:none] xs:max-sm:-mx-5 xs:max-sm:px-5 sm:grid-cols-2 lg:mt-8 lg:grid-cols-6 lg:grid-rows-[auto_auto] lg:gap-4 [&::-webkit-scrollbar]:hidden">
+          <ol className="relative mt-6 grid gap-3 max-sm:-mx-4 max-sm:flex max-sm:snap-x max-sm:snap-mandatory max-sm:overflow-x-auto max-sm:px-4 max-sm:pb-1 max-sm:[scrollbar-width:none] xs:max-sm:-mx-5 xs:max-sm:px-5 sm:grid-cols-2 lg:mt-7 lg:grid-cols-6 lg:grid-rows-[auto_auto] lg:gap-3.5 [&::-webkit-scrollbar]:hidden">
             {a.steps.map((x, i) => {
               const Job = JOBS[x.key];
               const on = run ? i === j : false;
@@ -1583,7 +1583,7 @@ export function RxAfter({ it }) {
                   {...show(0.08 * i)}
                   aria-label={x.when + ': ' + x.title + '. ' + x.text}
                   className={cn(
-                    'relative rounded-[22px] p-4 transition-shadow duration-500 max-sm:w-[86%] max-sm:shrink-0 max-sm:snap-center lg:p-5',
+                    'relative rounded-[22px] p-4 transition-shadow duration-500 max-sm:w-[86%] max-sm:shrink-0 max-sm:snap-center xl:p-5',
                     x.key === 'remind' ? 'bg-ink text-white' : 'bg-white',
                     on ? 'shadow-[0_0_0_2px_#F25C2A,0_30px_60px_-34px_rgba(242,92,42,0.55)]' : 'shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_24px_48px_-36px_rgba(90,50,20,0.4)]',
                     JOB_PLACE[x.key]
@@ -1596,21 +1596,21 @@ export function RxAfter({ it }) {
           </ol>
 
           {/* the KPI Agent: one week of improvement in four steps */}
-          <motion.div {...show(0.3)} className="relative mt-3 grid gap-5 rounded-[22px] bg-[#FFF8F1] p-5 shadow-[0_0_0_1px_rgba(242,92,42,0.18)] lg:mt-4 lg:grid-cols-[minmax(0,360px)_minmax(0,1fr)] lg:items-center lg:gap-8 lg:px-6 lg:py-5">
+          <motion.div {...show(0.3)} className="relative mt-3 grid gap-5 rounded-[22px] bg-[#FFF8F1] p-5 shadow-[0_0_0_1px_rgba(242,92,42,0.18)] lg:mt-3.5 lg:grid-cols-[minmax(0,300px)_minmax(0,1fr)] lg:items-center lg:gap-6 lg:px-5 lg:py-4">
             <div>
               <span className="inline-flex items-center gap-1.5 rounded-full bg-[#FFE7D3] px-2.5 py-1 text-[11.5px] font-medium text-[#B4471A]">
                 <TrendingUp className="h-3.5 w-3.5" strokeWidth={2.2} aria-hidden="true" />
                 {a.kpi.badge}
               </span>
-              <p className="mt-2.5 text-[19px] font-medium leading-snug tracking-[-0.01em] text-ink">{a.kpi.title}</p>
-              <p className="mt-1 text-[13.5px] leading-snug text-graphite">{a.kpi.text}</p>
+              <p className="mt-2 text-[18px] font-medium leading-snug tracking-[-0.01em] text-ink">{a.kpi.title}</p>
+              <p className="mt-1 text-[13.5px] leading-snug text-graphite lg:text-[12.5px]">{a.kpi.text}</p>
             </div>
             <ol className="grid grid-cols-2 gap-2 lg:grid-cols-4" aria-label={a.kpi.badge}>
               {a.kpi.steps.map((x, i) => {
                 const on = i === k;
                 const done = i < k;
                 return (
-                  <li key={x.tag} className={cn('relative overflow-hidden rounded-[14px] p-3 transition-colors duration-500', on ? 'bg-white shadow-[0_8px_20px_-14px_rgba(90,50,20,0.5)]' : 'bg-white/50')}>
+                  <li key={x.tag} className={cn('relative overflow-hidden rounded-[14px] p-3 transition-colors duration-500 lg:px-3 lg:py-2.5', on ? 'bg-white shadow-[0_8px_20px_-14px_rgba(90,50,20,0.5)]' : 'bg-white/50')}>
                     <span aria-hidden="true" className="absolute inset-x-0 top-0 h-[2px] bg-ink/[0.06]">
                       <span
                         className={cn('absolute inset-y-0 left-0 bg-[#F25C2A]', on && run ? 'transition-[width] ease-linear' : '')}
@@ -1620,8 +1620,8 @@ export function RxAfter({ it }) {
                     <p className={cn('t-data text-[10.5px] uppercase tracking-[0.08em] transition-colors', on ? 'text-[#D9481C]' : 'text-ink/35')}>
                       {String(i + 1).padStart(2, '0')} · {x.tag}
                     </p>
-                    <p className={cn('mt-1.5 text-[13.5px] leading-snug transition-colors', on ? 'text-ink' : 'text-ink/55')}>{x.text}</p>
-                    {x.who ? <p className="mt-1.5 text-[11.5px] font-medium text-[#2E7A48]">{x.who}</p> : null}
+                    <p className={cn('mt-1 text-[13.5px] leading-snug transition-colors lg:text-[13px]', on ? 'text-ink' : 'text-ink/55')}>{x.text}</p>
+                    {x.who ? <p className="mt-1 text-[11.5px] font-medium text-[#2E7A48]">{x.who}</p> : null}
                   </li>
                 );
               })}
