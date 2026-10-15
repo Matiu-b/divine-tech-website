@@ -329,19 +329,7 @@ function CallStage({ h, header }) {
         </LiquidGlass>
       </div>
 
-      <div className="mt-4 flex flex-col gap-2 px-1 sm:flex-row sm:items-start sm:justify-between">
-        <p className="text-[12px] text-slate">{c.note}</p>
-        <details className="group text-[13px] text-graphite sm:max-w-[560px]">
-          <summary className="cursor-pointer list-none font-medium text-ink underline decoration-ink/25 underline-offset-4 hover:decoration-ink sm:text-right">{c.transcriptLabel}</summary>
-          <ol className="mt-3 grid gap-2">
-            {c.captions.map((x, i) => (
-              <li key={i}>
-                <span className={cn('font-medium', x.who === 'aurora' ? 'text-[#B4471A]' : 'text-ink')}>{x.who === 'aurora' ? 'Aurora' : c.caller}:</span> {x.text}
-              </li>
-            ))}
-          </ol>
-        </details>
-      </div>
+      <p className="mt-3 px-1 text-[12px] text-slate">{c.note}</p>
     </div>
   );
 }
@@ -352,7 +340,7 @@ export function RxHero({ it }) {
   const { open } = useLead();
 
   return (
-    <section id="top" data-nav-theme="light" aria-labelledby="rx-hero-title" className="relative overflow-hidden pb-[clamp(56px,7vw,104px)] pt-[calc(var(--nav-h)+36px)] min-[560px]:pt-[calc(var(--nav-h)+16px)]">
+    <section id="top" data-nav-theme="light" aria-labelledby="rx-hero-title" className="relative overflow-hidden pb-0 pt-[calc(var(--nav-h)+36px)] min-[560px]:pt-[calc(var(--nav-h)+16px)]">
       <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[760px] bg-[radial-gradient(55%_55%_at_82%_0%,rgba(255,214,170,0.75),rgba(246,245,241,0)_70%),radial-gradient(40%_50%_at_10%_10%,rgba(240,232,218,0.7),rgba(246,245,241,0)_70%)]" />
       <div className="shell relative">
         <CallStage
@@ -981,7 +969,7 @@ export function RxRace({ it }) {
   const n = String(r.steps.length).padStart(2, '0');
 
   return (
-    <section id="race" data-nav-theme="light" aria-labelledby="rx-race-title" className="section relative">
+    <section id="race" data-nav-theme="light" aria-labelledby="rx-race-title" className="section relative !pt-[clamp(48px,6vw,88px)]">
       <div className="shell">
         {/* wide screens: the headline moves into the canvas, as its left column */}
         <SectionHeader id="rx-race-title" eyebrow={r.eyebrow} titleA={r.titleA} titleB={r.titleB} text={r.text} layout="split" className="xl:hidden" />
