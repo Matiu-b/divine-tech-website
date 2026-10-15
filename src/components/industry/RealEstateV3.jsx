@@ -2021,16 +2021,94 @@ export function RxFaqMore({ m, guide = null }) {
   );
 }
 
-// the growth bars behind the closing headline: heights as a share of their box, rising left to right
-const SCALE_BARS = [0.22, 0.3, 0.27, 0.38, 0.46, 0.43, 0.56, 0.64, 0.72, 0.84, 1];
+// The closing illustration: a street of homes drawn in line, each a little bigger than the last (growth, in houses),
+// with the sun rising behind the tallest. In a 1200 x 360 frame; the lines draw themselves in when the section shows.
+const STREET_GROUND = 330;
+const STREET = Array.from({ length: 7 }, (_, i) => 0.5 + i * 0.09).reduce(
+  (acc, k, i) => {
+    const w = 150 * k;
+    const h = 108 * k;
+    const r = 68 * k;
+    const x = acc.x;
+    const g = STREET_GROUND;
+    const win = w * 0.18;
+    acc.houses.push({
+      i,
+      shell: `M${x} ${g}V${g - h}H${x + w}V${g}`,
+      roof: `M${x - 8 * k} ${g - h}L${x + w / 2} ${g - h - r}L${x + w + 8 * k} ${g - h}`,
+      door: `M${x + w * 0.42} ${g}V${g - h * 0.44}H${x + w * 0.58}V${g}`,
+      windows: [
+        { x: x + w * 0.14, y: g - h * 0.78, s: win },
+        { x: x + w * 0.68, y: g - h * 0.78, s: win },
+      ],
+    });
+    acc.x = x + w + 14 + 14 * k;
+    return acc;
+  },
+  { x: 24, houses: [] }
+).houses;
+
+function StreetArt({ grow, reduce }) {
+  const draw = (delay) => ({
+    pathLength: 1,
+    strokeDasharray: 1,
+    style: { strokeDashoffset: grow ? 0 : 1, transition: reduce ? 'none' : `stroke-dashoffset 1.4s cubic-bezier(0.65,0,0.35,1) ${delay}s` },
+  });
+  return (
+    <svg viewBox="0 0 1200 360" className="block h-auto w-full" fill="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="rx-street-line" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stopColor="#FF9F45" stopOpacity="0.35" />
+          <stop offset="1" stopColor="#FFC857" stopOpacity="0.9" />
+        </linearGradient>
+        <radialGradient id="rx-street-sun" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0" stopColor="#FFC857" stopOpacity="0.55" />
+          <stop offset="0.55" stopColor="#F25C2A" stopOpacity="0.18" />
+          <stop offset="1" stopColor="#F25C2A" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      {/* the sun rising behind the tallest house */}
+      <circle cx="1060" cy={STREET_GROUND - 150} r="150" fill="url(#rx-street-sun)" style={{ opacity: grow ? 1 : 0, transition: reduce ? 'none' : 'opacity 1.6s ease 0.6s' }} />
+      <circle cx="1060" cy={STREET_GROUND - 150} r="58" stroke="#FFC857" strokeOpacity="0.7" strokeWidth="1.5" {...draw(0.9)} />
+      <g stroke="url(#rx-street-line)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+        <path d={`M0 ${STREET_GROUND}H1200`} {...draw(0)} />
+        {STREET.map((h) => (
+          <g key={h.i}>
+            <path d={h.shell} {...draw(0.15 + h.i * 0.12)} />
+            <path d={h.roof} {...draw(0.3 + h.i * 0.12)} />
+            <path d={h.door} {...draw(0.45 + h.i * 0.12)} />
+            {h.windows.map((w, k) => {
+              const d = draw(0.5 + h.i * 0.12);
+              return (
+                <rect
+                  key={k}
+                  x={w.x}
+                  y={w.y}
+                  width={w.s}
+                  height={w.s}
+                  rx="1.5"
+                  fill="#FFC857"
+                  fillOpacity={grow ? 0.08 + h.i * 0.05 : 0}
+                  pathLength={1}
+                  strokeDasharray={1}
+                  style={{ ...d.style, transition: reduce ? 'none' : `${d.style.transition}, fill-opacity 0.8s ease ${0.9 + h.i * 0.12}s` }}
+                />
+              );
+            })}
+          </g>
+        ))}
+      </g>
+    </svg>
+  );
+}
 
 /**
- * The closing for a brokerage, in Aurora's colours only: an ink night with a warm dawn, growth bars rising under the
- * headline, then a SOLD sign on a street of homes at sunrise whose panel points to the demo form, set in glass beside it.
+ * The closing for a brokerage, in Aurora's colours only: an ink night with a warm dawn. On the left the headline, the
+ * line under it and a street of homes drawn in line, each bigger than the last, the sun rising behind the tallest; on
+ * the right the demo form in glass. Phones and tablets: headline, drawing, form.
  */
 export function RxClosing({ it }) {
   const c = it.v3.closing;
-  const img = c.image || it.v3.hero.film.image;
   const reduce = !!useReducedMotion();
   const ref = useRef(null);
   const seen = useInViewport(ref, { threshold: 0.2, once: true });
@@ -2038,50 +2116,28 @@ export function RxClosing({ it }) {
   return (
     <section ref={ref} id="contact" data-nav-theme="dark" aria-labelledby="contact-title" className="on-dark relative overflow-hidden bg-ink pb-[clamp(72px,7vw,112px)] pt-[clamp(88px,8vw,128px)] text-white">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-        {/* the dawn: Sun, Amber and Gold glowing behind the photo */}
-        <div className="absolute bottom-[8%] left-1/2 h-[75%] w-[120%] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(closest-side,rgba(242,92,42,0.42),rgba(255,159,69,0.16)_45%,rgba(255,200,87,0)_75%)] blur-2xl" />
-        <div className="absolute right-[-10%] top-[-20%] h-[60%] w-[50%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.12),rgba(255,200,87,0))] blur-2xl" />
+        {/* the dawn: Sun, Amber and Gold glowing low across the section */}
+        <div className="absolute bottom-[4%] left-[18%] h-[70%] w-[90%] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(closest-side,rgba(242,92,42,0.30),rgba(255,159,69,0.10)_50%,rgba(255,200,87,0)_75%)] blur-2xl" />
+        <div className="absolute right-[-10%] top-[-20%] h-[60%] w-[50%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.10),rgba(255,200,87,0))] blur-2xl" />
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
         {/* the dawn settles back to plain ink before the footer, so the two meet without a seam */}
-        <div className="absolute inset-x-0 bottom-0 h-[38%] bg-gradient-to-b from-ink/0 via-ink/80 to-ink" />
+        <div className="absolute inset-x-0 bottom-0 h-[22%] bg-gradient-to-b from-ink/0 to-ink" />
       </div>
 
-      <div className="shell relative">
-        <div className="grid gap-5 lg:grid-cols-12 lg:items-end lg:gap-12">
-          <h2 id="contact-title" className="t-display balance lg:col-span-7 lg:text-[clamp(2.4rem,0.6rem+3vw,3.9rem)]">
+      <div className="shell relative grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,500px)] lg:items-end lg:gap-14 xl:grid-cols-[minmax(0,1fr)_minmax(0,540px)]">
+        <div className="min-w-0">
+          <h2 id="contact-title" className="t-display balance lg:text-[clamp(2.4rem,0.6rem+3vw,3.9rem)]">
             <RevealLines lines={[c.titleA, c.titleB]} lineClassNames={['', '']} />
           </h2>
-          <p className="t-lead pretty max-w-[34em] !text-white/70 lg:col-span-5">{c.text}</p>
-        </div>
-
-        {/* growth bars on their own line under the headline, rising left to right */}
-        <div aria-hidden="true" className="mt-8 flex h-10 items-end gap-1.5 sm:h-12 lg:ml-auto lg:w-[41.6%]">
-          {SCALE_BARS.map((v, i) => (
-            <span
-              key={i}
-              className="flex-1 rounded-t-[5px] bg-[linear-gradient(180deg,rgba(255,159,69,0.55),rgba(242,92,42,0.12))]"
-              style={{ height: v * 100 + '%', transform: grow ? 'scaleY(1)' : 'scaleY(0)', transformOrigin: 'bottom', transition: reduce ? 'none' : `transform 0.9s cubic-bezier(0.22,1,0.36,1) ${0.15 + i * 0.07}s` }}
-            />
-          ))}
-        </div>
-
-        {/*
-          The street at sunrise with the SOLD sign, whose panel says "Leave your details" and points to the form.
-          From 1280 px: the sign on the left, the form as glass on the right, side by side, so nothing covers the sign.
-          Below that: the photo above, the form overlapping only its bottom edge, under the sign.
-        */}
-        <div className="relative mt-3 xl:grid xl:min-h-[560px] xl:grid-cols-[minmax(0,1fr)_minmax(0,520px)] xl:overflow-hidden xl:rounded-[34px]">
-          <div className="relative aspect-[3/2] overflow-hidden rounded-[24px] sm:aspect-[2/1] xl:absolute xl:inset-0 xl:aspect-auto xl:rounded-none">
-            <img src={img.src} srcSet={img.srcSet} sizes="(min-width: 1280px) 1400px, 100vw" alt="" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover object-[20%_40%] xl:object-[0%_40%]" />
-            <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,15,14,0)_55%,rgba(10,15,14,0.7)_100%)] xl:bg-[linear-gradient(90deg,rgba(10,15,14,0)_35%,rgba(10,15,14,0.45)_70%,rgba(10,15,14,0.6)_100%)]" />
-          </div>
-          <div className="relative -mt-12 px-2 xs:px-3 sm:px-6 xl:col-start-2 xl:mt-0 xl:flex xl:items-center xl:p-6">
-            <LiquidGlass tone="dark" className="w-full rounded-[clamp(20px,2.2vw,28px)] p-5 xs:p-6 md:p-7">
-              <p className="mb-5 text-[15px] leading-snug text-white/75">Leave your details and Aurora, our AI agent, will call you right away.</p>
-              <LeadForm dark columns={2} industry={it.leadIndustry} />
-            </LiquidGlass>
+          <p className="t-lead pretty mt-5 max-w-[32em] !text-white/70">{c.text}</p>
+          <div className="mt-8 max-w-[640px] lg:mt-12">
+            <StreetArt grow={grow} reduce={reduce} />
           </div>
         </div>
+        <LiquidGlass tone="dark" className="rounded-[clamp(20px,2.2vw,28px)] p-5 xs:p-6 md:p-7">
+          <p className="mb-5 text-[15px] leading-snug text-white/75">Leave your details and Aurora, our AI agent, will call you right away.</p>
+          <LeadForm dark columns={2} industry={it.leadIndustry} />
+        </LiquidGlass>
       </div>
     </section>
   );
