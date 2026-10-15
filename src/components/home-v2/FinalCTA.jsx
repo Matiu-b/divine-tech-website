@@ -12,7 +12,7 @@ import { EASE } from './motion';
  * and optionally `titleA` / `titleB` / `text` to speak to that industry.
  * @param {any} props
  */
-export default function FinalCTA({ industry = '', titleA = closing.titleA, titleB = closing.titleB, text = closing.text }) {
+export default function FinalCTA({ industry = '', titleA = closing.titleA, titleB = closing.titleB, text = closing.text, formTitle = 'Book a demo' }) {
   const reduce = useReducedMotion();
   // The form card is glass: it reveals itself rather than through a fading wrapper.
   const appear = reduce
@@ -50,7 +50,7 @@ export default function FinalCTA({ industry = '', titleA = closing.titleA, title
 
         <LiquidGlass as={motion.div} {...appear} tone="dark" className="mt-10 rounded-[clamp(24px,2.6vw,34px)] p-5 xs:p-7 md:mt-14 md:p-8">
           <div className="mb-6 flex flex-col gap-1.5 md:flex-row md:items-baseline md:justify-between md:gap-8">
-            <h3 className="t-h3 text-white">Book a demo</h3>
+            {formTitle ? <h3 className="t-h3 text-white">{formTitle}</h3> : null}
             <p className="text-[15px] leading-snug text-white/55">Leave your details and Aurora, our AI agent, will call you right away.</p>
           </div>
           <LeadForm dark wide industry={industry} />
