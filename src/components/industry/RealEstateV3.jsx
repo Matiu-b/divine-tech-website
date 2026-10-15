@@ -693,7 +693,7 @@ function BuyerPhone({ p, T, t, reduce, children = null }) {
     prev.current = active;
   }, [active]);
   return (
-    <div className="relative mx-auto h-[560px] w-full max-w-[336px] rounded-[46px] bg-ink p-[9px] shadow-[0_40px_80px_-40px_rgba(60,35,10,0.55)] sm:h-[620px] lg:h-[var(--stage-h)] lg:w-[clamp(272px,calc(var(--stage-h)*0.56),336px)]">
+    <div className="relative mx-auto h-[520px] w-full max-w-[336px] rounded-[46px] min-[400px]:h-[540px] bg-ink p-[9px] shadow-[0_40px_80px_-40px_rgba(60,35,10,0.55)] sm:h-[620px] lg:h-[var(--stage-h)] lg:w-[clamp(272px,calc(var(--stage-h)*0.56),336px)]">
       <div className="relative h-full overflow-hidden rounded-[38px] bg-[#FBFAF7]">
         <div className="relative flex items-center justify-between px-7 pb-1 pt-3 text-[13px] font-medium text-ink">
           <span className="tabular-nums">{clockOf(p, T, t)}</span>
@@ -820,15 +820,15 @@ function SofaClip({ film, T, t, reduce, active, small = false }) {
     <motion.div
       className={cn(
         'absolute inset-0 overflow-hidden bg-[#2A2420]',
-        small ? 'rounded-[20px] shadow-[0_0_0_3px_#FBFAF7,0_18px_36px_-12px_rgba(40,25,10,0.55)]' : 'rounded-[24px] shadow-[0_24px_48px_-32px_rgba(90,50,20,0.45)]'
+        small ? 'rounded-[inherit]' : 'rounded-[24px] shadow-[0_24px_48px_-32px_rgba(90,50,20,0.45)]'
       )}
       initial={false}
       animate={{ opacity: on ? 1 : 0, scale: on ? 1 : 0.97 }}
       transition={{ duration: reduce ? 0 : 0.45, ease: EASE }}
       aria-hidden="true"
     >
-      <img src={film.poster} alt="" className="absolute inset-0 h-full w-full object-cover" loading="lazy" decoding="async" />
-      {loaded && !reduce ? <video ref={ref} src={film.video} poster={film.poster} muted playsInline loop={small} preload="auto" className="absolute inset-0 h-full w-full object-cover" /> : null}
+      <img src={film.poster} alt="" className="absolute inset-0 h-full w-full object-cover object-[50%_40%]" loading="lazy" decoding="async" />
+      {loaded && !reduce ? <video ref={ref} src={film.video} poster={film.poster} muted playsInline loop={small} preload="auto" className="absolute inset-0 h-full w-full object-cover object-[50%_40%]" /> : null}
     </motion.div>
   );
 }
@@ -925,7 +925,7 @@ export function RxRace({ it }) {
         <SectionHeader id="rx-race-title" eyebrow={r.eyebrow} titleA={r.titleA} titleB={r.titleB} text={r.text} layout="split" />
         <div
           ref={ref}
-          className="canvas canvas-grain relative mt-8 grid gap-5 overflow-hidden bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] p-4 xs:p-5 md:mt-14 md:p-8 lg:grid-cols-[max(332px,calc(var(--stage-h)_-_176px))_auto] lg:items-center lg:justify-center lg:gap-14 lg:p-8 lg:[--stage-h:clamp(440px,calc(100svh_-_200px),620px)] xl:grid-cols-[max(332px,calc(var(--stage-h)_-_176px))_minmax(260px,320px)_auto] xl:gap-10 2xl:gap-14 lg:[@media(max-height:820px)]:py-7"
+          className="canvas canvas-grain relative mt-8 grid gap-3 overflow-hidden md:gap-5 bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] p-4 xs:p-5 md:mt-14 md:p-8 lg:grid-cols-[max(332px,calc(var(--stage-h)_-_176px))_auto] lg:items-center lg:justify-center lg:gap-14 lg:p-8 lg:[--stage-h:clamp(440px,calc(100svh_-_200px),620px)] xl:grid-cols-[max(332px,calc(var(--stage-h)_-_176px))_minmax(260px,320px)_auto] xl:gap-10 2xl:gap-14 lg:[@media(max-height:820px)]:py-7"
         >
           <div aria-hidden="true" className="pointer-events-none absolute right-[6%] top-[-10%] h-[70%] w-[45%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.45),rgba(255,200,87,0))] blur-2xl" />
 
@@ -935,23 +935,32 @@ export function RxRace({ it }) {
                 <span key={x.title} className={cn('h-1 flex-1 rounded-full transition-colors duration-500', i <= step ? 'bg-ink' : 'bg-ink/10')} />
               ))}
             </div>
-            {/* the step; on phones and tablets the sofa clip sits beside it, so it never covers the phone */}
-            <div className="mt-4 flex items-start gap-3 sm:gap-4 lg:block">
-              <div className="min-h-[150px] min-w-0 flex-1 min-[360px]:min-h-[126px] min-[385px]:min-h-[112px] sm:min-h-[116px] md:min-h-[128px] lg:min-h-[132px]" aria-live="polite">
+            {wide ? (
+              <div className="mt-4 min-h-[132px]" aria-live="polite">
                 <AnimatePresence mode="wait" initial={false}>
                   <motion.div key={step} initial={reduce ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6, transition: { duration: 0.2 } }} transition={{ duration: 0.45, ease: EASE }}>
                     <p className="t-data text-[12px] text-[#B4471A]">{s.time}</p>
-                    <p className="balance mt-1 text-[17px] font-medium leading-tight tracking-[-0.015em] text-ink xs:text-[18px] sm:text-[20px] lg:text-[26px]">{s.title}</p>
-                    <p className="pretty mt-1 max-w-[34ch] text-[13.5px] leading-snug text-graphite sm:text-[14.5px] lg:max-w-none lg:text-[15.5px]">{s.text}</p>
+                    <p className="balance mt-1 text-[26px] font-medium leading-tight tracking-[-0.015em] text-ink">{s.title}</p>
+                    <p className="pretty mt-1 text-[15.5px] leading-snug text-graphite">{s.text}</p>
                   </motion.div>
                 </AnimatePresence>
               </div>
-              {wide ? null : (
-                <div className="relative mt-1 h-[72px] w-[72px] shrink-0 min-[360px]:h-[84px] min-[360px]:w-[84px] xs:h-24 xs:w-24 sm:h-28 sm:w-28 md:h-32 md:w-32">
-                  <SofaClip film={r.film} T={T} t={t} reduce={reduce} active={inView && visible} small />
+            ) : (
+              // phones and tablets: her evening on the sofa as a wide clip, with the step written over it
+              <div className="relative mt-3 aspect-[2/1] max-h-[300px] w-full overflow-hidden rounded-[20px] bg-[#2A2420] shadow-[0_18px_36px_-18px_rgba(40,25,10,0.5)]">
+                <SofaClip film={r.film} T={T} t={t} reduce={reduce} active={inView && visible} small />
+                <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(20,14,10,0)_30%,rgba(20,14,10,0.78)_100%)]" />
+                <div className="absolute inset-x-0 bottom-0 p-3.5 sm:p-5" aria-live="polite">
+                  <AnimatePresence mode="wait" initial={false}>
+                    <motion.div key={step} initial={reduce ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6, transition: { duration: 0.2 } }} transition={{ duration: 0.45, ease: EASE }}>
+                      <p className="t-data text-[11.5px] text-[#FFC69A]">{s.time}</p>
+                      <p className="mt-0.5 text-[16px] font-medium leading-tight tracking-[-0.01em] text-white min-[400px]:text-[17px] sm:text-[20px]">{s.title}</p>
+                      <p className="pretty mt-0.5 text-[12.5px] leading-snug text-white/80 min-[400px]:text-[13px] sm:text-[14.5px]">{s.text}</p>
+                    </motion.div>
+                  </AnimatePresence>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
             {/* desktop: her evening on the sofa until her message reaches the brokerage, then its CRM */}
             <div ref={boxRef} className="relative mt-5 hidden lg:block lg:h-[max(332px,calc(var(--stage-h)_-_176px))] lg:w-full">
               {wide ? <SofaClip film={r.film} T={T} t={t} reduce={reduce} active={inView && visible} /> : null}
