@@ -120,9 +120,52 @@
    "out": "public/media/real-estate/emma-sofa"
   },
   {
-   "kind": "audio",
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261015_125350_88c0ec88-c06c-4432-bc7f-0bb774bedcca.mp3",
-   "out": "design/media/src/call-c-broker-line"
+   "kind": "image",
+   "url": "https://www.google.com/s2/favicons?domain=followupboss.com&sz=128",
+   "out": "public/img/logos/re/followupboss",
+   "widths": [
+    96
+   ]
+  },
+  {
+   "kind": "image",
+   "url": "https://www.google.com/s2/favicons?domain=lofty.com&sz=128",
+   "out": "public/img/logos/re/lofty",
+   "widths": [
+    96
+   ]
+  },
+  {
+   "kind": "image",
+   "url": "https://www.google.com/s2/favicons?domain=boldtrail.com&sz=128",
+   "out": "public/img/logos/re/boldtrail",
+   "widths": [
+    96
+   ]
+  },
+  {
+   "kind": "image",
+   "url": "https://www.google.com/s2/favicons?domain=realtor.com&sz=128",
+   "out": "public/img/logos/re/realtor",
+   "widths": [
+    96
+   ]
+  },
+  {
+   "kind": "image",
+   "url": "https://www.google.com/s2/favicons?domain=homes.com&sz=128",
+   "out": "public/img/logos/re/homes",
+   "widths": [
+    96
+   ]
+  },
+  {
+   "kind": "image",
+   "url": "https://www.google.com/s2/favicons?domain=zillow.com&sz=128",
+   "out": "public/img/logos/re/zillow",
+   "widths": [
+    96
+   ]
   }
  ]
 }
