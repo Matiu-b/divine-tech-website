@@ -1258,7 +1258,7 @@ export function RxRules({ it }) {
             <div className="mt-5 lg:hidden">
               <PlaybookChips r={r} sc={sc} price={price} pick={pick} />
             </div>
-            <div className="mt-5 min-h-[352px] max-w-[600px] xs:min-h-[330px] sm:min-h-[300px] lg:mt-8">
+            <div className="mt-5 min-h-[368px] max-w-[600px] xs:min-h-[340px] sm:min-h-[300px] lg:mt-8">
               <AnimatePresence mode="wait" initial={false}>
                 <motion.div key={i} exit={reduce ? undefined : { opacity: 0, transition: { duration: 0.2 } }}>
                   <RuleFlow r={r} sc={sc} reduce={reduce} />
