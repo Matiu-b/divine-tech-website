@@ -919,7 +919,7 @@ export function RxRace({ it }) {
           className={cn(
             'canvas canvas-grain relative mt-8 grid gap-3 overflow-hidden bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] p-4 xs:p-5 md:mt-14 md:gap-5 md:p-8',
             'lg:grid-cols-[max(332px,calc(var(--stage-h)_-_176px))_auto] lg:items-center lg:justify-center lg:gap-14 lg:p-8 lg:[--stage-h:clamp(440px,calc(100svh_-_200px),620px)] lg:[@media(max-height:820px)]:py-7',
-            'xl:mt-0 xl:grid-cols-[minmax(280px,380px)_minmax(0,calc(var(--stage-h)_*_0.8))_auto] xl:gap-12 xl:px-12 xl:[--stage-h:clamp(440px,calc(100svh_-_170px),620px)] 2xl:gap-16'
+            'xl:mt-0 xl:grid-cols-[minmax(240px,330px)_minmax(320px,calc(var(--stage-h)_*_0.8))_auto] xl:gap-12 xl:px-12 xl:[--stage-h:clamp(440px,calc(100svh_-_170px),620px)] 2xl:gap-16'
           )}
         >
           <div aria-hidden="true" className="pointer-events-none absolute right-[6%] top-[-10%] h-[70%] w-[45%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.45),rgba(255,200,87,0))] blur-2xl" />
