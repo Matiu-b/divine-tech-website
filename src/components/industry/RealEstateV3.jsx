@@ -352,11 +352,11 @@ export function RxHero({ it }) {
                 <p className="intro-slide t-lead pretty max-w-[34em] lg:text-[15.5px] lg:leading-[1.55] lg:text-white/[0.88]" style={{ animationDelay: '0.3s' }}>
                   {h.text}
                 </p>
-                <div className="intro-slide mt-6 flex flex-wrap items-center gap-2.5 sm:gap-3 lg:mt-5" style={{ animationDelay: '0.42s' }}>
-                  <CTAButton size="lg" onClick={open} className="max-sm:h-12 max-sm:px-4 max-sm:text-[14px]">
+                <div className="intro-slide mt-6 flex flex-wrap items-center gap-2.5 sm:gap-3 lg:mt-5 lg:flex-nowrap" style={{ animationDelay: '0.42s' }}>
+                  <CTAButton size="lg" onClick={open} className="max-sm:h-12 max-sm:px-4 max-sm:text-[14px] lg:h-12 lg:px-5 lg:text-[15px]">
                     Book a demo
                   </CTAButton>
-                  <CTAButton size="lg" variant="glass" href="#race" arrow={false} onClick={(e) => onAnchorClick(e, '#race')} className="max-sm:h-12 max-sm:px-4 max-sm:text-[14px]">
+                  <CTAButton size="lg" variant="glass" href="#race" arrow={false} onClick={(e) => onAnchorClick(e, '#race')} className="max-sm:h-12 max-sm:px-4 max-sm:text-[14px] lg:h-12 lg:px-5 lg:text-[15px]">
                     Why speed wins
                   </CTAButton>
                 </div>
