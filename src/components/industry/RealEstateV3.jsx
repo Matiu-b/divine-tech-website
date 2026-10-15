@@ -930,7 +930,7 @@ export function RxRace({ it }) {
           <div aria-hidden="true" className="pointer-events-none absolute right-[6%] top-[-10%] h-[70%] w-[45%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.45),rgba(255,200,87,0))] blur-2xl" />
 
           <div className="relative">
-            <div className="flex gap-1.5" aria-hidden="true">
+            <div className="mx-auto flex max-w-[352px] gap-1.5 lg:max-w-none" aria-hidden="true">
               {r.steps.map((x, i) => (
                 <span key={x.title} className={cn('h-1 flex-1 rounded-full transition-colors duration-500', i <= step ? 'bg-ink' : 'bg-ink/10')} />
               ))}
@@ -946,34 +946,20 @@ export function RxRace({ it }) {
                 </AnimatePresence>
               </div>
             ) : (
-              // phones and tablets: her evening on the sofa, large and clear; only the step's title sits on the
-              // clip's bottom edge, the description goes under it
-              <div className="mt-3">
-                <div className="relative aspect-[16/10] max-h-[340px] w-full overflow-hidden rounded-[20px] bg-[#2A2420] shadow-[0_18px_36px_-18px_rgba(40,25,10,0.5)]">
+              // phones and tablets: the step, with her clip as a square on the right that runs down over the
+              // phone's top corner. Floats let the first lines use the full width and wrap around the square.
+              <div className="relative mx-auto mt-4 min-h-[124px] w-full max-w-[352px] [display:flow-root] min-[360px]:min-h-[136px]">
+                <div aria-hidden="true" className="float-right h-[48px] w-0 min-[360px]:h-[54px]" />
+                <div className="relative z-[3] float-right clear-right -mb-[38px] ml-3 h-[108px] w-[108px] overflow-hidden rounded-[20px] shadow-[0_0_0_3px_#FBFAF7,0_18px_36px_-12px_rgba(40,25,10,0.5)] min-[360px]:-mb-[44px] min-[360px]:h-[124px] min-[360px]:w-[124px] min-[400px]:h-[132px] min-[400px]:w-[132px]">
                   <SofaClip film={r.film} T={T} t={t} reduce={reduce} active={inView && visible} small />
-                  <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-[45%] bg-[linear-gradient(180deg,rgba(20,14,10,0)_0%,rgba(20,14,10,0.75)_100%)]" />
-                  <div className="absolute inset-x-0 bottom-0 px-3.5 pb-3 sm:px-5 sm:pb-4">
-                    <AnimatePresence mode="wait" initial={false}>
-                      <motion.p
-                        key={step}
-                        initial={reduce ? false : { opacity: 0, y: 6 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, transition: { duration: 0.15 } }}
-                        transition={{ duration: 0.4, ease: EASE }}
-                        className="flex items-baseline gap-2 text-white"
-                      >
-                        <span className="t-data shrink-0 text-[11.5px] text-[#FFC69A]">{s.time}</span>
-                        <span className="balance min-w-0 text-[15.5px] font-medium leading-tight tracking-[-0.01em] min-[400px]:text-[16.5px] sm:text-[19px]">{s.title}</span>
-                      </motion.p>
-                    </AnimatePresence>
-                  </div>
                 </div>
-                <div className="mt-2 min-h-[2.7em] px-0.5 text-[13.5px] leading-snug text-graphite sm:text-[14.5px]" aria-live="polite">
+                <div aria-live="polite">
                   <AnimatePresence mode="wait" initial={false}>
-                    <motion.p key={step} initial={reduce ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 0.15 } }} transition={{ duration: 0.4 }}>
-                      <span className="sr-only">{s.title}. </span>
-                      {s.text}
-                    </motion.p>
+                    <motion.div key={step} initial={reduce ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6, transition: { duration: 0.2 } }} transition={{ duration: 0.45, ease: EASE }}>
+                      <p className="t-data text-[12px] text-[#B4471A]">{s.time}</p>
+                      <p className="mt-1 text-[17px] font-medium leading-tight tracking-[-0.015em] text-ink min-[400px]:text-[18px]">{s.title}</p>
+                      <p className="mt-1 text-[13.5px] leading-snug text-graphite min-[400px]:text-[14px]">{s.text}</p>
+                    </motion.div>
                   </AnimatePresence>
                 </div>
               </div>
