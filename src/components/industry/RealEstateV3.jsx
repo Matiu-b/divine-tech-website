@@ -1351,7 +1351,8 @@ export function RxAfter({ it }) {
     const id = setTimeout(() => setK((x) => (x + 1) % a.kpi.steps.length), KPI_MS);
     return () => clearTimeout(id);
   }, [k, reduce, inView, visible, a.kpi.steps.length]);
-  const show = (d) => (reduce ? {} : { initial: { opacity: 0, y: 16 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, amount: 0.3 }, transition: { duration: 0.6, ease: EASE, delay: d } });
+  // amount 'some': on phones the next step only peeks in from the side, and must still appear
+  const show = (d) => (reduce ? {} : { initial: { opacity: 0, y: 16 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, amount: 'some' }, transition: { duration: 0.6, ease: EASE, delay: d } });
 
   return (
     <section data-nav-theme="light" aria-labelledby="rx-after-title" className="section relative pt-0">
