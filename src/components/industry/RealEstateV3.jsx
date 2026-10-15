@@ -883,15 +883,10 @@ function ReplyBoard({ p, b, T, t, reduce }) {
               <span className="min-w-0 flex-1">
                 <span className="block truncate text-[13px] font-medium leading-tight text-ink">{r.name}</span>
                 <span className="block truncate text-[11.5px] leading-tight text-slate">{r.address}</span>
+                {/* Aurora's row has the longest name: its status goes on its own line */}
+                {r.aurora ? <span className={cn('mt-1 block text-[11.5px] font-medium', r.state === 'booked' ? 'text-[#2E7A48]' : 'text-[#B4471A]')}>{r.note}</span> : null}
               </span>
-              <span
-                className={cn(
-                  'shrink-0 text-right text-[11.5px] font-medium tabular-nums',
-                  r.aurora ? (r.state === 'booked' ? 'text-[#2E7A48]' : 'text-[#B4471A]') : 'text-ink/45'
-                )}
-              >
-                {r.note}
-              </span>
+              {r.aurora ? null : <span className="shrink-0 text-right text-[11.5px] font-medium tabular-nums text-ink/45">{r.note}</span>}
             </motion.li>
           ))}
         </AnimatePresence>
