@@ -1,13 +1,14 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, m as motion, useReducedMotion } from 'framer-motion';
-import { ArrowUp, CalendarCheck, Check, ChevronLeft, CircleDollarSign, Database, Hand, MessageCircle, Pause, Play, Scale, Volume2, Send, Clock, House } from 'lucide-react';
+import { ArrowUp, CalendarCheck, Check, ChevronLeft, CircleDollarSign, Database, Hand, Pause, Play, Scale, Volume2, Send, Clock, House, BellOff, Hourglass, ShieldCheck, User, ArrowRight, TrendingUp, Heart } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import CTAButton from '@/components/home-v2/primitives/CTAButton';
 import SectionHeader from '@/components/home-v2/primitives/SectionHeader';
-import { RevealGroup, RevealItem, RevealLines } from '@/components/home-v2/primitives/MotionReveal';
+import { RevealLines } from '@/components/home-v2/primitives/MotionReveal';
 import { useLead } from '@/components/home-v2/LeadDrawer';
 import LiquidGlass from '@/components/home-v2/primitives/LiquidGlass';
 import { onAnchorClick, useInViewport, useMediaQuery, usePageLoaded, usePageVisible } from '@/components/home-v2/hooks';
+import { useNavigate } from 'react-router-dom';
 
 /*
  * Real estate page, v3. One message per section, in this order:
@@ -329,19 +330,7 @@ function CallStage({ h, header }) {
         </LiquidGlass>
       </div>
 
-      <div className="mt-4 flex flex-col gap-2 px-1 sm:flex-row sm:items-start sm:justify-between">
-        <p className="text-[12px] text-slate">{c.note}</p>
-        <details className="group text-[13px] text-graphite sm:max-w-[560px]">
-          <summary className="cursor-pointer list-none font-medium text-ink underline decoration-ink/25 underline-offset-4 hover:decoration-ink sm:text-right">{c.transcriptLabel}</summary>
-          <ol className="mt-3 grid gap-2">
-            {c.captions.map((x, i) => (
-              <li key={i}>
-                <span className={cn('font-medium', x.who === 'aurora' ? 'text-[#B4471A]' : 'text-ink')}>{x.who === 'aurora' ? 'Aurora' : c.caller}:</span> {x.text}
-              </li>
-            ))}
-          </ol>
-        </details>
-      </div>
+      <p className="mt-3 px-1 text-[12px] text-slate">{c.note}</p>
     </div>
   );
 }
@@ -352,7 +341,7 @@ export function RxHero({ it }) {
   const { open } = useLead();
 
   return (
-    <section id="top" data-nav-theme="light" aria-labelledby="rx-hero-title" className="relative overflow-hidden pb-[clamp(56px,7vw,104px)] pt-[calc(var(--nav-h)+36px)] min-[560px]:pt-[calc(var(--nav-h)+16px)]">
+    <section id="top" data-nav-theme="light" aria-labelledby="rx-hero-title" className="relative overflow-hidden pb-0 pt-[calc(var(--nav-h)+36px)] min-[560px]:pt-[calc(var(--nav-h)+16px)]">
       <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[760px] bg-[radial-gradient(55%_55%_at_82%_0%,rgba(255,214,170,0.75),rgba(246,245,241,0)_70%),radial-gradient(40%_50%_at_10%_10%,rgba(240,232,218,0.7),rgba(246,245,241,0)_70%)]" />
       <div className="shell relative">
         <CallStage
@@ -981,7 +970,7 @@ export function RxRace({ it }) {
   const n = String(r.steps.length).padStart(2, '0');
 
   return (
-    <section id="race" data-nav-theme="light" aria-labelledby="rx-race-title" className="section relative">
+    <section id="race" data-nav-theme="light" aria-labelledby="rx-race-title" className="section relative !pt-[clamp(48px,6vw,88px)]">
       <div className="shell">
         {/* wide screens: the headline moves into the canvas, as its left column */}
         <SectionHeader id="rx-race-title" eyebrow={r.eyebrow} titleA={r.titleA} titleB={r.titleB} text={r.text} layout="split" className="xl:hidden" />
@@ -1081,32 +1070,828 @@ export function RxRace({ it }) {
   );
 }
 
-const RULE_ICONS = { price: CircleDollarSign, fair: Scale, consent: MessageCircle, handoff: Hand };
+const RULE_ICONS = { price: CircleDollarSign, fair: Scale, stop: BellOff, handoff: Hand };
+const TONES = {
+  ok: { icon: Check, cls: 'bg-[#E4F4E8] text-[#2E7A48]' },
+  wait: { icon: Hourglass, cls: 'bg-[#FFF1E4] text-[#B4471A]' },
+  shield: { icon: ShieldCheck, cls: 'bg-[#E8EEF9] text-[#3A5A9A]' },
+  stop: { icon: BellOff, cls: 'bg-ink/[0.06] text-ink/70' },
+};
+// how long each rule stays on screen (ms)
+const SCENE_MS = 5600;
 
-/** Your rules: four short guarantees, specific to real estate. */
+/** One setting in the playbook: its name on the left, its value on the right (a two-way switch for final prices). */
+function PlaybookRow({ row, active, value, onPick, reduce, id = 'panel' }) {
+  const Icon = row.icon ? RULE_ICONS[row.icon] : null;
+  return (
+    <button
+      type="button"
+      onClick={onPick}
+      aria-pressed={active}
+      className={cn(
+        'relative flex w-full items-center gap-3 rounded-[12px] px-3 py-2.5 text-left transition-colors duration-300',
+        active ? 'bg-[#FFF3E8]' : 'hover:bg-ink/[0.03]'
+      )}
+    >
+      {active ? <motion.span layoutId={reduce ? undefined : id + '-mark'} className="absolute inset-y-2 left-0 w-[3px] rounded-full bg-[#F25C2A]" /> : null}
+      {Icon ? (
+        <Icon className={cn('h-4 w-4 shrink-0 transition-colors', active ? 'text-[#D9481C]' : 'text-ink/40')} strokeWidth={1.9} aria-hidden="true" />
+      ) : (
+        <span aria-hidden="true" className={cn('w-4 shrink-0 text-center font-serif text-[18px] leading-none transition-colors', active ? 'text-[#D9481C]' : 'text-ink/30')}>
+          ”
+        </span>
+      )}
+      <span className={cn('min-w-0 flex-1 text-[14px] leading-snug transition-colors lg:truncate', active ? 'font-medium text-ink' : 'text-ink/75')}>{row.label}</span>
+      {row.values.length > 1 ? (
+        // a real choice: both options, the one in force highlighted
+        <span className="flex shrink-0 whitespace-nowrap rounded-full bg-ink/[0.06] p-0.5 text-[11.5px] font-medium">
+          {row.values.map((v, i) => (
+            <span key={v} className="relative px-2.5 py-1">
+              {i === value ? (
+                <motion.span
+                  layoutId={reduce ? undefined : id + '-switch'}
+                  className="absolute inset-0 rounded-full bg-white shadow-[0_1px_3px_rgba(10,15,14,0.15)]"
+                  transition={{ duration: 0.4, ease: EASE }}
+                />
+              ) : null}
+              <span className={cn('relative transition-colors', i === value ? 'text-ink' : 'text-ink/45')}>{v}</span>
+            </span>
+          ))}
+        </span>
+      ) : (
+        <span className={cn('shrink-0 whitespace-nowrap rounded-full px-2.5 py-1 text-[11.5px] font-medium transition-colors', active ? 'bg-white text-ink shadow-[0_1px_3px_rgba(10,15,14,0.12)]' : 'bg-ink/[0.05] text-ink/60')}>
+          {row.values[0]}
+        </span>
+      )}
+    </button>
+  );
+}
+
+/** The rule in force, as three steps on a line: what the lead says, what Aurora does, and what comes of it. */
+function RuleFlow({ r, sc, reduce }) {
+  const tone = TONES[sc.tone] || TONES.ok;
+  const ToneIcon = tone.icon;
+  const enter = (d) => (reduce ? { initial: false } : { initial: { opacity: 0, y: 10 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.45, ease: EASE, delay: d } });
+  const line = (d) =>
+    reduce ? null : (
+      <motion.span
+        aria-hidden="true"
+        className="absolute left-0 top-0 h-2 w-2 -translate-x-[3px] rounded-full bg-[#F25C2A] shadow-[0_0_0_4px_rgba(242,92,42,0.18)]"
+        initial={{ top: '0%', opacity: 0 }}
+        animate={{ top: '100%', opacity: [0, 1, 1, 0] }}
+        transition={{ duration: 0.6, ease: 'easeInOut', delay: d }}
+      />
+    );
+  const label = 't-data text-[11px] uppercase tracking-[0.08em] text-ink/40';
+  return (
+    <div className="relative" aria-live="polite">
+      {/* when */}
+      <motion.div {...enter(0)} className="rounded-[18px] bg-white p-4 shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_18px_40px_-28px_rgba(90,50,20,0.35)]">
+        {/* who wrote it: the buyer, and how it reached the brokerage */}
+        <p className="flex items-center gap-2">
+          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-ink/[0.07] text-ink/60">
+            <User className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
+          </span>
+          <span className="text-[13px] font-medium text-ink">{r.flow.when}</span>
+          <span className="truncate text-[12.5px] text-slate">{sc.channel}</span>
+        </p>
+        <p className="mt-2 text-[16px] font-medium leading-snug tracking-[-0.01em] text-ink sm:text-[17px] xl:text-[18px]">“{sc.trigger}”</p>
+      </motion.div>
+      <div className="relative ml-6 h-7 w-[2px] bg-ink/10">{line(0.45)}</div>
+      {/* then */}
+      <motion.div {...enter(0.7)} className="rounded-[18px] bg-ink p-4 text-white shadow-[0_18px_40px_-24px_rgba(10,15,14,0.6)]">
+        <p className="flex items-center gap-2">
+          <img src="/brand/aurora-symbol-color.svg" alt="" width="14" height="14" className="h-3.5 w-3.5" />
+          <span className="t-data text-[11px] uppercase tracking-[0.08em] text-white/55">{r.flow.then}</span>
+        </p>
+        <p className="mt-1.5 text-[13px] leading-snug text-white/55">{sc.action}</p>
+        {/* the message she actually sends */}
+        <p className="mt-3 border-l-2 border-[#F25C2A] pl-3 text-[14.5px] leading-snug text-white sm:text-[15.5px] xl:text-[16.5px]">“{sc.reply}”</p>
+      </motion.div>
+      <div className="relative ml-6 h-7 w-[2px] bg-ink/10">{line(1.15)}</div>
+      {/* result */}
+      <motion.div {...enter(1.4)} className="flex items-center gap-3">
+        <span className={label}>{r.flow.result}</span>
+        <span className={cn('inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[13px] font-medium', tone.cls)}>
+          <ToneIcon className="h-3.5 w-3.5" strokeWidth={2.2} aria-hidden="true" />
+          {sc.result}
+        </span>
+      </motion.div>
+    </div>
+  );
+}
+
+/**
+ * Phones and tablets: the playbook one setting at a time, the same row as on laptops, with its group, its place in the
+ * list, arrows and dots to move through it.
+ */
+function PlaybookStepper({ r, sc, i, price, go, reduce }) {
+  const row = r.rows.find((x) => x.key === sc.row);
+  const group = r.groups.find((g) => g.key === row.group);
+  const n = r.rows.findIndex((x) => x.key === row.key);
+  const btn = 'flex h-8 w-8 items-center justify-center rounded-full bg-ink/[0.05] text-ink/70 transition-colors hover:bg-ink/[0.09]';
+  return (
+    <div className="rounded-[20px] bg-white/80 p-2.5 shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_20px_40px_-32px_rgba(90,50,20,0.4)] backdrop-blur-sm lg:hidden">
+      <div className="flex items-center justify-between gap-3 pb-1.5 pl-3 pr-0.5">
+        <span className="t-data truncate text-[10.5px] uppercase tracking-[0.08em] text-ink/45">
+          {group.label} · {n + 1}/{r.rows.length}
+        </span>
+        <span className="flex shrink-0 gap-1">
+          <button type="button" className={btn} onClick={() => go(i - 1)} aria-label="Previous rule">
+            <ChevronLeft className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
+          </button>
+          <button type="button" className={btn} onClick={() => go(i + 1)} aria-label="Next rule">
+            <ChevronLeft className="h-4 w-4 rotate-180" strokeWidth={2} aria-hidden="true" />
+          </button>
+        </span>
+      </div>
+      {/* the setting: its name on one line, its value under it, so nothing is squeezed on a narrow screen */}
+      <div className="relative rounded-[14px] bg-[#FFF3E8] px-3.5 py-3">
+        <span className="absolute inset-y-2.5 left-0 w-[3px] rounded-full bg-[#F25C2A]" aria-hidden="true" />
+        <p className="flex items-center gap-2 text-[15px] font-medium leading-snug text-ink">
+          {row.icon ? (
+            React.createElement(RULE_ICONS[row.icon], { className: 'h-4 w-4 shrink-0 text-[#D9481C]', strokeWidth: 1.9, 'aria-hidden': 'true' })
+          ) : (
+            <span aria-hidden="true" className="w-4 shrink-0 text-center font-serif text-[18px] leading-none text-[#D9481C]">
+              ”
+            </span>
+          )}
+          {row.label}
+        </p>
+        <div className="mt-2 flex pl-6">
+          {row.values.length > 1 ? (
+            <span className="flex whitespace-nowrap rounded-full bg-ink/[0.06] p-0.5 text-[12px] font-medium">
+              {row.values.map((v, k) => (
+                <span key={v} className="relative px-3 py-1">
+                  {k === price ? <motion.span layoutId={reduce ? undefined : 'stepper-switch'} className="absolute inset-0 rounded-full bg-white shadow-[0_1px_3px_rgba(10,15,14,0.15)]" transition={{ duration: 0.4, ease: EASE }} /> : null}
+                  <span className={cn('relative', k === price ? 'text-ink' : 'text-ink/45')}>{v}</span>
+                </span>
+              ))}
+            </span>
+          ) : (
+            <span className="whitespace-nowrap rounded-full bg-white px-3 py-1 text-[12px] font-medium text-ink shadow-[0_1px_3px_rgba(10,15,14,0.12)]">{row.values[0]}</span>
+          )}
+        </div>
+      </div>
+      <div className="flex justify-center gap-1.5 pb-1 pt-2" aria-hidden="true">
+        {r.rows.map((x) => (
+          <span key={x.key} className={cn('h-1.5 rounded-full transition-all duration-300', x.key === row.key ? 'w-5 bg-[#F25C2A]' : 'w-1.5 bg-ink/15')} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Your rules: the broker's playbook on the left, the rule in force on the right as when, what Aurora does, and the
+ * result. It steps through the rules by itself (final prices twice: Never, then Ask me first); a click picks a rule.
+ */
 export function RxRules({ it }) {
   const r = it.v3.rules;
+  const ref = useRef(null);
+  const reduce = !!useReducedMotion();
+  const inView = useInViewport(ref, { threshold: 0.3 });
+  const visible = usePageVisible();
+  const [i, setI] = useState(0);
+  const [tick, setTick] = useState(0); // restarts the timer after a click
+  const sc = r.scenes[i];
+
+  useEffect(() => {
+    if (reduce || !inView || !visible) return undefined;
+    const id = setTimeout(() => setI((x) => (x + 1) % r.scenes.length), SCENE_MS);
+    return () => clearTimeout(id);
+  }, [i, tick, reduce, inView, visible, r.scenes.length]);
+
+  // the value each setting shows: final prices follows the scene on screen, and stays where it was left
+  const [price, setPrice] = useState(0);
+  useEffect(() => {
+    if (sc.row === 'price') setPrice(sc.value);
+  }, [sc]);
+
+  // a click shows that rule (on final prices, a second click flips the switch) and restarts the timer
+  const pick = (key) => {
+    const at = key === 'price' && sc.row === 'price' ? r.scenes.findIndex((x) => x.row === 'price' && x.value !== sc.value) : r.scenes.findIndex((x) => x.row === key);
+    setI(at);
+    setTick((x) => x + 1);
+  };
+  const go = (to) => {
+    setI((to + r.scenes.length) % r.scenes.length);
+    setTick((x) => x + 1);
+  };
+
   return (
     <section data-nav-theme="light" aria-labelledby="rx-rules-title" className="section relative pt-0">
       <div className="shell">
-        <SectionHeader id="rx-rules-title" eyebrow={r.eyebrow} titleA={r.titleA} titleB={r.titleB} layout="split" />
-        <RevealGroup className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2 md:mt-14 lg:grid-cols-4 lg:gap-4" amount={0.2}>
-          {r.items.map((x) => {
-            const Icon = RULE_ICONS[x.icon] || Scale;
-            return (
-              <RevealItem key={x.title} as="article" className="flex gap-3.5 rounded-[22px] bg-white p-4 shadow-[0_0_0_1px_rgba(10,15,14,0.06)] sm:block sm:p-5">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[13px] bg-[linear-gradient(140deg,#FFF1E6,#FFE3C4)] text-[#D9481C]">
-                  <Icon className="h-[19px] w-[19px]" strokeWidth={1.8} aria-hidden="true" />
-                </span>
-                <span className="block">
-                  <span className="block text-[15px] font-medium tracking-[-0.01em] text-ink sm:mt-4 sm:text-[16px]">{x.title}</span>
-                  <span className="mt-1 block text-[13.5px] leading-relaxed text-graphite sm:text-[14px]">{x.text}</span>
-                </span>
-              </RevealItem>
-            );
-          })}
-        </RevealGroup>
+        <div ref={ref} className="canvas canvas-grain relative grid gap-6 overflow-hidden bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] p-4 xs:p-5 md:p-8 lg:grid-cols-[minmax(340px,420px)_minmax(0,1fr)] lg:items-center lg:gap-12 lg:p-10 xl:gap-16 xl:px-14">
+          <div aria-hidden="true" className="pointer-events-none absolute left-[8%] top-[-12%] h-[60%] w-[40%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.4),rgba(255,200,87,0))] blur-2xl" />
+
+          {/* the headline and the rule in force (first on phones) */}
+          <div className="relative min-w-0 lg:col-start-2 lg:row-start-1">
+            <h2 id="rx-rules-title" className="text-[clamp(28px,2.6vw,42px)] font-medium leading-[1.08] tracking-[-0.022em] text-ink">
+              {r.titleA} <span className="sm:block">{r.titleB}</span>
+            </h2>
+            <p className="pretty mt-3 max-w-[34em] text-[15px] leading-[1.6] text-graphite md:text-[15.5px]">{r.text}</p>
+            <div className="mt-5 lg:hidden">
+              <PlaybookStepper r={r} sc={sc} i={i} price={price} go={go} reduce={reduce} />
+            </div>
+            <div className="mt-5 min-h-[438px] max-w-[600px] xs:min-h-[400px] sm:min-h-[346px] lg:mt-8">
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.div key={i} exit={reduce ? undefined : { opacity: 0, transition: { duration: 0.2 } }}>
+                  <RuleFlow r={r} sc={sc} reduce={reduce} />
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </div>
+
+          {/* the broker's playbook (laptops; phones and tablets get the stepper above the rule) */}
+          <div className="relative hidden rounded-[24px] bg-white/80 p-3 shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_30px_60px_-40px_rgba(90,50,20,0.4)] backdrop-blur-sm lg:col-start-1 lg:row-start-1 lg:block lg:p-4">
+            <div className="flex items-center justify-between gap-3 px-3 pb-3 pt-1.5">
+              <span>
+                <span className="block text-[15px] font-medium text-ink">{r.panel.title}</span>
+                <span className="block text-[12px] text-slate">{r.panel.sub}</span>
+              </span>
+              <span className="rounded-full bg-[#E4F4E8] px-2.5 py-1 text-[11.5px] font-medium text-[#2E7A48]">{r.panel.edited}</span>
+            </div>
+            {r.groups.map((g) => (
+              <div key={g.key} className="border-t border-ink/[0.06] pt-2 first-of-type:border-0">
+                <p className="t-data px-3 pb-1 pt-1 text-[10.5px] uppercase tracking-[0.08em] text-ink/40">{g.label}</p>
+                {r.rows
+                  .filter((x) => x.group === g.key)
+                  .map((x) => (
+                    <PlaybookRow key={x.key} row={x} active={sc.row === x.key} value={x.key === 'price' ? price : 0} onPick={() => pick(x.key)} reduce={reduce} />
+                  ))}
+              </div>
+            ))}
+          </div>
+        </div>
+        <p className="mt-4 text-[12px] text-slate">{r.note}</p>
       </div>
     </section>
+  );
+}
+
+// how long each job stays in the spotlight, and when inside it the job resolves (ms)
+const AFTER_MS = 3400;
+const AFTER_RESOLVE = 1100;
+
+const STAGE_TONES = {
+  blue: 'bg-[#E8EEF9] text-[#3A5A9A]',
+  amber: 'bg-[#FFF1E4] text-[#B4471A]',
+  slate: 'bg-ink/[0.06] text-ink/60',
+  orange: 'bg-[#FFE7D3] text-[#C2410C]',
+};
+
+/** What every job card opens with: the pipeline stage, when it happens, the job's name and one line on what Aurora does. */
+function JobHead({ x, on }) {
+  return (
+    <div>
+      <p className="flex items-center justify-between gap-3">
+        <span className={cn('inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium', STAGE_TONES[x.tone] || STAGE_TONES.slate)}>
+          <span className="h-1.5 w-1.5 rounded-full bg-current" aria-hidden="true" />
+          {x.stage}
+        </span>
+        <span className={cn('t-data text-[10.5px] uppercase tracking-[0.08em] transition-colors', on ? 'text-[#D9481C]' : 'text-ink/35')}>{x.when}</span>
+      </p>
+      <p className="mt-2.5 text-[17px] font-medium leading-snug tracking-[-0.01em] text-ink">{x.title}</p>
+      <p className="mt-1 text-[13px] leading-snug text-graphite">{x.text}</p>
+    </div>
+  );
+}
+
+/** Showing confirmation: the reminder text and the buyer's C, then the showing on the day's calendar turns confirmed. */
+function JobRemind({ x, on, done, reduce }) {
+  return (
+    <div className="flex h-full flex-col">
+      <JobHead x={x} on={on} />
+      {/* the text thread */}
+      <div className="mt-4 rounded-[16px] bg-[#F6F1E8] p-3">
+        <p className="rounded-[14px] rounded-bl-[4px] bg-white px-3 py-2 text-[13px] leading-snug text-ink shadow-[0_1px_2px_rgba(10,15,14,0.06)]">
+          <span className="mb-0.5 flex items-center gap-1.5 text-[10.5px] font-medium uppercase tracking-[0.06em] text-ink/40">
+            <img src="/brand/aurora-symbol-color.svg" alt="" width="11" height="11" className="h-[11px] w-[11px]" />
+            Aurora
+          </span>
+          {x.msg}
+        </p>
+        <div className="mt-2 flex h-7 justify-end">
+          <AnimatePresence>
+            {done ? (
+              <motion.span key="c" initial={reduce ? false : { opacity: 0, y: 8, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }} className="rounded-[14px] rounded-br-[4px] bg-[#2F7CF6] px-3 py-1 text-[13px] font-medium text-white">
+                {x.reply}
+              </motion.span>
+            ) : null}
+          </AnimatePresence>
+        </div>
+      </div>
+      {/* the broker's calendar for that day */}
+      <div className="mt-3 flex-1 rounded-[16px] p-3 shadow-[inset_0_0_0_1px_rgba(10,15,14,0.08)]">
+        <p className="text-[11.5px] font-medium text-ink/50">{x.event.day}</p>
+        <div className="mt-2 grid gap-0">
+          {x.hours.map((h) => (
+            <div key={h} className="flex items-start gap-2 border-t border-ink/[0.06] py-1.5 first:border-0">
+              <span className="t-data w-10 shrink-0 pt-0.5 text-[10.5px] text-ink/35">{h}</span>
+              {h === x.event.time ? (
+                <span className={cn('block min-w-0 flex-1 rounded-[10px] px-2.5 py-1.5 transition-colors duration-500', done ? 'bg-[#E4F4E8] shadow-[inset_3px_0_0_#2E9A58]' : 'bg-[#FFF8E6] shadow-[inset_3px_0_0_#E3A93B]')}>
+                  <span className="block truncate text-[12.5px] font-medium text-ink">{x.event.title}</span>
+                  <span className="mt-0.5 flex items-center justify-between gap-2">
+                    <span className="truncate text-[11px] text-slate">{x.event.who}</span>
+                  <span className={cn('inline-flex shrink-0 items-center gap-1 text-[11px] font-medium', done ? 'text-[#2E7A48]' : 'text-[#A46A12]')}>
+                    {done ? <Check className="h-3 w-3" strokeWidth={2.6} aria-hidden="true" /> : <Clock className="h-3 w-3" strokeWidth={2.2} aria-hidden="true" />}
+                    {done ? x.result : x.pending}
+                  </span>
+                  </span>
+                </span>
+              ) : (
+                <span className="h-6 flex-1" />
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** Follow-up cadence: where this touch sits in the cadence, two homes that match, and the buyer hearts one. */
+function JobNurture({ x, on, done, reduce }) {
+  return (
+    <div className="flex h-full flex-col gap-3">
+      <div className="flex min-w-0 flex-col">
+        <JobHead x={x} on={on} />
+        {/* the cadence: where this message sits */}
+        <div className="mt-3 flex items-center gap-1" aria-hidden="true">
+          {x.cadence.map((c, i) => (
+            <React.Fragment key={c}>
+              <span className={cn('whitespace-nowrap rounded-full px-1.5 py-0.5 text-[10.5px] font-medium transition-colors', i < x.at ? 'bg-ink/[0.07] text-ink/50' : i === x.at ? 'bg-[#F25C2A] text-white' : 'text-ink/30 shadow-[inset_0_0_0_1px_rgba(10,15,14,0.1)]')}>{c}</span>
+              {i < x.cadence.length - 1 ? <span className="h-px w-1.5 shrink-0 bg-ink/15" /> : null}
+            </React.Fragment>
+          ))}
+        </div>
+        <p className="mt-3 rounded-[14px] rounded-bl-[4px] bg-[#F6F1E8] px-3 py-2 text-[13px] leading-snug text-ink">
+          <span className="mb-0.5 flex items-center gap-1.5 text-[10.5px] font-medium uppercase tracking-[0.06em] text-ink/40">
+            <img src="/brand/aurora-symbol-color.svg" alt="" width="11" height="11" className="h-[11px] w-[11px]" />
+            Aurora
+          </span>
+          {x.msg}
+        </p>
+      </div>
+      <div className="mt-auto flex flex-col">
+        <div className="grid grid-cols-2 gap-2">
+          {x.homes.map((h, i) => {
+            const picked = done && i === x.pick;
+            return (
+              <div key={h.price} className={cn('relative overflow-hidden rounded-[14px] bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.08)] transition-transform duration-500', picked ? '-translate-y-1 shadow-[0_0_0_2px_#F25C2A,0_16px_30px_-18px_rgba(242,92,42,0.6)]' : '')}>
+                <img src={h.image} alt="" className="h-[78px] w-full object-cover" loading="lazy" decoding="async" />
+                <span className={cn('absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full transition-colors duration-300', picked ? 'bg-[#F25C2A] text-white' : 'bg-white/90 text-ink/50')}>
+                  <motion.span animate={picked && !reduce ? { scale: [1, 1.35, 1] } : { scale: 1 }} transition={{ duration: 0.4 }}>
+                    <Heart className={cn('h-3.5 w-3.5', picked ? 'fill-current' : '')} strokeWidth={2.2} aria-hidden="true" />
+                  </motion.span>
+                </span>
+                <p className="px-2.5 pb-2 pt-1.5">
+                  <span className="block text-[14px] font-medium text-ink">{h.price}</span>
+                  <span className="block truncate text-[11px] text-slate">{h.meta}</span>
+                </p>
+              </div>
+            );
+          })}
+        </div>
+        <p className={cn('mt-2.5 flex h-6 items-center gap-1.5 text-[12.5px] font-medium text-[#B4471A] transition-opacity duration-500', done ? 'opacity-100' : 'opacity-0')}>
+          <CalendarCheck className="h-3.5 w-3.5" strokeWidth={2.2} aria-hidden="true" />
+          {x.result}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/** Database reactivation: a list of leads gone quiet in the CRM. Aurora writes to each; the ones who answer flip to Active. */
+function JobRevive({ x, on, done, reduce }) {
+  return (
+    <div className="flex h-full flex-col">
+      <JobHead x={x} on={on} />
+      {/* the CRM list */}
+      <div className="mb-3 mt-3 rounded-[14px] p-1.5 shadow-[inset_0_0_0_1px_rgba(10,15,14,0.08)]">
+        <p className="px-1.5 pb-1 pt-0.5 text-[10.5px] font-medium uppercase tracking-[0.06em] text-ink/40">{x.list}</p>
+        <ul>
+          {x.leads.map((l, i) => {
+            const live = done && l.replied;
+            return (
+              <li key={l.name} className={cn('flex items-center gap-2.5 rounded-[10px] px-1.5 py-1.5 transition-colors duration-500', live ? 'bg-[#FFF3E8]' : '')}>
+                <span className={cn('relative flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[10.5px] font-medium transition-colors duration-500', live ? 'bg-ink text-white' : 'bg-ink/10 text-ink/45')}>
+                  {l.initials}
+                  {live && !reduce ? <span className="ring-ping absolute inset-0 rounded-full bg-[#F25C2A]/30" /> : null}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className={cn('block truncate text-[13px] font-medium leading-tight transition-colors', live ? 'text-ink' : 'text-ink/55')}>{l.name}</span>
+                  <span className={cn('block truncate text-[11px] leading-tight transition-colors', live ? 'text-[#2E7A48]' : 'text-slate')}>{live ? x.after : done ? x.sent : l.before}</span>
+                </span>
+                <span className="relative h-[22px] w-[54px] shrink-0 [perspective:400px]">
+                  <motion.span
+                    className="absolute inset-0 [transform-style:preserve-3d]"
+                    animate={{ rotateX: live ? 180 : 0 }}
+                    transition={{ duration: reduce ? 0 : 0.6, ease: EASE, delay: reduce || !live ? 0 : 0.18 * i }}
+                  >
+                    <span className="absolute inset-0 flex items-center justify-center rounded-full bg-ink/[0.07] text-[11px] font-medium text-ink/50 [backface-visibility:hidden]">{x.cold}</span>
+                    <span className="absolute inset-0 flex items-center justify-center rounded-full bg-[#E4F4E8] text-[11px] font-medium text-[#2E7A48] [backface-visibility:hidden] [transform:rotateX(180deg)]">{x.active}</span>
+                  </motion.span>
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+      {/* one of the threads */}
+      <div className="mt-auto flex flex-col rounded-[16px] bg-[#F6F1E8] p-3">
+        <p className="rounded-[14px] rounded-bl-[4px] bg-white px-3 py-2 text-[13px] leading-snug text-ink shadow-[0_1px_2px_rgba(10,15,14,0.06)]">
+          <span className="mb-0.5 flex items-center gap-1.5 text-[10.5px] font-medium uppercase tracking-[0.06em] text-ink/40">
+            <img src="/brand/aurora-symbol-color.svg" alt="" width="11" height="11" className="h-[11px] w-[11px]" />
+            Aurora
+          </span>
+          {x.msg}
+        </p>
+        <div className="mt-2 flex min-h-[30px] justify-end">
+          <AnimatePresence>
+            {done ? (
+              <motion.span key="r" initial={reduce ? false : { opacity: 0, y: 8, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ delay: reduce ? 0 : 0.25 }} className="rounded-[14px] rounded-br-[4px] bg-ink px-3 py-1.5 text-[13px] text-white">
+                {x.reply}
+              </motion.span>
+            ) : null}
+          </AnimatePresence>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** Listing appointments: a homeowner wants a valuation; Aurora offers times and one is booked with the broker. */
+function JobSeller({ x, on, done, reduce }) {
+  return (
+    <div className="flex h-full flex-col">
+      <JobHead x={x} on={on} />
+      <p className="mt-3 flex items-center gap-2.5">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-[#F6F1E8] text-[#D9481C]">
+          <House className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
+        </span>
+        <span className="min-w-0">
+          <span className="block text-[14px] font-medium text-ink">{x.address}</span>
+          <span className="block text-[11.5px] text-slate">{x.tag}</span>
+        </span>
+      </p>
+      <div className="mt-3 rounded-[16px] bg-[#F6F1E8] p-3">
+      <p className="rounded-[14px] rounded-bl-[4px] bg-white px-3 py-2 text-[13px] leading-snug text-ink shadow-[0_1px_2px_rgba(10,15,14,0.06)]">
+          <span className="mb-0.5 flex items-center gap-1.5 text-[10.5px] font-medium uppercase tracking-[0.06em] text-ink/40">
+            <img src="/brand/aurora-symbol-color.svg" alt="" width="11" height="11" className="h-[11px] w-[11px]" />
+            Aurora
+          </span>
+          {x.msg}
+      </p>
+      <div className="mt-2 flex flex-wrap gap-1.5">
+        {x.slots.map((sl, i) => {
+          const picked = done && i === x.pick;
+          return (
+            <span key={sl} className={cn('relative rounded-[10px] px-2.5 py-1.5 text-[12px] font-medium transition-colors duration-300', picked ? 'text-white' : 'bg-white/70 text-ink/60')}>
+              {picked ? <motion.span layoutId={reduce ? undefined : 'seller-slot'} className="absolute inset-0 rounded-[10px] bg-ink" /> : null}
+              <span className="relative">{sl}</span>
+            </span>
+          );
+        })}
+      </div>
+      </div>
+      <AnimatePresence>
+        {done ? (
+          <motion.p key="r" initial={reduce ? false : { opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: reduce ? 0 : 0.3 }} className="mt-auto flex items-center gap-2 pt-3 text-[12.5px] font-medium text-[#2E7A48]">
+            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-ink text-[10px] text-white">M</span>
+            {x.result}
+          </motion.p>
+        ) : null}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+const JOBS = { remind: JobRemind, nurture: JobNurture, revive: JobRevive, seller: JobSeller };
+
+// The story of one goal, beat by beat (ms): the weeks so far and the dip, the cause, the change, then the weeks after it
+const BEAT_AT = [0, 2700, 5200, 7700];
+const GOAL_END = 12200;
+const WEEK_STEP = 0.32; // seconds between weeks as they are drawn
+
+/** Weeks that meet the goal, and the first week from which every week meets it. */
+function goalState(g) {
+  const met = g.values.map((v) => v >= g.goal);
+  let since = met.length;
+  for (let i = met.length - 1; i >= 0 && met[i]; i -= 1) since = i;
+  return { met, since: since < met.length ? since : -1 };
+}
+
+/**
+ * The KPI Agent, built around the brokerage's own goals. Each goal plays as a short story in step with its chart, the
+ * way the platform page does it: the weeks up to the dip are drawn, the cause is named, the change drops in as a
+ * marker, then the weeks after it are drawn one by one until they pass the goal. Last year's weeks stand beside them
+ * the whole time. Then the next goal; a tap holds one and replays it. Off screen or with reduced motion: the whole run.
+ */
+function KpiGoals({ a, run, reduce, titleId }) {
+  const K = a.kpi;
+  const [g, setG] = useState(0);
+  const [held, setHeld] = useState(false);
+  const [cycle, setCycle] = useState(0);
+  const [beat, setBeat] = useState(3);
+  useEffect(() => {
+    if (!run) {
+      setBeat(3);
+      return undefined;
+    }
+    setBeat(0);
+    const ids = BEAT_AT.slice(1).map((t, i) => setTimeout(() => setBeat(i + 1), t));
+    ids.push(
+      setTimeout(() => {
+        if (held) setCycle((c) => c + 1);
+        else setG((x) => (x + 1) % K.goals.length);
+      }, GOAL_END)
+    );
+    return () => ids.forEach(clearTimeout);
+  }, [g, cycle, run, held, K.goals.length]);
+
+  const goal = K.goals[g];
+  const { met, since } = goalState(goal);
+  const n = goal.values.length;
+  const at = goal.change.after;
+  const cut = ((at + 1) / n) * 100;
+  const playing = run && !reduce;
+  const story = [
+    { tag: K.weekLabel + ' ' + (at + 1), text: goal.dip, tone: 'text-[#B4471A]' },
+    { tag: K.story.cause, text: goal.cause, tone: 'text-[#D9481C]' },
+    { tag: K.story.change, text: goal.change.text, who: goal.change.who, tone: 'text-[#D9481C]' },
+    { tag: K.story.result, text: K.result.replace('{n}', since + 1), tone: 'text-[#2E7A48]' },
+  ][beat];
+  const ink = (on) => ({ opacity: on ? 1 : 0, transition: 'opacity 0.45s ease' });
+
+  return (
+    <div className="relative grid gap-6 lg:grid-cols-[minmax(0,340px)_minmax(0,1fr)] lg:gap-10">
+      {/* what it is, and the goals */}
+      <div className="flex min-w-0 flex-col">
+        <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-ink px-2.5 py-1 text-[11.5px] font-medium text-white">
+          <TrendingUp className="h-3.5 w-3.5" strokeWidth={2.2} aria-hidden="true" />
+          {K.badge}
+        </span>
+        <h2 id={titleId} className="mt-4 text-[clamp(26px,2.2vw,34px)] font-medium leading-[1.1] tracking-[-0.022em] text-ink">{K.title}</h2>
+        <p className="pretty mt-3 text-[15px] leading-[1.6] text-graphite">{K.text}</p>
+        {/* the goals by area: pills that wrap under 1024 px, a list beside the chart on laptops */}
+        <div role="tablist" aria-label={K.badge} className="mt-4 flex flex-wrap gap-1.5 lg:mt-auto lg:grid lg:gap-0 lg:pt-3">
+          {K.goals.map((x, i) => {
+            const cur = i === g;
+            return (
+              <button
+                key={x.key}
+                type="button"
+                role="tab"
+                aria-selected={cur}
+                aria-label={x.area + ': ' + x.name}
+                onClick={() => {
+                  setG(i);
+                  setHeld(true);
+                  setCycle((c) => c + 1);
+                }}
+                className={cn(
+                  'flex items-center gap-3 rounded-full px-3 py-1.5 text-left transition-colors duration-300 lg:rounded-[10px] lg:py-[5px]',
+                  cur ? 'bg-[#F6F1E8]' : 'shadow-[inset_0_0_0_1px_rgba(10,15,14,0.1)] hover:bg-ink/[0.03] lg:shadow-none'
+                )}
+              >
+                <span className={cn('whitespace-nowrap text-[12.5px] font-medium transition-colors lg:w-[78px] lg:shrink-0 lg:text-[10.5px] lg:uppercase lg:tracking-[0.06em]', cur ? 'text-ink lg:text-[#C2410C]' : 'text-ink/55 lg:text-ink/40')}>{x.area}</span>
+                <span className={cn('hidden min-w-0 truncate text-[13.5px] font-medium transition-colors lg:block', cur ? 'text-ink' : 'text-ink/55')}>{x.name}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* the goal, week by week */}
+      <div className="flex min-w-0 flex-col rounded-[20px] bg-[#FBF8F3] p-3.5 shadow-[inset_0_0_0_1px_rgba(10,15,14,0.05)] md:p-5">
+        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+          <p className="min-w-0">
+            <span className="block text-[15px] font-medium text-ink">
+              <span className="t-data mr-2 text-[10.5px] uppercase tracking-[0.06em] text-[#C2410C]">{goal.area}</span>
+              {goal.name}
+            </span>
+            <span className="mt-0.5 flex items-center gap-1.5 text-[12px] text-slate">
+              <span aria-hidden="true" className="w-4 border-t-[1.5px] border-dashed border-ink/45" />
+              {K.legend.goal}: {goal.target}
+            </span>
+          </p>
+          <span
+            className="inline-flex items-center gap-1 rounded-full bg-[#E4F4E8] px-2.5 py-1 text-[11.5px] font-medium text-[#2E7A48]"
+            style={{ opacity: beat === 3 && since >= 0 ? 1 : 0, transition: beat === 3 && playing ? `opacity 0.4s ease ${(n - at - 1) * WEEK_STEP + 0.4}s` : 'opacity 0.2s ease' }}
+          >
+            <Check className="h-3 w-3" strokeWidth={2.6} aria-hidden="true" />
+            {K.since} {since + 1}
+          </span>
+        </div>
+
+        <div className="relative mt-4 h-[140px] sm:h-[170px] lg:h-auto lg:min-h-[190px] lg:flex-1" role="img" aria-label={goal.area + ', ' + goal.name + ', ' + K.goalLabel.toLowerCase() + ' ' + goal.target.toLowerCase() + (since >= 0 ? '. ' + K.since + ' ' + (since + 1) + '.' : '.')}>
+          {/* the weeks: last year stands from the start, this year is drawn in step with the story */}
+          <div key={goal.key + cycle} className="absolute inset-0 grid items-end" style={{ gridTemplateColumns: `repeat(${n}, minmax(0, 1fr))` }}>
+            {goal.values.map((v, i) => {
+              const shown = beat >= 3 || i <= at;
+              const delay = !playing ? 0 : i <= at ? 0.25 + i * WEEK_STEP : (i - at - 1) * WEEK_STEP;
+              return (
+                <span key={i} className="flex h-full items-end justify-center gap-[3px] sm:gap-1">
+                  <motion.span
+                    className="block w-[30%] max-w-[18px] rounded-t-[5px] rounded-b-[2px] bg-[#D3C5B0]"
+                    style={{ height: goal.last[i] * 100 + '%', transformOrigin: 'bottom' }}
+                    initial={playing ? { scaleY: 0 } : false}
+                    animate={{ scaleY: 1 }}
+                    transition={{ duration: 0.4, ease: EASE, delay: playing ? i * 0.03 : 0 }}
+                  />
+                  <motion.span
+                    className={cn(
+                      'block w-[30%] max-w-[18px] rounded-t-[5px] rounded-b-[2px] transition-shadow duration-500',
+                      met[i] ? 'bg-[linear-gradient(180deg,#FF8A3D,#F25C2A)]' : 'bg-[#F25C2A]/55',
+                      i === at && beat >= 1 && beat < 3 ? 'shadow-[0_0_0_2px_#FBF8F3,0_0_0_3.5px_#F25C2A]' : ''
+                    )}
+                    style={{ height: v * 100 + '%', transformOrigin: 'bottom' }}
+                    initial={playing ? { scaleY: 0 } : false}
+                    animate={{ scaleY: shown ? 1 : 0 }}
+                    transition={{ duration: 0.5, ease: EASE, delay }}
+                  />
+                </span>
+              );
+            })}
+          </div>
+          {/* the goal */}
+          <span aria-hidden="true" className="absolute inset-x-0 border-t-[1.5px] border-dashed border-ink/45 transition-[bottom] duration-500" style={{ bottom: goal.goal * 100 + '%' }} />
+          {/* the dip, named while its cause is found */}
+          <span
+            aria-hidden="true"
+            className="absolute -translate-x-1/2 whitespace-nowrap rounded-full bg-[#FFF1E4] px-2 py-0.5 text-[10.5px] font-medium text-[#B4471A]"
+            style={{ left: ((at + 0.5) / n) * 100 + '%', bottom: `calc(${goal.values[at] * 100}% + 8px)`, ...ink(beat === 1) }}
+          >
+            ↓ {K.slipping}
+          </span>
+          {/* the change */}
+          <span aria-hidden="true" className="absolute -top-1 bottom-0 border-l-[1.5px] border-dotted border-[#F25C2A]" style={{ left: cut + '%', ...ink(beat >= 2) }}>
+            <span className="absolute -left-[5px] -top-1 h-2.5 w-2.5 rounded-full bg-[#F25C2A] shadow-[0_0_0_3px_#FBF8F3]" />
+          </span>
+        </div>
+        <div aria-hidden="true" className="mt-1.5 grid border-t border-ink/10 pt-1.5" style={{ gridTemplateColumns: `repeat(${n}, minmax(0, 1fr))` }}>
+          {K.weeks.map((w) => (
+            <span key={w} className="t-data text-center text-[10.5px] text-ink/40">
+              {w}
+            </span>
+          ))}
+        </div>
+
+        <p aria-hidden="true" className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-slate">
+          <span className="inline-flex items-center gap-1.5">
+            <span className="h-2.5 w-2.5 rounded-[3px] bg-[#F25C2A]" />
+            {K.legend.now}
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span className="h-2.5 w-2.5 rounded-[3px] bg-[#D3C5B0]" />
+            {K.legend.last}
+          </span>
+        </p>
+
+        {/* what is happening at this beat */}
+        <div className="relative mt-3 min-h-[58px]" aria-live="polite">
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={goal.key + cycle + '-' + beat}
+              initial={playing ? { opacity: 0, y: 6 } : false}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4, transition: { duration: 0.2 } }}
+              transition={{ duration: 0.4, ease: EASE }}
+              className="rounded-[14px] bg-white px-3 py-2.5 shadow-[0_0_0_1px_rgba(10,15,14,0.05)]"
+            >
+              <p className={cn('t-data text-[10.5px] uppercase tracking-[0.08em]', story.tone)}>
+                {String(beat + 1).padStart(2, '0')} · {story.tag}
+              </p>
+              <p className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] leading-snug text-ink">
+                <span className="min-w-0">{story.text}</span>
+                {story.who ? <span className="rounded-full bg-[#E4F4E8] px-2 py-0.5 text-[11px] font-medium text-[#2E7A48]">{story.who}</span> : null}
+              </p>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * After the first reply: four jobs Aurora keeps doing for a lead, each drawn as the thing it is, in four equal cards. A spotlight
+ * moves from one to the next, and each resolves in its own way (a stamp, a heart, a status flip, a slot).
+ */
+export function RxAfter({ it }) {
+  const a = it.v3.after;
+  const ref = useRef(null);
+  const reduce = !!useReducedMotion();
+  const inView = useInViewport(ref, { threshold: 0.25 });
+  const visible = usePageVisible();
+  const run = !reduce && inView && visible;
+
+  // the spotlight: job j is on; it resolves AFTER_RESOLVE ms in; every job before it stays resolved
+  const n = a.steps.length;
+  const [j, setJ] = useState(0);
+  const [resolved, setResolved] = useState(false);
+  useEffect(() => {
+    if (!run) return undefined;
+    setResolved(false);
+    const r = setTimeout(() => setResolved(true), AFTER_RESOLVE);
+    const nx = setTimeout(() => setJ((x) => (x + 1) % (n + 1)), AFTER_MS);
+    return () => {
+      clearTimeout(r);
+      clearTimeout(nx);
+    };
+  }, [j, run, n]);
+
+  const show = (d) => (reduce ? {} : { initial: { opacity: 0, y: 16 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, amount: 'some' }, transition: { duration: 0.6, ease: EASE, delay: d } });
+
+  return (
+    <section data-nav-theme="light" aria-labelledby="rx-after-title" className="section relative pt-0">
+      <div className="shell">
+        <div ref={ref} className="canvas canvas-grain relative overflow-hidden bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] p-4 xs:p-5 md:p-8 lg:px-10 lg:py-8 xl:px-14">
+          <div aria-hidden="true" className="pointer-events-none absolute right-[4%] top-[-14%] h-[55%] w-[40%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.4),rgba(255,200,87,0))] blur-2xl" />
+
+          <div className="relative grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)] lg:items-end lg:gap-12">
+            <h2 id="rx-after-title" className="text-[clamp(28px,2.4vw,36px)] font-medium leading-[1.08] tracking-[-0.022em] text-ink">
+              {a.titleA} <span className="sm:block">{a.titleB}</span>
+            </h2>
+            <p className="pretty text-[15px] leading-[1.6] text-graphite md:text-[15.5px]">{a.text}</p>
+          </div>
+
+          {/* the jobs: four equal cards on laptops, two by two on tablets, a row to swipe on phones */}
+          <ol className="relative mt-6 grid gap-3 max-sm:-mx-4 max-sm:flex max-sm:snap-x max-sm:snap-mandatory max-sm:overflow-x-auto max-sm:px-4 max-sm:pb-1 max-sm:[scrollbar-width:none] xs:max-sm:-mx-5 xs:max-sm:px-5 sm:grid-cols-2 lg:mt-7 lg:grid-cols-4 lg:gap-3.5 [&::-webkit-scrollbar]:hidden">
+            {a.steps.map((x, i) => {
+              const Job = JOBS[x.key];
+              const on = run ? i === j : false;
+              const done = reduce || !run ? true : i < j || (i === j && resolved);
+              return (
+                <motion.li
+                  key={x.key}
+                  {...show(0.08 * i)}
+                  aria-label={x.when + ': ' + x.title + '. ' + x.text}
+                  className={cn(
+                    'relative rounded-[22px] p-4 transition-shadow duration-500 max-sm:w-[86%] max-sm:shrink-0 max-sm:snap-center',
+                    'bg-white',
+                    on ? 'shadow-[0_0_0_2px_#F25C2A,0_30px_60px_-34px_rgba(242,92,42,0.55)]' : 'shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_24px_48px_-36px_rgba(90,50,20,0.4)]'
+                  )}
+                >
+                  <Job x={x} on={on} done={done} reduce={reduce} />
+                </motion.li>
+              );
+            })}
+          </ol>
+
+        </div>
+        <p className="mt-4 text-[12px] text-slate">{a.note}</p>
+      </div>
+    </section>
+  );
+}
+
+/** The KPI Agent as its own section after the jobs: the brokerage's goals, each played as a story with its chart. */
+export function RxKpi({ it }) {
+  const a = it.v3.after;
+  const ref = useRef(null);
+  const reduce = !!useReducedMotion();
+  const inView = useInViewport(ref, { threshold: 0.3 });
+  const visible = usePageVisible();
+  const run = !reduce && inView && visible;
+  if (!a || !a.kpi) return null;
+  return (
+    <section data-nav-theme="light" aria-labelledby="rx-kpi-title" className="section relative pt-0">
+      <div className="shell">
+        <motion.div
+          ref={ref}
+          {...(reduce ? {} : { initial: { opacity: 0, y: 16 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, amount: 'some' }, transition: { duration: 0.6, ease: EASE } })}
+          className="canvas relative overflow-hidden bg-white p-4 shadow-[0_0_0_1px_rgba(10,15,14,0.07),0_30px_70px_-50px_rgba(90,50,20,0.45)] xs:p-5 md:p-8 lg:px-10 lg:py-9 xl:px-14"
+        >
+          <div aria-hidden="true" className="pointer-events-none absolute left-[-6%] top-[-30%] h-[70%] w-[38%] rounded-full bg-[radial-gradient(closest-side,rgba(255,159,69,0.16),rgba(255,159,69,0))] blur-2xl" />
+          <KpiGoals a={a} run={run} reduce={reduce} titleId="rx-kpi-title" />
+        </motion.div>
+        {a.kpi.note ? <p className="mt-4 text-[12px] text-slate">{a.kpi.note}</p> : null}
+      </div>
+    </section>
+  );
+}
+
+/** Under the FAQ: one line pointing to the platform page, for anyone who wants the whole picture. */
+export function RxFaqMore({ m }) {
+  const navigate = useNavigate();
+  return (
+    <p className="mt-6 flex flex-wrap items-center gap-x-2 gap-y-1 text-[14px] text-graphite">
+      {m.text}
+      <a
+        href={m.href}
+        onClick={(e) => {
+          if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
+          e.preventDefault();
+          navigate(m.href);
+        }}
+        className="inline-flex items-center gap-1 font-medium text-ink underline decoration-ink/25 underline-offset-4 hover:decoration-ink"
+      >
+        {m.link}
+        <ArrowRight className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
+      </a>
+    </p>
   );
 }

@@ -8,7 +8,7 @@ import { Reveal } from './primitives/MotionReveal';
  * answer is in the HTML for search and AI crawlers. Used on the home and industry pages.
  * @param {{ id: string, items: [string, string][], eyebrow?: string, title?: string, className?: string }} props
  */
-export default function Faq({ id, items, eyebrow = 'Questions', title = 'Good to know.', className = '' }) {
+export default function Faq({ id, items, eyebrow = 'Questions', title = 'Good to know.', className = '', more = null }) {
   return (
     <section id="faq" data-nav-theme="light" aria-labelledby={id} className={'section relative ' + className}>
       <div className="shell grid gap-10 lg:grid-cols-12">
@@ -27,6 +27,7 @@ export default function Faq({ id, items, eyebrow = 'Questions', title = 'Good to
               </details>
             ))}
           </div>
+          {more}
         </Reveal>
       </div>
     </section>

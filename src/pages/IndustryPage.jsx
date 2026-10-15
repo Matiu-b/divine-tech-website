@@ -16,7 +16,7 @@ import SmartLink from '@/components/home-v2/primitives/SmartLink';
 import { Reveal, RevealGroup, RevealItem, RevealLines } from '@/components/home-v2/primitives/MotionReveal';
 import { useLead } from '@/components/home-v2/LeadDrawer';
 import { onAnchorClick } from '@/components/home-v2/hooks';
-import { RxHero, RxRace, RxRules } from '@/components/industry/RealEstateV3';
+import { RxAfter, RxHero, RxKpi, RxRace, RxRules, RxFaqMore } from '@/components/industry/RealEstateV3';
 
 /** @param {any} props */
 function IndustryHero({ it }) {
@@ -267,9 +267,11 @@ export default function IndustryPage() {
         <RxHero it={it} />
         <RxRace it={it} />
         <RxRules it={it} />
-        <Faq id="ind-faq-title" items={it.faq} className="pt-0" />
+        {it.v3.after ? <RxAfter it={it} /> : null}
+        {it.v3.after ? <RxKpi it={it} /> : null}
+        <Faq id="ind-faq-title" items={it.faq} className="pt-0" more={it.v3.faqMore ? <RxFaqMore m={it.v3.faqMore} /> : null} />
         <OtherIndustries it={it} />
-        <FinalCTA industry={it.leadIndustry} />
+        <FinalCTA industry={it.leadIndustry} {...(it.v3.closing || {})} />
       </SiteLayout>
     );
   }
