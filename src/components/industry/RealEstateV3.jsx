@@ -2021,82 +2021,46 @@ export function RxFaqMore({ m, guide = null }) {
   );
 }
 
-// The closing illustration: a street of homes drawn in line, each a little bigger than the last (growth, in houses),
-// with the sun rising behind the tallest. In a 1200 x 360 frame; the lines draw themselves in when the section shows.
-const STREET_GROUND = 330;
-const STREET = Array.from({ length: 7 }, (_, i) => 0.5 + i * 0.09).reduce(
-  (acc, k, i) => {
-    const w = 150 * k;
-    const h = 108 * k;
-    const r = 68 * k;
-    const x = acc.x;
-    const g = STREET_GROUND;
-    const win = w * 0.18;
-    acc.houses.push({
-      i,
-      shell: `M${x} ${g}V${g - h}H${x + w}V${g}`,
-      roof: `M${x - 8 * k} ${g - h}L${x + w / 2} ${g - h - r}L${x + w + 8 * k} ${g - h}`,
-      door: `M${x + w * 0.42} ${g}V${g - h * 0.44}H${x + w * 0.58}V${g}`,
-      windows: [
-        { x: x + w * 0.14, y: g - h * 0.78, s: win },
-        { x: x + w * 0.68, y: g - h * 0.78, s: win },
-      ],
-    });
-    acc.x = x + w + 14 + 14 * k;
-    return acc;
-  },
-  { x: 24, houses: [] }
-).houses;
+// The closing illustration: one modern family home drawn as an architect's elevation, in thin Amber-to-Gold line:
+// a two-storey gable, a garage wing, a flat-roofed wing, lit windows. The lines draw themselves in when the section shows.
+const HOUSE_MAIN = ['M10 270H630', 'M86 270L58 298M184 270L206 298', 'M214 270V122M426 122V270', 'M196 128L320 56L444 128', 'M206 128L320 62L434 128', 'M378 93V70H398V104', 'M374 70H402', 'M62 270V176H214', 'M48 182L136 140L214 168', 'M86 270V198H184V270', 'M426 186H580V270', 'M420 180H586', 'M250 132H390V186H250Z', 'M216 192H424', 'M302 270V206H338V270', 'M286 198H354', 'M230 209H285V251H230Z', 'M356 209H411V251H356Z', 'M450 204H560V256H450Z'];
+const HOUSE_DETAIL = ['M296.7 132V186M343.3 132V186', 'M257.5 209V251M383.5 209V251', 'M486.7 204V256M523.3 204V256', 'M86 214H184M86 230H184M86 246H184', 'M98 205H172', 'M311 92H329V104H311Z', 'M330 214V262', 'M292 198V204M348 198V204', 'M216 270C216 258 230 254 236 262C240 254 252 258 250 270', 'M412 270C412 256 428 252 434 262C438 254 452 258 448 270', 'M582 270C582 262 594 258 600 266C604 260 614 262 612 270'];
+const HOUSE_BOARDS = 'M260 128V122M280 128V108M300 128V97M340 128V97M360 128V108M380 128V120';
+const HOUSE_LIT = [
+  [252, 134, 136, 50],
+  [452, 206, 106, 48],
+  [232, 211, 51, 38],
+];
 
-function StreetArt({ grow, reduce }) {
-  const draw = (delay) => ({
+function HouseArt({ grow, reduce }) {
+  const draw = (delay, dur = 1.2) => ({
     pathLength: 1,
     strokeDasharray: 1,
-    style: { strokeDashoffset: grow ? 0 : 1, transition: reduce ? 'none' : `stroke-dashoffset 1.4s cubic-bezier(0.65,0,0.35,1) ${delay}s` },
+    style: { strokeDashoffset: grow ? 0 : 1, transition: reduce ? 'none' : `stroke-dashoffset ${dur}s cubic-bezier(0.65,0,0.35,1) ${delay}s` },
   });
   return (
-    <svg viewBox="0 0 1200 360" className="block h-auto w-full" fill="none" aria-hidden="true">
+    <svg viewBox="0 0 640 300" className="block h-auto w-full" fill="none" aria-hidden="true">
       <defs>
-        <linearGradient id="rx-street-line" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1200" y2="0">
-          <stop offset="0" stopColor="#FF9F45" stopOpacity="0.3" />
-          <stop offset="1" stopColor="#FFC857" stopOpacity="0.9" />
+        <linearGradient id="rx-house-line" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="640" y2="0">
+          <stop offset="0" stopColor="#FF9F45" stopOpacity="0.55" />
+          <stop offset="1" stopColor="#FFC857" stopOpacity="0.95" />
         </linearGradient>
-        <radialGradient id="rx-street-sun" cx="0.5" cy="0.5" r="0.5">
-          <stop offset="0" stopColor="#FFC857" stopOpacity="0.55" />
-          <stop offset="0.55" stopColor="#F25C2A" stopOpacity="0.18" />
-          <stop offset="1" stopColor="#F25C2A" stopOpacity="0" />
-        </radialGradient>
       </defs>
-      {/* the sun rising behind the tallest house */}
-      <circle cx="1090" cy={STREET_GROUND - 120} r="150" fill="url(#rx-street-sun)" style={{ opacity: grow ? 1 : 0, transition: reduce ? 'none' : 'opacity 1.6s ease 0.6s' }} />
-      <circle cx="1090" cy={STREET_GROUND - 120} r="58" stroke="#FFC857" strokeOpacity="0.7" strokeWidth="1.5" {...draw(0.9)} />
-      <g stroke="url(#rx-street-line)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-        <path d={`M0 ${STREET_GROUND}H1200`} {...draw(0)} />
-        {STREET.map((h) => (
-          <g key={h.i}>
-            <path d={h.shell} {...draw(0.15 + h.i * 0.12)} />
-            <path d={h.roof} {...draw(0.3 + h.i * 0.12)} />
-            <path d={h.door} {...draw(0.45 + h.i * 0.12)} />
-            {h.windows.map((w, k) => {
-              const d = draw(0.5 + h.i * 0.12);
-              return (
-                <rect
-                  key={k}
-                  x={w.x}
-                  y={w.y}
-                  width={w.s}
-                  height={w.s}
-                  rx="1.5"
-                  fill="#FFC857"
-                  fillOpacity={grow ? 0.08 + h.i * 0.05 : 0}
-                  pathLength={1}
-                  strokeDasharray={1}
-                  style={{ ...d.style, transition: reduce ? 'none' : `${d.style.transition}, fill-opacity 0.8s ease ${0.9 + h.i * 0.12}s` }}
-                />
-              );
-            })}
-          </g>
+      <g fill="#FFC857" style={{ fillOpacity: grow ? 0.16 : 0, transition: reduce ? 'none' : 'fill-opacity 1s ease 1.9s' }}>
+        {HOUSE_LIT.map(([x, y, w, h]) => (
+          <rect key={x} x={x} y={y} width={w} height={h} />
         ))}
+      </g>
+      <g stroke="url(#rx-house-line)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        {HOUSE_MAIN.map((d, i) => (
+          <path key={i} d={d} {...draw(i * 0.07)} />
+        ))}
+      </g>
+      <g stroke="url(#rx-house-line)" strokeWidth="1" strokeOpacity="0.7" strokeLinecap="round">
+        {HOUSE_DETAIL.map((d, i) => (
+          <path key={i} d={d} {...draw(1 + i * 0.06, 0.9)} />
+        ))}
+        <path d={HOUSE_BOARDS} strokeOpacity="0.5" {...draw(1.6, 0.8)} />
       </g>
     </svg>
   );
@@ -2104,8 +2068,8 @@ function StreetArt({ grow, reduce }) {
 
 /**
  * The closing for a brokerage, in Aurora's colours only: an ink night with a warm dawn. On the left the headline, the
- * line under it and a street of homes drawn in line, each bigger than the last, the sun rising behind the tallest; on
- * the right the demo form in glass. Phones and tablets: headline, drawing, form.
+ * line under it and a family home drawn as an architect's elevation; on the right the demo form in glass. Phones and
+ * tablets: headline, drawing, form.
  */
 export function RxClosing({ it }) {
   const c = it.v3.closing;
@@ -2130,8 +2094,8 @@ export function RxClosing({ it }) {
             <RevealLines lines={[c.titleA, c.titleB]} lineClassNames={['', '']} />
           </h2>
           <p className="t-lead pretty mt-5 max-w-[32em] !text-white/70">{c.text}</p>
-          <div className="mt-8 max-w-[640px] lg:mt-12">
-            <StreetArt grow={grow} reduce={reduce} />
+          <div className="mt-8 max-w-[560px] lg:mt-12">
+            <HouseArt grow={grow} reduce={reduce} />
           </div>
         </div>
         <LiquidGlass tone="dark" className="rounded-[clamp(20px,2.2vw,28px)] p-5 xs:p-6 md:p-7">
