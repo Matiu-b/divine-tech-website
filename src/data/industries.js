@@ -301,19 +301,29 @@ export const industries = [
           // illustrative weekly values, 0 to 1 of the chart height; `better` says which side of the goal counts as met
           goals: [
             {
-              key: 'noshow', name: 'No-show rate', target: 'under 10%', better: 'lower', goal: 0.42,
+              key: 'sales', area: 'Sales', name: 'Showings booked', target: '12 a week', better: 'higher', goal: 0.68,
+              values: [0.42, 0.47, 0.44, 0.5, 0.7, 0.74, 0.77, 0.82],
+              change: { after: 3, text: 'Aurora offers two showing times in the first reply instead of asking when suits.' },
+            },
+            {
+              key: 'followup', area: 'Follow-up', name: 'Follow-up replies', target: '3 in 10 leads', better: 'higher', goal: 0.6,
+              values: [0.35, 0.38, 0.4, 0.62, 0.66, 0.7, 0.69, 0.74],
+              change: { after: 2, text: 'Follow-ups open with a new listing in the buyer’s range instead of a check-in.' },
+            },
+            {
+              key: 'service', area: 'Service', name: 'Buyer satisfaction', target: '4.5 out of 5', better: 'higher', goal: 0.72,
+              values: [0.6, 0.62, 0.58, 0.64, 0.75, 0.78, 0.8, 0.81],
+              change: { after: 3, text: 'Questions about offers go to a broker the same day.' },
+            },
+            {
+              key: 'ops', area: 'Operations', name: 'No-show rate', target: 'under 10%', better: 'lower', goal: 0.42,
               values: [0.62, 0.58, 0.66, 0.4, 0.34, 0.3, 0.32, 0.27],
               change: { after: 2, text: 'Showing reminders move from email to a text two hours before.', who: 'Approved by Marcus' },
             },
             {
-              key: 'speed', name: 'Speed to lead', target: 'under 1 minute', better: 'lower', goal: 0.45,
-              values: [0.8, 0.76, 0.72, 0.41, 0.36, 0.33, 0.3, 0.29],
-              change: { after: 2, text: 'After-hours calls are answered by Aurora’s voice agent instead of voicemail.' },
-            },
-            {
-              key: 'showings', name: 'Showings booked', target: '12 a week', better: 'higher', goal: 0.68,
-              values: [0.42, 0.47, 0.44, 0.5, 0.7, 0.74, 0.77, 0.82],
-              change: { after: 3, text: 'Aurora offers two showing times in the first reply instead of asking when suits.' },
+              key: 'docs', area: 'Documents', name: 'Signed before the tour', target: '9 in 10 tours', better: 'higher', goal: 0.78,
+              values: [0.5, 0.55, 0.52, 0.86, 0.9, 0.92, 0.95, 0.96],
+              change: { after: 2, text: 'The buyer agreement goes out for e-signature with the showing confirmation.' },
             },
           ],
         },
