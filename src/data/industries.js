@@ -351,11 +351,12 @@ export const industries = [
         titleB: 'Hear Aurora answer a buyer about it.',
         text: 'Pick one of your listings and we’ll prepare Aurora on it. Then you play the buyer: ask about the home, push on the price, and hear Aurora qualify you and book the showing.',
       },
-      // the tools Aurora connects to, with their brand icons (shown only to name them), and the blog guide beside them
+      // the tools Aurora connects to, by kind, with their brand icons (shown only to name them); each kind ends in 'and more'
       stack: {
         titleA: 'Works with the tools',
         titleB: 'your brokerage runs on.',
         text: 'During setup Aurora is connected to your CRM, your lead sources and your brokers’ calendars. Leads keep arriving where they do now, and every conversation is logged to the lead’s record.',
+        more: 'and more',
         groups: [
           {
             label: 'CRM',
@@ -382,13 +383,34 @@ export const industries = [
               { name: 'Outlook', icon: '/img/logos/outlook.svg' },
             ],
           },
+          {
+            label: 'Phone systems',
+            items: [
+              { name: 'RingCentral', icon: '/img/logos/ringcentral.svg', wordmark: true },
+              { name: '3CX', icon: '/img/logos/3cx.svg' },
+            ],
+          },
+          {
+            label: 'Email',
+            items: [
+              { name: 'Gmail', icon: '/img/logos/gmail.svg' },
+              { name: 'Outlook', icon: '/img/logos/outlook.svg' },
+            ],
+          },
+          {
+            label: 'Channels',
+            items: [
+              { name: 'Phone', mark: 'phone' },
+              { name: 'Text', glyph: 'text' },
+              { name: 'WhatsApp', mark: 'whatsapp' },
+              { name: 'Web chat', glyph: 'chat' },
+            ],
+          },
         ],
         languages: { label: 'Languages', items: ['English', 'Español'] },
         note: 'Product names and logos belong to their owners and are shown only to name the tools Aurora connects to.',
-        guide: 'From the blog',
-        read: 'Read the guide',
       },
-      faqMore: { text: 'Want the full picture of how Aurora works?', link: 'See the platform', href: '/platform' },
+      faqMore: { text: 'Want the full picture?', guide: 'Read our guide to AI lead follow-up for brokerages', link: 'see the platform', join: 'or', href: '/platform' },
     },
     meta: {
       title: 'AI ISA for Real Estate Brokerages | Aurora by Divine Tech AI',

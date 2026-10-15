@@ -227,12 +227,6 @@ function GoLive({ it }) {
   );
 }
 
-/** The industry guide from the blog, for the real estate page's tools section. */
-function guideFor(it) {
-  const post = it.article ? posts.find((p) => p.slug === it.article) : null;
-  return post ? { href: postPath(post.slug), image: `${post.image.base}-800.webp`, title: post.title, minutes: readMinutes(post.bodyHtml) } : null;
-}
-
 function OtherIndustries({ it }) {
   const others = industries.filter((o) => o.slug !== it.slug);
   return (
@@ -275,8 +269,8 @@ export default function IndustryPage() {
         <RxRules it={it} />
         {it.v3.after ? <RxAfter it={it} /> : null}
         {it.v3.after ? <RxKpi it={it} /> : null}
-        {it.v3.stack ? <RxStack it={it} guide={guideFor(it)} /> : null}
-        <Faq id="ind-faq-title" items={it.faq} className="pt-0" more={it.v3.faqMore ? <RxFaqMore m={it.v3.faqMore} /> : null} />
+        {it.v3.stack ? <RxStack it={it} /> : null}
+        <Faq id="ind-faq-title" items={it.faq} className="pt-0" more={it.v3.faqMore ? <RxFaqMore m={it.v3.faqMore} guide={it.article ? postPath(it.article) : null} /> : null} />
         <OtherIndustries it={it} />
         <FinalCTA industry={it.leadIndustry} {...(it.v3.closing || {})} />
       </SiteLayout>
