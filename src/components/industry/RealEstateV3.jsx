@@ -2039,7 +2039,7 @@ export function RxClosing({ it }) {
     <section ref={ref} id="contact" data-nav-theme="dark" aria-labelledby="contact-title" className="on-dark relative overflow-hidden bg-ink pb-[clamp(72px,7vw,112px)] pt-[clamp(88px,8vw,128px)] text-white">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
         {/* the dawn: Sun, Amber and Gold rising from below */}
-        <div className="absolute bottom-[-35%] left-1/2 h-[90%] w-[120%] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(closest-side,rgba(242,92,42,0.45),rgba(255,159,69,0.18)_45%,rgba(255,200,87,0)_75%)] blur-2xl" />
+        <div className="absolute bottom-[8%] left-1/2 h-[75%] w-[120%] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(closest-side,rgba(242,92,42,0.42),rgba(255,159,69,0.16)_45%,rgba(255,200,87,0)_75%)] blur-2xl" />
         <div className="absolute right-[-10%] top-[-20%] h-[60%] w-[50%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.12),rgba(255,200,87,0))] blur-2xl" />
         {/* growth bars behind the headline */}
         <div className="absolute right-[4%] top-[10%] flex h-[34%] w-[46%] items-end gap-[1.4%] max-lg:right-[-6%] max-lg:top-[3%] max-lg:h-[16%] max-lg:w-[70%] max-lg:opacity-50">
@@ -2052,6 +2052,8 @@ export function RxClosing({ it }) {
           ))}
         </div>
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
+        {/* the dawn settles back to plain ink before the footer, so the two meet without a seam */}
+        <div className="absolute inset-x-0 bottom-0 h-[38%] bg-gradient-to-b from-ink/0 via-ink/80 to-ink" />
       </div>
 
       <div className="shell relative">
