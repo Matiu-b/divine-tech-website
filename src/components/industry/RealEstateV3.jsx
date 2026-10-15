@@ -833,6 +833,74 @@ function SofaClip({ film, T, t, reduce, active, small = false }) {
   );
 }
 
+/** Minutes since 7:00 pm for a clock string like "9:46" or "9:10 PM". */
+const minutesOf = (clock) => {
+  const [h, m] = clock.replace(/ ?[AP]M$/, '').split(':').map(Number);
+  return (h - 7) * 60 + m;
+};
+const waited = (min) => (min < 60 ? min + 'm' : Math.floor(min / 60) + 'h ' + String(min % 60).padStart(2, '0') + 'm');
+
+/**
+ * Wide screens: who answered her, and how long the others have kept her waiting. Each agent joins the
+ * board when her message is sent; the brokerage with Aurora answers in seconds and books the tour.
+ */
+function ReplyBoard({ p, b, T, t, reduce }) {
+  const now = minutesOf(clockOf(p, T, t));
+  const ours = p.listings.length - 1;
+  const rows = [];
+  T.sends.forEach((s) => {
+    if (t < s.sent) return;
+    const l = p.listings[s.i];
+    rows.push({ key: l.key, name: l.agent.name, address: l.address, state: 'wait', note: b.noReply + ' · ' + waited(Math.max(1, now - minutesOf(l.time))) });
+  });
+  if (t >= T.chat[0].at) {
+    const l = p.listings[ours];
+    const booked = t >= T.statusAt[2];
+    const replied = t >= T.chat[1].at;
+    rows.push({ key: l.key, name: l.agent.name, address: l.address, aurora: true, state: booked ? 'booked' : replied ? 'replied' : 'typing', note: booked ? b.booked : replied ? b.replied : b.typing });
+  }
+  return (
+    <div className="rounded-[22px] bg-white/70 p-4 shadow-[0_0_0_1px_rgba(10,15,14,0.06)] backdrop-blur-sm">
+      <div className="flex items-baseline justify-between gap-3">
+        <p className="text-[13px] font-medium text-ink">{b.title}</p>
+        <p className="text-[11.5px] text-slate">{b.sub}</p>
+      </div>
+      <ul className="mt-3 grid gap-2">
+        <AnimatePresence initial={false}>
+          {rows.map((r) => (
+            <motion.li
+              key={r.key}
+              layout={!reduce}
+              initial={reduce ? false : { opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45, ease: EASE }}
+              className={cn(
+                'flex items-center gap-3 rounded-[14px] px-3 py-2.5 transition-colors duration-500',
+                r.aurora ? (r.state === 'booked' ? 'bg-[#E4F4E8]' : 'bg-[#FFF3E8]') : 'bg-white'
+              )}
+            >
+              <span className={cn('h-2 w-2 shrink-0 rounded-full', r.aurora ? (r.state === 'typing' ? 'animate-blink bg-[#F25C2A]' : 'bg-[#2E9A58]') : 'bg-ink/20')} />
+              <span className="min-w-0 flex-1">
+                <span className="block truncate text-[13px] font-medium leading-tight text-ink">{r.name}</span>
+                <span className="block truncate text-[11.5px] leading-tight text-slate">{r.address}</span>
+              </span>
+              <span
+                className={cn(
+                  'shrink-0 text-right text-[11.5px] font-medium tabular-nums',
+                  r.aurora ? (r.state === 'booked' ? 'text-[#2E7A48]' : 'text-[#B4471A]') : 'text-ink/45'
+                )}
+              >
+                {r.note}
+              </span>
+            </motion.li>
+          ))}
+        </AnimatePresence>
+        {rows.length === 0 ? <li className="rounded-[14px] bg-white/60 px-3 py-2.5 text-[12px] text-ink/40">{b.empty}</li> : null}
+      </ul>
+    </div>
+  );
+}
+
 /** Speed to lead: she messages three listing agents and waits; the brokerage with Aurora answers in seconds. */
 export function RxRace({ it }) {
   const r = it.v3.race;
@@ -862,7 +930,7 @@ export function RxRace({ it }) {
         <SectionHeader id="rx-race-title" eyebrow={r.eyebrow} titleA={r.titleA} titleB={r.titleB} text={r.text} layout="split" />
         <div
           ref={ref}
-          className="canvas canvas-grain relative mt-8 grid gap-5 overflow-hidden bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] p-4 xs:p-5 md:mt-14 md:p-8 lg:grid-cols-[max(332px,calc(var(--stage-h)_-_176px))_auto] lg:items-center lg:justify-center lg:gap-16 lg:p-10 lg:[--stage-h:clamp(440px,calc(100svh_-_200px),620px)] xl:gap-24 lg:[@media(max-height:820px)]:py-7"
+          className="canvas canvas-grain relative mt-8 grid gap-5 overflow-hidden bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] p-4 xs:p-5 md:mt-14 md:p-8 lg:grid-cols-[max(332px,calc(var(--stage-h)_-_176px))_auto] lg:items-center lg:justify-center lg:gap-14 lg:p-8 lg:[--stage-h:clamp(440px,calc(100svh_-_200px),620px)] xl:grid-cols-[max(332px,calc(var(--stage-h)_-_176px))_minmax(260px,320px)_auto] xl:gap-10 2xl:gap-14 lg:[@media(max-height:820px)]:py-7"
         >
           <div aria-hidden="true" className="pointer-events-none absolute right-[6%] top-[-10%] h-[70%] w-[45%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.45),rgba(255,200,87,0))] blur-2xl" />
 
@@ -909,6 +977,10 @@ export function RxRace({ it }) {
             </div>
           </div>
 
+          {/* wide screens: the reply board fills the space between her and her phone */}
+          <div className="relative hidden xl:block">
+            <ReplyBoard p={r.phone} b={r.board} T={T} t={t} reduce={reduce} />
+          </div>
           <div className="relative">
             <BuyerPhone p={r.phone} T={T} t={t} reduce={reduce} />
           </div>
