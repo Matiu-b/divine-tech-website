@@ -1353,7 +1353,7 @@ function JobHead({ x, on }) {
         </span>
         <span className={cn('t-data text-[10.5px] uppercase tracking-[0.08em] transition-colors', on ? 'text-[#D9481C]' : 'text-ink/35')}>{x.when}</span>
       </p>
-      <p className="mt-3 text-[17px] font-medium leading-snug tracking-[-0.01em] text-ink">{x.title}</p>
+      <p className="mt-2.5 text-[17px] font-medium leading-snug tracking-[-0.01em] text-ink">{x.title}</p>
       <p className="mt-1 text-[13px] leading-snug text-graphite">{x.text}</p>
     </div>
   );
