@@ -907,19 +907,19 @@ function StepTimeline({ steps, T, t, step, reduce }) {
         const cur = i === step;
         const aurora = i >= 3;
         return (
-          <li key={x.title} className="relative pb-3.5 pl-5 last:pb-0" aria-current={cur ? 'step' : undefined}>
+          <li key={x.title} className="relative pb-5 pl-5 last:pb-0 [@media(max-height:760px)]:pb-3.5" aria-current={cur ? 'step' : undefined}>
             <span aria-hidden="true" className="absolute bottom-1 left-0 top-1 w-[2px] overflow-hidden rounded-full bg-ink/[0.09]">
               <span className={cn('absolute inset-x-0 top-0 rounded-full', aurora ? 'bg-[linear-gradient(180deg,#FF8A3D,#F25C2A)]' : 'bg-ink/75')} style={{ height: f * 100 + '%' }} />
             </span>
             <p className="flex items-baseline gap-3">
-              <span className={cn('t-data w-[58px] shrink-0 text-[11.5px] transition-colors duration-500', cur ? 'text-[#B4471A]' : i < step ? 'text-ink/40' : 'text-ink/25')}>{x.time}</span>
-              <span className={cn('text-[15px] font-medium leading-snug tracking-[-0.01em] transition-colors duration-500', cur ? 'text-ink' : i < step ? 'text-ink/45' : 'text-ink/30')}>{x.title}</span>
+              <span className={cn('t-data w-[80px] shrink-0 whitespace-nowrap text-[11px] transition-colors duration-500', cur ? 'text-[#B4471A]' : i < step ? 'text-ink/40' : 'text-ink/25')}>{x.time}</span>
+              <span className={cn('text-[16px] font-medium leading-snug tracking-[-0.01em] transition-colors duration-500', cur ? 'text-ink' : i < step ? 'text-ink/45' : 'text-ink/30')}>{x.title}</span>
             </p>
             <AnimatePresence initial={false}>
               {cur ? (
                 <motion.p
                   key="text"
-                  className="overflow-hidden pl-[70px] text-[13.5px] leading-snug text-graphite"
+                  className="overflow-hidden pl-[92px] text-[14px] leading-snug text-graphite"
                   initial={reduce ? false : { height: 0, opacity: 0 }}
                   animate={{ height: 'auto', opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
