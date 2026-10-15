@@ -1570,7 +1570,10 @@ function JobSeller({ x, on, done, reduce }) {
 
 const JOBS = { remind: JobRemind, nurture: JobNurture, revive: JobRevive, seller: JobSeller };
 
-const GOAL_MS = 6400;
+// The story of one goal, beat by beat (ms): the weeks so far and the dip, the cause, the change, then the weeks after it
+const BEAT_AT = [0, 2700, 5200, 7700];
+const GOAL_END = 12200;
+const WEEK_STEP = 0.32; // seconds between weeks as they are drawn
 
 /** Weeks that meet the goal, and the first week from which every week meets it. */
 function goalState(g) {
@@ -1581,23 +1584,46 @@ function goalState(g) {
 }
 
 /**
- * The KPI Agent, built around the brokerage's own goals: pick a goal and see eight weeks against it, the change the
- * agent made and from when the goal is met. The goals take turns while on screen; a tap holds one.
+ * The KPI Agent, built around the brokerage's own goals. Each goal plays as a short story in step with its chart, the
+ * way the platform page does it: the weeks up to the dip are drawn, the cause is named, the change drops in as a
+ * marker, then the weeks after it are drawn one by one until they pass the goal. Last year's weeks stand beside them
+ * the whole time. Then the next goal; a tap holds one and replays it. Off screen or with reduced motion: the whole run.
  */
 function KpiGoals({ a, run, reduce }) {
   const K = a.kpi;
   const [g, setG] = useState(0);
   const [held, setHeld] = useState(false);
+  const [cycle, setCycle] = useState(0);
+  const [beat, setBeat] = useState(3);
   useEffect(() => {
-    if (!run || held) return undefined;
-    const id = setTimeout(() => setG((x) => (x + 1) % K.goals.length), GOAL_MS);
-    return () => clearTimeout(id);
-  }, [g, run, held, K.goals.length]);
+    if (!run) {
+      setBeat(3);
+      return undefined;
+    }
+    setBeat(0);
+    const ids = BEAT_AT.slice(1).map((t, i) => setTimeout(() => setBeat(i + 1), t));
+    ids.push(
+      setTimeout(() => {
+        if (held) setCycle((c) => c + 1);
+        else setG((x) => (x + 1) % K.goals.length);
+      }, GOAL_END)
+    );
+    return () => ids.forEach(clearTimeout);
+  }, [g, cycle, run, held, K.goals.length]);
 
   const goal = K.goals[g];
   const { met, since } = goalState(goal);
   const n = goal.values.length;
-  const cut = ((goal.change.after + 1) / n) * 100;
+  const at = goal.change.after;
+  const cut = ((at + 1) / n) * 100;
+  const playing = run && !reduce;
+  const story = [
+    { tag: K.weekLabel + ' ' + (at + 1), text: goal.dip, tone: 'text-[#B4471A]' },
+    { tag: K.story.cause, text: goal.cause, tone: 'text-[#D9481C]' },
+    { tag: K.story.change, text: goal.change.text, who: goal.change.who, tone: 'text-[#D9481C]' },
+    { tag: K.story.result, text: K.result.replace('{n}', since + 1), tone: 'text-[#2E7A48]' },
+  ][beat];
+  const ink = (on) => ({ opacity: on ? 1 : 0, transition: 'opacity 0.45s ease' });
 
   return (
     <div className="relative grid gap-5 rounded-[22px] bg-white p-4 shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_24px_48px_-36px_rgba(90,50,20,0.4)] md:p-5 lg:grid-cols-[minmax(0,300px)_minmax(0,1fr)] lg:gap-8 lg:p-6">
@@ -1623,6 +1649,7 @@ function KpiGoals({ a, run, reduce }) {
                 onClick={() => {
                   setG(i);
                   setHeld(true);
+                  setCycle((c) => c + 1);
                 }}
                 className={cn(
                   'flex items-center gap-3 rounded-full px-3 py-1.5 text-left transition-colors duration-300 lg:rounded-[10px] lg:py-[5px]',
@@ -1650,49 +1677,57 @@ function KpiGoals({ a, run, reduce }) {
               {K.legend.goal}: {goal.target}
             </span>
           </p>
-          <AnimatePresence mode="wait">
-            {since >= 0 ? (
-              <motion.span
-                key={goal.key}
-                initial={reduce ? false : { opacity: 0, y: 4 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                transition={{ delay: reduce ? 0 : 1.2, duration: 0.35 }}
-                className="inline-flex items-center gap-1 rounded-full bg-[#E4F4E8] px-2.5 py-1 text-[11.5px] font-medium text-[#2E7A48]"
-              >
-                <Check className="h-3 w-3" strokeWidth={2.6} aria-hidden="true" />
-                {K.since} {since + 1}
-              </motion.span>
-            ) : null}
-          </AnimatePresence>
+          <span
+            className="inline-flex items-center gap-1 rounded-full bg-[#E4F4E8] px-2.5 py-1 text-[11.5px] font-medium text-[#2E7A48]"
+            style={{ opacity: beat === 3 && since >= 0 ? 1 : 0, transition: beat === 3 && playing ? `opacity 0.4s ease ${(n - at - 1) * WEEK_STEP + 0.4}s` : 'opacity 0.2s ease' }}
+          >
+            <Check className="h-3 w-3" strokeWidth={2.6} aria-hidden="true" />
+            {K.since} {since + 1}
+          </span>
         </div>
 
         <div className="relative mt-3 h-[120px] sm:h-[128px] lg:h-auto lg:min-h-[128px] lg:flex-1" role="img" aria-label={goal.area + ', ' + goal.name + ', ' + K.goalLabel.toLowerCase() + ' ' + goal.target.toLowerCase() + (since >= 0 ? '. ' + K.since + ' ' + (since + 1) + '.' : '.')}>
-          {/* the weeks: last year beside this year, drawn left to right */}
-          <div className="absolute inset-0 grid items-end" style={{ gridTemplateColumns: `repeat(${n}, minmax(0, 1fr))` }}>
-            {goal.values.map((v, i) => (
-              <span key={goal.key + i} className="flex h-full items-end justify-center gap-[3px] sm:gap-1">
-                <motion.span
-                  className="block w-[30%] max-w-[18px] rounded-t-[5px] rounded-b-[2px] bg-[#D3C5B0]"
-                  style={{ height: goal.last[i] * 100 + '%', transformOrigin: 'bottom' }}
-                  initial={reduce ? false : { scaleY: 0 }}
-                  animate={{ scaleY: 1 }}
-                  transition={{ duration: 0.45, ease: EASE, delay: reduce ? 0 : 0.11 * i }}
-                />
-                <motion.span
-                  className={cn('block w-[30%] max-w-[18px] rounded-t-[5px] rounded-b-[2px]', met[i] ? 'bg-[linear-gradient(180deg,#FF8A3D,#F25C2A)]' : 'bg-[#F25C2A]/55')}
-                  style={{ height: v * 100 + '%', transformOrigin: 'bottom' }}
-                  initial={reduce ? false : { scaleY: 0 }}
-                  animate={{ scaleY: 1 }}
-                  transition={{ duration: 0.55, ease: EASE, delay: reduce ? 0 : 0.11 * i + 0.05 }}
-                />
-              </span>
-            ))}
+          {/* the weeks: last year stands from the start, this year is drawn in step with the story */}
+          <div key={goal.key + cycle} className="absolute inset-0 grid items-end" style={{ gridTemplateColumns: `repeat(${n}, minmax(0, 1fr))` }}>
+            {goal.values.map((v, i) => {
+              const shown = beat >= 3 || i <= at;
+              const delay = !playing ? 0 : i <= at ? 0.25 + i * WEEK_STEP : (i - at - 1) * WEEK_STEP;
+              return (
+                <span key={i} className="flex h-full items-end justify-center gap-[3px] sm:gap-1">
+                  <motion.span
+                    className="block w-[30%] max-w-[18px] rounded-t-[5px] rounded-b-[2px] bg-[#D3C5B0]"
+                    style={{ height: goal.last[i] * 100 + '%', transformOrigin: 'bottom' }}
+                    initial={playing ? { scaleY: 0 } : false}
+                    animate={{ scaleY: 1 }}
+                    transition={{ duration: 0.4, ease: EASE, delay: playing ? i * 0.03 : 0 }}
+                  />
+                  <motion.span
+                    className={cn(
+                      'block w-[30%] max-w-[18px] rounded-t-[5px] rounded-b-[2px] transition-shadow duration-500',
+                      met[i] ? 'bg-[linear-gradient(180deg,#FF8A3D,#F25C2A)]' : 'bg-[#F25C2A]/55',
+                      i === at && beat >= 1 && beat < 3 ? 'shadow-[0_0_0_2px_#FBF8F3,0_0_0_3.5px_#F25C2A]' : ''
+                    )}
+                    style={{ height: v * 100 + '%', transformOrigin: 'bottom' }}
+                    initial={playing ? { scaleY: 0 } : false}
+                    animate={{ scaleY: shown ? 1 : 0 }}
+                    transition={{ duration: 0.5, ease: EASE, delay }}
+                  />
+                </span>
+              );
+            })}
           </div>
           {/* the goal */}
           <span aria-hidden="true" className="absolute inset-x-0 border-t-[1.5px] border-dashed border-ink/45 transition-[bottom] duration-500" style={{ bottom: goal.goal * 100 + '%' }} />
+          {/* the dip, named while its cause is found */}
+          <span
+            aria-hidden="true"
+            className="absolute -translate-x-1/2 whitespace-nowrap rounded-full bg-[#FFF1E4] px-2 py-0.5 text-[10.5px] font-medium text-[#B4471A]"
+            style={{ left: ((at + 0.5) / n) * 100 + '%', bottom: `calc(${goal.values[at] * 100}% + 8px)`, ...ink(beat === 1) }}
+          >
+            ↓ {K.slipping}
+          </span>
           {/* the change */}
-          <span aria-hidden="true" className="absolute -top-1 bottom-0 border-l-[1.5px] border-dotted border-[#F25C2A] transition-[left] duration-500" style={{ left: cut + '%' }}>
+          <span aria-hidden="true" className="absolute -top-1 bottom-0 border-l-[1.5px] border-dotted border-[#F25C2A]" style={{ left: cut + '%', ...ink(beat >= 2) }}>
             <span className="absolute -left-[5px] -top-1 h-2.5 w-2.5 rounded-full bg-[#F25C2A] shadow-[0_0_0_3px_#FBF8F3]" />
           </span>
         </div>
@@ -1715,24 +1750,27 @@ function KpiGoals({ a, run, reduce }) {
           </span>
         </p>
 
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.p
-            key={goal.key}
-            initial={reduce ? false : { opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, transition: { duration: 0.2 } }}
-            transition={{ duration: 0.4, ease: EASE, delay: reduce ? 0 : 0.6 }}
-            className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[12.5px] leading-snug text-graphite"
-          >
-            <span className="inline-flex items-center gap-1.5 font-medium text-[#C2410C]">
-              <span className="h-2 w-2 rounded-full bg-[#F25C2A]" aria-hidden="true" />
-              {K.changeLabel} {goal.change.after + 1}
-            </span>
-            <span className="min-w-0">{goal.change.text}</span>
-            {goal.change.who ? <span className="rounded-full bg-[#E4F4E8] px-2 py-0.5 text-[11px] font-medium text-[#2E7A48]">{goal.change.who}</span> : null}
-          </motion.p>
-        </AnimatePresence>
-
+        {/* what is happening at this beat */}
+        <div className="relative mt-3 min-h-[58px]" aria-live="polite">
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={goal.key + cycle + '-' + beat}
+              initial={playing ? { opacity: 0, y: 6 } : false}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4, transition: { duration: 0.2 } }}
+              transition={{ duration: 0.4, ease: EASE }}
+              className="rounded-[14px] bg-white px-3 py-2.5 shadow-[0_0_0_1px_rgba(10,15,14,0.05)]"
+            >
+              <p className={cn('t-data text-[10.5px] uppercase tracking-[0.08em]', story.tone)}>
+                {String(beat + 1).padStart(2, '0')} · {story.tag}
+              </p>
+              <p className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] leading-snug text-ink">
+                <span className="min-w-0">{story.text}</span>
+                {story.who ? <span className="rounded-full bg-[#E4F4E8] px-2 py-0.5 text-[11px] font-medium text-[#2E7A48]">{story.who}</span> : null}
+              </p>
+            </motion.div>
+          </AnimatePresence>
+        </div>
       </div>
     </div>
   );
