@@ -1174,6 +1174,42 @@ function RuleFlow({ r, sc, reduce }) {
   );
 }
 
+/** Phones and tablets: the playbook as one scrolling row of chips; the rule in force is highlighted and kept in view. */
+function PlaybookChips({ r, sc, price, pick }) {
+  const box = useRef(null);
+  useEffect(() => {
+    const el = box.current;
+    const on = el && el.querySelector('[aria-pressed="true"]');
+    if (!on) return;
+    // scroll the strip only, never the page
+    el.scrollTo({ left: on.offsetLeft - (el.clientWidth - on.offsetWidth) / 2, behavior: 'smooth' });
+  }, [sc.row]);
+  return (
+    <div ref={box} className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] xs:-mx-5 xs:px-5 md:-mx-8 md:px-8 lg:hidden [&::-webkit-scrollbar]:hidden">
+      {r.rows.map((x) => {
+        const on = sc.row === x.key;
+        return (
+          <button
+            key={x.key}
+            type="button"
+            onClick={() => pick(x.key)}
+            aria-pressed={on}
+            className={cn(
+              'flex shrink-0 items-center gap-2 rounded-full px-3.5 py-2 text-[13px] transition-colors duration-300',
+              on ? 'bg-ink text-white' : 'bg-white/80 text-ink/70 shadow-[0_0_0_1px_rgba(10,15,14,0.06)]'
+            )}
+          >
+            <span className="whitespace-nowrap font-medium">{x.label}</span>
+            <span className={cn('whitespace-nowrap rounded-full px-2 py-0.5 text-[11px] font-medium', on ? 'bg-white/15 text-white' : 'bg-ink/[0.05] text-ink/55')}>
+              {x.values[x.key === 'price' ? price : 0]}
+            </span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 /**
  * Your rules: the broker's playbook on the left, the rule in force on the right as when, what Aurora does, and the
  * result. It steps through the rules by itself (final prices twice: Never, then Ask me first); a click picks a rule.
@@ -1219,7 +1255,10 @@ export function RxRules({ it }) {
               {r.titleA} {r.titleB}
             </h2>
             <p className="pretty mt-3 max-w-[34em] text-[15px] leading-[1.6] text-graphite md:text-[15.5px]">{r.text}</p>
-            <div className="mt-6 max-w-[600px] lg:mt-8 lg:min-h-[300px]">
+            <div className="mt-5 lg:hidden">
+              <PlaybookChips r={r} sc={sc} price={price} pick={pick} />
+            </div>
+            <div className="mt-5 min-h-[352px] max-w-[600px] xs:min-h-[330px] sm:min-h-[300px] lg:mt-8">
               <AnimatePresence mode="wait" initial={false}>
                 <motion.div key={i} exit={reduce ? undefined : { opacity: 0, transition: { duration: 0.2 } }}>
                   <RuleFlow r={r} sc={sc} reduce={reduce} />
@@ -1228,8 +1267,8 @@ export function RxRules({ it }) {
             </div>
           </div>
 
-          {/* the broker's playbook */}
-          <div className="relative rounded-[24px] bg-white/80 p-3 shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_30px_60px_-40px_rgba(90,50,20,0.4)] backdrop-blur-sm lg:col-start-1 lg:row-start-1 lg:p-4">
+          {/* the broker's playbook (laptops; phones and tablets get the chip row above the rule) */}
+          <div className="relative hidden rounded-[24px] bg-white/80 p-3 shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_30px_60px_-40px_rgba(90,50,20,0.4)] backdrop-blur-sm lg:col-start-1 lg:row-start-1 lg:block lg:p-4">
             <div className="flex items-center justify-between gap-3 px-3 pb-3 pt-1.5">
               <span>
                 <span className="block text-[15px] font-medium text-ink">{r.panel.title}</span>
