@@ -893,6 +893,49 @@ function StepBars({ steps, T, t, className = '' }) {
   );
 }
 
+/**
+ * Wide screens: the evening as a timeline under the headline. Each step is a time and a name on a thin rail that fills
+ * as the step plays; the current step opens with its line of text. Aurora's steps fill in her orange.
+ */
+function StepTimeline({ steps, T, t, step, reduce }) {
+  return (
+    <ol className="grid" aria-live="polite">
+      {steps.map((x, i) => {
+        const from = T.stepAt[i];
+        const to = i < steps.length - 1 ? T.stepAt[i + 1] : T.end;
+        const f = Math.min(1, Math.max(0, (t - from) / Math.max(1, to - from)));
+        const cur = i === step;
+        const aurora = i >= 3;
+        return (
+          <li key={x.title} className="relative pb-3.5 pl-5 last:pb-0" aria-current={cur ? 'step' : undefined}>
+            <span aria-hidden="true" className="absolute bottom-1 left-0 top-1 w-[2px] overflow-hidden rounded-full bg-ink/[0.09]">
+              <span className={cn('absolute inset-x-0 top-0 rounded-full', aurora ? 'bg-[linear-gradient(180deg,#FF8A3D,#F25C2A)]' : 'bg-ink/75')} style={{ height: f * 100 + '%' }} />
+            </span>
+            <p className="flex items-baseline gap-3">
+              <span className={cn('t-data w-[58px] shrink-0 text-[11.5px] transition-colors duration-500', cur ? 'text-[#B4471A]' : i < step ? 'text-ink/40' : 'text-ink/25')}>{x.time}</span>
+              <span className={cn('text-[15px] font-medium leading-snug tracking-[-0.01em] transition-colors duration-500', cur ? 'text-ink' : i < step ? 'text-ink/45' : 'text-ink/30')}>{x.title}</span>
+            </p>
+            <AnimatePresence initial={false}>
+              {cur ? (
+                <motion.p
+                  key="text"
+                  className="overflow-hidden pl-[70px] text-[13.5px] leading-snug text-graphite"
+                  initial={reduce ? false : { height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.4, ease: EASE }}
+                >
+                  <span className="block pt-1">{x.text}</span>
+                </motion.p>
+              ) : null}
+            </AnimatePresence>
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
+
 /** Speed to lead: she messages three listing agents and waits; the brokerage with Aurora answers in seconds. */
 export function RxRace({ it }) {
   const r = it.v3.race;
@@ -924,18 +967,22 @@ export function RxRace({ it }) {
         >
           <div aria-hidden="true" className="pointer-events-none absolute right-[6%] top-[-10%] h-[70%] w-[45%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.45),rgba(255,200,87,0))] blur-2xl" />
 
-          {/* wide screens: the section's headline and its line, nothing else */}
-          <div className="relative hidden xl:block">
-            <h2 className="balance text-[clamp(31px,2.55vw,40px)] font-medium leading-[1.08] tracking-[-0.022em] text-ink">
-              {r.titleA} {r.titleB}
-            </h2>
-            <p className="pretty mt-5 max-w-[30em] text-[16px] leading-[1.6] text-graphite">{r.text}</p>
+          {/* wide screens: the section's headline at the top, the evening as a timeline on the bottom line */}
+          <div className="relative hidden xl:flex xl:flex-col xl:justify-between xl:gap-8 xl:self-stretch">
+            <div>
+              <h2 className="balance text-[clamp(31px,2.55vw,40px)] font-medium leading-[1.08] tracking-[-0.022em] text-ink">
+                {r.titleA} {r.titleB}
+              </h2>
+              <p className="pretty mt-4 max-w-[30em] text-[15.5px] leading-[1.6] text-graphite">{r.text}</p>
+            </div>
+            <StepTimeline steps={r.steps} T={T} t={t} step={step} reduce={reduce} />
           </div>
 
-          {/* the step, and on laptops the stage box under it: her clip, then the brokerage's CRM once her message lands */}
+          {/* the step and, on laptops, the stage box: her clip, then the brokerage's CRM once her message lands. From 1280 px the box alone, as tall as the phone */}
           <div className="relative lg:flex lg:flex-col lg:self-stretch">
             {wide ? (
-              <div aria-live="polite">
+              // 1024 to 1279: the step above the stage box (wider screens show it as the timeline on the left)
+              <div aria-live="polite" className="xl:hidden">
                 <StepBars steps={r.steps} T={T} t={t} />
                 <AnimatePresence mode="wait" initial={false}>
                   <motion.div key={step} className="mt-3.5 min-h-[112px]" initial={reduce ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6, transition: { duration: 0.2 } }} transition={{ duration: 0.45, ease: EASE }}>
@@ -972,19 +1019,21 @@ export function RxRace({ it }) {
                 </div>
               </>
             )}
-            <div className="relative mt-5 hidden min-h-[300px] lg:block lg:h-[max(332px,calc(var(--stage-h)_-_176px))] lg:w-full xl:h-auto xl:flex-1">
+            <div className="relative mt-5 hidden min-h-[300px] lg:block lg:h-[max(332px,calc(var(--stage-h)_-_176px))] lg:w-full xl:mt-0 xl:h-auto xl:flex-1">
               {wide ? <SofaClip film={r.film} T={T} t={t} reduce={reduce} active={inView && visible} /> : null}
               <AnimatePresence initial={false}>
                 {t >= T.chat[0].at ? (
                   <motion.div
                     key="crm"
-                    className="absolute inset-x-0 top-0"
+                    className="absolute inset-0 flex items-start xl:items-center"
                     initial={reduce ? false : { opacity: 0, y: 14, scale: 0.98 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, transition: { duration: 0.2 } }}
                     transition={{ duration: 0.55, ease: EASE }}
                   >
-                    <CrmCard c={r.crm} T={T} t={t} reduce={reduce} short={short} />
+                    <div className="w-full">
+                      <CrmCard c={r.crm} T={T} t={t} reduce={reduce} short={short} />
+                    </div>
                   </motion.div>
                 ) : null}
               </AnimatePresence>
