@@ -1574,7 +1574,7 @@ const GOAL_MS = 6400;
 
 /** Weeks that meet the goal, and the first week from which every week meets it. */
 function goalState(g) {
-  const met = g.values.map((v) => (g.better === 'lower' ? v <= g.goal : v >= g.goal));
+  const met = g.values.map((v) => v >= g.goal);
   let since = met.length;
   for (let i = met.length - 1; i >= 0 && met[i]; i -= 1) since = i;
   return { met, since: since < met.length ? since : -1 };
@@ -1657,7 +1657,7 @@ function KpiGoals({ a, run, reduce }) {
                 initial={reduce ? false : { opacity: 0, y: 4 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
-                transition={{ delay: reduce ? 0 : 0.9, duration: 0.35 }}
+                transition={{ delay: reduce ? 0 : 1.2, duration: 0.35 }}
                 className="inline-flex items-center gap-1 rounded-full bg-[#E4F4E8] px-2.5 py-1 text-[11.5px] font-medium text-[#2E7A48]"
               >
                 <Check className="h-3 w-3" strokeWidth={2.6} aria-hidden="true" />
@@ -1668,16 +1668,23 @@ function KpiGoals({ a, run, reduce }) {
         </div>
 
         <div className="relative mt-3 h-[120px] sm:h-[128px] lg:h-auto lg:min-h-[128px] lg:flex-1" role="img" aria-label={goal.area + ', ' + goal.name + ', ' + K.goalLabel.toLowerCase() + ' ' + goal.target.toLowerCase() + (since >= 0 ? '. ' + K.since + ' ' + (since + 1) + '.' : '.')}>
-          {/* the weeks */}
+          {/* the weeks: last year beside this year, drawn left to right */}
           <div className="absolute inset-0 grid items-end" style={{ gridTemplateColumns: `repeat(${n}, minmax(0, 1fr))` }}>
             {goal.values.map((v, i) => (
-              <span key={goal.key + i} className="flex h-full items-end justify-center">
+              <span key={goal.key + i} className="flex h-full items-end justify-center gap-[3px] sm:gap-1">
                 <motion.span
-                  className={cn('block w-[54%] max-w-[44px] rounded-t-[7px] rounded-b-[2px]', met[i] ? 'bg-[#F25C2A]' : 'bg-ink/[0.13]')}
+                  className="block w-[30%] max-w-[18px] rounded-t-[5px] rounded-b-[2px] bg-[#D3C5B0]"
+                  style={{ height: goal.last[i] * 100 + '%', transformOrigin: 'bottom' }}
+                  initial={reduce ? false : { scaleY: 0 }}
+                  animate={{ scaleY: 1 }}
+                  transition={{ duration: 0.45, ease: EASE, delay: reduce ? 0 : 0.11 * i }}
+                />
+                <motion.span
+                  className={cn('block w-[30%] max-w-[18px] rounded-t-[5px] rounded-b-[2px]', met[i] ? 'bg-[linear-gradient(180deg,#FF8A3D,#F25C2A)]' : 'bg-[#F25C2A]/55')}
                   style={{ height: v * 100 + '%', transformOrigin: 'bottom' }}
                   initial={reduce ? false : { scaleY: 0 }}
                   animate={{ scaleY: 1 }}
-                  transition={{ duration: 0.55, ease: EASE, delay: reduce ? 0 : 0.05 * i }}
+                  transition={{ duration: 0.55, ease: EASE, delay: reduce ? 0 : 0.11 * i + 0.05 }}
                 />
               </span>
             ))}
@@ -1697,13 +1704,24 @@ function KpiGoals({ a, run, reduce }) {
           ))}
         </div>
 
+        <p aria-hidden="true" className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-slate">
+          <span className="inline-flex items-center gap-1.5">
+            <span className="h-2.5 w-2.5 rounded-[3px] bg-[#F25C2A]" />
+            {K.legend.now}
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span className="h-2.5 w-2.5 rounded-[3px] bg-[#D3C5B0]" />
+            {K.legend.last}
+          </span>
+        </p>
+
         <AnimatePresence mode="wait" initial={false}>
           <motion.p
             key={goal.key}
             initial={reduce ? false : { opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, transition: { duration: 0.2 } }}
-            transition={{ duration: 0.4, ease: EASE, delay: reduce ? 0 : 0.5 }}
+            transition={{ duration: 0.4, ease: EASE, delay: reduce ? 0 : 0.6 }}
             className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[12.5px] leading-snug text-graphite"
           >
             <span className="inline-flex items-center gap-1.5 font-medium text-[#C2410C]">
