@@ -885,22 +885,42 @@ export function RxRace({ it }) {
   return (
     <section id="race" data-nav-theme="light" aria-labelledby="rx-race-title" className="section relative">
       <div className="shell">
-        <SectionHeader id="rx-race-title" eyebrow={r.eyebrow} titleA={r.titleA} titleB={r.titleB} text={r.text} layout="split" />
+        {/* wide screens: the headline moves into the canvas (the left column), so the whole scene fits one screen */}
+        <SectionHeader id="rx-race-title" eyebrow={r.eyebrow} titleA={r.titleA} titleB={r.titleB} text={r.text} layout="split" className="xl:hidden" />
         <div
           ref={ref}
-          className="canvas canvas-grain relative mt-8 grid gap-3 overflow-hidden md:gap-5 bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] p-4 xs:p-5 md:mt-14 md:p-8 lg:grid-cols-[max(332px,calc(var(--stage-h)_-_176px))_auto] lg:items-center lg:justify-center lg:gap-14 lg:p-8 lg:[--stage-h:clamp(440px,calc(100svh_-_200px),620px)] xl:grid-cols-[minmax(300px,340px)_minmax(0,calc(var(--stage-h)_*_0.8))_auto] xl:gap-10 2xl:gap-14 lg:[@media(max-height:820px)]:py-7"
+          className="canvas canvas-grain relative mt-8 grid gap-3 overflow-hidden xl:mt-0 md:gap-5 bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] p-4 xs:p-5 md:mt-14 md:p-8 lg:grid-cols-[max(332px,calc(var(--stage-h)_-_176px))_auto] lg:items-center lg:justify-center lg:gap-14 lg:p-8 lg:[--stage-h:clamp(440px,calc(100svh_-_200px),620px)] xl:grid-cols-[minmax(300px,340px)_minmax(0,calc(var(--stage-h)_*_0.8))_auto] xl:gap-10 xl:[--stage-h:clamp(440px,calc(100svh_-_170px),620px)] 2xl:gap-14 lg:[@media(max-height:820px)]:py-7"
         >
           <div aria-hidden="true" className="pointer-events-none absolute right-[6%] top-[-10%] h-[70%] w-[45%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.45),rgba(255,200,87,0))] blur-2xl" />
 
-          {/* wide screens: the column runs the phone's full height, so the step lines up with its top and the CRM with its bottom */}
+          {/*
+            wide screens: the column runs the phone's full height. On top, the section's headline until Aurora answers her,
+            then the brokerage's CRM in its place, filling in as Aurora qualifies her; the step sits on the bottom line.
+          */}
           <div className="relative xl:flex xl:flex-col xl:self-stretch">
+            <div className="relative hidden min-h-0 pb-6 xl:block xl:flex-1">
+              <AnimatePresence mode="wait" initial={false}>
+                {t < T.chat[1].at ? (
+                  <motion.div key="title" initial={reduce ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8, transition: { duration: 0.25 } }} transition={{ duration: 0.5, ease: EASE }}>
+                    <h2 className="balance text-[clamp(28px,2.35vw,36px)] font-medium leading-[1.08] tracking-[-0.02em] text-ink">
+                      {r.titleA} {r.titleB}
+                    </h2>
+                    <p className="pretty mt-4 text-[15.5px] leading-[1.55] text-graphite">{r.text}</p>
+                  </motion.div>
+                ) : (
+                  <motion.div key="crm" initial={reduce ? false : { opacity: 0, y: 14, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, transition: { duration: 0.2 } }} transition={{ duration: 0.55, ease: EASE }}>
+                    <CrmCard c={r.crm} T={T} t={t} reduce={reduce} short={short} />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
             <div className="mx-auto flex max-w-[352px] gap-1.5 lg:max-w-none" aria-hidden="true">
               {r.steps.map((x, i) => (
                 <span key={x.title} className={cn('h-1 flex-1 rounded-full transition-colors duration-500', i <= step ? 'bg-ink' : 'bg-ink/10')} />
               ))}
             </div>
             {wide ? (
-              <div className="mt-4 min-h-[132px]" aria-live="polite">
+              <div className="mt-4 min-h-[132px] xl:min-h-[124px]" aria-live="polite">
                 <AnimatePresence mode="wait" initial={false}>
                   <motion.div key={step} initial={reduce ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6, transition: { duration: 0.2 } }} transition={{ duration: 0.45, ease: EASE }}>
                     <p className="t-data text-[12px] text-[#B4471A]">{s.time}</p>
@@ -932,13 +952,9 @@ export function RxRace({ it }) {
             <div className="relative mt-5 hidden lg:block lg:h-[max(332px,calc(var(--stage-h)_-_176px))] lg:w-full xl:hidden">
               {wide && !xl ? clip : null}
             </div>
-            {/* wide screens: the brokerage's CRM fills in as Aurora qualifies her */}
-            <div className="relative hidden pt-5 xl:mt-auto xl:block">
-              <CrmCard c={r.crm} T={T} t={t} reduce={reduce} short={short} />
-            </div>
           </div>
 
-          {/* wide screens: her evening on the sofa, between the CRM and her phone, sitting on the same bottom line */}
+          {/* wide screens: her evening on the sofa, between the headline/CRM column and her phone, sitting on the same bottom line */}
           <div className="relative hidden xl:block xl:self-end">
             <div className="relative mx-auto aspect-square max-h-[var(--stage-h)] w-full">{xl ? clip : null}</div>
           </div>
