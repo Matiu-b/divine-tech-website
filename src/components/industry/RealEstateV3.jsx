@@ -1402,7 +1402,7 @@ function JobRemind({ x, on, done, reduce }) {
                   </span>
                 </span>
               ) : (
-                <span className="h-[42px] flex-1" />
+                <span className="h-6 flex-1" />
               )}
             </div>
           ))}
@@ -1415,8 +1415,8 @@ function JobRemind({ x, on, done, reduce }) {
 /** Follow-up cadence: where this touch sits in the cadence, two homes that match, and the buyer hearts one. */
 function JobNurture({ x, on, done, reduce }) {
   return (
-    <div className="flex h-full flex-col gap-4 lg:flex-row lg:items-stretch">
-      <div className="flex min-w-0 flex-col lg:w-[46%]">
+    <div className="flex h-full flex-col gap-3">
+      <div className="flex min-w-0 flex-col">
         <JobHead x={x} on={on} />
         {/* the cadence: where this message sits */}
         <div className="mt-3 flex items-center gap-1" aria-hidden="true">
@@ -1435,13 +1435,13 @@ function JobNurture({ x, on, done, reduce }) {
           {x.msg}
         </p>
       </div>
-      <div className="flex flex-1 flex-col">
-        <div className="grid flex-1 grid-cols-2 gap-2.5">
+      <div className="mt-auto flex flex-col">
+        <div className="grid grid-cols-2 gap-2">
           {x.homes.map((h, i) => {
             const picked = done && i === x.pick;
             return (
               <div key={h.price} className={cn('relative overflow-hidden rounded-[14px] bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.08)] transition-transform duration-500', picked ? '-translate-y-1 shadow-[0_0_0_2px_#F25C2A,0_16px_30px_-18px_rgba(242,92,42,0.6)]' : '')}>
-                <img src={h.image} alt="" className="h-[96px] w-full object-cover" loading="lazy" decoding="async" />
+                <img src={h.image} alt="" className="h-[78px] w-full object-cover" loading="lazy" decoding="async" />
                 <span className={cn('absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full transition-colors duration-300', picked ? 'bg-[#F25C2A] text-white' : 'bg-white/90 text-ink/50')}>
                   <motion.span animate={picked && !reduce ? { scale: [1, 1.35, 1] } : { scale: 1 }} transition={{ duration: 0.4 }}>
                     <Heart className={cn('h-3.5 w-3.5', picked ? 'fill-current' : '')} strokeWidth={2.2} aria-hidden="true" />
@@ -1449,7 +1449,7 @@ function JobNurture({ x, on, done, reduce }) {
                 </span>
                 <p className="px-2.5 pb-2 pt-1.5">
                   <span className="block text-[14px] font-medium text-ink">{h.price}</span>
-                  <span className="block text-[11.5px] text-slate">{h.meta}</span>
+                  <span className="block truncate text-[11px] text-slate">{h.meta}</span>
                 </p>
               </div>
             );
@@ -1543,13 +1543,6 @@ function JobSeller({ x, on, done, reduce }) {
 }
 
 const JOBS = { remind: JobRemind, nurture: JobNurture, revive: JobRevive, seller: JobSeller };
-// bento placement on laptops: the reminder tall on the left, listings wide on top, the CRM row and the booking below
-const JOB_PLACE = {
-  remind: 'lg:col-span-2 lg:row-span-2',
-  nurture: 'lg:col-span-4',
-  revive: 'lg:col-span-2',
-  seller: 'lg:col-span-2',
-};
 
 /**
  * The KPI Agent: one week of improvement in four steps that light up in turn. A strip under the jobs up to 1279 px,
@@ -1592,7 +1585,7 @@ function KpiPanel({ a, k, run, tall = false }) {
 }
 
 /**
- * After the first reply: four jobs Aurora keeps doing for a lead, each drawn as the thing it is, in a bento. A spotlight
+ * After the first reply: four jobs Aurora keeps doing for a lead, each drawn as the thing it is, in four equal cards. A spotlight
  * moves from one to the next, and each resolves in its own way (a stamp, a heart, a status flip, a slot). Then the KPI
  * Agent improving it, one week in four steps that light up in turn.
  */
@@ -1640,8 +1633,8 @@ export function RxAfter({ it }) {
             <p className="pretty text-[15px] leading-[1.6] text-graphite md:text-[15.5px]">{a.text}</p>
           </div>
 
-          {/* the jobs, as a bento on laptops and a row to swipe on phones */}
-          <ol className="relative mt-6 grid gap-3 max-sm:-mx-4 max-sm:flex max-sm:snap-x max-sm:snap-mandatory max-sm:overflow-x-auto max-sm:px-4 max-sm:pb-1 max-sm:[scrollbar-width:none] xs:max-sm:-mx-5 xs:max-sm:px-5 sm:grid-cols-2 lg:mt-7 lg:grid-cols-6 lg:grid-rows-[auto_auto] lg:gap-3.5 [&::-webkit-scrollbar]:hidden">
+          {/* the jobs: four equal cards on laptops, two by two on tablets, a row to swipe on phones */}
+          <ol className="relative mt-6 grid gap-3 max-sm:-mx-4 max-sm:flex max-sm:snap-x max-sm:snap-mandatory max-sm:overflow-x-auto max-sm:px-4 max-sm:pb-1 max-sm:[scrollbar-width:none] xs:max-sm:-mx-5 xs:max-sm:px-5 sm:grid-cols-2 lg:mt-7 lg:grid-cols-4 lg:gap-3.5 [&::-webkit-scrollbar]:hidden">
             {a.steps.map((x, i) => {
               const Job = JOBS[x.key];
               const on = run ? i === j : false;
@@ -1654,8 +1647,7 @@ export function RxAfter({ it }) {
                   className={cn(
                     'relative rounded-[22px] p-4 transition-shadow duration-500 max-sm:w-[86%] max-sm:shrink-0 max-sm:snap-center',
                     'bg-white',
-                    on ? 'shadow-[0_0_0_2px_#F25C2A,0_30px_60px_-34px_rgba(242,92,42,0.55)]' : 'shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_24px_48px_-36px_rgba(90,50,20,0.4)]',
-                    JOB_PLACE[x.key]
+                    on ? 'shadow-[0_0_0_2px_#F25C2A,0_30px_60px_-34px_rgba(242,92,42,0.55)]' : 'shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_24px_48px_-36px_rgba(90,50,20,0.4)]'
                   )}
                 >
                   <Job x={x} on={on} done={done} reduce={reduce} />
