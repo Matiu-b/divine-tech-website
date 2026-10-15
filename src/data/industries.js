@@ -273,7 +273,13 @@ export const industries = [
           {
             key: 'revive', stage: 'Inactive', tone: 'slate', when: 'Month 3', title: 'Database reactivation',
             text: 'Re-engages quiet CRM leads and puts replies back in the pipeline.',
-            name: 'Dan Morales', initials: 'DM', before: 'Last contact 94 days ago', after: 'Replied just now', cold: 'Cold', active: 'Active',
+            list: 'Quiet leads in your CRM', sent: 'Message sent', after: 'Replied just now', cold: 'Cold', active: 'Active',
+            leads: [
+              { name: 'Dan Morales', initials: 'DM', before: 'Last contact 94 days ago', replied: true },
+              { name: 'Priya Shah', initials: 'PS', before: 'Last contact 121 days ago', replied: false },
+              { name: 'Kevin Brooks', initials: 'KB', before: 'Last contact 78 days ago', replied: true },
+              { name: 'Lena Ortiz', initials: 'LO', before: 'Last contact 150 days ago', replied: false },
+            ],
             msg: 'Hi Dan, are you still thinking about a move this spring?', reply: 'Yes, probably April.',
           },
           {

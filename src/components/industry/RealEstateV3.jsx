@@ -1464,31 +1464,43 @@ function JobNurture({ x, on, done, reduce }) {
   );
 }
 
-/** Database reactivation: a lead that went quiet in the CRM, a question, a reply, and the row comes back to life. */
+/** Database reactivation: a list of leads gone quiet in the CRM. Aurora writes to each; the ones who answer flip to Active. */
 function JobRevive({ x, on, done, reduce }) {
   return (
     <div className="flex h-full flex-col">
       <JobHead x={x} on={on} />
-      <div className={cn('mb-3 mt-3 flex items-center gap-3 rounded-[14px] px-3 py-2.5 transition-colors duration-500', done ? 'bg-[#FFF3E8]' : 'bg-ink/[0.04]')}>
-        <span className={cn('relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[12px] font-medium transition-colors duration-500', done ? 'bg-ink text-white' : 'bg-ink/10 text-ink/45')}>
-          {x.initials}
-          {done && !reduce ? <span className="ring-ping absolute inset-0 rounded-full bg-[#F25C2A]/30" /> : null}
-        </span>
-        <span className="min-w-0 flex-1">
-          <span className={cn('block text-[14px] font-medium transition-colors', done ? 'text-ink' : 'text-ink/50')}>{x.name}</span>
-          <span className="block truncate text-[11.5px] text-slate">{done ? x.after : x.before}</span>
-        </span>
-        <span className="relative h-6 w-[58px] shrink-0 [perspective:400px]">
-          <motion.span
-            className="absolute inset-0 [transform-style:preserve-3d]"
-            animate={{ rotateX: done ? 180 : 0 }}
-            transition={{ duration: reduce ? 0 : 0.6, ease: EASE }}
-          >
-            <span className="absolute inset-0 flex items-center justify-center rounded-full bg-ink/[0.08] text-[11.5px] font-medium text-ink/55 [backface-visibility:hidden]">{x.cold}</span>
-            <span className="absolute inset-0 flex items-center justify-center rounded-full bg-[#E4F4E8] text-[11.5px] font-medium text-[#2E7A48] [backface-visibility:hidden] [transform:rotateX(180deg)]">{x.active}</span>
-          </motion.span>
-        </span>
+      {/* the CRM list */}
+      <div className="mb-3 mt-3 rounded-[14px] p-1.5 shadow-[inset_0_0_0_1px_rgba(10,15,14,0.08)]">
+        <p className="px-1.5 pb-1 pt-0.5 text-[10.5px] font-medium uppercase tracking-[0.06em] text-ink/40">{x.list}</p>
+        <ul>
+          {x.leads.map((l, i) => {
+            const live = done && l.replied;
+            return (
+              <li key={l.name} className={cn('flex items-center gap-2.5 rounded-[10px] px-1.5 py-1.5 transition-colors duration-500', live ? 'bg-[#FFF3E8]' : '')}>
+                <span className={cn('relative flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[10.5px] font-medium transition-colors duration-500', live ? 'bg-ink text-white' : 'bg-ink/10 text-ink/45')}>
+                  {l.initials}
+                  {live && !reduce ? <span className="ring-ping absolute inset-0 rounded-full bg-[#F25C2A]/30" /> : null}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className={cn('block truncate text-[13px] font-medium leading-tight transition-colors', live ? 'text-ink' : 'text-ink/55')}>{l.name}</span>
+                  <span className={cn('block truncate text-[11px] leading-tight transition-colors', live ? 'text-[#2E7A48]' : 'text-slate')}>{live ? x.after : done ? x.sent : l.before}</span>
+                </span>
+                <span className="relative h-[22px] w-[54px] shrink-0 [perspective:400px]">
+                  <motion.span
+                    className="absolute inset-0 [transform-style:preserve-3d]"
+                    animate={{ rotateX: live ? 180 : 0 }}
+                    transition={{ duration: reduce ? 0 : 0.6, ease: EASE, delay: reduce || !live ? 0 : 0.18 * i }}
+                  >
+                    <span className="absolute inset-0 flex items-center justify-center rounded-full bg-ink/[0.07] text-[11px] font-medium text-ink/50 [backface-visibility:hidden]">{x.cold}</span>
+                    <span className="absolute inset-0 flex items-center justify-center rounded-full bg-[#E4F4E8] text-[11px] font-medium text-[#2E7A48] [backface-visibility:hidden] [transform:rotateX(180deg)]">{x.active}</span>
+                  </motion.span>
+                </span>
+              </li>
+            );
+          })}
+        </ul>
       </div>
+      {/* one of the threads */}
       <div className="mt-auto flex flex-col rounded-[16px] bg-[#F6F1E8] p-3">
         <p className="rounded-[14px] rounded-bl-[4px] bg-white px-3 py-2 text-[13px] leading-snug text-ink shadow-[0_1px_2px_rgba(10,15,14,0.06)]">
           <span className="mb-0.5 flex items-center gap-1.5 text-[10.5px] font-medium uppercase tracking-[0.06em] text-ink/40">
