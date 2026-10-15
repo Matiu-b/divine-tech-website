@@ -1515,12 +1515,11 @@ function JobSeller({ x, on, done, reduce }) {
 
 const JOBS = { remind: JobRemind, nurture: JobNurture, revive: JobRevive, seller: JobSeller };
 // bento placement on laptops: the reminder tall on the left, listings wide on top, the CRM row and the booking below
-// wide screens (xl): twelve columns, the KPI Agent as a tall tile on the right
 const JOB_PLACE = {
-  remind: 'lg:col-span-2 lg:row-span-2 xl:col-span-3 xl:col-start-1 xl:row-start-1',
-  nurture: 'lg:col-span-4 xl:col-span-6 xl:col-start-4 xl:row-start-1',
-  revive: 'lg:col-span-2 xl:col-span-3 xl:col-start-4 xl:row-start-2',
-  seller: 'lg:col-span-2 xl:col-span-3 xl:col-start-7 xl:row-start-2',
+  remind: 'lg:col-span-2 lg:row-span-2',
+  nurture: 'lg:col-span-4',
+  revive: 'lg:col-span-2',
+  seller: 'lg:col-span-2',
 };
 
 /**
@@ -1536,7 +1535,7 @@ function KpiPanel({ a, k, run, tall = false }) {
           {a.kpi.badge}
         </span>
         <p className="mt-2 text-[18px] font-medium leading-snug tracking-[-0.01em] text-ink">{a.kpi.title}</p>
-        <p className="mt-1 text-[13px] leading-snug text-graphite">{a.kpi.text}</p>
+        <p className="mt-1 text-[13px] leading-snug text-graphite lg:sr-only">{a.kpi.text}</p>
       </div>
       <ol className={cn('grid gap-2', tall ? 'mt-4 flex-1 content-end' : 'grid-cols-2 lg:grid-cols-4')} aria-label={a.kpi.badge}>
         {a.kpi.steps.map((x, i) => {
@@ -1613,7 +1612,7 @@ export function RxAfter({ it }) {
           </div>
 
           {/* the jobs, as a bento on laptops and a row to swipe on phones */}
-          <ol className="relative mt-6 grid gap-3 max-sm:-mx-4 max-sm:flex max-sm:snap-x max-sm:snap-mandatory max-sm:overflow-x-auto max-sm:px-4 max-sm:pb-1 max-sm:[scrollbar-width:none] xs:max-sm:-mx-5 xs:max-sm:px-5 sm:grid-cols-2 lg:mt-7 lg:grid-cols-6 lg:grid-rows-[auto_auto] lg:gap-3.5 xl:grid-cols-12 [&::-webkit-scrollbar]:hidden">
+          <ol className="relative mt-6 grid gap-3 max-sm:-mx-4 max-sm:flex max-sm:snap-x max-sm:snap-mandatory max-sm:overflow-x-auto max-sm:px-4 max-sm:pb-1 max-sm:[scrollbar-width:none] xs:max-sm:-mx-5 xs:max-sm:px-5 sm:grid-cols-2 lg:mt-7 lg:grid-cols-6 lg:grid-rows-[auto_auto] lg:gap-3.5 [&::-webkit-scrollbar]:hidden">
             {a.steps.map((x, i) => {
               const Job = JOBS[x.key];
               const on = run ? i === j : false;
@@ -1624,7 +1623,7 @@ export function RxAfter({ it }) {
                   {...show(0.08 * i)}
                   aria-label={x.when + ': ' + x.title + '. ' + x.text}
                   className={cn(
-                    'relative rounded-[22px] p-4 transition-shadow duration-500 max-sm:w-[86%] max-sm:shrink-0 max-sm:snap-center xl:p-5',
+                    'relative rounded-[22px] p-4 transition-shadow duration-500 max-sm:w-[86%] max-sm:shrink-0 max-sm:snap-center',
                     x.key === 'remind' ? 'bg-ink text-white' : 'bg-white',
                     on ? 'shadow-[0_0_0_2px_#F25C2A,0_30px_60px_-34px_rgba(242,92,42,0.55)]' : 'shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_24px_48px_-36px_rgba(90,50,20,0.4)]',
                     JOB_PLACE[x.key]
@@ -1634,14 +1633,10 @@ export function RxAfter({ it }) {
                 </motion.li>
               );
             })}
-            {/* wide screens: the KPI Agent as a tall tile on the right */}
-            <li className="hidden xl:col-span-3 xl:col-start-10 xl:row-span-2 xl:row-start-1 xl:block">
-              <KpiPanel a={a} k={k} run={run} tall />
-            </li>
           </ol>
 
-          {/* up to 1279 px: the KPI Agent as a strip under the jobs */}
-          <motion.div {...show(0.3)} className="relative mt-3 lg:mt-3.5 xl:hidden">
+          {/* the KPI Agent: a strip under the jobs */}
+          <motion.div {...show(0.3)} className="relative mt-3 lg:mt-3.5">
             <KpiPanel a={a} k={k} run={run} />
           </motion.div>
         </div>
