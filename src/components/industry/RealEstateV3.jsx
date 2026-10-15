@@ -2043,7 +2043,7 @@ export function RxClosing({ it }) {
         <div className="absolute bottom-[-35%] left-1/2 h-[90%] w-[120%] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(closest-side,rgba(242,92,42,0.45),rgba(255,159,69,0.18)_45%,rgba(255,200,87,0)_75%)] blur-2xl" />
         <div className="absolute right-[-10%] top-[-20%] h-[60%] w-[50%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.12),rgba(255,200,87,0))] blur-2xl" />
         {/* growth bars behind the headline */}
-        <div className="absolute right-[4%] top-[10%] flex h-[34%] w-[46%] items-end gap-[1.4%] max-lg:right-[-8%] max-lg:top-[4%] max-lg:h-[22%] max-lg:w-[80%]">
+        <div className="absolute right-[4%] top-[10%] flex h-[34%] w-[46%] items-end gap-[1.4%] max-lg:right-[-6%] max-lg:top-[3%] max-lg:h-[16%] max-lg:w-[70%] max-lg:opacity-50">
           {SCALE_BARS.map((v, i) => (
             <span
               key={i}
@@ -2063,12 +2063,13 @@ export function RxClosing({ it }) {
           <p className="t-lead pretty max-w-[34em] !text-white/70 lg:col-span-5">{c.text}</p>
         </div>
 
-        {/* the house, warmed to Aurora's light, with the form as glass over it */}
-        <div className="relative mt-10 overflow-hidden rounded-[clamp(24px,2.6vw,34px)] md:mt-12">
-          <img src={img.src} srcSet={img.srcSet} sizes="(min-width: 1280px) 1200px, 100vw" alt="" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover object-[50%_42%]" />
-          <div aria-hidden="true" className="absolute inset-0 bg-[#F25C2A] opacity-30 mix-blend-color" />
-          <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,15,14,0.15)_0%,rgba(10,15,14,0.35)_45%,rgba(10,15,14,0.85)_100%)]" />
-          <div className="relative px-3 pb-3 pt-[clamp(150px,22vw,300px)] xs:px-4 xs:pb-4 md:px-6 md:pb-6">
+        {/* the house, warmed to Aurora's light, with the form as glass over it (phones: the house above, the form overlapping it) */}
+        <div className="relative mt-10 md:mt-12 md:overflow-hidden md:rounded-[clamp(24px,2.6vw,34px)]">
+          <div className="relative aspect-[16/10] overflow-hidden rounded-[24px] md:absolute md:inset-0 md:aspect-auto md:rounded-none">
+            <img src={img.src} srcSet={img.srcSet} sizes="(min-width: 1280px) 1200px, 100vw" alt="" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover object-[50%_45%] [filter:sepia(0.55)_saturate(1.25)_brightness(0.85)]" />
+            <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,159,69,0.10)_0%,rgba(242,92,42,0.12)_40%,rgba(10,15,14,0.55)_75%,rgba(10,15,14,0.9)_100%)] md:bg-[linear-gradient(180deg,rgba(255,159,69,0.08)_0%,rgba(10,15,14,0.25)_40%,rgba(10,15,14,0.85)_100%)]" />
+          </div>
+          <div className="relative -mt-16 px-2 xs:px-3 md:mt-0 md:px-6 md:pb-6 md:pt-[clamp(200px,22vw,300px)]">
             <LiquidGlass tone="dark" className="rounded-[clamp(20px,2.2vw,28px)] p-5 xs:p-6 md:p-7">
               <p className="mb-5 text-[15px] leading-snug text-white/70">Leave your details and Aurora, our AI agent, will call you right away.</p>
               <LeadForm dark wide industry={it.leadIndustry} />
