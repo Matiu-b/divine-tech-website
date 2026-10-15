@@ -925,7 +925,7 @@ function StepTimeline({ steps, T, t, step, reduce }) {
                   exit={{ height: 0, opacity: 0 }}
                   transition={{ duration: 0.4, ease: EASE }}
                 >
-                  <span className="block min-h-[2.75em] pt-1">{x.text}</span>
+                  <span className="block min-h-[4.125em] pt-1">{x.text}</span>
                 </motion.p>
               ) : null}
             </AnimatePresence>
@@ -976,7 +976,7 @@ export function RxRace({ it }) {
               <p className="pretty mt-4 max-w-[30em] text-[15.5px] leading-[1.6] text-graphite">{r.text}</p>
             </div>
             {/* a fixed height for the timeline, so the group stays put while steps open and close */}
-            <div className="min-h-[316px] [@media(max-height:760px)]:min-h-[276px]">
+            <div className="min-h-[300px] [@media(max-height:760px)]:min-h-[270px]">
               <StepTimeline steps={r.steps} T={T} t={t} step={step} reduce={reduce} />
             </div>
           </div>
