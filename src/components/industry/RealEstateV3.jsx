@@ -920,7 +920,7 @@ export function RxRace({ it }) {
               ))}
             </div>
             {wide ? (
-              <div className="mt-4 min-h-[132px] xl:min-h-[124px]" aria-live="polite">
+              <div className="mt-4 min-h-[132px] xl:min-h-[144px]" aria-live="polite">
                 <AnimatePresence mode="wait" initial={false}>
                   <motion.div key={step} initial={reduce ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6, transition: { duration: 0.2 } }} transition={{ duration: 0.45, ease: EASE }}>
                     <p className="t-data text-[12px] text-[#B4471A]">{s.time}</p>
