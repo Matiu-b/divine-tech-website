@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 import CTAButton from '@/components/home-v2/primitives/CTAButton';
 import SectionHeader from '@/components/home-v2/primitives/SectionHeader';
 import { RevealLines } from '@/components/home-v2/primitives/MotionReveal';
-import { useLead } from '@/components/home-v2/LeadDrawer';
+import { LeadForm, useLead } from '@/components/home-v2/LeadDrawer';
 import LiquidGlass from '@/components/home-v2/primitives/LiquidGlass';
 import { onAnchorClick, useInViewport, useMediaQuery, usePageLoaded, usePageVisible } from '@/components/home-v2/hooks';
 import { useNavigate } from 'react-router-dom';
@@ -2018,5 +2018,64 @@ export function RxFaqMore({ m, guide = null }) {
         <ArrowRight className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
       </a>
     </p>
+  );
+}
+
+// the growth bars behind the closing headline: heights as a share of their box, rising left to right
+const SCALE_BARS = [0.22, 0.3, 0.27, 0.38, 0.46, 0.43, 0.56, 0.64, 0.72, 0.84, 1];
+
+/**
+ * The closing for a brokerage, in Aurora's colours only: an ink night with a warm dawn rising from below and growth
+ * bars climbing behind the headline; then the house from the top of the page, warmed to the same light, with the demo
+ * form as glass over it.
+ */
+export function RxClosing({ it }) {
+  const c = it.v3.closing;
+  const img = it.v3.hero.film.image;
+  const reduce = !!useReducedMotion();
+  const ref = useRef(null);
+  const seen = useInViewport(ref, { threshold: 0.2, once: true });
+  const grow = reduce || seen;
+  return (
+    <section ref={ref} id="contact" data-nav-theme="dark" aria-labelledby="contact-title" className="on-dark relative overflow-hidden bg-ink pb-[clamp(72px,7vw,112px)] pt-[clamp(88px,8vw,128px)] text-white">
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+        {/* the dawn: Sun, Amber and Gold rising from below */}
+        <div className="absolute bottom-[-35%] left-1/2 h-[90%] w-[120%] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(closest-side,rgba(242,92,42,0.45),rgba(255,159,69,0.18)_45%,rgba(255,200,87,0)_75%)] blur-2xl" />
+        <div className="absolute right-[-10%] top-[-20%] h-[60%] w-[50%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.12),rgba(255,200,87,0))] blur-2xl" />
+        {/* growth bars behind the headline */}
+        <div className="absolute right-[4%] top-[10%] flex h-[34%] w-[46%] items-end gap-[1.4%] max-lg:right-[-8%] max-lg:top-[4%] max-lg:h-[22%] max-lg:w-[80%]">
+          {SCALE_BARS.map((v, i) => (
+            <span
+              key={i}
+              className="flex-1 rounded-t-[6px] bg-[linear-gradient(180deg,rgba(255,159,69,0.28),rgba(242,92,42,0.06))]"
+              style={{ height: v * 100 + '%', transform: grow ? 'scaleY(1)' : 'scaleY(0)', transformOrigin: 'bottom', transition: reduce ? 'none' : `transform 0.9s cubic-bezier(0.22,1,0.36,1) ${0.15 + i * 0.07}s` }}
+            />
+          ))}
+        </div>
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
+      </div>
+
+      <div className="shell relative">
+        <div className="grid gap-5 lg:grid-cols-12 lg:items-end lg:gap-12">
+          <h2 id="contact-title" className="t-display balance lg:col-span-7 lg:text-[clamp(2.4rem,0.6rem+3vw,3.9rem)]">
+            <RevealLines lines={[c.titleA, c.titleB]} lineClassNames={['', '']} />
+          </h2>
+          <p className="t-lead pretty max-w-[34em] !text-white/70 lg:col-span-5">{c.text}</p>
+        </div>
+
+        {/* the house, warmed to Aurora's light, with the form as glass over it */}
+        <div className="relative mt-10 overflow-hidden rounded-[clamp(24px,2.6vw,34px)] md:mt-12">
+          <img src={img.src} srcSet={img.srcSet} sizes="(min-width: 1280px) 1200px, 100vw" alt="" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover object-[50%_42%]" />
+          <div aria-hidden="true" className="absolute inset-0 bg-[#F25C2A] opacity-30 mix-blend-color" />
+          <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,15,14,0.15)_0%,rgba(10,15,14,0.35)_45%,rgba(10,15,14,0.85)_100%)]" />
+          <div className="relative px-3 pb-3 pt-[clamp(150px,22vw,300px)] xs:px-4 xs:pb-4 md:px-6 md:pb-6">
+            <LiquidGlass tone="dark" className="rounded-[clamp(20px,2.2vw,28px)] p-5 xs:p-6 md:p-7">
+              <p className="mb-5 text-[15px] leading-snug text-white/70">Leave your details and Aurora, our AI agent, will call you right away.</p>
+              <LeadForm dark wide industry={it.leadIndustry} />
+            </LiquidGlass>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }

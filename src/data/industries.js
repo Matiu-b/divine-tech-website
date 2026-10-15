@@ -350,8 +350,6 @@ export const industries = [
         titleA: 'Ready to scale with us?',
         titleB: 'Book a demo.',
         text: 'Aurora answers, qualifies, books and follows up on every lead, so the brokers you have handle more deals. Bring one of your listings and hear it work.',
-        // the headline already says it, so the form card skips its own 'Book a demo' title
-        formTitle: null,
       },
       // the tools Aurora connects to, by kind, with their brand icons (shown only to name them); each kind ends in 'and more'
       stack: {
