@@ -2057,8 +2057,8 @@ function StreetArt({ grow, reduce }) {
   return (
     <svg viewBox="0 0 1200 360" className="block h-auto w-full" fill="none" aria-hidden="true">
       <defs>
-        <linearGradient id="rx-street-line" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stopColor="#FF9F45" stopOpacity="0.35" />
+        <linearGradient id="rx-street-line" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1200" y2="0">
+          <stop offset="0" stopColor="#FF9F45" stopOpacity="0.3" />
           <stop offset="1" stopColor="#FFC857" stopOpacity="0.9" />
         </linearGradient>
         <radialGradient id="rx-street-sun" cx="0.5" cy="0.5" r="0.5">
@@ -2068,8 +2068,8 @@ function StreetArt({ grow, reduce }) {
         </radialGradient>
       </defs>
       {/* the sun rising behind the tallest house */}
-      <circle cx="1060" cy={STREET_GROUND - 150} r="150" fill="url(#rx-street-sun)" style={{ opacity: grow ? 1 : 0, transition: reduce ? 'none' : 'opacity 1.6s ease 0.6s' }} />
-      <circle cx="1060" cy={STREET_GROUND - 150} r="58" stroke="#FFC857" strokeOpacity="0.7" strokeWidth="1.5" {...draw(0.9)} />
+      <circle cx="1090" cy={STREET_GROUND - 120} r="150" fill="url(#rx-street-sun)" style={{ opacity: grow ? 1 : 0, transition: reduce ? 'none' : 'opacity 1.6s ease 0.6s' }} />
+      <circle cx="1090" cy={STREET_GROUND - 120} r="58" stroke="#FFC857" strokeOpacity="0.7" strokeWidth="1.5" {...draw(0.9)} />
       <g stroke="url(#rx-street-line)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
         <path d={`M0 ${STREET_GROUND}H1200`} {...draw(0)} />
         {STREET.map((h) => (
