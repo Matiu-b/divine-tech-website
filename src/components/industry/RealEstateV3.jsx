@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, m as motion, useReducedMotion } from 'framer-motion';
-import { ArrowUp, CalendarCheck, Check, ChevronLeft, CircleDollarSign, Database, Hand, Pause, Play, Scale, Volume2, Send, Clock, House, BellOff, Hourglass, ShieldCheck, User } from 'lucide-react';
+import { ArrowUp, CalendarCheck, Check, ChevronLeft, CircleDollarSign, Database, Hand, Pause, Play, Scale, Volume2, Send, Clock, House, BellOff, Hourglass, ShieldCheck, User, RefreshCw, ArrowRight, TrendingUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import CTAButton from '@/components/home-v2/primitives/CTAButton';
 import SectionHeader from '@/components/home-v2/primitives/SectionHeader';
@@ -8,6 +8,7 @@ import { RevealLines } from '@/components/home-v2/primitives/MotionReveal';
 import { useLead } from '@/components/home-v2/LeadDrawer';
 import LiquidGlass from '@/components/home-v2/primitives/LiquidGlass';
 import { onAnchorClick, useInViewport, useMediaQuery, usePageLoaded, usePageVisible } from '@/components/home-v2/hooks';
+import { useNavigate } from 'react-router-dom';
 
 /*
  * Real estate page, v3. One message per section, in this order:
@@ -1326,5 +1327,134 @@ export function RxRules({ it }) {
         <p className="mt-4 text-[12px] text-slate">{r.note}</p>
       </div>
     </section>
+  );
+}
+
+const AFTER_ICONS = { remind: CalendarCheck, nurture: Send, revive: RefreshCw, seller: House };
+// how long each KPI step stays highlighted (ms)
+const KPI_MS = 2800;
+
+/**
+ * After the first reply: what Aurora keeps doing for a lead over the following weeks (reminders, follow-up, old leads,
+ * seller leads), each with the message it sends and what came of it; then the KPI Agent improving it, one week told
+ * in four steps that light up in turn.
+ */
+export function RxAfter({ it }) {
+  const a = it.v3.after;
+  const ref = useRef(null);
+  const reduce = !!useReducedMotion();
+  const inView = useInViewport(ref, { threshold: 0.25 });
+  const visible = usePageVisible();
+  const [k, setK] = useState(0);
+  useEffect(() => {
+    if (reduce || !inView || !visible) return undefined;
+    const id = setTimeout(() => setK((x) => (x + 1) % a.kpi.steps.length), KPI_MS);
+    return () => clearTimeout(id);
+  }, [k, reduce, inView, visible, a.kpi.steps.length]);
+  const show = (d) => (reduce ? {} : { initial: { opacity: 0, y: 16 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, amount: 0.3 }, transition: { duration: 0.6, ease: EASE, delay: d } });
+
+  return (
+    <section data-nav-theme="light" aria-labelledby="rx-after-title" className="section relative pt-0">
+      <div className="shell">
+        <div ref={ref} className="canvas canvas-grain relative overflow-hidden bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] p-4 xs:p-5 md:p-8 lg:p-10 xl:px-14">
+          <div aria-hidden="true" className="pointer-events-none absolute right-[4%] top-[-14%] h-[55%] w-[40%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.4),rgba(255,200,87,0))] blur-2xl" />
+
+          <div className="relative grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)] lg:items-end lg:gap-12">
+            <h2 id="rx-after-title" className="text-[clamp(28px,2.6vw,42px)] font-medium leading-[1.08] tracking-[-0.022em] text-ink">
+              {a.titleA} <span className="sm:block">{a.titleB}</span>
+            </h2>
+            <p className="pretty text-[15px] leading-[1.6] text-graphite md:text-[15.5px]">{a.text}</p>
+          </div>
+
+          {/* the weeks after the first reply */}
+          <ol className="relative mt-7 grid gap-3 sm:grid-cols-2 lg:mt-9 lg:grid-cols-4 lg:gap-4">
+            <span aria-hidden="true" className="absolute left-4 right-4 top-[27px] hidden h-px bg-[linear-gradient(90deg,rgba(242,92,42,0.5),rgba(10,15,14,0.1))] lg:block" />
+            {a.steps.map((x, i) => {
+              const Icon = AFTER_ICONS[x.key] || Check;
+              return (
+                <motion.li key={x.key} {...show(0.08 * i)} className="relative flex flex-col rounded-[20px] bg-white p-4 shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_24px_48px_-36px_rgba(90,50,20,0.4)]">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="relative flex h-[30px] w-[30px] items-center justify-center rounded-full bg-[linear-gradient(140deg,#FF8A3D,#F25C2A)] text-white">
+                      <Icon className="h-[14px] w-[14px]" strokeWidth={2} aria-hidden="true" />
+                    </span>
+                    <span className="t-data text-[11px] uppercase tracking-[0.08em] text-ink/40">{x.when}</span>
+                  </div>
+                  <p className="mt-3 text-[16px] font-medium leading-snug tracking-[-0.01em] text-ink">{x.title}</p>
+                  <p className="mt-1 text-[13.5px] leading-snug text-graphite">{x.text}</p>
+                  {/* the message Aurora sends */}
+                  <p className="mt-3 flex-1 rounded-[12px] bg-[#F6F1E8] px-3 py-2.5 text-[13.5px] leading-snug text-ink">
+                    <span className="mb-1 flex items-center gap-1.5 text-[10.5px] font-medium uppercase tracking-[0.06em] text-ink/40">
+                      <img src="/brand/aurora-symbol-color.svg" alt="" width="11" height="11" className="h-[11px] w-[11px]" />
+                      Aurora
+                    </span>
+                    “{x.msg}”
+                  </p>
+                  <span className="mt-3 inline-flex items-center gap-1.5 self-start rounded-full bg-[#E4F4E8] px-2.5 py-1 text-[12px] font-medium text-[#2E7A48]">
+                    <Check className="h-3.5 w-3.5" strokeWidth={2.4} aria-hidden="true" />
+                    {x.result}
+                  </span>
+                </motion.li>
+              );
+            })}
+          </ol>
+
+          {/* the KPI Agent: one week of improvement in four steps */}
+          <motion.div {...show(0.3)} className="relative mt-3 grid gap-5 rounded-[22px] bg-ink p-5 text-white lg:mt-4 lg:grid-cols-[minmax(0,300px)_minmax(0,1fr)] lg:items-center lg:gap-10 lg:p-6">
+            <div>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1 text-[11.5px] font-medium text-white/80">
+                <TrendingUp className="h-3.5 w-3.5 text-[#FF8A3D]" strokeWidth={2.2} aria-hidden="true" />
+                {a.kpi.badge}
+              </span>
+              <p className="mt-3 text-[19px] font-medium leading-snug tracking-[-0.01em]">{a.kpi.title}</p>
+              <p className="mt-1.5 text-[13.5px] leading-relaxed text-white/60">{a.kpi.text}</p>
+            </div>
+            <ol className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4" aria-label={a.kpi.badge}>
+              {a.kpi.steps.map((x, i) => {
+                const on = i === k;
+                const done = i < k;
+                return (
+                  <li key={x.tag} className={cn('relative overflow-hidden rounded-[14px] p-3 transition-colors duration-500', on ? 'bg-white/[0.12]' : 'bg-white/[0.04]')}>
+                    <span aria-hidden="true" className="absolute inset-x-0 top-0 h-[2px] bg-white/10">
+                      <span
+                        className={cn('absolute inset-y-0 left-0 bg-[#F25C2A]', on && !reduce ? 'transition-[width] ease-linear' : '')}
+                        style={{ width: done ? '100%' : on ? '100%' : '0%', transitionDuration: on && !reduce ? KPI_MS + 'ms' : '0ms' }}
+                      />
+                    </span>
+                    <p className={cn('t-data text-[10.5px] uppercase tracking-[0.08em] transition-colors', on ? 'text-[#FF8A3D]' : 'text-white/40')}>
+                      {String(i + 1).padStart(2, '0')} · {x.tag}
+                    </p>
+                    <p className={cn('mt-1.5 text-[13.5px] leading-snug transition-colors', on ? 'text-white' : 'text-white/55')}>{x.text}</p>
+                    {x.who ? <p className="mt-1.5 text-[11.5px] font-medium text-[#7FD49B]">{x.who}</p> : null}
+                  </li>
+                );
+              })}
+            </ol>
+          </motion.div>
+        </div>
+        <p className="mt-4 text-[12px] text-slate">{a.note}</p>
+      </div>
+    </section>
+  );
+}
+
+/** Under the FAQ: one line pointing to the platform page, for anyone who wants the whole picture. */
+export function RxFaqMore({ m }) {
+  const navigate = useNavigate();
+  return (
+    <p className="mt-6 flex flex-wrap items-center gap-x-2 gap-y-1 text-[14px] text-graphite">
+      {m.text}
+      <a
+        href={m.href}
+        onClick={(e) => {
+          if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
+          e.preventDefault();
+          navigate(m.href);
+        }}
+        className="inline-flex items-center gap-1 font-medium text-ink underline decoration-ink/25 underline-offset-4 hover:decoration-ink"
+      >
+        {m.link}
+        <ArrowRight className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
+      </a>
+    </p>
   );
 }

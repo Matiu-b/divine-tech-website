@@ -243,6 +243,39 @@ export const industries = [
         ],
         note: 'An example playbook. Rules, names and replies are illustrative.',
       },
+      // After the first reply: what Aurora keeps doing for a lead over the following weeks, and the KPI Agent that
+      // measures it. Every name, message and change is illustrative.
+      after: {
+        eyebrow: 'After the first reply',
+        titleA: 'The first reply is day one.',
+        titleB: 'Aurora keeps every lead moving.',
+        text: 'Most buyers aren’t ready this week. Aurora reminds, follows up, revives and books, on your rules, until they are.',
+        steps: [
+          { key: 'remind', when: 'Day 1', title: 'Showing reminders', text: 'Confirms the tour and reminds the buyer the day before.', msg: 'Reminder: tomorrow at 11 am, 18 Willow Court with Marcus. Reply C to confirm.', result: 'Confirmed' },
+          { key: 'nurture', when: 'Week 2', title: 'Leads not ready yet', text: 'Sends homes that match and checks in on the timing they gave.', msg: 'Two new homes in your range just listed near Oak Park. Want to see either one?', result: 'Tour requested' },
+          { key: 'revive', when: 'Month 3', title: 'Old leads, back to life', text: 'Works through the leads in your CRM that went quiet.', msg: 'Hi Dan, are you still thinking about a move this spring?', result: 'Back in the pipeline' },
+          { key: 'seller', when: 'Any day', title: 'Seller leads', text: 'Qualifies homeowners and books the listing appointment.', msg: 'Happy to help. Marcus can come by for a home valuation on Thursday. Does 5 pm work?', result: 'Listing appointment booked' },
+        ],
+        kpi: {
+          badge: 'Patented KPI Agent',
+          title: 'And it gets better every week.',
+          text: 'The KPI Agent measures Aurora against the numbers your brokerage runs on, like speed to lead, showings booked and no-shows, and improves how it works. Bigger changes wait for your approval.',
+          steps: [
+            { tag: 'Measured', text: 'No-shows rose on Saturday showings.' },
+            { tag: 'Cause found', text: 'Reminders went out by email. Buyers read texts.' },
+            { tag: 'Fix suggested', text: 'A text reminder two hours before.', who: 'Approved by Marcus' },
+            { tag: 'Improved', text: 'No-shows back on target. The change is logged.' },
+          ],
+        },
+        note: 'An example. Names, messages and the change are illustrative.',
+      },
+      // the closing call to action, for a brokerage
+      closing: {
+        titleA: 'Send us one listing.',
+        titleB: 'Hear Aurora answer a buyer about it.',
+        text: 'Share one of your listings. We set Aurora up on it, and you hear it answer a buyer, qualify them and book the showing.',
+      },
+      faqMore: { text: 'Want the full picture of how Aurora works?', link: 'See the platform', href: '/platform' },
     },
     meta: {
       title: 'AI ISA for Real Estate Brokerages | Aurora by Divine Tech AI',
@@ -309,9 +342,12 @@ export const industries = [
       ['What is an AI ISA for real estate?', 'An AI ISA (inside sales agent) answers and qualifies a brokerage’s leads the way a human ISA does, by phone, text, chat and email. Aurora replies to every new lead in seconds, asks about budget, timing and area, books the showing or listing appointment with the right broker and follows up until the lead is ready.'],
       ['How fast does Aurora reply to a new lead?', 'Within seconds, on the channel the lead came from, at any hour. A portal inquiry at 9:47 pm gets an answer at 9:47 pm, not the next morning.'],
       ['Can Aurora book showings in my brokers’ calendars?', 'Yes. During setup Aurora is connected to your brokers’ calendars and your routing rules, so it books the showing with the right broker, sends the confirmation and address, and reminds the client the day before.'],
-      ['Does Aurora work with our CRM and lead sources?', 'Aurora works inside the systems your team already uses. During setup it is connected to your CRM, your lead sources and your brokers’ calendars, and every conversation is logged to the lead’s record.'],
+      ['Does Aurora work with our CRM and lead sources?', 'Aurora works inside the systems your team already uses. During setup it is connected to your CRM, such as HubSpot or Salesforce, your lead sources and your brokers’ Google or Outlook calendars, and every conversation is logged to the lead’s record.'],
       ['Will Aurora quote prices or negotiate?', 'Only within the rules you set. You can tell it never to quote a final price and to offer a showing or a call with a broker instead. Anything outside your rules goes to a broker for approval.'],
       ['What happens when a lead is ready to talk to a broker?', 'Aurora hands the lead to the right broker with the full conversation, and your team can step into any conversation at any moment.'],
+      FAQ_CHANNELS,
+      FAQ_LIVE,
+      ['How much does Aurora cost for a brokerage?', 'Aurora is priced for each brokerage. The price depends on what Aurora takes on, from new leads to follow-up and showings, the channels it covers and the systems it connects to. We map your process first, then send a proposal based on that plan.'],
     ],
   },
   {
