@@ -122,7 +122,7 @@
   {
    "kind": "image",
    "url": "https://www.google.com/s2/favicons?domain=followupboss.com&sz=128",
-   "out": "public/img/logos/re/followupboss",
+   "out": "public/media/logos/followupboss",
    "widths": [
     96
    ]
@@ -130,7 +130,7 @@
   {
    "kind": "image",
    "url": "https://www.google.com/s2/favicons?domain=lofty.com&sz=128",
-   "out": "public/img/logos/re/lofty",
+   "out": "public/media/logos/lofty",
    "widths": [
     96
    ]
@@ -138,7 +138,7 @@
   {
    "kind": "image",
    "url": "https://www.google.com/s2/favicons?domain=boldtrail.com&sz=128",
-   "out": "public/img/logos/re/boldtrail",
+   "out": "public/media/logos/boldtrail",
    "widths": [
     96
    ]
@@ -146,7 +146,7 @@
   {
    "kind": "image",
    "url": "https://www.google.com/s2/favicons?domain=realtor.com&sz=128",
-   "out": "public/img/logos/re/realtor",
+   "out": "public/media/logos/realtor",
    "widths": [
     96
    ]
@@ -154,7 +154,7 @@
   {
    "kind": "image",
    "url": "https://www.google.com/s2/favicons?domain=homes.com&sz=128",
-   "out": "public/img/logos/re/homes",
+   "out": "public/media/logos/homes",
    "widths": [
     96
    ]
@@ -162,7 +162,7 @@
   {
    "kind": "image",
    "url": "https://www.google.com/s2/favicons?domain=zillow.com&sz=128",
-   "out": "public/img/logos/re/zillow",
+   "out": "public/media/logos/zillow",
    "widths": [
     96
    ]
