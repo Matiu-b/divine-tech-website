@@ -1,10 +1,10 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, m as motion, useReducedMotion } from 'framer-motion';
-import { ArrowUp, CalendarCheck, Check, ChevronLeft, CircleDollarSign, Database, Hand, MessageCircle, Pause, Play, Scale, Volume2, Send, Clock, House } from 'lucide-react';
+import { ArrowUp, CalendarCheck, Check, ChevronLeft, CircleDollarSign, Database, Hand, Pause, Play, Scale, Volume2, Send, Clock, House, BellOff, Hourglass, ShieldCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import CTAButton from '@/components/home-v2/primitives/CTAButton';
 import SectionHeader from '@/components/home-v2/primitives/SectionHeader';
-import { RevealGroup, RevealItem, RevealLines } from '@/components/home-v2/primitives/MotionReveal';
+import { RevealLines } from '@/components/home-v2/primitives/MotionReveal';
 import { useLead } from '@/components/home-v2/LeadDrawer';
 import LiquidGlass from '@/components/home-v2/primitives/LiquidGlass';
 import { onAnchorClick, useInViewport, useMediaQuery, usePageLoaded, usePageVisible } from '@/components/home-v2/hooks';
@@ -1081,31 +1081,187 @@ export function RxRace({ it }) {
   );
 }
 
-const RULE_ICONS = { price: CircleDollarSign, fair: Scale, consent: MessageCircle, handoff: Hand };
+const RULE_ICONS = { price: CircleDollarSign, fair: Scale, stop: BellOff, handoff: Hand };
+const TONES = {
+  ok: { icon: Check, cls: 'bg-[#E4F4E8] text-[#2E7A48]' },
+  wait: { icon: Hourglass, cls: 'bg-[#FFF1E4] text-[#B4471A]' },
+  shield: { icon: ShieldCheck, cls: 'bg-[#E8EEF9] text-[#3A5A9A]' },
+  stop: { icon: BellOff, cls: 'bg-ink/[0.06] text-ink/70' },
+};
+// how long each rule stays on screen (ms)
+const SCENE_MS = 5600;
 
-/** Your rules: four short guarantees, specific to real estate. */
+/** One setting in the playbook: its name on the left, its value on the right (a two-way switch for final prices). */
+function PlaybookRow({ row, active, value, onPick, reduce }) {
+  const Icon = row.icon ? RULE_ICONS[row.icon] : null;
+  return (
+    <button
+      type="button"
+      onClick={onPick}
+      aria-pressed={active}
+      className={cn(
+        'relative flex w-full items-center gap-3 rounded-[12px] px-3 py-2.5 text-left transition-colors duration-300',
+        active ? 'bg-[#FFF3E8]' : 'hover:bg-ink/[0.03]'
+      )}
+    >
+      {active ? <motion.span layoutId={reduce ? undefined : 'playbook-mark'} className="absolute inset-y-2 left-0 w-[3px] rounded-full bg-[#F25C2A]" /> : null}
+      {Icon ? (
+        <Icon className={cn('h-4 w-4 shrink-0 transition-colors', active ? 'text-[#D9481C]' : 'text-ink/40')} strokeWidth={1.9} aria-hidden="true" />
+      ) : (
+        <span aria-hidden="true" className={cn('w-4 shrink-0 text-center font-serif text-[18px] leading-none transition-colors', active ? 'text-[#D9481C]' : 'text-ink/30')}>
+          ”
+        </span>
+      )}
+      <span className={cn('min-w-0 flex-1 truncate text-[14px] transition-colors', active ? 'font-medium text-ink' : 'text-ink/75')}>{row.label}</span>
+      {row.values.length > 1 ? (
+        // a real choice: both options, the one in force highlighted
+        <span className="flex shrink-0 rounded-full bg-ink/[0.06] p-0.5 text-[11.5px] font-medium">
+          {row.values.map((v, i) => (
+            <span key={v} className="relative px-2.5 py-1">
+              {i === value ? (
+                <motion.span
+                  layoutId={reduce ? undefined : 'price-switch'}
+                  className="absolute inset-0 rounded-full bg-white shadow-[0_1px_3px_rgba(10,15,14,0.15)]"
+                  transition={{ duration: 0.4, ease: EASE }}
+                />
+              ) : null}
+              <span className={cn('relative transition-colors', i === value ? 'text-ink' : 'text-ink/45')}>{v}</span>
+            </span>
+          ))}
+        </span>
+      ) : (
+        <span className={cn('shrink-0 rounded-full px-2.5 py-1 text-[11.5px] font-medium transition-colors', active ? 'bg-white text-ink shadow-[0_1px_3px_rgba(10,15,14,0.12)]' : 'bg-ink/[0.05] text-ink/60')}>
+          {row.values[0]}
+        </span>
+      )}
+    </button>
+  );
+}
+
+/** The rule in force, as three steps on a line: what the lead says, what Aurora does, and what comes of it. */
+function RuleFlow({ r, sc, reduce }) {
+  const tone = TONES[sc.tone] || TONES.ok;
+  const ToneIcon = tone.icon;
+  const enter = (d) => (reduce ? { initial: false } : { initial: { opacity: 0, y: 10 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.45, ease: EASE, delay: d } });
+  const line = (d) =>
+    reduce ? null : (
+      <motion.span
+        aria-hidden="true"
+        className="absolute left-0 top-0 h-2 w-2 -translate-x-[3px] rounded-full bg-[#F25C2A] shadow-[0_0_0_4px_rgba(242,92,42,0.18)]"
+        initial={{ top: '0%', opacity: 0 }}
+        animate={{ top: '100%', opacity: [0, 1, 1, 0] }}
+        transition={{ duration: 0.6, ease: 'easeInOut', delay: d }}
+      />
+    );
+  const label = 't-data text-[11px] uppercase tracking-[0.08em] text-ink/40';
+  return (
+    <div className="relative" aria-live="polite">
+      {/* when */}
+      <motion.div {...enter(0)} className="rounded-[18px] bg-white p-4 shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_18px_40px_-28px_rgba(90,50,20,0.35)]">
+        <p className="flex items-center justify-between gap-3">
+          <span className={label}>{r.flow.when}</span>
+          <span className="truncate text-[11.5px] text-slate">{sc.channel}</span>
+        </p>
+        <p className="mt-2 text-[17px] font-medium leading-snug tracking-[-0.01em] text-ink xl:text-[18px]">“{sc.trigger}”</p>
+      </motion.div>
+      <div className="relative ml-6 h-7 w-[2px] bg-ink/10">{line(0.45)}</div>
+      {/* then */}
+      <motion.div {...enter(0.7)} className="rounded-[18px] bg-ink p-4 text-white shadow-[0_18px_40px_-24px_rgba(10,15,14,0.6)]">
+        <p className="flex items-center gap-2">
+          <img src="/brand/aurora-symbol-color.svg" alt="" width="14" height="14" className="h-3.5 w-3.5" />
+          <span className="t-data text-[11px] uppercase tracking-[0.08em] text-white/55">{r.flow.then}</span>
+        </p>
+        <p className="mt-2 text-[16px] leading-snug text-white/[0.92] xl:text-[17px]">{sc.action}</p>
+      </motion.div>
+      <div className="relative ml-6 h-7 w-[2px] bg-ink/10">{line(1.15)}</div>
+      {/* result */}
+      <motion.div {...enter(1.4)} className="flex items-center gap-3">
+        <span className={label}>{r.flow.result}</span>
+        <span className={cn('inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[13px] font-medium', tone.cls)}>
+          <ToneIcon className="h-3.5 w-3.5" strokeWidth={2.2} aria-hidden="true" />
+          {sc.result}
+        </span>
+      </motion.div>
+    </div>
+  );
+}
+
+/**
+ * Your rules: the broker's playbook on the left, the rule in force on the right as when, what Aurora does, and the
+ * result. It steps through the rules by itself (final prices twice: Never, then Ask me first); a click picks a rule.
+ */
 export function RxRules({ it }) {
   const r = it.v3.rules;
+  const ref = useRef(null);
+  const reduce = !!useReducedMotion();
+  const inView = useInViewport(ref, { threshold: 0.3 });
+  const visible = usePageVisible();
+  const [i, setI] = useState(0);
+  const [tick, setTick] = useState(0); // restarts the timer after a click
+  const sc = r.scenes[i];
+
+  useEffect(() => {
+    if (reduce || !inView || !visible) return undefined;
+    const id = setTimeout(() => setI((x) => (x + 1) % r.scenes.length), SCENE_MS);
+    return () => clearTimeout(id);
+  }, [i, tick, reduce, inView, visible, r.scenes.length]);
+
+  // the value each setting shows: final prices follows the scene on screen, and stays where it was left
+  const [price, setPrice] = useState(0);
+  useEffect(() => {
+    if (sc.row === 'price') setPrice(sc.value);
+  }, [sc]);
+
+  // a click shows that rule (on final prices, a second click flips the switch) and restarts the timer
+  const pick = (key) => {
+    const at = key === 'price' && sc.row === 'price' ? r.scenes.findIndex((x) => x.row === 'price' && x.value !== sc.value) : r.scenes.findIndex((x) => x.row === key);
+    setI(at);
+    setTick((x) => x + 1);
+  };
+
   return (
     <section data-nav-theme="light" aria-labelledby="rx-rules-title" className="section relative pt-0">
       <div className="shell">
-        <SectionHeader id="rx-rules-title" eyebrow={r.eyebrow} titleA={r.titleA} titleB={r.titleB} layout="split" />
-        <RevealGroup className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2 md:mt-14 lg:grid-cols-4 lg:gap-4" amount={0.2}>
-          {r.items.map((x) => {
-            const Icon = RULE_ICONS[x.icon] || Scale;
-            return (
-              <RevealItem key={x.title} as="article" className="flex gap-3.5 rounded-[22px] bg-white p-4 shadow-[0_0_0_1px_rgba(10,15,14,0.06)] sm:block sm:p-5">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[13px] bg-[linear-gradient(140deg,#FFF1E6,#FFE3C4)] text-[#D9481C]">
-                  <Icon className="h-[19px] w-[19px]" strokeWidth={1.8} aria-hidden="true" />
-                </span>
-                <span className="block">
-                  <span className="block text-[15px] font-medium tracking-[-0.01em] text-ink sm:mt-4 sm:text-[16px]">{x.title}</span>
-                  <span className="mt-1 block text-[13.5px] leading-relaxed text-graphite sm:text-[14px]">{x.text}</span>
-                </span>
-              </RevealItem>
-            );
-          })}
-        </RevealGroup>
+        <div ref={ref} className="canvas canvas-grain relative grid gap-6 overflow-hidden bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] p-4 xs:p-5 md:p-8 lg:grid-cols-[minmax(340px,420px)_minmax(0,1fr)] lg:items-center lg:gap-12 lg:p-10 xl:gap-16 xl:px-14">
+          <div aria-hidden="true" className="pointer-events-none absolute left-[8%] top-[-12%] h-[60%] w-[40%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.4),rgba(255,200,87,0))] blur-2xl" />
+
+          {/* the headline and the rule in force (first on phones) */}
+          <div className="relative min-w-0 lg:col-start-2 lg:row-start-1">
+            <h2 id="rx-rules-title" className="balance text-[clamp(28px,2.6vw,42px)] font-medium leading-[1.08] tracking-[-0.022em] text-ink">
+              {r.titleA} {r.titleB}
+            </h2>
+            <p className="pretty mt-3 max-w-[34em] text-[15px] leading-[1.6] text-graphite md:text-[15.5px]">{r.text}</p>
+            <div className="mt-6 max-w-[520px] lg:mt-8 lg:min-h-[300px]">
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.div key={i} exit={reduce ? undefined : { opacity: 0, transition: { duration: 0.2 } }}>
+                  <RuleFlow r={r} sc={sc} reduce={reduce} />
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </div>
+
+          {/* the broker's playbook */}
+          <div className="relative rounded-[24px] bg-white/80 p-3 shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_30px_60px_-40px_rgba(90,50,20,0.4)] backdrop-blur-sm lg:col-start-1 lg:row-start-1 lg:p-4">
+            <div className="flex items-center justify-between gap-3 px-3 pb-3 pt-1.5">
+              <span>
+                <span className="block text-[15px] font-medium text-ink">{r.panel.title}</span>
+                <span className="block text-[12px] text-slate">{r.panel.sub}</span>
+              </span>
+              <span className="rounded-full bg-[#E4F4E8] px-2.5 py-1 text-[11.5px] font-medium text-[#2E7A48]">{r.panel.edited}</span>
+            </div>
+            {r.groups.map((g) => (
+              <div key={g.key} className="border-t border-ink/[0.06] pt-2 first-of-type:border-0">
+                <p className="t-data px-3 pb-1 pt-1 text-[10.5px] uppercase tracking-[0.08em] text-ink/40">{g.label}</p>
+                {r.rows
+                  .filter((x) => x.group === g.key)
+                  .map((x) => (
+                    <PlaybookRow key={x.key} row={x} active={sc.row === x.key} value={x.key === 'price' ? price : 0} onPick={() => pick(x.key)} reduce={reduce} />
+                  ))}
+              </div>
+            ))}
+          </div>
+        </div>
+        <p className="mt-4 text-[12px] text-slate">{r.note}</p>
       </div>
     </section>
   );

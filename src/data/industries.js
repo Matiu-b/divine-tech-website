@@ -208,16 +208,41 @@ export const industries = [
         },
         note: 'An example evening. Names, times and messages are illustrative.',
       },
+      // Your playbook: the broker's settings on the left, one rule at a time on the right (when, what Aurora does, result).
+      // Every name, time and result is illustrative.
       rules: {
         eyebrow: 'Your rules',
         titleA: 'It follows your rules.',
         titleB: 'Every time.',
-        items: [
-          { icon: 'price', title: 'No final prices', text: 'Offers a showing or a call with a broker instead of quoting a price.' },
-          { icon: 'fair', title: 'Questions about the home', text: 'Budget, timing, area and needs. Never about who the buyer is.' },
-          { icon: 'consent', title: 'Contact on their terms', text: 'Replies on the channel the lead chose, and stops when asked.' },
-          { icon: 'handoff', title: 'Hot leads to a person', text: 'Ready buyers and sellers go to the right broker with the full history.' },
+        text: 'You set what Aurora never does, what needs you first, and how it answers the objections buyers raise.',
+        panel: { title: 'Your playbook', sub: 'Harbor Lane Realty', edited: 'Set by you' },
+        groups: [
+          { key: 'guard', label: 'Guardrails' },
+          { key: 'obj', label: 'Objections' },
         ],
+        rows: [
+          { key: 'price', group: 'guard', icon: 'price', label: 'Final prices', values: ['Never', 'Ask me first'] },
+          { key: 'fair', group: 'guard', icon: 'fair', label: 'Who lives in the area', values: ['Never discuss'] },
+          { key: 'stop', group: 'guard', icon: 'stop', label: 'Opt-out requests', values: ['Stop at once'] },
+          { key: 'handoff', group: 'guard', icon: 'handoff', label: 'Ready to tour', values: ['Hand to a broker'] },
+          { key: 'looking', group: 'obj', label: '“Just looking”', values: ['Nurture'] },
+          { key: 'broker', group: 'obj', label: '“I already have a broker”', values: ['Step back'] },
+          { key: 'high', group: 'obj', label: '“The price is too high”', values: ['Find their range'] },
+          { key: 'preapp', group: 'obj', label: '“Not pre-approved yet”', values: ['Lender intro'] },
+        ],
+        flow: { when: 'When', then: 'Aurora', result: 'Result' },
+        scenes: [
+          { row: 'price', value: 0, channel: 'Text · 9:14 pm', trigger: 'What’s the lowest the seller would take?', action: 'Doesn’t name a number. Offers a call with the listing broker.', result: 'Call booked · Marcus notified', tone: 'ok' },
+          { row: 'price', value: 1, channel: 'Text · 9:14 pm', trigger: 'What’s the lowest the seller would take?', action: 'Holds the reply and asks you first.', result: 'Approval sent to Marcus · one tap', tone: 'wait' },
+          { row: 'fair', value: 0, channel: 'Web chat · 7:02 pm', trigger: 'Is it a good area for families like mine?', action: 'Talks about the home, schools and commute. Never about who lives nearby.', result: 'Fair Housing rule applied', tone: 'shield' },
+          { row: 'stop', value: 0, channel: 'Text · 6:40 pm', trigger: 'STOP', action: 'Confirms once and never texts again.', result: 'Opted out · follow-ups cancelled', tone: 'stop' },
+          { row: 'handoff', value: 0, channel: 'Text · 8:21 pm', trigger: 'We’re pre-approved. Can we see it Saturday?', action: 'Books the tour and hands the lead to the right broker, with the full history.', result: 'Tour booked · Marcus has the history', tone: 'ok' },
+          { row: 'looking', value: 0, channel: 'Zillow inquiry · 10:05 pm', trigger: 'Just looking for now.', action: 'Sends a few homes that match and checks back in two weeks.', result: 'Nurture · next touch in 14 days', tone: 'wait' },
+          { row: 'broker', value: 0, channel: 'Text · 5:48 pm', trigger: 'I already have a broker.', action: 'Thanks them and steps back. No pressure, no follow-ups.', result: 'Marked: working with a broker', tone: 'stop' },
+          { row: 'high', value: 0, channel: 'Text · 8:57 pm', trigger: 'The price is too high for us.', action: 'Asks their range and suggests homes that fit it.', result: '3 homes in range sent', tone: 'ok' },
+          { row: 'preapp', value: 0, channel: 'Call · 12:30 pm', trigger: 'We’re not pre-approved yet.', action: 'Offers an intro to a lender you work with.', result: 'Lender intro requested', tone: 'ok' },
+        ],
+        note: 'An example playbook. Rules, names and times are illustrative.',
       },
     },
     meta: {
