@@ -294,7 +294,7 @@ export const industries = [
           title: 'Measured against your goals.',
           text: 'You set the numbers that matter to the brokerage. Every week the KPI Agent measures Aurora against them, finds what holds a number back and changes how Aurora works. Bigger changes wait for your approval.',
           goalLabel: 'Goal',
-          legend: { met: 'Goal met', not: 'Not yet', goal: 'Your goal' },
+          legend: { goal: 'Your goal' },
           since: 'On goal since week',
           changeLabel: 'After week',
           weeks: ['W1', 'W2', 'W3', 'W4', 'W5', 'W6', 'W7', 'W8'],

@@ -1623,17 +1623,16 @@ function KpiGoals({ a, run, reduce }) {
                   setHeld(true);
                 }}
                 className={cn(
-                  'flex shrink-0 items-center justify-between gap-4 rounded-[12px] px-3 py-2 text-left transition-colors duration-300',
+                  'flex shrink-0 items-center justify-between gap-4 rounded-[12px] px-3 py-2 text-left transition-colors duration-300 lg:py-1.5',
                   cur ? 'bg-[#F6F1E8]' : 'bg-transparent shadow-[inset_0_0_0_1px_rgba(10,15,14,0.08)] hover:bg-ink/[0.03] lg:shadow-none'
                 )}
               >
-                <span className="min-w-0">
+                <span className="min-w-0 lg:flex lg:flex-1 lg:items-baseline lg:justify-between lg:gap-3">
                   <span className={cn('block whitespace-nowrap text-[13.5px] font-medium transition-colors', cur ? 'text-ink' : 'text-ink/55')}>{x.name}</span>
                   <span className="block whitespace-nowrap text-[11.5px] text-slate">
                     {K.goalLabel}: {x.target}
                   </span>
                 </span>
-                <span aria-hidden="true" className={cn('hidden h-2 w-2 shrink-0 rounded-full transition-colors lg:block', cur ? 'bg-[#F25C2A]' : 'bg-ink/15')} />
               </button>
             );
           })}
@@ -1645,8 +1644,9 @@ function KpiGoals({ a, run, reduce }) {
         <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
           <p className="min-w-0">
             <span className="block text-[15px] font-medium text-ink">{goal.name}</span>
-            <span className="block text-[12px] text-slate">
-              {K.goalLabel}: {goal.target}
+            <span className="mt-0.5 flex items-center gap-1.5 text-[12px] text-slate">
+              <span aria-hidden="true" className="w-4 border-t-[1.5px] border-dashed border-ink/45" />
+              {K.legend.goal}: {goal.target}
             </span>
           </p>
           <AnimatePresence mode="wait">
@@ -1666,7 +1666,7 @@ function KpiGoals({ a, run, reduce }) {
           </AnimatePresence>
         </div>
 
-        <div className="relative mt-4 h-[132px] sm:h-[150px]" role="img" aria-label={goal.name + ', ' + K.goalLabel.toLowerCase() + ' ' + goal.target.toLowerCase() + (since >= 0 ? '. ' + K.since + ' ' + (since + 1) + '.' : '.')}>
+        <div className="relative mt-3 h-[120px] sm:h-[128px]" role="img" aria-label={goal.name + ', ' + K.goalLabel.toLowerCase() + ' ' + goal.target.toLowerCase() + (since >= 0 ? '. ' + K.since + ' ' + (since + 1) + '.' : '.')}>
           {/* the weeks */}
           <div className="absolute inset-0 grid items-end" style={{ gridTemplateColumns: `repeat(${n}, minmax(0, 1fr))` }}>
             {goal.values.map((v, i) => (
@@ -1714,20 +1714,6 @@ function KpiGoals({ a, run, reduce }) {
           </motion.p>
         </AnimatePresence>
 
-        <p aria-hidden="true" className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-slate">
-          <span className="inline-flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-[3px] bg-[#F25C2A]" />
-            {K.legend.met}
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-[3px] bg-ink/[0.13]" />
-            {K.legend.not}
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <span className="w-4 border-t-[1.5px] border-dashed border-ink/45" />
-            {K.legend.goal}
-          </span>
-        </p>
       </div>
     </div>
   );
