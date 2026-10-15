@@ -1610,7 +1610,7 @@ function KpiGoals({ a, run, reduce }) {
         <p className="mt-3 text-[19px] font-medium leading-snug tracking-[-0.01em] text-ink">{K.title}</p>
         <p className="mt-1.5 text-[13px] leading-snug text-graphite">{K.text}</p>
         {/* the goals by area: pills that wrap under 1024 px, a list beside the chart on laptops */}
-        <div role="tablist" aria-label={K.badge} className="mt-4 flex flex-wrap gap-1.5 lg:mt-auto lg:grid lg:gap-0.5 lg:pt-4">
+        <div role="tablist" aria-label={K.badge} className="mt-4 flex flex-wrap gap-1.5 lg:mt-auto lg:grid lg:gap-0 lg:pt-3">
           {K.goals.map((x, i) => {
             const cur = i === g;
             return (
@@ -1625,7 +1625,7 @@ function KpiGoals({ a, run, reduce }) {
                   setHeld(true);
                 }}
                 className={cn(
-                  'flex items-center gap-3 rounded-full px-3 py-1.5 text-left transition-colors duration-300 lg:rounded-[10px] lg:py-[7px]',
+                  'flex items-center gap-3 rounded-full px-3 py-1.5 text-left transition-colors duration-300 lg:rounded-[10px] lg:py-[5px]',
                   cur ? 'bg-[#F6F1E8]' : 'shadow-[inset_0_0_0_1px_rgba(10,15,14,0.1)] hover:bg-ink/[0.03] lg:shadow-none'
                 )}
               >
@@ -1638,7 +1638,7 @@ function KpiGoals({ a, run, reduce }) {
       </div>
 
       {/* the goal, week by week */}
-      <div className="min-w-0 rounded-[18px] bg-[#FBF8F3] p-3.5 shadow-[inset_0_0_0_1px_rgba(10,15,14,0.05)] md:p-4">
+      <div className="flex min-w-0 flex-col rounded-[18px] bg-[#FBF8F3] p-3.5 shadow-[inset_0_0_0_1px_rgba(10,15,14,0.05)] md:p-4">
         <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
           <p className="min-w-0">
             <span className="block text-[15px] font-medium text-ink">
@@ -1667,7 +1667,7 @@ function KpiGoals({ a, run, reduce }) {
           </AnimatePresence>
         </div>
 
-        <div className="relative mt-3 h-[120px] sm:h-[128px]" role="img" aria-label={goal.area + ', ' + goal.name + ', ' + K.goalLabel.toLowerCase() + ' ' + goal.target.toLowerCase() + (since >= 0 ? '. ' + K.since + ' ' + (since + 1) + '.' : '.')}>
+        <div className="relative mt-3 h-[120px] sm:h-[128px] lg:h-auto lg:min-h-[128px] lg:flex-1" role="img" aria-label={goal.area + ', ' + goal.name + ', ' + K.goalLabel.toLowerCase() + ' ' + goal.target.toLowerCase() + (since >= 0 ? '. ' + K.since + ' ' + (since + 1) + '.' : '.')}>
           {/* the weeks */}
           <div className="absolute inset-0 grid items-end" style={{ gridTemplateColumns: `repeat(${n}, minmax(0, 1fr))` }}>
             {goal.values.map((v, i) => (

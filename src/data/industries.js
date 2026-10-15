@@ -292,7 +292,7 @@ export const industries = [
         kpi: {
           badge: 'Patented KPI Agent',
           title: 'Measured against your goals.',
-          text: 'You set the numbers that matter to the brokerage. Every week the KPI Agent measures Aurora against them, finds what holds a number back and changes how Aurora works. Bigger changes wait for your approval.',
+          text: 'You set a goal for each part of the brokerage. Every week the KPI Agent measures Aurora against it and changes what holds a number back. Bigger changes wait for your approval.',
           goalLabel: 'Goal',
           legend: { goal: 'Your goal' },
           since: 'On goal since week',
