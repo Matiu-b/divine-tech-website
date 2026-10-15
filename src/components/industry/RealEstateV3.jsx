@@ -1366,13 +1366,13 @@ export function RxAfter({ it }) {
             <p className="pretty text-[15px] leading-[1.6] text-graphite md:text-[15.5px]">{a.text}</p>
           </div>
 
-          {/* the weeks after the first reply */}
-          <ol className="relative mt-7 grid gap-3 sm:grid-cols-2 lg:mt-8 lg:grid-cols-4 lg:gap-4">
+          {/* the weeks after the first reply (phones: a row to swipe through) */}
+          <ol className="relative mt-7 grid gap-3 max-sm:-mx-4 max-sm:flex max-sm:snap-x max-sm:snap-mandatory max-sm:overflow-x-auto max-sm:px-4 max-sm:pb-1 max-sm:[scrollbar-width:none] xs:max-sm:-mx-5 xs:max-sm:px-5 sm:grid-cols-2 lg:mt-8 lg:grid-cols-4 lg:gap-4 [&::-webkit-scrollbar]:hidden">
             <span aria-hidden="true" className="absolute left-4 right-4 top-[27px] hidden h-px bg-[linear-gradient(90deg,rgba(242,92,42,0.5),rgba(10,15,14,0.1))] lg:block" />
             {a.steps.map((x, i) => {
               const Icon = AFTER_ICONS[x.key] || Check;
               return (
-                <motion.li key={x.key} {...show(0.08 * i)} className="relative flex flex-col rounded-[20px] bg-white p-4 shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_24px_48px_-36px_rgba(90,50,20,0.4)]">
+                <motion.li key={x.key} {...show(0.08 * i)} className="relative flex flex-col rounded-[20px] bg-white p-4 shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_24px_48px_-36px_rgba(90,50,20,0.4)] max-sm:w-[84%] max-sm:shrink-0 max-sm:snap-center">
                   <div className="flex items-center justify-between gap-3">
                     <span className="relative flex h-[30px] w-[30px] items-center justify-center rounded-full bg-[linear-gradient(140deg,#FF8A3D,#F25C2A)] text-white">
                       <Icon className="h-[14px] w-[14px]" strokeWidth={2} aria-hidden="true" />
@@ -1408,7 +1408,7 @@ export function RxAfter({ it }) {
               <p className="mt-2.5 text-[19px] font-medium leading-snug tracking-[-0.01em]">{a.kpi.title}</p>
               <p className="mt-1 text-[13.5px] leading-snug text-white/60">{a.kpi.text}</p>
             </div>
-            <ol className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4" aria-label={a.kpi.badge}>
+            <ol className="grid grid-cols-2 gap-2 lg:grid-cols-4" aria-label={a.kpi.badge}>
               {a.kpi.steps.map((x, i) => {
                 const on = i === k;
                 const done = i < k;
