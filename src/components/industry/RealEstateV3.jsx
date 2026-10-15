@@ -219,7 +219,7 @@ function CallStage({ h, header }) {
           <div className="relative z-[2] min-[560px]:px-7 min-[560px]:pt-7 sm:px-8 sm:pt-8 lg:pr-[calc(var(--card-w)_+_72px)] lg:[@media(max-height:760px)]:pt-6">{header}</div>
 
           {/* the photo: from 560 px its tree line meets the header and its top edge fades into the sky */}
-          <div className="relative mt-8 aspect-[4/3] overflow-hidden rounded-[24px] bg-[#2B3550] shadow-[0_40px_80px_-48px_rgba(30,30,60,0.55)] min-[560px]:mt-0 min-[560px]:aspect-auto min-[560px]:h-[46.71cqw] min-[560px]:overflow-visible min-[560px]:rounded-none min-[560px]:bg-transparent min-[560px]:shadow-none lg:h-auto lg:flex-1">
+          <div className="relative mt-7 aspect-[4/3] overflow-hidden rounded-[24px] bg-[#2B3550] shadow-[0_40px_80px_-48px_rgba(30,30,60,0.55)] min-[560px]:mt-0 min-[560px]:aspect-auto min-[560px]:h-[46.71cqw] min-[560px]:overflow-visible min-[560px]:rounded-none min-[560px]:bg-transparent min-[560px]:shadow-none lg:h-auto lg:flex-1">
             <img
               src={f.image ? f.image.src : f.poster}
               srcSet={f.image ? f.image.srcSet : undefined}
@@ -238,9 +238,9 @@ function CallStage({ h, header }) {
           </div>
         </div>
 
-        {/* The call: under the photo on phones and tablets; on laptops the right-hand column of the frame, from the top */}
+        {/* The call: over the photo's bottom edge on phones; on tablets over the road and sidewalk, up to just below the For Sale sign; on laptops the right-hand column of the frame, from the top */}
         <LiquidGlass
-          className="relative z-[3] mx-3 -mt-10 rounded-[22px] p-3.5 sm:mx-6 sm:-mt-24 sm:p-5 lg:absolute lg:right-8 lg:top-8 lg:mx-0 lg:mt-0 lg:w-[var(--card-w)] lg:rounded-[26px] xl:p-6"
+          className="relative z-[3] mx-3 -mt-10 rounded-[22px] p-3.5 min-[560px]:mx-5 min-[560px]:-mt-[14cqw] sm:mx-6 sm:p-5 lg:absolute lg:right-8 lg:top-8 lg:mx-0 lg:mt-0 lg:w-[var(--card-w)] lg:rounded-[26px] xl:p-6"
           style={{ '--lg-tint-a': 'rgba(255,252,247,0.9)', '--lg-tint-b': 'rgba(255,249,241,0.82)' }}
         >
           <div className="flex items-center gap-3">
@@ -370,11 +370,11 @@ export function RxHero({ it }) {
                 <p className="intro-slide t-lead pretty max-w-[36em] min-[560px]:!text-white/[0.88] lg:text-[15.5px] lg:leading-[1.55]" style={{ animationDelay: '0.3s' }}>
                   {h.text}
                 </p>
-                <div className="intro-slide mt-6 flex flex-wrap items-center gap-2.5 min-[560px]:mt-5 sm:gap-3 lg:[@media(max-height:760px)]:mt-4" style={{ animationDelay: '0.42s' }}>
-                  <CTAButton size="lg" onClick={open} className="max-sm:h-12 max-sm:px-4 max-sm:text-[14px] lg:h-12 lg:px-5 lg:text-[15px] lg:[@media(max-height:760px)]:h-11">
+                <div className="intro-slide mt-6 flex flex-wrap items-center gap-2 min-[560px]:mt-5 min-[560px]:gap-2.5 sm:gap-3 lg:[@media(max-height:760px)]:mt-4" style={{ animationDelay: '0.42s' }}>
+                  <CTAButton size="lg" onClick={open} className="max-sm:h-12 max-sm:px-3.5 max-sm:text-[14px] max-sm:[&_.btn-arrow]:hidden lg:h-12 lg:px-5 lg:text-[15px] lg:[@media(max-height:760px)]:h-11">
                     Book a demo
                   </CTAButton>
-                  <CTAButton size="lg" variant="glass" href="#race" arrow={false} onClick={(e) => onAnchorClick(e, '#race')} className="max-sm:h-12 max-sm:px-4 max-sm:text-[14px] lg:h-12 lg:px-5 lg:text-[15px] lg:[@media(max-height:760px)]:h-11">
+                  <CTAButton size="lg" variant="glass" href="#race" arrow={false} onClick={(e) => onAnchorClick(e, '#race')} className="max-sm:h-12 max-sm:px-3.5 max-sm:text-[14px] max-sm:[&_.btn-arrow]:hidden lg:h-12 lg:px-5 lg:text-[15px] lg:[@media(max-height:760px)]:h-11">
                     Why speed wins
                   </CTAButton>
                 </div>
