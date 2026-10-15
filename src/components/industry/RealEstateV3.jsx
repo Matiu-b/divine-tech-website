@@ -925,7 +925,7 @@ function StepTimeline({ steps, T, t, step, reduce }) {
                   exit={{ height: 0, opacity: 0 }}
                   transition={{ duration: 0.4, ease: EASE }}
                 >
-                  <span className="block pt-1">{x.text}</span>
+                  <span className="block min-h-[2.75em] pt-1">{x.text}</span>
                 </motion.p>
               ) : null}
             </AnimatePresence>
@@ -967,8 +967,8 @@ export function RxRace({ it }) {
         >
           <div aria-hidden="true" className="pointer-events-none absolute right-[6%] top-[-10%] h-[70%] w-[45%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.45),rgba(255,200,87,0))] blur-2xl" />
 
-          {/* wide screens: the section's headline at the top, the evening as a timeline on the bottom line */}
-          <div className="relative hidden xl:flex xl:flex-col xl:justify-between xl:gap-8 xl:self-stretch">
+          {/* wide screens: the section's headline, and the evening as a timeline under it; centred as one group */}
+          <div className="relative hidden xl:flex xl:flex-col xl:justify-center xl:gap-10 xl:self-stretch [@media(max-height:760px)]:xl:gap-7">
             <div>
               <h2 className="balance text-[clamp(31px,2.55vw,40px)] font-medium leading-[1.08] tracking-[-0.022em] text-ink">
                 {r.titleA} {r.titleB}
