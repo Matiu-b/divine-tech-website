@@ -210,7 +210,7 @@ function CallStage({ h, header }) {
       >
         {/* laptops: a soft shade under the header and along the bottom edge */}
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[1] hidden bg-[linear-gradient(180deg,rgba(16,22,46,0.38)_0%,rgba(16,22,46,0)_42%,rgba(16,22,46,0)_72%,rgba(16,22,46,0.3)_100%)] lg:block" />
-        <div className="relative z-[2] lg:pl-8 lg:pr-[calc(var(--card-w)_+_72px)] lg:pt-8">{header}</div>
+        <div className="relative z-[2] lg:pl-8 lg:pr-[calc(var(--card-w)_+_72px)] lg:pt-8 lg:[@media(max-height:760px)]:pt-6">{header}</div>
 
         {/* laptops: no fade on this box (it would lift the card under the shade); the photo fades in by itself */}
         <div className="intro-fade relative mt-10 md:mt-14 lg:mt-0 lg:flex-1 lg:[animation:none]" style={{ animationDelay: '0.2s' }}>
@@ -375,19 +375,19 @@ export function RxHero({ it }) {
             <div className="grid gap-6 lg:block">
               <div>
                 <p className="intro-rise eyebrow lg:text-white/75">{h.eyebrow}</p>
-                <h1 id="rx-hero-title" className="t-display balance mt-5 md:mt-6 lg:mt-3 lg:text-[clamp(2.2rem,0.4rem+2.7vw,3.4rem)] lg:text-white lg:[text-shadow:0_2px_24px_rgba(10,16,40,0.35)]">
+                <h1 id="rx-hero-title" className="t-display balance mt-5 md:mt-6 lg:mt-3 lg:[@media(max-height:760px)]:mt-2 lg:text-[clamp(2.2rem,0.4rem+2.7vw,3.4rem)] lg:text-white lg:[text-shadow:0_2px_24px_rgba(10,16,40,0.35)]">
                   <RevealLines lines={[h.titleA, h.titleB]} lineClassNames={['', '']} immediate delay={0.08} stagger={0.14} />
                 </h1>
               </div>
-              <div className="lg:mt-4">
+              <div className="lg:mt-4 lg:[@media(max-height:760px)]:mt-3">
                 <p className="intro-slide t-lead pretty max-w-[34em] lg:max-w-[36em] lg:text-[15.5px] lg:leading-[1.55] lg:text-white/[0.88]" style={{ animationDelay: '0.3s' }}>
                   {h.text}
                 </p>
-                <div className="intro-slide mt-6 flex flex-wrap items-center gap-2.5 sm:gap-3 lg:mt-5" style={{ animationDelay: '0.42s' }}>
-                  <CTAButton size="lg" onClick={open} className="max-sm:h-12 max-sm:px-4 max-sm:text-[14px] lg:h-12 lg:px-5 lg:text-[15px]">
+                <div className="intro-slide mt-6 flex flex-wrap items-center gap-2.5 sm:gap-3 lg:mt-5 lg:[@media(max-height:760px)]:mt-4" style={{ animationDelay: '0.42s' }}>
+                  <CTAButton size="lg" onClick={open} className="max-sm:h-12 max-sm:px-4 max-sm:text-[14px] lg:h-12 lg:px-5 lg:text-[15px] lg:[@media(max-height:760px)]:h-11">
                     Book a demo
                   </CTAButton>
-                  <CTAButton size="lg" variant="glass" href="#race" arrow={false} onClick={(e) => onAnchorClick(e, '#race')} className="max-sm:h-12 max-sm:px-4 max-sm:text-[14px] lg:h-12 lg:px-5 lg:text-[15px]">
+                  <CTAButton size="lg" variant="glass" href="#race" arrow={false} onClick={(e) => onAnchorClick(e, '#race')} className="max-sm:h-12 max-sm:px-4 max-sm:text-[14px] lg:h-12 lg:px-5 lg:text-[15px] lg:[@media(max-height:760px)]:h-11">
                     Why speed wins
                   </CTAButton>
                 </div>
