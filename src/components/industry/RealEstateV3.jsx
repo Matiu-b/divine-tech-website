@@ -1080,7 +1080,7 @@ const TONES = {
 const SCENE_MS = 5600;
 
 /** One setting in the playbook: its name on the left, its value on the right (a two-way switch for final prices). */
-function PlaybookRow({ row, active, value, onPick, reduce }) {
+function PlaybookRow({ row, active, value, onPick, reduce, id = 'panel' }) {
   const Icon = row.icon ? RULE_ICONS[row.icon] : null;
   return (
     <button
@@ -1092,7 +1092,7 @@ function PlaybookRow({ row, active, value, onPick, reduce }) {
         active ? 'bg-[#FFF3E8]' : 'hover:bg-ink/[0.03]'
       )}
     >
-      {active ? <motion.span layoutId={reduce ? undefined : 'playbook-mark'} className="absolute inset-y-2 left-0 w-[3px] rounded-full bg-[#F25C2A]" /> : null}
+      {active ? <motion.span layoutId={reduce ? undefined : id + '-mark'} className="absolute inset-y-2 left-0 w-[3px] rounded-full bg-[#F25C2A]" /> : null}
       {Icon ? (
         <Icon className={cn('h-4 w-4 shrink-0 transition-colors', active ? 'text-[#D9481C]' : 'text-ink/40')} strokeWidth={1.9} aria-hidden="true" />
       ) : (
@@ -1100,15 +1100,15 @@ function PlaybookRow({ row, active, value, onPick, reduce }) {
           ”
         </span>
       )}
-      <span className={cn('min-w-0 flex-1 truncate text-[14px] transition-colors', active ? 'font-medium text-ink' : 'text-ink/75')}>{row.label}</span>
+      <span className={cn('min-w-0 flex-1 text-[14px] leading-snug transition-colors lg:truncate', active ? 'font-medium text-ink' : 'text-ink/75')}>{row.label}</span>
       {row.values.length > 1 ? (
         // a real choice: both options, the one in force highlighted
-        <span className="flex shrink-0 rounded-full bg-ink/[0.06] p-0.5 text-[11.5px] font-medium">
+        <span className="flex shrink-0 whitespace-nowrap rounded-full bg-ink/[0.06] p-0.5 text-[11.5px] font-medium">
           {row.values.map((v, i) => (
             <span key={v} className="relative px-2.5 py-1">
               {i === value ? (
                 <motion.span
-                  layoutId={reduce ? undefined : 'price-switch'}
+                  layoutId={reduce ? undefined : id + '-switch'}
                   className="absolute inset-0 rounded-full bg-white shadow-[0_1px_3px_rgba(10,15,14,0.15)]"
                   transition={{ duration: 0.4, ease: EASE }}
                 />
@@ -1118,7 +1118,7 @@ function PlaybookRow({ row, active, value, onPick, reduce }) {
           ))}
         </span>
       ) : (
-        <span className={cn('shrink-0 rounded-full px-2.5 py-1 text-[11.5px] font-medium transition-colors', active ? 'bg-white text-ink shadow-[0_1px_3px_rgba(10,15,14,0.12)]' : 'bg-ink/[0.05] text-ink/60')}>
+        <span className={cn('shrink-0 whitespace-nowrap rounded-full px-2.5 py-1 text-[11.5px] font-medium transition-colors', active ? 'bg-white text-ink shadow-[0_1px_3px_rgba(10,15,14,0.12)]' : 'bg-ink/[0.05] text-ink/60')}>
           {row.values[0]}
         </span>
       )}
@@ -1159,7 +1159,9 @@ function RuleFlow({ r, sc, reduce }) {
           <img src="/brand/aurora-symbol-color.svg" alt="" width="14" height="14" className="h-3.5 w-3.5" />
           <span className="t-data text-[11px] uppercase tracking-[0.08em] text-white/55">{r.flow.then}</span>
         </p>
-        <p className="mt-2 text-[16px] leading-snug text-white/[0.92] xl:text-[17px]">{sc.action}</p>
+        <p className="mt-1.5 text-[13px] leading-snug text-white/55">{sc.action}</p>
+        {/* the message she actually sends */}
+        <p className="mt-3 border-l-2 border-[#F25C2A] pl-3 text-[15.5px] leading-snug text-white xl:text-[16.5px]">“{sc.reply}”</p>
       </motion.div>
       <div className="relative ml-6 h-7 w-[2px] bg-ink/10">{line(1.15)}</div>
       {/* result */}
@@ -1174,38 +1176,36 @@ function RuleFlow({ r, sc, reduce }) {
   );
 }
 
-/** Phones and tablets: the playbook as one scrolling row of chips; the rule in force is highlighted and kept in view. */
-function PlaybookChips({ r, sc, price, pick }) {
-  const box = useRef(null);
-  useEffect(() => {
-    const el = box.current;
-    const on = el && el.querySelector('[aria-pressed="true"]');
-    if (!on) return;
-    // scroll the strip only, never the page
-    el.scrollTo({ left: on.offsetLeft - (el.clientWidth - on.offsetWidth) / 2, behavior: 'smooth' });
-  }, [sc.row]);
+/**
+ * Phones and tablets: the playbook one setting at a time, the same row as on laptops, with its group, its place in the
+ * list, arrows and dots to move through it.
+ */
+function PlaybookStepper({ r, sc, i, price, go, reduce }) {
+  const row = r.rows.find((x) => x.key === sc.row);
+  const group = r.groups.find((g) => g.key === row.group);
+  const n = r.rows.findIndex((x) => x.key === row.key);
+  const btn = 'flex h-8 w-8 items-center justify-center rounded-full bg-ink/[0.05] text-ink/70 transition-colors hover:bg-ink/[0.09]';
   return (
-    <div ref={box} className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] xs:-mx-5 xs:px-5 md:-mx-8 md:px-8 lg:hidden [&::-webkit-scrollbar]:hidden">
-      {r.rows.map((x) => {
-        const on = sc.row === x.key;
-        return (
-          <button
-            key={x.key}
-            type="button"
-            onClick={() => pick(x.key)}
-            aria-pressed={on}
-            className={cn(
-              'flex shrink-0 items-center gap-2 rounded-full px-3.5 py-2 text-[13px] transition-colors duration-300',
-              on ? 'bg-ink text-white' : 'bg-white/80 text-ink/70 shadow-[0_0_0_1px_rgba(10,15,14,0.06)]'
-            )}
-          >
-            <span className="whitespace-nowrap font-medium">{x.label}</span>
-            <span className={cn('whitespace-nowrap rounded-full px-2 py-0.5 text-[11px] font-medium', on ? 'bg-white/15 text-white' : 'bg-ink/[0.05] text-ink/55')}>
-              {x.values[x.key === 'price' ? price : 0]}
-            </span>
+    <div className="rounded-[20px] bg-white/80 p-2.5 shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_20px_40px_-32px_rgba(90,50,20,0.4)] backdrop-blur-sm lg:hidden">
+      <div className="flex items-center justify-between gap-3 pb-1.5 pl-3 pr-0.5">
+        <span className="t-data truncate text-[10.5px] uppercase tracking-[0.08em] text-ink/45">
+          {r.panel.title} · {group.label} · {n + 1}/{r.rows.length}
+        </span>
+        <span className="flex shrink-0 gap-1">
+          <button type="button" className={btn} onClick={() => go(i - 1)} aria-label="Previous rule">
+            <ChevronLeft className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
           </button>
-        );
-      })}
+          <button type="button" className={btn} onClick={() => go(i + 1)} aria-label="Next rule">
+            <ChevronLeft className="h-4 w-4 rotate-180" strokeWidth={2} aria-hidden="true" />
+          </button>
+        </span>
+      </div>
+      <PlaybookRow id="stepper" row={row} active value={row.key === 'price' ? price : 0} onPick={() => go(i + 1)} reduce={reduce} />
+      <div className="flex justify-center gap-1.5 pb-1 pt-2" aria-hidden="true">
+        {r.rows.map((x) => (
+          <span key={x.key} className={cn('h-1.5 rounded-full transition-all duration-300', x.key === row.key ? 'w-5 bg-[#F25C2A]' : 'w-1.5 bg-ink/15')} />
+        ))}
+      </div>
     </div>
   );
 }
@@ -1242,6 +1242,10 @@ export function RxRules({ it }) {
     setI(at);
     setTick((x) => x + 1);
   };
+  const go = (to) => {
+    setI((to + r.scenes.length) % r.scenes.length);
+    setTick((x) => x + 1);
+  };
 
   return (
     <section data-nav-theme="light" aria-labelledby="rx-rules-title" className="section relative pt-0">
@@ -1256,7 +1260,7 @@ export function RxRules({ it }) {
             </h2>
             <p className="pretty mt-3 max-w-[34em] text-[15px] leading-[1.6] text-graphite md:text-[15.5px]">{r.text}</p>
             <div className="mt-5 lg:hidden">
-              <PlaybookChips r={r} sc={sc} price={price} pick={pick} />
+              <PlaybookStepper r={r} sc={sc} i={i} price={price} go={go} reduce={reduce} />
             </div>
             <div className="mt-5 min-h-[368px] max-w-[600px] xs:min-h-[340px] sm:min-h-[300px] lg:mt-8">
               <AnimatePresence mode="wait" initial={false}>
@@ -1267,7 +1271,7 @@ export function RxRules({ it }) {
             </div>
           </div>
 
-          {/* the broker's playbook (laptops; phones and tablets get the chip row above the rule) */}
+          {/* the broker's playbook (laptops; phones and tablets get the stepper above the rule) */}
           <div className="relative hidden rounded-[24px] bg-white/80 p-3 shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_30px_60px_-40px_rgba(90,50,20,0.4)] backdrop-blur-sm lg:col-start-1 lg:row-start-1 lg:block lg:p-4">
             <div className="flex items-center justify-between gap-3 px-3 pb-3 pt-1.5">
               <span>
