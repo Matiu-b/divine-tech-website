@@ -98,7 +98,7 @@ export const industries = [
         // the fourth home is listed by a brokerage that runs Aurora. Every name, address, number and message is illustrative.
         // the evening as a brokerage would read it in an activity log; also the step captions on phones and tablets
         steps: [
-          { time: '7:58 pm', title: '3 homes, 3 inquiries', text: 'Elm & Co., Summit Homes and Keystone Realty. One message to each listing agent.' },
+          { time: '7:58 pm', title: '3 homes, 3 inquiries', text: 'One message to each listing agent: Elm & Co., Summit Homes, Keystone.' },
           { time: '9:46 pm', title: '0 of 3 replied', text: 'The first inquiry has waited 1h 48m. All three still say Delivered.' },
           { time: '9:47 pm', title: 'A 4th inquiry', text: '18 Willow Court, listed by Harbor Lane Realty. They run Aurora.' },
           { time: '+3 sec', title: 'Aurora replies', text: 'In her thread: the answer to her question, then a question back.' },
