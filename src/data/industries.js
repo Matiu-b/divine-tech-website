@@ -102,7 +102,7 @@ export const industries = [
           { time: '9:46 pm', title: '0 of 3 replied', text: 'The first inquiry has waited 1h 48m. All three still say Delivered.' },
           { time: '9:47 pm', title: 'A 4th inquiry', text: '18 Willow Court, listed by Harbor Lane Realty. They run Aurora.' },
           { time: '+3 sec', title: 'Aurora replies', text: 'In her thread: the answer to her question, then a question back.' },
-          { time: '9:52 pm', title: 'Tour booked, lead in the CRM', text: 'Qualified, scheduled with Marcus and filed, before any other agent replied.' },
+          { time: '9:52 pm', title: 'Tour booked, in the CRM', text: 'Qualified, booked with Marcus and filed. No other agent has replied.' },
         ],
         phone: {
           title: 'Messages',
