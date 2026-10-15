@@ -300,6 +300,7 @@ export const industries = [
           result: 'Past the goal from week {n}, and well above last year.',
           weekLabel: 'Week',
           slipping: 'Slipping',
+          note: 'An example. The goals, weekly figures and changes are illustrative.',
           weeks: ['W1', 'W2', 'W3', 'W4', 'W5', 'W6', 'W7', 'W8'],
           // illustrative weekly values, 0 to 1 of the chart height: this year against the same weeks last year
           goals: [
@@ -340,7 +341,7 @@ export const industries = [
             },
           ],
         },
-        note: 'An example. Names, messages, goals and the weekly figures are illustrative.',
+        note: 'An example. Names and messages are illustrative.',
       },
       // the closing call to action, for a brokerage
       closing: {

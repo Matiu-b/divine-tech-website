@@ -1589,7 +1589,7 @@ function goalState(g) {
  * marker, then the weeks after it are drawn one by one until they pass the goal. Last year's weeks stand beside them
  * the whole time. Then the next goal; a tap holds one and replays it. Off screen or with reduced motion: the whole run.
  */
-function KpiGoals({ a, run, reduce }) {
+function KpiGoals({ a, run, reduce, titleId }) {
   const K = a.kpi;
   const [g, setG] = useState(0);
   const [held, setHeld] = useState(false);
@@ -1626,15 +1626,15 @@ function KpiGoals({ a, run, reduce }) {
   const ink = (on) => ({ opacity: on ? 1 : 0, transition: 'opacity 0.45s ease' });
 
   return (
-    <div className="relative grid gap-5 rounded-[22px] bg-white p-4 shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_24px_48px_-36px_rgba(90,50,20,0.4)] md:p-5 lg:grid-cols-[minmax(0,300px)_minmax(0,1fr)] lg:gap-8 lg:p-6">
+    <div className="relative grid gap-6 lg:grid-cols-[minmax(0,340px)_minmax(0,1fr)] lg:gap-10">
       {/* what it is, and the goals */}
       <div className="flex min-w-0 flex-col">
         <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-ink px-2.5 py-1 text-[11.5px] font-medium text-white">
           <TrendingUp className="h-3.5 w-3.5" strokeWidth={2.2} aria-hidden="true" />
           {K.badge}
         </span>
-        <p className="mt-3 text-[19px] font-medium leading-snug tracking-[-0.01em] text-ink">{K.title}</p>
-        <p className="mt-1.5 text-[13px] leading-snug text-graphite">{K.text}</p>
+        <h2 id={titleId} className="mt-4 text-[clamp(26px,2.2vw,34px)] font-medium leading-[1.1] tracking-[-0.022em] text-ink">{K.title}</h2>
+        <p className="pretty mt-3 text-[15px] leading-[1.6] text-graphite">{K.text}</p>
         {/* the goals by area: pills that wrap under 1024 px, a list beside the chart on laptops */}
         <div role="tablist" aria-label={K.badge} className="mt-4 flex flex-wrap gap-1.5 lg:mt-auto lg:grid lg:gap-0 lg:pt-3">
           {K.goals.map((x, i) => {
@@ -1665,7 +1665,7 @@ function KpiGoals({ a, run, reduce }) {
       </div>
 
       {/* the goal, week by week */}
-      <div className="flex min-w-0 flex-col rounded-[18px] bg-[#FBF8F3] p-3.5 shadow-[inset_0_0_0_1px_rgba(10,15,14,0.05)] md:p-4">
+      <div className="flex min-w-0 flex-col rounded-[20px] bg-[#FBF8F3] p-3.5 shadow-[inset_0_0_0_1px_rgba(10,15,14,0.05)] md:p-5">
         <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
           <p className="min-w-0">
             <span className="block text-[15px] font-medium text-ink">
@@ -1686,7 +1686,7 @@ function KpiGoals({ a, run, reduce }) {
           </span>
         </div>
 
-        <div className="relative mt-3 h-[120px] sm:h-[128px] lg:h-auto lg:min-h-[128px] lg:flex-1" role="img" aria-label={goal.area + ', ' + goal.name + ', ' + K.goalLabel.toLowerCase() + ' ' + goal.target.toLowerCase() + (since >= 0 ? '. ' + K.since + ' ' + (since + 1) + '.' : '.')}>
+        <div className="relative mt-4 h-[140px] sm:h-[170px] lg:h-auto lg:min-h-[190px] lg:flex-1" role="img" aria-label={goal.area + ', ' + goal.name + ', ' + K.goalLabel.toLowerCase() + ' ' + goal.target.toLowerCase() + (since >= 0 ? '. ' + K.since + ' ' + (since + 1) + '.' : '.')}>
           {/* the weeks: last year stands from the start, this year is drawn in step with the story */}
           <div key={goal.key + cycle} className="absolute inset-0 grid items-end" style={{ gridTemplateColumns: `repeat(${n}, minmax(0, 1fr))` }}>
             {goal.values.map((v, i) => {
@@ -1778,8 +1778,7 @@ function KpiGoals({ a, run, reduce }) {
 
 /**
  * After the first reply: four jobs Aurora keeps doing for a lead, each drawn as the thing it is, in four equal cards. A spotlight
- * moves from one to the next, and each resolves in its own way (a stamp, a heart, a status flip, a slot). Then the KPI
- * Agent, measured against the brokerage's own goals week by week.
+ * moves from one to the next, and each resolves in its own way (a stamp, a heart, a status flip, a slot).
  */
 export function RxAfter({ it }) {
   const a = it.v3.after;
@@ -1842,12 +1841,34 @@ export function RxAfter({ it }) {
             })}
           </ol>
 
-          {/* the KPI Agent: the brokerage's goals, week by week */}
-          <motion.div {...show(0.3)} className="relative mt-3 lg:mt-3.5">
-            <KpiGoals a={a} run={run} reduce={reduce} />
-          </motion.div>
         </div>
         <p className="mt-4 text-[12px] text-slate">{a.note}</p>
+      </div>
+    </section>
+  );
+}
+
+/** The KPI Agent as its own section after the jobs: the brokerage's goals, each played as a story with its chart. */
+export function RxKpi({ it }) {
+  const a = it.v3.after;
+  const ref = useRef(null);
+  const reduce = !!useReducedMotion();
+  const inView = useInViewport(ref, { threshold: 0.3 });
+  const visible = usePageVisible();
+  const run = !reduce && inView && visible;
+  if (!a || !a.kpi) return null;
+  return (
+    <section data-nav-theme="light" aria-labelledby="rx-kpi-title" className="section relative pt-0">
+      <div className="shell">
+        <motion.div
+          ref={ref}
+          {...(reduce ? {} : { initial: { opacity: 0, y: 16 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, amount: 'some' }, transition: { duration: 0.6, ease: EASE } })}
+          className="canvas relative overflow-hidden bg-white p-4 shadow-[0_0_0_1px_rgba(10,15,14,0.07),0_30px_70px_-50px_rgba(90,50,20,0.45)] xs:p-5 md:p-8 lg:px-10 lg:py-9 xl:px-14"
+        >
+          <div aria-hidden="true" className="pointer-events-none absolute left-[-6%] top-[-30%] h-[70%] w-[38%] rounded-full bg-[radial-gradient(closest-side,rgba(255,159,69,0.16),rgba(255,159,69,0))] blur-2xl" />
+          <KpiGoals a={a} run={run} reduce={reduce} titleId="rx-kpi-title" />
+        </motion.div>
+        {a.kpi.note ? <p className="mt-4 text-[12px] text-slate">{a.kpi.note}</p> : null}
       </div>
     </section>
   );
