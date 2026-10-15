@@ -834,32 +834,61 @@ function CrmCard({ c, T, t, reduce, compact = false, short = false }) {
 }
 
 /**
- * Her evening on the sofa: a clip as long as the scene before her message reaches Aurora's brokerage,
- * kept in step with the phone's clock until then. After that it loops to the end of the conversation.
+ * Her evening on the sofa: a clip as long as the scene before her message reaches Aurora's brokerage, kept in step
+ * with the phone's clock. Laptops: it hands over to the brokerage's CRM the moment her message lands. Phones and
+ * tablets (`small`): the little square keeps playing, looping, to the end of the conversation.
  */
 function SofaClip({ film, T, t, reduce, active, small = false }) {
   const ref = useRef(null);
   const loaded = usePageLoaded();
   const intro = t < T.chat[0].at;
+  const on = small || intro;
   useEffect(() => {
     const v = ref.current;
     if (!v || reduce) return;
-    if (active) {
+    if (on && active) {
       // in step with the phone until her message lands (the clip is exactly that long); after that it just loops
       if (intro && Math.abs(v.currentTime - t / 1000) > 0.35) v.currentTime = Math.min(t / 1000, Math.max(0, (v.duration || 15) - 0.05));
       if (v.paused) v.play().catch(() => {});
     } else if (!v.paused) v.pause();
-  }, [intro, active, t, reduce]);
+  }, [on, intro, active, t, reduce]);
   return (
-    <div
+    <motion.div
       className={cn(
         'absolute inset-0 overflow-hidden bg-[#2A2420]',
         small ? 'rounded-[inherit]' : 'rounded-[24px] shadow-[0_24px_48px_-32px_rgba(90,50,20,0.45)]'
       )}
+      initial={false}
+      animate={{ opacity: on ? 1 : 0, scale: on ? 1 : 0.97 }}
+      transition={{ duration: reduce ? 0 : 0.45, ease: EASE }}
       aria-hidden="true"
     >
       <img src={film.poster} alt="" className="absolute inset-0 h-full w-full object-cover object-[50%_40%]" loading="lazy" decoding="async" />
-      {loaded && !reduce ? <video ref={ref} src={film.video} poster={film.poster} muted playsInline loop preload="auto" className="absolute inset-0 h-full w-full object-cover object-[50%_40%]" /> : null}
+      {loaded && !reduce ? <video ref={ref} src={film.video} poster={film.poster} muted playsInline loop={small} preload="auto" className="absolute inset-0 h-full w-full object-cover object-[50%_40%]" /> : null}
+    </motion.div>
+  );
+}
+
+/**
+ * Where the evening is: one segment per step, filling as the step plays (like stories). The steps where Aurora is
+ * at work fill in her orange.
+ */
+function StepBars({ steps, T, t, className = '' }) {
+  return (
+    <div className={cn('flex w-full gap-1.5', className)} aria-hidden="true">
+      {steps.map((x, i) => {
+        const from = T.stepAt[i];
+        const to = i < steps.length - 1 ? T.stepAt[i + 1] : T.end;
+        const f = Math.min(1, Math.max(0, (t - from) / Math.max(1, to - from)));
+        return (
+          <span key={x.title} className="relative h-[3px] flex-1 overflow-hidden rounded-full bg-ink/[0.09]">
+            <span
+              className={cn('absolute inset-y-0 left-0 rounded-full', i >= 3 ? 'bg-[linear-gradient(90deg,#FF8A3D,#F25C2A)]' : 'bg-ink/80')}
+              style={{ width: f * 100 + '%' }}
+            />
+          </span>
+        );
+      })}
     </div>
   );
 }
@@ -875,89 +904,93 @@ export function RxRace({ it }) {
   const t = useLoop(T.end, { active: inView && visible, still: reduce });
   const step = lastIndex(T.stepAt.map((at) => ({ at })), t);
   const s = r.steps[step];
-  // one copy of the clip: beside the step text on phones and tablets, under it on small laptops,
-  // and in the middle (between the CRM and the phone) on wide screens
+  // one copy of the clip: beside the step text on phones and tablets, in the stage box on laptops
   const wide = useMediaQuery('(min-width: 1024px)');
-  const xl = useMediaQuery('(min-width: 1280px)');
   const short = useMediaQuery('(max-height: 760px)');
-  const clip = <SofaClip film={r.film} T={T} t={t} reduce={reduce} active={inView && visible} />;
+  const n = String(r.steps.length).padStart(2, '0');
 
   return (
     <section id="race" data-nav-theme="light" aria-labelledby="rx-race-title" className="section relative">
       <div className="shell">
-        {/* wide screens: the headline moves into the canvas (the left column), so the whole scene fits one screen */}
+        {/* wide screens: the headline moves into the canvas, as its left column */}
         <SectionHeader id="rx-race-title" eyebrow={r.eyebrow} titleA={r.titleA} titleB={r.titleB} text={r.text} layout="split" className="xl:hidden" />
         <div
           ref={ref}
-          className="canvas canvas-grain relative mt-8 grid gap-3 overflow-hidden xl:mt-0 md:gap-5 bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] p-4 xs:p-5 md:mt-14 md:p-8 lg:grid-cols-[max(332px,calc(var(--stage-h)_-_176px))_auto] lg:items-center lg:justify-center lg:gap-14 lg:p-8 lg:[--stage-h:clamp(440px,calc(100svh_-_200px),620px)] xl:grid-cols-[minmax(300px,340px)_minmax(0,calc(var(--stage-h)_*_0.8))_auto] xl:gap-10 xl:[--stage-h:clamp(440px,calc(100svh_-_170px),620px)] 2xl:gap-14 lg:[@media(max-height:820px)]:py-7"
+          className={cn(
+            'canvas canvas-grain relative mt-8 grid gap-3 overflow-hidden bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] p-4 xs:p-5 md:mt-14 md:gap-5 md:p-8',
+            'lg:grid-cols-[max(332px,calc(var(--stage-h)_-_176px))_auto] lg:items-center lg:justify-center lg:gap-14 lg:p-8 lg:[--stage-h:clamp(440px,calc(100svh_-_200px),620px)] lg:[@media(max-height:820px)]:py-7',
+            'xl:mt-0 xl:grid-cols-[minmax(280px,380px)_minmax(0,calc(var(--stage-h)_*_0.8))_auto] xl:gap-12 xl:px-12 xl:[--stage-h:clamp(440px,calc(100svh_-_170px),620px)] 2xl:gap-16'
+          )}
         >
           <div aria-hidden="true" className="pointer-events-none absolute right-[6%] top-[-10%] h-[70%] w-[45%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.45),rgba(255,200,87,0))] blur-2xl" />
 
-          {/*
-            wide screens: the column runs the phone's full height. On top, the section's headline until Aurora answers her,
-            then the brokerage's CRM in its place, filling in as Aurora qualifies her; the step sits on the bottom line.
-          */}
-          <div className="relative xl:flex xl:flex-col xl:self-stretch">
-            <div className="relative hidden min-h-0 pb-6 xl:block xl:flex-1">
-              <AnimatePresence mode="wait" initial={false}>
-                {t < T.chat[1].at ? (
-                  <motion.div key="title" initial={reduce ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8, transition: { duration: 0.25 } }} transition={{ duration: 0.5, ease: EASE }}>
-                    <h2 className="balance text-[clamp(28px,2.35vw,36px)] font-medium leading-[1.08] tracking-[-0.02em] text-ink">
-                      {r.titleA} {r.titleB}
-                    </h2>
-                    <p className="pretty mt-4 text-[15.5px] leading-[1.55] text-graphite">{r.text}</p>
-                  </motion.div>
-                ) : (
-                  <motion.div key="crm" initial={reduce ? false : { opacity: 0, y: 14, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, transition: { duration: 0.2 } }} transition={{ duration: 0.55, ease: EASE }}>
-                    <CrmCard c={r.crm} T={T} t={t} reduce={reduce} short={short} />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-            <div className="mx-auto flex w-full max-w-[352px] gap-1.5 lg:max-w-none" aria-hidden="true">
-              {r.steps.map((x, i) => (
-                <span key={x.title} className={cn('h-1 flex-1 rounded-full transition-colors duration-500', i <= step ? 'bg-ink' : 'bg-ink/10')} />
-              ))}
-            </div>
+          {/* wide screens: the section's headline and its line, nothing else */}
+          <div className="relative hidden xl:block">
+            <h2 className="balance text-[clamp(34px,2.9vw,46px)] font-medium leading-[1.06] tracking-[-0.022em] text-ink">
+              {r.titleA} {r.titleB}
+            </h2>
+            <p className="pretty mt-5 max-w-[30em] text-[16px] leading-[1.6] text-graphite">{r.text}</p>
+          </div>
+
+          {/* the step, and on laptops the stage box under it: her clip, then the brokerage's CRM once her message lands */}
+          <div className="relative lg:flex lg:flex-col lg:self-stretch">
             {wide ? (
-              <div className="mt-4 min-h-[132px] xl:min-h-[144px]" aria-live="polite">
+              <div aria-live="polite">
+                <StepBars steps={r.steps} T={T} t={t} />
                 <AnimatePresence mode="wait" initial={false}>
-                  <motion.div key={step} initial={reduce ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6, transition: { duration: 0.2 } }} transition={{ duration: 0.45, ease: EASE }}>
-                    <p className="t-data text-[12px] text-[#B4471A]">{s.time}</p>
-                    <p className="balance mt-1 text-[26px] font-medium leading-tight tracking-[-0.015em] text-ink">{s.title}</p>
-                    <p className="pretty mt-1 text-[15.5px] leading-snug text-graphite">{s.text}</p>
+                  <motion.div key={step} className="mt-3.5 min-h-[112px]" initial={reduce ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6, transition: { duration: 0.2 } }} transition={{ duration: 0.45, ease: EASE }}>
+                    <p className="flex items-center justify-between text-[12px]">
+                      <span className="t-data text-[#B4471A]">{s.time}</span>
+                      <span className="t-data tabular-nums text-ink/35">
+                        {String(step + 1).padStart(2, '0')} / {n}
+                      </span>
+                    </p>
+                    <p className="balance mt-1.5 text-[22px] font-medium leading-tight tracking-[-0.015em] text-ink xl:text-[24px]">{s.title}</p>
+                    <p className="pretty mt-1 text-[15px] leading-snug text-graphite">{s.text}</p>
                   </motion.div>
                 </AnimatePresence>
               </div>
             ) : (
               // phones and tablets: the step, with her clip as a square on the right that runs down over the
               // phone's top corner. Floats let the first lines use the full width and wrap around the square.
-              <div className="relative mx-auto mt-4 min-h-[124px] w-full max-w-[352px] [display:flow-root] min-[360px]:min-h-[136px]">
-                <div aria-hidden="true" className="float-right h-[48px] w-0 min-[360px]:h-[54px]" />
-                <div className="relative z-[3] float-right clear-right -mb-[38px] ml-3 h-[108px] w-[108px] overflow-hidden rounded-[20px] shadow-[0_0_0_3px_#FBFAF7,0_18px_36px_-12px_rgba(40,25,10,0.5)] min-[360px]:-mb-[44px] min-[360px]:h-[124px] min-[360px]:w-[124px] min-[400px]:h-[132px] min-[400px]:w-[132px]">
-                  <SofaClip film={r.film} T={T} t={t} reduce={reduce} active={inView && visible} small />
+              <>
+                <StepBars steps={r.steps} T={T} t={t} className="mx-auto max-w-[352px]" />
+                <div className="relative mx-auto mt-4 min-h-[124px] w-full max-w-[352px] [display:flow-root] min-[360px]:min-h-[136px]">
+                  <div aria-hidden="true" className="float-right h-[48px] w-0 min-[360px]:h-[54px]" />
+                  <div className="relative z-[3] float-right clear-right -mb-[38px] ml-3 h-[108px] w-[108px] overflow-hidden rounded-[20px] shadow-[0_0_0_3px_#FBFAF7,0_18px_36px_-12px_rgba(40,25,10,0.5)] min-[360px]:-mb-[44px] min-[360px]:h-[124px] min-[360px]:w-[124px] min-[400px]:h-[132px] min-[400px]:w-[132px]">
+                    <SofaClip film={r.film} T={T} t={t} reduce={reduce} active={inView && visible} small />
+                  </div>
+                  <div aria-live="polite">
+                    <AnimatePresence mode="wait" initial={false}>
+                      <motion.div key={step} initial={reduce ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6, transition: { duration: 0.2 } }} transition={{ duration: 0.45, ease: EASE }}>
+                        <p className="t-data text-[12px] text-[#B4471A]">{s.time}</p>
+                        <p className="mt-1 text-[17px] font-medium leading-tight tracking-[-0.015em] text-ink min-[400px]:text-[18px]">{s.title}</p>
+                        <p className="mt-1 text-[13.5px] leading-snug text-graphite min-[400px]:text-[14px]">{s.text}</p>
+                      </motion.div>
+                    </AnimatePresence>
+                  </div>
                 </div>
-                <div aria-live="polite">
-                  <AnimatePresence mode="wait" initial={false}>
-                    <motion.div key={step} initial={reduce ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6, transition: { duration: 0.2 } }} transition={{ duration: 0.45, ease: EASE }}>
-                      <p className="t-data text-[12px] text-[#B4471A]">{s.time}</p>
-                      <p className="mt-1 text-[17px] font-medium leading-tight tracking-[-0.015em] text-ink min-[400px]:text-[18px]">{s.title}</p>
-                      <p className="mt-1 text-[13.5px] leading-snug text-graphite min-[400px]:text-[14px]">{s.text}</p>
-                    </motion.div>
-                  </AnimatePresence>
-                </div>
-              </div>
+              </>
             )}
-            {/* small laptops: her clip under the step; there is no room for the CRM as well */}
-            <div className="relative mt-5 hidden lg:block lg:h-[max(332px,calc(var(--stage-h)_-_176px))] lg:w-full xl:hidden">
-              {wide && !xl ? clip : null}
+            <div className="relative mt-5 hidden min-h-[300px] lg:block lg:h-[max(332px,calc(var(--stage-h)_-_176px))] lg:w-full xl:h-auto xl:flex-1">
+              {wide ? <SofaClip film={r.film} T={T} t={t} reduce={reduce} active={inView && visible} /> : null}
+              <AnimatePresence initial={false}>
+                {t >= T.chat[0].at ? (
+                  <motion.div
+                    key="crm"
+                    className="absolute inset-x-0 top-0"
+                    initial={reduce ? false : { opacity: 0, y: 14, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, transition: { duration: 0.2 } }}
+                    transition={{ duration: 0.55, ease: EASE }}
+                  >
+                    <CrmCard c={r.crm} T={T} t={t} reduce={reduce} short={short} />
+                  </motion.div>
+                ) : null}
+              </AnimatePresence>
             </div>
           </div>
 
-          {/* wide screens: her evening on the sofa, between the headline/CRM column and her phone, sitting on the same bottom line */}
-          <div className="relative hidden xl:block xl:self-end">
-            <div className="relative mx-auto aspect-square max-h-[var(--stage-h)] w-full">{xl ? clip : null}</div>
-          </div>
           <div className="relative">
             <BuyerPhone p={r.phone} T={T} t={t} reduce={reduce} />
           </div>
