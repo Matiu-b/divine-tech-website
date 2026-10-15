@@ -914,7 +914,7 @@ export function RxRace({ it }) {
                 )}
               </AnimatePresence>
             </div>
-            <div className="mx-auto flex max-w-[352px] gap-1.5 lg:max-w-none" aria-hidden="true">
+            <div className="mx-auto flex w-full max-w-[352px] gap-1.5 lg:max-w-none" aria-hidden="true">
               {r.steps.map((x, i) => (
                 <span key={x.title} className={cn('h-1 flex-1 rounded-full transition-colors duration-500', i <= step ? 'bg-ink' : 'bg-ink/10')} />
               ))}
