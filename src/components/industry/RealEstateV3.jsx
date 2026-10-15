@@ -200,55 +200,40 @@ function CallStage({ h, header }) {
 
   return (
     <div ref={ref} className="relative">
-      <div
-        className={cn(
-          'relative [container-type:inline-size] lg:[--card-w:400px] xl:[--card-w:460px] 2xl:[--card-w:500px]',
-          // laptops: the sky colours of the photo's top edge continue upward behind the header
-          'lg:flex lg:h-[clamp(600px,calc(100svh_-_var(--nav-h)_-_40px),860px)] lg:flex-col lg:overflow-hidden lg:rounded-[28px] lg:shadow-[0_40px_80px_-48px_rgba(30,30,60,0.55)]',
-          'lg:bg-[linear-gradient(180deg,rgba(22,34,72,0.45),rgba(22,34,72,0)_220px),linear-gradient(90deg,#396299,#4e72aa_20%,#4e6ea8_40%,#536ea7_60%,#6371a8_80%,#737aac)]'
-        )}
-      >
-        {/* laptops: a soft shade under the header and along the bottom edge */}
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[1] hidden bg-[linear-gradient(180deg,rgba(16,22,46,0.38)_0%,rgba(16,22,46,0)_42%,rgba(16,22,46,0)_72%,rgba(16,22,46,0.3)_100%)] lg:block" />
-        <div className="relative z-[2] lg:pl-8 lg:pr-[calc(var(--card-w)_+_72px)] lg:pt-8 lg:[@media(max-height:760px)]:pt-6">{header}</div>
+      <div className="relative [container-type:inline-size] lg:[--card-w:400px] xl:[--card-w:460px] 2xl:[--card-w:500px]">
+        {/*
+          The frame: the header sits in the photo's evening sky on every screen. The sky colours of the photo's top edge
+          continue upward behind the header. Phones and tablets: header, then the whole photo at its own shape.
+          Laptops: as tall as the screen allows, the header on the left, the call card on the right.
+        */}
+        <div
+          className={cn(
+            'relative flex flex-col overflow-hidden rounded-[24px] shadow-[0_40px_80px_-48px_rgba(30,30,60,0.55)] sm:rounded-[28px]',
+            'bg-[linear-gradient(180deg,rgba(22,34,72,0.45),rgba(22,34,72,0)_220px),linear-gradient(90deg,#396299,#4e72aa_20%,#4e6ea8_40%,#536ea7_60%,#6371a8_80%,#737aac)]',
+            'lg:h-[clamp(600px,calc(100svh_-_var(--nav-h)_-_40px),860px)]'
+          )}
+        >
+          {/* a soft shade under the header and along the bottom edge */}
+          <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[1] bg-[linear-gradient(180deg,rgba(16,22,46,0.38)_0%,rgba(16,22,46,0)_42%,rgba(16,22,46,0)_72%,rgba(16,22,46,0.3)_100%)]" />
+          <div className="relative z-[2] px-5 pt-6 xs:px-6 sm:px-8 sm:pt-8 lg:pr-[calc(var(--card-w)_+_72px)] lg:[@media(max-height:760px)]:pt-6">{header}</div>
 
-        {/* laptops: no fade on this box (it would lift the card under the shade); the photo fades in by itself */}
-        <div className="intro-fade relative mt-10 md:mt-14 lg:mt-0 lg:flex-1 lg:[animation:none]" style={{ animationDelay: '0.2s' }}>
-          <div className="relative overflow-hidden rounded-[28px] bg-[#2B3550] shadow-[0_40px_80px_-48px_rgba(30,30,60,0.55)] lg:static lg:overflow-visible lg:rounded-none lg:bg-transparent lg:shadow-none">
-            <div className="relative aspect-[4/3] sm:aspect-[16/10] lg:static lg:aspect-auto">
-              <img
-                src={f.image ? f.image.src : f.poster}
-                srcSet={f.image ? f.image.srcSet : undefined}
-                sizes="(min-width: 1440px) 1376px, 100vw"
-                alt={f.video ? '' : f.alt}
-                className={cn(
-                  'absolute inset-0 h-full w-full object-cover object-[30%_50%]',
-                  // laptops: full width at its own shape, the tree line meeting the header; the top edge fades into the sky
-                  'lg:inset-auto lg:left-0 lg:top-[-9.16cqw] lg:h-[calc(100%_+_9.16cqw)] lg:min-h-[55.87cqw] lg:object-[30%_0%] lg:[mask-image:linear-gradient(to_bottom,transparent,#000_7%)] lg:motion-safe:animate-[intro-fade_0.9s_cubic-bezier(0.22,1,0.36,1)_0.2s_both]'
-                )}
-                decoding="async"
-                fetchpriority="high"
-              />
-              {wantVideo && f.video ? (
-                <video
-                  ref={videoRef}
-                  src={f.video}
-                  poster={f.poster}
-                  muted
-                  loop
-                  playsInline
-                  preload="auto"
-                  aria-hidden="true"
-                  className="absolute inset-0 h-full w-full object-cover object-[30%_50%] lg:inset-auto lg:left-0 lg:top-[-9.16cqw] lg:h-[calc(100%_+_9.16cqw)] lg:min-h-[55.87cqw] lg:object-[30%_0%] lg:[mask-image:linear-gradient(to_bottom,transparent,#000_7%)] lg:motion-safe:animate-[intro-fade_0.9s_cubic-bezier(0.22,1,0.36,1)_0.2s_both]"
-                />
-              ) : null}
-              {f.video ? <span className="sr-only">{f.alt}</span> : null}
-              <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(20,24,40,0.25)_0%,rgba(20,24,40,0)_30%,rgba(20,24,40,0)_60%,rgba(20,24,40,0.35)_100%)] lg:hidden" />
-
-              <audio ref={audioRef} src={c.audio} preload="none" onEnded={ended} />
-            </div>
+          {/* the photo: its tree line meets the header and its top edge fades into the sky */}
+          <div className="relative h-[46.71cqw] lg:h-auto lg:flex-1">
+            <img
+              src={f.image ? f.image.src : f.poster}
+              srcSet={f.image ? f.image.srcSet : undefined}
+              sizes="(min-width: 1440px) 1376px, 100vw"
+              alt={f.video ? '' : f.alt}
+              className="absolute left-0 top-[-9.16cqw] h-[calc(100%_+_9.16cqw)] min-h-[55.87cqw] w-full object-cover object-[30%_0%] [mask-image:linear-gradient(to_bottom,transparent,#000_7%)] motion-safe:animate-[intro-fade_0.9s_cubic-bezier(0.22,1,0.36,1)_0.2s_both]"
+              decoding="async"
+              fetchpriority="high"
+            />
+            {wantVideo && f.video ? (
+              <video ref={videoRef} src={f.video} poster={f.poster} muted loop playsInline preload="auto" aria-hidden="true" className="absolute left-0 top-[-9.16cqw] h-[calc(100%_+_9.16cqw)] min-h-[55.87cqw] w-full object-cover object-[30%_0%] [mask-image:linear-gradient(to_bottom,transparent,#000_7%)] motion-safe:animate-[intro-fade_0.9s_cubic-bezier(0.22,1,0.36,1)_0.2s_both]" />
+            ) : null}
+            {f.video ? <span className="sr-only">{f.alt}</span> : null}
+            <audio ref={audioRef} src={c.audio} preload="none" onEnded={ended} />
           </div>
-
         </div>
 
         {/* The call: under the photo on phones and tablets; on laptops the right-hand column of the frame, from the top */}
@@ -365,25 +350,25 @@ export function RxHero({ it }) {
   const { open } = useLead();
 
   return (
-    <section id="top" data-nav-theme="light" aria-labelledby="rx-hero-title" className="relative overflow-hidden pb-[clamp(56px,7vw,104px)] pt-[calc(var(--nav-h)+36px)] md:pt-[calc(var(--nav-h)+56px)] lg:pt-[calc(var(--nav-h)+16px)]">
+    <section id="top" data-nav-theme="light" aria-labelledby="rx-hero-title" className="relative overflow-hidden pb-[clamp(56px,7vw,104px)] pt-[calc(var(--nav-h)+16px)]">
       <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[760px] bg-[radial-gradient(55%_55%_at_82%_0%,rgba(255,214,170,0.75),rgba(246,245,241,0)_70%),radial-gradient(40%_50%_at_10%_10%,rgba(240,232,218,0.7),rgba(246,245,241,0)_70%)]" />
       <div className="shell relative">
         <CallStage
           h={h}
           header={
-            // above the photo on phones and tablets; on laptops one column in its evening sky, left of the call card
-            <div className="grid gap-6 lg:block">
+            // in the photo's evening sky: full width on phones and tablets, left of the call card on laptops
+            <div>
               <div>
-                <p className="intro-rise eyebrow lg:text-white/75">{h.eyebrow}</p>
-                <h1 id="rx-hero-title" className="t-display balance mt-5 md:mt-6 lg:mt-3 lg:[@media(max-height:760px)]:mt-2 lg:text-[clamp(2.2rem,0.4rem+2.7vw,3.4rem)] lg:text-white lg:[text-shadow:0_2px_24px_rgba(10,16,40,0.35)]">
+                <p className="intro-rise eyebrow text-white/75">{h.eyebrow}</p>
+                <h1 id="rx-hero-title" className="t-display balance mt-3 text-white [text-shadow:0_2px_24px_rgba(10,16,40,0.35)] lg:text-[clamp(2.2rem,0.4rem+2.7vw,3.4rem)] lg:[@media(max-height:760px)]:mt-2">
                   <RevealLines lines={[h.titleA, h.titleB]} lineClassNames={['', '']} immediate delay={0.08} stagger={0.14} />
                 </h1>
               </div>
-              <div className="lg:mt-4 lg:[@media(max-height:760px)]:mt-3">
-                <p className="intro-slide t-lead pretty max-w-[34em] lg:max-w-[36em] lg:text-[15.5px] lg:leading-[1.55] lg:text-white/[0.88]" style={{ animationDelay: '0.3s' }}>
+              <div className="mt-4 lg:[@media(max-height:760px)]:mt-3">
+                <p className="intro-slide t-lead pretty max-w-[36em] !text-white/[0.88] lg:text-[15.5px] lg:leading-[1.55]" style={{ animationDelay: '0.3s' }}>
                   {h.text}
                 </p>
-                <div className="intro-slide mt-6 flex flex-wrap items-center gap-2.5 sm:gap-3 lg:mt-5 lg:[@media(max-height:760px)]:mt-4" style={{ animationDelay: '0.42s' }}>
+                <div className="intro-slide mt-5 flex flex-wrap items-center gap-2.5 sm:gap-3 lg:[@media(max-height:760px)]:mt-4" style={{ animationDelay: '0.42s' }}>
                   <CTAButton size="lg" onClick={open} className="max-sm:h-12 max-sm:px-4 max-sm:text-[14px] lg:h-12 lg:px-5 lg:text-[15px] lg:[@media(max-height:760px)]:h-11">
                     Book a demo
                   </CTAButton>
