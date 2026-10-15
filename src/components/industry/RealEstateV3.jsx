@@ -1150,7 +1150,7 @@ function RuleFlow({ r, sc, reduce }) {
           <span className={label}>{r.flow.when}</span>
           <span className="truncate text-[11.5px] text-slate">{sc.channel}</span>
         </p>
-        <p className="mt-2 text-[17px] font-medium leading-snug tracking-[-0.01em] text-ink xl:text-[18px]">“{sc.trigger}”</p>
+        <p className="mt-2 text-[16px] font-medium leading-snug tracking-[-0.01em] text-ink sm:text-[17px] xl:text-[18px]">“{sc.trigger}”</p>
       </motion.div>
       <div className="relative ml-6 h-7 w-[2px] bg-ink/10">{line(0.45)}</div>
       {/* then */}
@@ -1161,7 +1161,7 @@ function RuleFlow({ r, sc, reduce }) {
         </p>
         <p className="mt-1.5 text-[13px] leading-snug text-white/55">{sc.action}</p>
         {/* the message she actually sends */}
-        <p className="mt-3 border-l-2 border-[#F25C2A] pl-3 text-[15.5px] leading-snug text-white xl:text-[16.5px]">“{sc.reply}”</p>
+        <p className="mt-3 border-l-2 border-[#F25C2A] pl-3 text-[14.5px] leading-snug text-white sm:text-[15.5px] xl:text-[16.5px]">“{sc.reply}”</p>
       </motion.div>
       <div className="relative ml-6 h-7 w-[2px] bg-ink/10">{line(1.15)}</div>
       {/* result */}
@@ -1189,7 +1189,7 @@ function PlaybookStepper({ r, sc, i, price, go, reduce }) {
     <div className="rounded-[20px] bg-white/80 p-2.5 shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_20px_40px_-32px_rgba(90,50,20,0.4)] backdrop-blur-sm lg:hidden">
       <div className="flex items-center justify-between gap-3 pb-1.5 pl-3 pr-0.5">
         <span className="t-data truncate text-[10.5px] uppercase tracking-[0.08em] text-ink/45">
-          {r.panel.title} · {group.label} · {n + 1}/{r.rows.length}
+          {group.label} · {n + 1}/{r.rows.length}
         </span>
         <span className="flex shrink-0 gap-1">
           <button type="button" className={btn} onClick={() => go(i - 1)} aria-label="Previous rule">
@@ -1200,7 +1200,34 @@ function PlaybookStepper({ r, sc, i, price, go, reduce }) {
           </button>
         </span>
       </div>
-      <PlaybookRow id="stepper" row={row} active value={row.key === 'price' ? price : 0} onPick={() => go(i + 1)} reduce={reduce} />
+      {/* the setting: its name on one line, its value under it, so nothing is squeezed on a narrow screen */}
+      <div className="relative rounded-[14px] bg-[#FFF3E8] px-3.5 py-3">
+        <span className="absolute inset-y-2.5 left-0 w-[3px] rounded-full bg-[#F25C2A]" aria-hidden="true" />
+        <p className="flex items-center gap-2 text-[15px] font-medium leading-snug text-ink">
+          {row.icon ? (
+            React.createElement(RULE_ICONS[row.icon], { className: 'h-4 w-4 shrink-0 text-[#D9481C]', strokeWidth: 1.9, 'aria-hidden': 'true' })
+          ) : (
+            <span aria-hidden="true" className="w-4 shrink-0 text-center font-serif text-[18px] leading-none text-[#D9481C]">
+              ”
+            </span>
+          )}
+          {row.label}
+        </p>
+        <div className="mt-2 flex pl-6">
+          {row.values.length > 1 ? (
+            <span className="flex whitespace-nowrap rounded-full bg-ink/[0.06] p-0.5 text-[12px] font-medium">
+              {row.values.map((v, k) => (
+                <span key={v} className="relative px-3 py-1">
+                  {k === price ? <motion.span layoutId={reduce ? undefined : 'stepper-switch'} className="absolute inset-0 rounded-full bg-white shadow-[0_1px_3px_rgba(10,15,14,0.15)]" transition={{ duration: 0.4, ease: EASE }} /> : null}
+                  <span className={cn('relative', k === price ? 'text-ink' : 'text-ink/45')}>{v}</span>
+                </span>
+              ))}
+            </span>
+          ) : (
+            <span className="whitespace-nowrap rounded-full bg-white px-3 py-1 text-[12px] font-medium text-ink shadow-[0_1px_3px_rgba(10,15,14,0.12)]">{row.values[0]}</span>
+          )}
+        </div>
+      </div>
       <div className="flex justify-center gap-1.5 pb-1 pt-2" aria-hidden="true">
         {r.rows.map((x) => (
           <span key={x.key} className={cn('h-1.5 rounded-full transition-all duration-300', x.key === row.key ? 'w-5 bg-[#F25C2A]' : 'w-1.5 bg-ink/15')} />
