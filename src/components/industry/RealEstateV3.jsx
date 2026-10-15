@@ -998,10 +998,10 @@ export function RxRace({ it }) {
           {/* wide screens: the section's headline, and the evening as a timeline under it; centred as one group */}
           <div className="relative hidden xl:flex xl:flex-col xl:justify-center xl:gap-10 xl:self-stretch [@media(max-height:760px)]:xl:gap-7">
             <div>
-              <h2 className="balance text-[clamp(31px,2.55vw,40px)] font-medium leading-[1.08] tracking-[-0.022em] text-ink">
+              <h2 className="balance text-[clamp(31px,2.55vw,40px)] font-medium leading-[1.08] tracking-[-0.022em] text-ink [@media(max-height:760px)]:text-[30px]">
                 {r.titleA} {r.titleB}
               </h2>
-              <p className="pretty mt-4 max-w-[30em] text-[15.5px] leading-[1.6] text-graphite">{r.text}</p>
+              <p className="pretty mt-4 max-w-[30em] text-[15.5px] leading-[1.6] text-graphite [@media(max-height:760px)]:mt-3 [@media(max-height:760px)]:text-[14.5px] [@media(max-height:760px)]:leading-[1.5]">{r.text}</p>
             </div>
             {/* a fixed height for the timeline, so the group stays put while steps open and close */}
             <div className="min-h-[330px] [@media(max-height:760px)]:min-h-[280px]">
