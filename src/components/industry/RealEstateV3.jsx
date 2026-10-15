@@ -2026,12 +2026,11 @@ const SCALE_BARS = [0.22, 0.3, 0.27, 0.38, 0.46, 0.43, 0.56, 0.64, 0.72, 0.84, 1
 
 /**
  * The closing for a brokerage, in Aurora's colours only: an ink night with a warm dawn rising from below and growth
- * bars climbing behind the headline; then the house from the top of the page, warmed to the same light, with the demo
- * form as glass over it.
+ * bars climbing behind the headline; then a neighborhood at sunrise, with the demo form as glass over it.
  */
 export function RxClosing({ it }) {
   const c = it.v3.closing;
-  const img = it.v3.hero.film.image;
+  const img = c.image || it.v3.hero.film.image;
   const reduce = !!useReducedMotion();
   const ref = useRef(null);
   const seen = useInViewport(ref, { threshold: 0.2, once: true });
@@ -2063,10 +2062,10 @@ export function RxClosing({ it }) {
           <p className="t-lead pretty max-w-[34em] !text-white/70 lg:col-span-5">{c.text}</p>
         </div>
 
-        {/* the house, warmed to Aurora's light, with the form as glass over it (phones: the house above, the form overlapping it) */}
+        {/* the neighborhood at sunrise, with the form as glass over it (phones: the photo above, the form overlapping it) */}
         <div className="relative mt-10 md:mt-12 md:overflow-hidden md:rounded-[clamp(24px,2.6vw,34px)]">
           <div className="relative aspect-[16/10] overflow-hidden rounded-[24px] md:absolute md:inset-0 md:aspect-auto md:rounded-none">
-            <img src={img.src} srcSet={img.srcSet} sizes="(min-width: 1280px) 1200px, 100vw" alt="" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover object-[50%_45%] [filter:sepia(0.55)_saturate(1.25)_brightness(0.85)]" />
+            <img src={img.src} srcSet={img.srcSet} sizes="(min-width: 1280px) 1200px, 100vw" alt="" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover object-[50%_32%]" />
             <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,159,69,0.10)_0%,rgba(242,92,42,0.12)_40%,rgba(10,15,14,0.55)_75%,rgba(10,15,14,0.9)_100%)] md:bg-[linear-gradient(180deg,rgba(255,159,69,0.08)_0%,rgba(10,15,14,0.25)_40%,rgba(10,15,14,0.85)_100%)]" />
           </div>
           <div className="relative -mt-16 px-2 xs:px-3 md:mt-0 md:px-6 md:pb-6 md:pt-[clamp(200px,22vw,300px)]">

@@ -350,6 +350,11 @@ export const industries = [
         titleA: 'Ready to scale with us?',
         titleB: 'Book a demo.',
         text: 'Aurora answers, qualifies, books and follows up on every lead, so the brokers you have handle more deals. Bring one of your listings and hear it work.',
+        // a whole neighborhood at sunrise: the scale the headline talks about, in Aurora's dawn colours
+        image: {
+          src: '/media/real-estate/closing-neighborhood-1600.webp',
+          srcSet: '/media/real-estate/closing-neighborhood-900.webp 900w, /media/real-estate/closing-neighborhood-1200.webp 1200w, /media/real-estate/closing-neighborhood-1600.webp 1600w, /media/real-estate/closing-neighborhood-2000.webp 2000w',
+        },
       },
       // the tools Aurora connects to, by kind, with their brand icons (shown only to name them); each kind ends in 'and more'
       stack: {
