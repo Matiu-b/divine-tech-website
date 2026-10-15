@@ -926,7 +926,7 @@ export function RxRace({ it }) {
 
           {/* wide screens: the section's headline and its line, nothing else */}
           <div className="relative hidden xl:block">
-            <h2 className="balance text-[clamp(34px,2.9vw,46px)] font-medium leading-[1.06] tracking-[-0.022em] text-ink">
+            <h2 className="balance text-[clamp(31px,2.55vw,40px)] font-medium leading-[1.08] tracking-[-0.022em] text-ink">
               {r.titleA} {r.titleB}
             </h2>
             <p className="pretty mt-5 max-w-[30em] text-[16px] leading-[1.6] text-graphite">{r.text}</p>
