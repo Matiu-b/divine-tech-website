@@ -5,6 +5,9 @@ actually happening in AI and stops the same news from being used twice.
 
 Format: `- YYYY-MM-DD · <trend in one line> · <source link> · used in: <slug or "not yet">`
 
+- 2026-10-16 · Workday makes its agent platform "headless" (Oct 13): any MCP agent can act on HR and finance data, but every agent runs under the same permissions, approvals and audit trails (Agent Harness GA) · https://newsroom.workday.com/2026-10-13-Workdays-Trusted-Agent-Platform-Now-Delivers-Headless-Access-to-HR-and-Finance,-Letting-Customers-Build-and-Run-Lawful-AI-Agents · used in: ai-agents-vs-chatbots-vs-rpa
+- 2026-10-16 · Rocket Software expands EVA for mainframe agents (Sep 24) with PlanGuard, a policy and identity check between agent reasoning and actions; every action logged · https://itdaily.com/news/datacenter/rocket-software-deploys-managed-ai-agents-on-mainframes/ · used in: ai-agents-vs-chatbots-vs-rpa
+- 2026-10-16 · Dataiku Agent Management (announced Sep 24, GA Oct 2026): cross-vendor inventory, monitoring and risk certification for agents on Bedrock, Copilot Studio, Agentforce and others · https://www.dataiku.com/company/news/dataiku-agent-management-general-availability · used in: not yet
 - 2026-10-14 · Personal Agent Protocol Draft 0.1 published (poppy.json discovery, OAuth sessions, read/write scopes, handoff); 35 new design partners incl. GEICO, Liberty Mutual, Cigna, Visa, OpenAI · https://personalagentprotocol.org/docs/spec · used in: prepare-your-business-for-ai-agents
 - 2026-10-14 · Google Cloud launches the Gemini agent for enterprise work at Gemini at Work (Oct 8) · https://blog.google/innovation-and-ai/infrastructure-and-cloud/google-cloud/gemini-at-work/ · used in: not yet
 - 2026-10-14 · Meta Muse personal agent live in the US (Sep 2026): books travel, fills forms, buys, with approval for sensitive actions · https://www.techrepublic.com/article/news-meta-muse-ai-agent-us-launch/ · used in: prepare-your-business-for-ai-agents
