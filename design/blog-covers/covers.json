@@ -3,5 +3,6 @@
   { "slug": "ai-for-real-estate-lead-follow-up", "title": "The brokerage, on autopilot", "tone": "dark" },
   { "slug": "ai-receptionist-for-clinics", "title": "The front desk that never sleeps", "tone": "light" },
   { "slug": "ai-answering-service-for-contractors", "title": "Dispatch, without the dispatcher", "tone": "dark" },
-  { "slug": "prepare-your-business-for-ai-agents", "file": "prepare-your-business-for-ai-agents-2", "title": "When the caller is an agent", "tone": "dark", "seed": "caller", "palette": ["#3A0CA3", "#00C2FF", "#FF4FA3", "#FFD166"] }
+  { "slug": "prepare-your-business-for-ai-agents", "file": "prepare-your-business-for-ai-agents-2", "title": "When the caller is an agent", "tone": "dark", "seed": "caller", "palette": ["#3A0CA3", "#00C2FF", "#FF4FA3", "#FFD166"] },
+  { "slug": "ai-agents-vs-chatbots-vs-rpa", "title": "Script, reply or decision", "tone": "dark", "seed": "trio", "palette": ["#04343A", "#14A36B", "#FF6F61", "#FFC857"] }
 ]
