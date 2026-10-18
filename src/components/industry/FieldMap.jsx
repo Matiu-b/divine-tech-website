@@ -28,13 +28,25 @@ const ROADS = [
   [[[760, 300], [830, 330], [800, 472]], 'county'],
   [[[268, 400], [120, 330], [110, 160]], 'county'],
 ];
+/** The part of the map that must always be seen: every town on the route. */
+const FOCUS = [40, 72, 905, 525];
+const onEdge = ([x, y]) => x <= 0 || x >= W || y <= 0 || y >= H;
+const reach = (q, r) => {
+  const dx = q[0] - r[0];
+  const dy = q[1] - r[1];
+  const k = 400 / Math.hypot(dx, dy);
+  return [q[0] + dx * k, q[1] + dy * k];
+};
+/** A road that leaves the map keeps going the same way, so a frame wider than the map still shows it running on. */
+const grow = (p) => [...(onEdge(p[0]) ? [reach(p[0], p[1])] : []), ...p, ...(onEdge(p[p.length - 1]) ? [reach(p[p.length - 1], p[p.length - 2])] : [])];
+
 const TOWNS = [
   { name: 'Elmwood', box: [100, 400, 260, 488], label: [180, 512] },
   { name: 'Oakridge', box: [200, 95, 345, 205], label: [215, 82] },
   { name: 'Maple Heights', box: [565, 95, 720, 205], label: [642, 82] },
-  { name: 'Cedar Falls', box: [770, 280, 905, 392], label: [880, 410] },
+  { name: 'Cedar Falls', box: [770, 280, 905, 392], label: [850, 410] },
   { name: 'Brookside', box: [455, 405, 590, 500], label: [522, 518] },
-  { name: 'Lakeview', box: [40, 110, 180, 215], label: [80, 97] },
+  { name: 'Lakeview', box: [40, 110, 180, 215], label: [110, 97] },
 ];
 const WOODS = [
   'M380 210 C420 190 480 200 490 240 C500 280 450 300 410 290 C370 280 350 240 380 210 Z',
@@ -61,7 +73,7 @@ function Region() {
   const order = ['county', 'route', 'interstate'];
   return (
     <g>
-      <rect width={W} height={H} fill="#EEEBE4" />
+      <rect x={-400} y={-400} width={W + 800} height={H + 800} fill="#EEEBE4" />
       <defs>
         <pattern id="fm-grid" width="7" height="7" patternUnits="userSpaceOnUse">
           <path d="M0 0.4 H7 M0.4 0 V7" stroke="#FFFFFF" strokeWidth="0.8" />
@@ -83,8 +95,8 @@ function Region() {
       {order.map((k) =>
         ROADS.filter(([, kind]) => kind === k).map(([p]) => (
           <g key={k + p[0].join()}>
-            <path d={pts(p)} fill="none" stroke={style[k].edge} strokeWidth={style[k].w + 2} strokeLinecap="round" strokeLinejoin="round" />
-            <path d={pts(p)} fill="none" stroke={style[k].fill} strokeWidth={style[k].w} strokeLinecap="round" strokeLinejoin="round" />
+            <path d={pts(grow(p))} fill="none" stroke={style[k].edge} strokeWidth={style[k].w + 2} strokeLinecap="round" strokeLinejoin="round" />
+            <path d={pts(grow(p))} fill="none" stroke={style[k].fill} strokeWidth={style[k].w} strokeLinecap="round" strokeLinejoin="round" />
           </g>
         ))
       )}
@@ -109,7 +121,8 @@ function Region() {
   );
 }
 
-/** The map keeps its proportions and covers its frame, cropped evenly; this says where a map point lands on the frame. */
+/** The map keeps its proportions and covers its frame, but never crops the towns on the route (the land runs on past
+ * the edges if the frame is narrower); this says where a map point lands on the frame. */
 function useCover(ref) {
   const [box, setBox] = useState({ s: 1, ox: 0, oy: 0, w: W, h: H });
   useLayoutEffect(() => {
@@ -118,8 +131,13 @@ function useCover(ref) {
     const update = () => {
       const w = el.clientWidth;
       const h = el.clientHeight;
-      const s = Math.max(w / W, h / H);
-      setBox({ s, ox: (w - W * s) / 2, oy: (h - H * s) / 2, w, h });
+      const [fx0, fy0, fx1, fy1] = FOCUS;
+      const s = Math.min(Math.max(w / W, h / H), w / (fx1 - fx0), h / (fy1 - fy0));
+      const place = (size, full, a, b) => {
+        const o = size / 2 - ((a + b) / 2) * s;
+        return full * s >= size ? Math.min(0, Math.max(size - full * s, o)) : o;
+      };
+      setBox({ s, ox: place(w, W, fx0, fx1), oy: place(h, H, fy0, fy1), w, h });
     };
     update();
     if (typeof ResizeObserver === 'undefined') return undefined;
@@ -277,9 +295,9 @@ export default function FieldMap({ d }) {
 
         <div ref={ref} className="canvas relative mt-5 grid overflow-hidden bg-[#FBF9F5] shadow-[0_0_0_1px_rgba(10,15,14,0.08),0_30px_60px_-40px_rgba(60,50,30,0.45)] sm:mt-8 md:mt-12 lg:h-[clamp(520px,calc(100svh_-_300px),640px)] lg:grid-cols-[minmax(0,1fr)_380px]">
           {/* the map */}
-          <div ref={frame} className="relative aspect-[4/3] overflow-hidden bg-[#F2EFE9] sm:aspect-[16/9] lg:aspect-auto lg:h-full">
+          <div ref={frame} className="relative aspect-[3/2] overflow-hidden bg-[#EEEBE4] sm:aspect-[16/9] lg:aspect-auto lg:h-full">
             <div className="absolute" style={{ left: box.ox, top: box.oy, width: W * box.s, height: H * box.s }}>
-              <svg viewBox={`0 0 ${W} ${H}`} className="block h-full w-full" aria-hidden="true">
+              <svg viewBox={`0 0 ${W} ${H}`} className="block h-full w-full overflow-visible" aria-hidden="true">
                 <Region />
                 {/* the order the jobs were booked in: a zigzag across the county */}
                 <path d={pts([d.yard, ...d.booked.order.map((k) => d.stops[k].at)])} fill="none" stroke="#0A0F0E" strokeOpacity="0.28" strokeWidth={1.8} strokeDasharray="4 6" strokeLinecap="round" strokeLinejoin="round" />
@@ -356,7 +374,7 @@ export default function FieldMap({ d }) {
             </div>
 
             {/* the search bar and the map controls */}
-            <div className="absolute left-3 top-3 flex items-center gap-2 rounded-full bg-white py-1.5 pl-2 pr-3.5 shadow-[0_2px_6px_rgba(10,15,14,0.14)] sm:left-4 sm:top-4">
+            <div className="absolute left-3 top-3 hidden items-center gap-2 rounded-full bg-white py-1.5 sm:flex pl-2 pr-3.5 shadow-[0_2px_6px_rgba(10,15,14,0.14)] sm:left-4 sm:top-4">
               <img src="/brand/aurora-symbol-color.svg" alt="" width="18" height="18" className="h-[18px] w-[18px]" />
               <span className="text-[12.5px] font-medium text-ink">{d.title}</span>
             </div>
