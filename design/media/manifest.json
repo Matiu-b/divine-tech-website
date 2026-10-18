@@ -219,6 +219,16 @@
    "kind": "audio",
    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_122014_9ceaf176-86ec-4fb8-b7ba-37316f636144.mp3",
    "out": "public/media/home-services/call-brief-2"
+  },
+  {
+   "kind": "image",
+   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_122924_874d231c-839a-4be3-9600-9eb3329c50d6.png",
+   "out": "public/media/home-services/hear-customer-2",
+   "widths": [
+    600,
+    900,
+    1400
+   ]
   }
  ]
 }
