@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, m as motion, useReducedMotion } from 'framer-motion';
-import { ArrowUp, CalendarCheck, Check, ChevronLeft, ChevronRight, CircleDollarSign, Database, Hand, Pause, Play, Scale, Volume2, Send, Clock, House, BellOff, Hourglass, ShieldCheck, User, ArrowRight, TrendingUp, Heart, MessageSquareText, MessagesSquare, Plus, RotateCcw, PhoneOutgoing } from 'lucide-react';
+import { ArrowUp, CalendarCheck, Check, ChevronLeft, ChevronRight, CircleDollarSign, Database, Hand, Pause, Play, Scale, Volume2, Send, Clock, House, BellOff, Hourglass, ShieldCheck, User, ArrowRight, TrendingUp, Heart, MessageSquareText, MessagesSquare, Plus, PhoneOutgoing } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import CTAButton from '@/components/home-v2/primitives/CTAButton';
 import SectionHeader from '@/components/home-v2/primitives/SectionHeader';
@@ -89,7 +89,15 @@ function useCallClock(c, { audioRef }) {
     setT(c.duration);
     setStatus('done');
   };
-  return { t, status, play, ended };
+  // back to the start, without playing (the journey uses it when its call step is left)
+  const reset = () => {
+    const a = audioRef.current;
+    if (a && !a.paused) a.pause();
+    now.current = 0;
+    setT(0);
+    setStatus('idle');
+  };
+  return { t, status, play, ended, reset };
 }
 
 const lastIndex = (list, t) => {
@@ -1545,43 +1553,15 @@ function KpiGoals({ a, run, reduce, titleId }) {
   );
 }
 
-// One lead's journey: how long each step stays on screen before the next (ms), and the closing card
-const STEP_MS = 9000;
-const END_MS = 6000;
+// One lead's journey: how long a step stays on screen before the next (ms). The call step holds while it plays.
+const STEP_MS = 10000;
+const CALL_IDLE_MS = 13000;
+const AFTER_CALL_MS = 2500;
 const BUBBLE_GAP = 0.55; // seconds between the texts of one step
 
-/** A text in the thread: Aurora's on the left, the lead's on the right, or a listing card Aurora sent. */
+/** A text in the thread: Aurora's on the left, the lead's on the right. The sender shows once per run of texts. */
 function JourneyBubble({ m, i, lead, labels, reduce, label = true }) {
   const enter = reduce ? {} : { initial: { opacity: 0, y: 10 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.4, ease: EASE, delay: 0.35 + i * BUBBLE_GAP } };
-  if (m.call) {
-    return (
-      <motion.div {...enter} className="flex items-center gap-3 rounded-[16px] bg-white px-3 py-2.5 shadow-[0_1px_2px_rgba(10,15,14,0.08)]">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#F25C2A] text-white">
-          <PhoneOutgoing className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
-        </span>
-        <span className="min-w-0 flex-1">
-          <span className="block text-[14px] font-medium text-ink">{m.call.title}</span>
-          <span className="block text-[12.5px] text-slate">{m.call.meta}</span>
-        </span>
-        <span aria-hidden="true" className="flex h-5 items-center gap-[3px] max-xs:hidden">
-          {[8, 14, 20, 11, 17, 7, 13, 19, 10, 6].map((h, j) => (
-            <span key={j} className="w-[3px] rounded-full bg-[#F25C2A]/55" style={{ height: h }} />
-          ))}
-        </span>
-      </motion.div>
-    );
-  }
-  if (m.home) {
-    return (
-      <motion.div {...enter} className="flex w-[260px] max-w-[88%] items-stretch overflow-hidden rounded-[16px] rounded-bl-[6px] bg-white shadow-[0_1px_2px_rgba(10,15,14,0.08)]">
-        <img src={m.home.image} alt="" width="200" height="150" loading="lazy" decoding="async" className="w-[96px] shrink-0 object-cover" />
-        <p className="flex flex-col justify-center px-3 py-2.5">
-          <span className="block text-[15px] font-medium text-ink">{m.home.price}</span>
-          <span className="block text-[12.5px] leading-snug text-slate">{m.home.meta}</span>
-        </p>
-      </motion.div>
-    );
-  }
   const mine = m.who === 'aurora';
   return (
     <motion.div {...enter} className={cn('flex max-w-[88%] flex-col', mine ? 'items-start' : 'items-end self-end')}>
@@ -1591,17 +1571,113 @@ function JourneyBubble({ m, i, lead, labels, reduce, label = true }) {
           {mine ? labels.you : lead.name.split(' ')[0]}
         </span>
       ) : null}
-      <p className={cn('rounded-[18px] px-3.5 py-2.5 text-[14px] leading-snug md:text-[15px]', mine ? 'rounded-bl-[6px] bg-white text-ink shadow-[0_1px_2px_rgba(10,15,14,0.08)]' : 'rounded-br-[6px] bg-ink text-white')}>{m.text}</p>
+      <p className={cn('rounded-[18px] px-3.5 py-2.5 text-[14px] leading-snug md:text-[15px]', mine ? 'rounded-bl-[6px] bg-white text-ink shadow-[0_1px_2px_rgba(10,15,14,0.08)]' : 'rounded-br-[6px] bg-ink text-white')}>
+        {m.cue ? <span className="mr-1 text-[12px] italic opacity-55">[{m.cue}]</span> : null}
+        {m.text}
+      </p>
     </motion.div>
   );
 }
 
-/** One step on the stage: what happened, the texts, then what the team sees. Animates in when it becomes the current step. */
-function JourneyStep({ step, n, a, reduce }) {
-  const TeamIcon = step.icon === 'calendar' ? CalendarCheck : Database;
+/** One line of the call, word by word as it is spoken, with the delivery the voice was given. */
+function CallLine({ cap, t, dim, c }) {
+  const mine = cap.who === 'aurora';
+  const words = cap.text.split(' ');
+  return (
+    <div className={cn('transition-opacity duration-500', dim ? 'opacity-40' : 'opacity-100')}>
+      <p className={cn('flex items-center gap-1.5 text-[10.5px] font-medium uppercase tracking-[0.07em]', mine ? 'text-[#B4471A]' : 'text-slate')}>
+        {mine ? 'Aurora' : c.caller}
+        {cap.cue ? <span className="font-normal normal-case italic tracking-normal text-ink/40">[{cap.cue}]</span> : null}
+      </p>
+      <p className="mt-0.5 text-[15px] leading-[1.42] tracking-[-0.005em] text-ink md:text-[16px]">
+        <span className="sr-only">{cap.text}</span>
+        <span aria-hidden="true">
+          {words.map((w, i) => (
+            <span key={i} className={cn('transition-opacity duration-200', t >= cap.at + (cap.words[i] || 0) ? 'opacity-100' : 'opacity-[0.14]')}>
+              {w}
+              {i < words.length - 1 ? ' ' : ''}
+            </span>
+          ))}
+        </span>
+      </p>
+    </div>
+  );
+}
+
+/**
+ * The call, the peak of the story. Before anyone presses play it shows the call's turning points (the objection,
+ * Aurora's answer, the booking); once it plays, every line lights up as it is spoken.
+ */
+function CallPanel({ c, a, clock: cc, reduce }) {
+  const { t, status, play } = cc;
+  const live = status === 'playing' || status === 'paused';
+  const heard = live || status === 'done';
+  const k = lastIndex(c.captions, t);
+  const cap = c.captions[k];
+  const prev = k > 0 ? c.captions[k - 1] : null;
+  const speaking = status === 'playing' && t >= cap.at && t <= cap.end + 150 ? cap.who : null;
+  return (
+    <div className="flex flex-col gap-3 rounded-[18px] bg-[#F6F1E8] p-3.5 md:p-4">
+      <div className="flex items-center gap-3 rounded-[16px] bg-white px-3 py-2.5 shadow-[0_1px_2px_rgba(10,15,14,0.08)]">
+        <span className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#FFF1E6]">
+          {speaking === 'aurora' ? <span className="ring-ping absolute inset-0 rounded-full bg-[#F25C2A]/25" /> : null}
+          <img src="/brand/aurora-symbol-color.svg" alt="" width="20" height="20" className="relative h-5 w-5" />
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-[14px] font-medium leading-tight text-ink">{c.title}</span>
+          <span className="block truncate text-[12px] text-slate">
+            {c.meta} · <span className="tabular-nums">{clock(live ? Math.min(t, c.duration) : c.duration)}</span>
+          </span>
+        </span>
+        {live ? <Wave who={reduce ? null : speaking} /> : null}
+        <button
+          type="button"
+          onClick={play}
+          aria-label={status === 'playing' ? c.pause : status === 'paused' ? c.resume : status === 'done' ? c.again : c.listen}
+          className={cn(
+            'relative flex shrink-0 items-center justify-center rounded-full text-white transition-transform hover:scale-105',
+            live ? 'h-9 w-9 bg-ink' : 'h-11 w-11 bg-[linear-gradient(140deg,#FF8A3D,#F25C2A)] shadow-[0_10px_24px_-10px_rgba(242,92,42,0.8)]'
+          )}
+        >
+          {!live && !reduce ? <span className="ring-ping absolute inset-0 rounded-full bg-[#F25C2A]/30" /> : null}
+          {status === 'playing' ? <Pause className="relative h-3.5 w-3.5 fill-current" strokeWidth={2.2} aria-hidden="true" /> : <Play className="relative ml-0.5 h-4 w-4 fill-current" strokeWidth={2.2} aria-hidden="true" />}
+        </button>
+      </div>
+
+      {heard && status !== 'done' ? (
+        <div className="grid h-[200px] content-end gap-3 overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,#000_25%)] md:h-[188px]">
+          {prev ? <CallLine key={k - 1} cap={prev} t={t} dim c={c} /> : null}
+          <CallLine key={k} cap={cap} t={t} c={c} />
+        </div>
+      ) : (
+        <div className="flex min-h-[200px] flex-col gap-2.5 md:min-h-[188px]">
+          {c.moments.map((m, i) => {
+            const x = c.captions[m];
+            return <JourneyBubble key={m} m={x} i={i} lead={a.lead} labels={a.labels} reduce={reduce} label={i === 0 || c.captions[c.moments[i - 1]].who !== x.who} />;
+          })}
+          {status !== 'done' ? (
+            <button type="button" onClick={play} className="mt-auto inline-flex w-fit items-center gap-1.5 self-center rounded-full bg-white px-3.5 py-2 text-[13px] font-medium text-[#B4471A] shadow-[0_0_0_1px_rgba(242,92,42,0.25)] hover:shadow-[0_0_0_1px_rgba(242,92,42,0.6)]">
+              <Volume2 className="h-3.5 w-3.5" strokeWidth={2.2} aria-hidden="true" />
+              {c.listen} · {c.sound} · <span className="tabular-nums">{clock(c.duration)}</span>
+            </button>
+          ) : null}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** One step on the stage: what happened, then the call or the texts, then what the team sees. */
+function JourneyStep({ step, n, a, reduce, cc }) {
+  const TeamIcon = step.icon === 'calendar' ? CalendarCheck : step.icon === 'phone' ? PhoneOutgoing : Database;
+  const c = step.call;
+  // during the call the team line follows it; otherwise it shows where things ended up
+  const playing = c && cc && (cc.status === 'playing' || cc.status === 'paused');
+  const team = playing ? c.notes[lastIndex(c.notes, cc.t)].text : step.team;
+  const n2 = c ? 4 : step.thread.length;
   return (
     <motion.div initial={reduce ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: EASE }} className="flex h-full flex-col">
-      <div className="grid gap-4 md:mb-5 md:gap-5 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] xl:gap-8">
+      <div className="grid gap-4 md:mb-5 md:gap-5 xl:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] xl:gap-8">
         <div>
           <p className="t-data text-[11px] uppercase tracking-[0.08em] text-[#C2410C]">
             {String(n + 1).padStart(2, '0')} · {step.date}
@@ -1610,61 +1686,79 @@ function JourneyStep({ step, n, a, reduce }) {
           <p className="mt-3 text-[11px] font-medium uppercase tracking-[0.08em] text-ink/40 md:mt-4">{a.labels.happened}</p>
           <p className="pretty mt-1.5 text-[14.5px] leading-[1.55] text-graphite md:text-[15px] md:leading-[1.6]">{step.happened}</p>
         </div>
-        <div className="flex flex-col gap-2.5 rounded-[18px] bg-[#F6F1E8] p-3.5 md:p-4">
-          {step.thread.map((m, i) => (
-            <JourneyBubble key={i} m={m} i={i} lead={a.lead} labels={a.labels} reduce={reduce} label={i === 0 || step.thread[i - 1].who !== m.who} />
-          ))}
-        </div>
+        {c ? (
+          <CallPanel c={c} a={a} clock={cc} reduce={reduce} />
+        ) : (
+          <div className="flex flex-col gap-2.5 rounded-[18px] bg-[#F6F1E8] p-3.5 md:p-4">
+            {step.thread.map((m, i) => (
+              <JourneyBubble key={i} m={m} i={i} lead={a.lead} labels={a.labels} reduce={reduce} label={i === 0 || step.thread[i - 1].who !== m.who} />
+            ))}
+          </div>
+        )}
       </div>
       <motion.p
         initial={reduce ? false : { opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.4, delay: reduce ? 0 : 0.35 + step.thread.length * BUBBLE_GAP }}
+        transition={{ duration: 0.4, delay: reduce ? 0 : 0.35 + n2 * BUBBLE_GAP }}
         className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-0.5 rounded-[14px] bg-[#FBF8F3] px-3.5 py-2.5 shadow-[inset_0_0_0_1px_rgba(10,15,14,0.06)] md:mt-auto md:px-4 md:py-3"
       >
         <span className="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.08em] text-ink/45">
           <TeamIcon className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
           {a.labels.team}
         </span>
-        <span className="min-w-0 text-[13px] font-medium leading-snug text-ink md:text-[14px]">{step.team}</span>
+        <span className="min-w-0 text-[13px] font-medium leading-snug text-ink md:text-[14px]">{team}</span>
       </motion.p>
     </motion.div>
   );
 }
 
 /**
- * After the first reply: one lead's journey over three months, told a step at a time. Emma, the buyer from the
- * speed-to-lead section, is shown at a cafe; a timeline of four steps runs above one stage that holds what happened,
- * the texts themselves and what the brokerage sees in its calendar or CRM. Steps advance on their own while the
- * section is on screen; a click on a step or the arrows takes over. Every step's text is in the HTML.
+ * After the first reply: one lead's journey in three steps. Emma, the buyer from the speed-to-lead section, went
+ * quiet; Aurora calls her back (the call can be heard, with its words lighting up as they are spoken), Marcus shows
+ * her a house, and she closes. Each step has its own short scene of her. Steps advance on their own while the
+ * section is on screen; the call holds the step while it plays. Every step's text is in the HTML.
  */
 export function RxAfter({ it }) {
   const a = it.v3.after;
   const ref = useRef(null);
+  const audioRef = useRef(null);
+  const videos = useRef([]);
   const reduce = !!useReducedMotion();
-  const inView = useInViewport(ref, { threshold: 0.3 });
+  const inView = useInViewport(ref, { threshold: 0.12 });
   const visible = usePageVisible();
   const n = a.steps.length;
-  const [k, setK] = useState(0); // 0..n-1 the steps, n the closing card
-  const [held, setHeld] = useState(false);
-  const [hover, setHover] = useState(false);
-  const run = !reduce && inView && visible && !held && !hover;
+  const ci = a.steps.findIndex((x) => x.call);
+  const call = ci >= 0 ? a.steps[ci].call : null;
+  const cc = useCallClock(call || { duration: 0 }, { audioRef });
+  const [k, setK] = useState(0);
+  const [nonce, setNonce] = useState(0);
+  const callBusy = k === ci && (cc.status === 'playing' || cc.status === 'paused');
+
   useEffect(() => {
-    if (!run) return undefined;
-    const id = setTimeout(() => setK((x) => (x + 1) % (n + 1)), k === n ? END_MS : STEP_MS);
+    if (reduce || !inView || !visible || callBusy) return undefined;
+    const ms = k === ci ? (cc.status === 'done' ? AFTER_CALL_MS : CALL_IDLE_MS) : STEP_MS;
+    const id = setTimeout(() => setK((x) => (x + 1) % n), ms);
     return () => clearTimeout(id);
-  }, [k, run, n]);
-  const go = (x) => {
-    setHeld(true);
-    setK((x + n + 1) % (n + 1));
-  };
-  const video = useRef(null);
+  }, [k, nonce, reduce, inView, visible, callBusy, cc.status, ci, n]);
+
+  // leaving the call step stops the call; coming back to it starts fresh
   useEffect(() => {
-    const v = video.current;
-    if (!v) return;
-    if (inView && visible && !reduce) v.play().catch(() => {});
-    else v.pause();
-  }, [inView, visible, reduce]);
+    if (k !== ci) cc.reset();
+  }, [k]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // only the current step's scene plays, and only while the section is on screen
+  useEffect(() => {
+    videos.current.forEach((v, i) => {
+      if (!v) return;
+      if (i === k && inView && visible && !reduce) v.play().catch(() => {});
+      else v.pause();
+    });
+  }, [k, inView, visible, reduce]);
+
+  const go = (x) => {
+    setK((x + n) % n);
+    setNonce((v) => v + 1);
+  };
 
   return (
     <section data-nav-theme="light" aria-labelledby="rx-after-title" className="section relative pt-0">
@@ -1679,8 +1773,8 @@ export function RxAfter({ it }) {
             <p className="pretty text-[15px] leading-[1.6] text-graphite md:text-[15.5px]">{a.text}</p>
           </div>
 
-          {/* who this is, then the four steps as a timeline (no fill bar: a marker for each step, a check once it's done) */}
-          <div className="relative mt-7 grid gap-4 xl:grid-cols-[minmax(0,260px)_minmax(0,1fr)_auto] xl:items-center xl:gap-8">
+          {/* who this is, then the three steps (a marker for each step and a check once it's done; no fill bar) */}
+          <div className="relative mt-7 grid gap-4 xl:grid-cols-[minmax(0,280px)_minmax(0,1fr)_auto] xl:items-center xl:gap-8">
             <p className="flex items-center gap-3">
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-ink text-[13px] font-medium text-white">{a.lead.initials}</span>
               <span className="min-w-0">
@@ -1688,8 +1782,8 @@ export function RxAfter({ it }) {
                 <span className="block text-[12.5px] leading-snug text-slate">{a.lead.intro}</span>
               </span>
             </p>
-            <ol className="relative grid grid-cols-4" aria-label="Emma’s journey">
-              <span aria-hidden="true" className="absolute left-[12.5%] right-[12.5%] top-[13px] h-px bg-ink/15" />
+            <ol className="relative grid" style={{ gridTemplateColumns: `repeat(${n}, minmax(0, 1fr))` }} aria-label="Emma’s journey">
+              <span aria-hidden="true" className="absolute top-[13px] h-px bg-ink/15" style={{ left: `${50 / n}%`, right: `${50 / n}%` }} />
               {a.steps.map((x, i) => {
                 const cur = i === k;
                 const done = i < k;
@@ -1704,9 +1798,7 @@ export function RxAfter({ it }) {
                       >
                         {done ? <Check className="h-3.5 w-3.5" strokeWidth={2.6} aria-hidden="true" /> : i + 1}
                       </span>
-                      <span className={cn('text-[11.5px] font-medium leading-tight transition-colors xs:text-[12.5px] sm:text-[13.5px]', cur ? 'text-ink' : 'text-ink/55')}>
-                        <span className="max-sm:sr-only">{x.name}</span>
-                      </span>
+                      <span className={cn('text-[12px] font-medium leading-tight transition-colors xs:text-[12.5px] sm:text-[13.5px]', cur ? 'text-ink' : 'text-ink/55')}>{x.name}</span>
                       <span className="t-data text-[10.5px] text-ink/40 max-sm:hidden">{x.date}</span>
                     </button>
                   </li>
@@ -1723,51 +1815,40 @@ export function RxAfter({ it }) {
             </div>
           </div>
 
-          {/* the stage: Emma, then what happened, the texts, and what the team sees */}
-          <div
-            className="relative mt-5 grid overflow-hidden rounded-[24px] bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_30px_60px_-40px_rgba(90,50,20,0.45)] md:grid-cols-[minmax(0,240px)_minmax(0,1fr)] xl:grid-cols-[minmax(0,300px)_minmax(0,1fr)]"
-            onMouseEnter={() => setHover(true)}
-            onMouseLeave={() => setHover(false)}
-          >
-            <div className="relative aspect-[16/9] bg-[#E9E1D4] sm:aspect-[2/1] md:aspect-auto md:min-h-[340px]">
-              {reduce ? (
-                <img src={a.media.still} alt="" className="absolute inset-0 h-full w-full object-cover object-[50%_35%]" />
-              ) : (
-                <video ref={video} src={a.media.video} poster={a.media.poster} muted loop playsInline preload="metadata" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover object-[50%_35%]" />
+          {/* the stage: Emma in this step's scene, then what happened, the call or the texts, and what the team sees */}
+          <div className="relative mt-5 grid overflow-hidden rounded-[24px] bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_30px_60px_-40px_rgba(90,50,20,0.45)] md:grid-cols-[minmax(0,240px)_minmax(0,1fr)] xl:grid-cols-[minmax(0,300px)_minmax(0,1fr)]">
+            <div className="relative aspect-[16/9] bg-[#E9E1D4] sm:aspect-[2/1] md:aspect-auto md:min-h-[360px]">
+              {a.steps.map((x, i) =>
+                reduce ? (
+                  <img key={x.key} src={x.media.poster} alt="" className={cn('absolute inset-0 h-full w-full object-cover object-[50%_35%]', i === k ? 'opacity-100' : 'opacity-0')} />
+                ) : (
+                  <video
+                    key={x.key}
+                    ref={(el) => {
+                      videos.current[i] = el;
+                    }}
+                    src={x.media.video}
+                    poster={x.media.poster}
+                    muted
+                    loop
+                    playsInline
+                    preload={i === 0 ? 'metadata' : 'none'}
+                    aria-hidden="true"
+                    className={cn('absolute inset-0 h-full w-full object-cover object-[50%_35%] transition-opacity duration-700', i === k ? 'opacity-100' : 'opacity-0')}
+                  />
+                )
               )}
-              <span className="absolute bottom-3 left-3 rounded-full bg-white/85 px-2.5 py-1 text-[12px] font-medium text-ink backdrop-blur">{a.lead.name}</span>
+              <span className="absolute bottom-3 left-3 rounded-full bg-white/90 px-2.5 py-1 text-[12px] font-medium text-ink">{a.lead.name}</span>
+              {call ? <audio ref={audioRef} src={call.audio} preload="none" onEnded={cc.ended} /> : null}
             </div>
 
             {/* every step is laid in the same grid cell, so the stage is as tall as the longest step and never jumps */}
             <div className="relative grid min-w-0 p-4 xs:p-5 md:p-6 lg:px-7 lg:py-6" aria-live="polite">
               {a.steps.map((x, i) => (
                 <div key={x.key} className={cn('[grid-area:1/1]', i === k ? '' : 'invisible')} aria-hidden={i === k ? undefined : true}>
-                  <JourneyStep key={i === k ? 'on' : 'off'} step={x} n={i} a={a} reduce={reduce || i !== k} />
+                  <JourneyStep key={i === k ? 'on' : 'off'} step={x} n={i} a={a} reduce={reduce || i !== k} cc={x.call ? cc : null} />
                 </div>
               ))}
-              <div className={cn('[grid-area:1/1]', k === n ? '' : 'invisible')} aria-hidden={k === n ? undefined : true}>
-                <motion.div
-                  key={k === n ? 'on' : 'off'}
-                  initial={reduce || k !== n ? false : { opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.45, ease: EASE }}
-                  className="flex h-full flex-col justify-center py-4"
-                >
-                  <p className="t-data text-[11px] uppercase tracking-[0.08em] text-[#C2410C]">{a.ending.title}</p>
-                  <p className="pretty mt-2 max-w-[28em] text-[22px] font-medium leading-snug tracking-[-0.015em] text-ink md:text-[24px]">{a.ending.text}</p>
-                  <p className="mt-5 flex flex-wrap gap-2">
-                    {a.ending.chips.map((c) => (
-                      <span key={c} className="rounded-full bg-[#F6F1E8] px-3 py-1.5 text-[13px] font-medium text-ink">
-                        {c}
-                      </span>
-                    ))}
-                  </p>
-                  <button type="button" onClick={() => go(0)} tabIndex={k === n ? undefined : -1} className="mt-6 inline-flex w-fit items-center gap-1.5 text-[14px] font-medium text-ink underline decoration-ink/25 underline-offset-4 hover:decoration-ink">
-                    <RotateCcw className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
-                    {a.labels.replay}
-                  </button>
-                </motion.div>
-              </div>
             </div>
           </div>
 
@@ -1785,7 +1866,8 @@ export function RxAfter({ it }) {
           <ol className="sr-only">
             {a.steps.map((x) => (
               <li key={x.key}>
-                {x.name} ({x.date}). {x.happened} {x.thread.filter((m) => m.text).map((m) => (m.who === 'aurora' ? 'Aurora: ' : a.lead.name.split(' ')[0] + ': ') + m.text).join(' ')} {x.team}
+                {x.name} ({x.date}). {x.happened}{' '}
+                {(x.call ? x.call.captions : x.thread).map((m) => (m.who === 'aurora' ? 'Aurora: ' : a.lead.name.split(' ')[0] + ': ') + m.text).join(' ')} {x.team}
               </li>
             ))}
           </ol>

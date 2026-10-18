@@ -186,6 +186,24 @@
    "kind": "audio",
    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_073121_481d52fe-0909-4a96-94ee-b1370edb9c17.mp3",
    "out": "public/media/real-estate/emma-call"
+  },
+  {
+   "kind": "video",
+   "width": 900,
+   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_073238_e4eccec0-df5f-4639-a4fe-88cb43352de4.mp4",
+   "out": "public/media/real-estate/emma-office"
+  },
+  {
+   "kind": "video",
+   "width": 900,
+   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_073238_c71a787d-8867-45c2-8e21-059f651f7233.mp4",
+   "out": "public/media/real-estate/emma-showing"
+  },
+  {
+   "kind": "video",
+   "width": 900,
+   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_073515_b1e97096-ab89-479c-88ff-cbf24621fcc9.mp4",
+   "out": "public/media/real-estate/emma-closing"
   }
  ]
 }
