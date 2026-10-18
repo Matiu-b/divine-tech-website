@@ -1601,7 +1601,7 @@ function JourneyStep({ step, n, a, reduce }) {
   const TeamIcon = step.icon === 'calendar' ? CalendarCheck : Database;
   return (
     <motion.div initial={reduce ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: EASE }} className="flex h-full flex-col">
-      <div className="grid gap-4 md:gap-5 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-8">
+      <div className="grid gap-4 md:mb-5 md:gap-5 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] xl:gap-8">
         <div>
           <p className="t-data text-[11px] uppercase tracking-[0.08em] text-[#C2410C]">
             {String(n + 1).padStart(2, '0')} · {step.date}
@@ -1620,7 +1620,7 @@ function JourneyStep({ step, n, a, reduce }) {
         initial={reduce ? false : { opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.4, delay: reduce ? 0 : 0.35 + step.thread.length * BUBBLE_GAP }}
-        className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-0.5 rounded-[14px] bg-[#FBF8F3] px-3.5 py-2.5 md:mt-5 md:px-4 md:py-3 shadow-[inset_0_0_0_1px_rgba(10,15,14,0.06)] lg:mt-auto"
+        className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-0.5 rounded-[14px] bg-[#FBF8F3] px-3.5 py-2.5 shadow-[inset_0_0_0_1px_rgba(10,15,14,0.06)] md:mt-auto md:px-4 md:py-3"
       >
         <span className="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.08em] text-ink/45">
           <TeamIcon className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
@@ -1680,7 +1680,7 @@ export function RxAfter({ it }) {
           </div>
 
           {/* who this is, then the four steps as a timeline (no fill bar: a marker for each step, a check once it's done) */}
-          <div className="relative mt-7 grid gap-4 lg:grid-cols-[minmax(0,260px)_minmax(0,1fr)_auto] lg:items-center lg:gap-8">
+          <div className="relative mt-7 grid gap-4 xl:grid-cols-[minmax(0,260px)_minmax(0,1fr)_auto] xl:items-center xl:gap-8">
             <p className="flex items-center gap-3">
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-ink text-[13px] font-medium text-white">{a.lead.initials}</span>
               <span className="min-w-0">
@@ -1713,7 +1713,7 @@ export function RxAfter({ it }) {
                 );
               })}
             </ol>
-            <div className="flex gap-2 max-lg:hidden">
+            <div className="flex gap-2 max-xl:hidden">
               <button type="button" onClick={() => go(k - 1)} aria-label={a.labels.prev} className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-ink shadow-[0_0_0_1px_rgba(10,15,14,0.1)] hover:shadow-[0_0_0_1px_rgba(10,15,14,0.3)]">
                 <ChevronLeft className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
               </button>
@@ -1725,11 +1725,11 @@ export function RxAfter({ it }) {
 
           {/* the stage: Emma, then what happened, the texts, and what the team sees */}
           <div
-            className="relative mt-5 grid overflow-hidden rounded-[24px] bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_30px_60px_-40px_rgba(90,50,20,0.45)] lg:grid-cols-[minmax(0,300px)_minmax(0,1fr)]"
+            className="relative mt-5 grid overflow-hidden rounded-[24px] bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_30px_60px_-40px_rgba(90,50,20,0.45)] md:grid-cols-[minmax(0,240px)_minmax(0,1fr)] xl:grid-cols-[minmax(0,300px)_minmax(0,1fr)]"
             onMouseEnter={() => setHover(true)}
             onMouseLeave={() => setHover(false)}
           >
-            <div className="relative aspect-[16/9] bg-[#E9E1D4] sm:aspect-[2/1] lg:aspect-auto lg:min-h-[340px]">
+            <div className="relative aspect-[16/9] bg-[#E9E1D4] sm:aspect-[2/1] md:aspect-auto md:min-h-[340px]">
               {reduce ? (
                 <img src={a.media.still} alt="" className="absolute inset-0 h-full w-full object-cover object-[50%_35%]" />
               ) : (
@@ -1772,7 +1772,7 @@ export function RxAfter({ it }) {
           </div>
 
           {/* phones and tablets: the arrows under the stage */}
-          <div className="mt-4 flex justify-center gap-2 lg:hidden">
+          <div className="mt-4 flex justify-center gap-2 xl:hidden">
             <button type="button" onClick={() => go(k - 1)} aria-label={a.labels.prev} className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-ink shadow-[0_0_0_1px_rgba(10,15,14,0.1)]">
               <ChevronLeft className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
             </button>
