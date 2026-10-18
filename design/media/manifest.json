@@ -201,11 +201,6 @@
    ]
   },
   {
-   "kind": "audio",
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_120911_f86a56d6-9fc8-4391-8fd5-a010cf9edfbf.mp3",
-   "out": "public/media/home-services/call-customer-2"
-  },
-  {
    "kind": "image",
    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_125545_a5b34753-dc2c-450a-affb-eadb4222baff.png",
    "out": "public/media/home-services/hero-b",
