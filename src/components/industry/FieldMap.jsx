@@ -199,7 +199,7 @@ function Stop({ s, i, open, here, reduce, labels }) {
           <motion.div key="d" initial={reduce ? false : { height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3, ease: EASE }} className="overflow-hidden">
             <div className="px-3 pb-3 pl-12">
               <p className="text-[12.5px] text-slate">{s.address}</p>
-              <p className="mt-1.5 flex items-start gap-1.5 text-[12.5px] leading-snug text-ink">
+              <p className="mt-1.5 flex items-start gap-1.5 text-[12.5px] leading-snug text-ink max-sm:hidden">
                 <Wrench className="mt-0.5 h-3.5 w-3.5 shrink-0 text-ink/45" strokeWidth={2} aria-hidden="true" />
                 {s.detail}
               </p>
@@ -426,7 +426,12 @@ export default function FieldMap({ d }) {
           </div>
         </div>
 
-        {d.note ? <p className="mt-4 text-[12px] text-slate">{d.note}</p> : null}
+        {d.note ? (
+          <p className="mt-3 text-[12px] text-slate sm:mt-4">
+            <span className="sm:hidden">{d.noteShort}</span>
+            <span className="max-sm:hidden">{d.note}</span>
+          </p>
+        ) : null}
 
         <ol className="sr-only">
           {d.stops.map((s, i) => (

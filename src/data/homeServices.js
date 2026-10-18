@@ -73,6 +73,7 @@ export const hsField = {
   textShort: 'Aurora orders each tech’s day to drive least, and texts it with the job and the parts to bring.',
   title: 'Northline · Jake today',
   note: 'An example day. The company, places, jobs and drive times are illustrative.',
+  noteShort: 'An illustrative example day.',
   tech: { name: 'Jake', title: 'Jake’s route · Tuesday', sent: 'texted 7:40 am' },
   labels: {
     jobs: 'jobs',
