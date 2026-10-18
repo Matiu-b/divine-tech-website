@@ -130,7 +130,7 @@ function Tag({ at, tone = 'ink', children, show }) {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -4 }}
           transition={{ duration: 0.35, ease: EASE }}
-          className={cn('pointer-events-none absolute z-[2] -translate-x-1/2 -translate-y-[calc(100%+12px)] whitespace-nowrap rounded-full px-2.5 py-1 text-[11.5px] font-medium shadow-[0_6px_16px_-8px_rgba(10,15,14,0.35)] sm:text-[12px]', tones[tone])}
+          className={cn('pointer-events-none absolute z-[2] -translate-y-[calc(100%+12px)]', at[0] > W * 0.62 ? '-translate-x-[88%]' : at[0] < W * 0.34 ? '-translate-x-[12%]' : '-translate-x-1/2', 'whitespace-nowrap rounded-full px-2.5 py-1 text-[11.5px] font-medium shadow-[0_6px_16px_-8px_rgba(10,15,14,0.35)] sm:text-[12px]', tones[tone])}
           style={pct(at[0], at[1])}
         >
           {children}
@@ -190,7 +190,7 @@ export default function BriefMap({ d }) {
 
         <div ref={ref} className="relative mt-5 sm:mt-8 md:mt-12">
           {/* the map */}
-          <div className="canvas relative aspect-[4/3] overflow-hidden shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_30px_60px_-40px_rgba(90,50,20,0.45)] sm:aspect-[16/9] lg:aspect-[16/7]">
+          <div className="canvas relative aspect-square overflow-hidden shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_30px_60px_-40px_rgba(90,50,20,0.45)] sm:aspect-[16/9] lg:aspect-[16/7]">
             <Town m={m} beat={beat} reduce={reduce} />
             <Tag at={m.van} show={beat >= 2} tone="white">
               {m.labels.van}
