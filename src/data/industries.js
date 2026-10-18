@@ -261,7 +261,7 @@ export const industries = [
             key: 'call', name: 'Reactivation call', date: 'Jun 2', icon: 'phone',
             media: { video: '/media/real-estate/emma-desk.mp4', poster: '/media/real-estate/emma-desk-poster.webp', focus: '50% 22%' },
             happened: 'Two months of silence, turned into a booked showing with one call.',
-            points: ['Quiet 2 months', 'AI agent calls', 'Objections handled', 'Showing booked'],
+            points: ['Went quiet', 'AI agent calls', 'Objections handled', 'Tour booked'],
             call: {
               audio: '/media/real-estate/emma-call-2.mp3',
               duration: 72910,
