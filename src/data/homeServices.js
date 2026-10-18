@@ -8,7 +8,7 @@ export const hsHero = {
   titleA: 'Your team is on a job.',
   titleB: 'Aurora runs the rest.',
   text: 'Out front, Aurora answers every call, quotes from your price book and books the technician. Behind the scenes, it plans the routes, checks freelancer invoices and briefs the owner.',
-  textShort: 'Aurora answers every call and books the job. Behind the scenes, it plans routes, checks invoices and briefs the owner.',
+  textShort: 'Aurora answers every call and books the job. Behind the scenes, it runs the office.',
   secondary: 'Hear Aurora',
   secondaryHref: '#hear',
   lanes: { customers: 'Customer', team: 'Team' },
@@ -19,16 +19,35 @@ export const hsHero = {
     focus: '34% 50%',
     alt: 'A home-services technician checking readings on a tablet beside an outdoor AC unit, his van behind him',
   },
-  // the live feed over the photo: one for a customer, one for the team, in turn
-  events: [
-    { lane: 'customers', icon: 'service', title: 'Call answered', detail: 'AC not cooling, after hours' },
-    { lane: 'team', icon: 'report', title: 'Routes set for 14 techs', detail: 'Grouped by area and skill' },
-    { lane: 'customers', icon: 'send', title: 'Quote sent', detail: 'From your price book' },
-    { lane: 'team', icon: 'invoice', title: 'Freelancer invoice checked', detail: 'Hours matched to time on site' },
-    { lane: 'customers', icon: 'calendar', title: 'Technician booked', detail: 'Today 1 to 3 pm, Jake' },
-    { lane: 'team', icon: 'approval', title: 'Time off approved', detail: 'Jobs moved to Jake’s route' },
-    { lane: 'customers', icon: 'mail', title: 'Review request sent', detail: 'After the job, with photos' },
-    { lane: 'team', icon: 'crm', title: 'Part found for a tech', detail: 'Van 7, six minutes away' },
+  // over the photo: the same moment, out front and behind the scenes (the moments of the day further down the page)
+  panel: { title: 'Aurora at Northline', working: 'Working on it' },
+  sides: { customers: 'For a customer', team: 'For your team' },
+  moments: [
+    {
+      time: '9:00 am',
+      customers: { icon: 'service', title: 'Call answered', detail: 'AC not cooling, booked for 1 pm' },
+      team: { icon: 'report', title: 'Routes set for 14 techs', detail: 'Grouped by area and skill' },
+    },
+    {
+      time: '10:15 am',
+      customers: { icon: 'send', title: 'Quote sent', detail: 'Water heater, from your price book' },
+      team: { icon: 'invoice', title: 'Invoice held for Dana', detail: '6 h billed, 4.5 h on site' },
+    },
+    {
+      time: '12:40 pm',
+      customers: { icon: 'message', title: 'On-the-way text sent', detail: 'Jake arrives in 12 minutes' },
+      team: { icon: 'crm', title: 'Part found for Mike', detail: 'Van 7, six minutes away' },
+    },
+    {
+      time: '2:10 pm',
+      customers: { icon: 'calendar', title: 'Visit moved, confirmed', detail: 'Pine Ave, now 4:45 pm' },
+      team: { icon: 'approval', title: 'Route reshuffled', detail: 'A job ran an hour long' },
+    },
+    {
+      time: '4:55 pm',
+      customers: { icon: 'mail', title: 'Review request sent', detail: 'After the job, with photos' },
+      team: { icon: 'report', title: 'Day summary to Dana', detail: '39 jobs, 1 needs her OK' },
+    },
   ],
 };
 
