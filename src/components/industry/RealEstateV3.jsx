@@ -1872,7 +1872,7 @@ export function RxAfter({ it }) {
 
           {/* the stage: Emma's scene with the live layer over it, and beside it what happened */}
           <div className="relative mt-4 grid overflow-hidden rounded-[24px] bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_30px_60px_-40px_rgba(90,50,20,0.45)] lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] xl:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
-            <div className="relative aspect-[4/3] overflow-hidden bg-[#E9E1D4] sm:aspect-[16/9] lg:aspect-auto lg:min-h-[400px]">
+            <div className="relative aspect-[4/3] overflow-hidden bg-[#E9E1D4] sm:aspect-[16/9] lg:aspect-auto lg:min-h-[340px]">
               {a.steps.map((x, i) =>
                 reduce ? (
                   <img key={x.key} src={x.media.poster} alt="" className={cn('absolute inset-0 h-full w-full object-cover', i === k ? 'opacity-100' : 'opacity-0')} style={{ objectPosition: x.media.focus || '50% 35%' }} />
