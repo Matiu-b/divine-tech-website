@@ -181,6 +181,11 @@
    "width": 900,
    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_070211_0d203d77-ccdc-4b10-a687-0dfa00376d3a.mp4",
    "out": "public/media/real-estate/emma-cafe"
+  },
+  {
+   "kind": "audio",
+   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_073121_481d52fe-0909-4a96-94ee-b1370edb9c17.mp3",
+   "out": "public/media/real-estate/emma-call"
   }
  ]
 }
