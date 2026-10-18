@@ -237,7 +237,7 @@ export const industries = [
           { row: 'price', value: 1, channel: 'via text', trigger: 'What’s the lowest the seller would take?', action: 'Holds the reply and asks you first.', result: 'Approval sent to Marcus · one tap', tone: 'wait', reply: 'Good question. Let me check with the listing broker and get back to you within the hour.' },
           { row: 'fair', value: 0, channel: 'via web chat', trigger: 'Is it a good area for families like mine?', action: 'Talks about the home, schools and commute. Never about who lives nearby.', result: 'Fair Housing rule applied', tone: 'shield', reply: 'I can’t speak to who lives in the area, but I can send you the schools, the commute and the parks nearby. Want the list?' },
           { row: 'stop', value: 0, channel: 'via text', trigger: 'STOP', action: 'Confirms once and never texts again.', result: 'Opted out · follow-ups cancelled', tone: 'stop', reply: 'Got it. You won’t hear from us again.' },
-          { row: 'handoff', value: 0, channel: 'via text', trigger: 'We’re pre-approved. Can we see it Saturday?', action: 'Books the tour and hands the lead to the right broker, with the full history.', result: 'Tour booked · Marcus has the history', tone: 'ok', reply: 'Saturday at 11 works. You’re booked with Marcus, and he has our whole conversation, so no need to repeat yourself.' },
+          { row: 'handoff', value: 0, channel: 'via text', trigger: 'We’re pre-approved. Can we see it this weekend?', action: 'Books the tour and hands the lead to the right broker, with the full history.', result: 'Tour booked · Marcus has the history', tone: 'ok', reply: 'Sunday at 2 works. You’re booked with Marcus, and he has our whole conversation, so no need to repeat yourself.' },
           { row: 'looking', value: 0, channel: 'via Zillow', trigger: 'Just looking for now.', action: 'Sends a few homes that match and checks back in two weeks.', result: 'In follow-up · next touch in 14 days', tone: 'wait', reply: 'No rush at all. I’ll send a few homes like this one and check back in two weeks. Sound good?' },
           { row: 'broker', value: 0, channel: 'via text', trigger: 'I already have a broker.', action: 'Thanks them and steps back. No pressure, no follow-ups.', result: 'Marked: working with a broker', tone: 'stop', reply: 'Thanks for letting us know, and good luck with the search!' },
           { row: 'high', value: 0, channel: 'via text', trigger: 'The price is too high for us.', action: 'Asks their range and suggests homes that fit it.', result: '3 homes in range sent', tone: 'ok', reply: 'Understood. What range feels right? I’ll send homes nearby that fit it.' },
@@ -251,46 +251,58 @@ export const industries = [
         eyebrow: 'After the first reply',
         titleA: 'The first reply is day one.',
         titleB: 'Aurora keeps every lead moving.',
-        text: 'Most leads aren’t ready this week. Aurora runs the confirmations, follow-up and reactivation your team never gets to, on your rules.',
-        // one card per stage of the pipeline: its stage, a clear name, what Aurora does, and the moment itself
+        text: 'Most buyers aren’t ready the week they first reach out. This is what Aurora did next with Emma, the buyer from earlier on this page, over the following three months, while the brokers worked on other deals.',
+        // One lead's journey, told one step at a time: what happened, the texts themselves, and what the brokerage sees.
+        // Emma is the buyer from the speed-to-lead section (tour booked Thursday 6:30 pm with Marcus). Illustrative.
+        lead: { name: 'Emma Clarke', initials: 'EC', intro: 'Texted about 18 Willow Court one evening in March' },
+        media: { video: '/media/real-estate/emma-cafe.mp4', poster: '/media/real-estate/emma-cafe-poster.webp', still: '/media/real-estate/emma-cafe-900.webp' },
+        labels: { happened: 'What happened', team: 'What your team sees', prev: 'Previous step', next: 'Next step', replay: 'Watch again', you: 'Aurora' },
         steps: [
           {
-            key: 'remind', stage: 'Showing scheduled', tone: 'blue', when: 'Day before', title: 'Showing confirmation',
-            text: 'Confirms each showing the day before, so fewer tours end in a no-show.',
-            msg: 'Reminder: tomorrow at 11 am, 18 Willow Court with Marcus. Reply C to confirm.', reply: 'C',
-            event: { day: 'Saturday', time: '11:00', title: 'Showing · 18 Willow Court', who: 'with Marcus' },
-            hours: ['10:00', '11:00'], pending: 'Unconfirmed', result: 'Confirmed',
-          },
-          {
-            key: 'nurture', stage: 'In progress', tone: 'amber', when: 'Weeks 1–8', title: 'Follow-up cadence',
-            text: 'Matching listings on a set cadence, until the buyer is ready.',
-            msg: 'Two new homes in your range just listed near Oak Park. Want to see either one?',
-            cadence: ['Day 3', 'Day 7', 'Day 14', 'Day 30'], at: 2,
-            homes: [
-              { image: '/media/real-estate/listing-birch-600.webp', price: '$452K', meta: '3 bd · 2 ba' },
-              { image: '/media/real-estate/listing-oak-600.webp', price: '$478K', meta: '4 bd · 3 ba' },
+            key: 'showing', name: 'Showing confirmation', short: 'Showing', date: 'Mar 6', icon: 'calendar',
+            happened: 'Aurora booked Emma’s tour of 18 Willow Court the evening she texted. On the morning of the tour it sent her a reminder, so Marcus wasn’t left waiting outside an empty house.',
+            thread: [
+              { who: 'aurora', text: 'Hi Emma, you’re seeing 18 Willow Court today at 6:30 pm with Marcus. Reply C to confirm, or R if you need a new time.' },
+              { who: 'lead', text: 'C' },
+              { who: 'aurora', text: 'Great. Marcus will meet you out front, and street parking is easiest.' },
             ],
-            pick: 1, result: 'Showing requested',
+            team: 'Calendar · Thu 6:30 pm · 18 Willow Court · Marcus · Confirmed',
           },
           {
-            key: 'revive', stage: 'Inactive', tone: 'slate', when: 'Month 3', title: 'Database reactivation',
-            text: 'Re-engages quiet CRM leads and puts replies back in the pipeline.',
-            list: 'Quiet leads in your CRM', sent: 'Message sent', after: 'Replied just now', cold: 'Cold', active: 'Active',
-            leads: [
-              { name: 'Dan Morales', initials: 'DM', before: 'Last contact 94 days ago', replied: true },
-              { name: 'Priya Shah', initials: 'PS', before: 'Last contact 121 days ago', replied: false },
-              { name: 'Kevin Brooks', initials: 'KB', before: 'Last contact 78 days ago', replied: true },
-              { name: 'Lena Ortiz', initials: 'LO', before: 'Last contact 150 days ago', replied: false },
+            key: 'followup', name: 'Follow-up', short: 'Follow-up', date: 'Mar 10 – Apr 28', icon: 'crm',
+            happened: 'Willow Court wasn’t the one. Emma was in no rush, so Aurora kept sending her new listings that fit what she’d asked for, a few each month, and she never went cold.',
+            thread: [
+              { who: 'aurora', text: 'Two homes near Oak Park just listed under $450K, both with the yard you asked about. Want to see either one?' },
+              { who: 'aurora', home: { image: '/media/real-estate/listing-birch-600.webp', price: '$438K', meta: '41 Birch Lane · 3 bd · 2 ba' } },
+              { who: 'lead', text: 'The one on Birch looks good. Saturday?' },
             ],
-            msg: 'Hi Dan, are you still thinking about a move this spring?', reply: 'Yes, probably April.',
+            team: 'CRM · Showing requested · 41 Birch Lane · Marcus',
           },
           {
-            key: 'seller', stage: 'Listing opportunity', tone: 'orange', when: 'Any day', title: 'Listing appointments',
-            text: 'Qualifies homeowners and books the listing appointment.',
-            address: '214 Cedar Lane', tag: 'Wants a home valuation', msg: 'Marcus can come by on Thursday. Which time works?',
-            slots: ['Thu 3:00', 'Thu 5:00', 'Fri 10:00'], pick: 1, result: 'Listing appointment booked',
+            key: 'reactivation', name: 'Reactivation', short: 'Reactivation', date: 'Jun 2', icon: 'crm',
+            happened: 'Emma passed on Birch Lane and went quiet for a month. Aurora reached back out with a new listing near the one she liked, and this time she had news.',
+            thread: [
+              { who: 'aurora', text: 'A three-bedroom just listed two streets from Birch Lane. Still planning a move this summer?' },
+              { who: 'lead', text: 'Yes, but we’d need to sell our condo first.' },
+            ],
+            team: 'CRM · Emma Clarke · Cold → Active · Note: has a condo to sell',
+          },
+          {
+            key: 'listing', name: 'Listing appointment', short: 'Listing', date: 'Jun 3', icon: 'calendar',
+            happened: 'That reply made Emma a seller as well as a buyer. Aurora offered a valuation visit and put it on Marcus’s calendar.',
+            thread: [
+              { who: 'aurora', text: 'Marcus can come by to value your condo this Thursday. Would 3:00 or 5:00 work better?' },
+              { who: 'lead', text: '5 works.' },
+              { who: 'aurora', text: 'Booked. Marcus will text you when he’s on his way.' },
+            ],
+            team: 'Calendar · Thu 5:00 pm · Listing appointment · 214 Cedar Lane, Unit 3 · Marcus',
           },
         ],
+        ending: {
+          title: 'Three months after her first text',
+          text: 'Emma is still buying with your brokerage, and now she’s selling her condo with you too.',
+          chips: ['Buying · touring near Oak Park', 'Selling · valuation booked'],
+        },
         kpi: {
           badge: 'Patented KPI Agent',
           title: 'Measured against your goals.',
@@ -343,7 +355,7 @@ export const industries = [
             },
           ],
         },
-        note: 'An example. Names and messages are illustrative.',
+        note: 'An example. Names, dates, homes and messages are illustrative.',
       },
       // the closing call to action, for a brokerage
       closing: {

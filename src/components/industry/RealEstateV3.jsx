@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, m as motion, useReducedMotion } from 'framer-motion';
-import { ArrowUp, CalendarCheck, Check, ChevronLeft, CircleDollarSign, Database, Hand, Pause, Play, Scale, Volume2, Send, Clock, House, BellOff, Hourglass, ShieldCheck, User, ArrowRight, TrendingUp, Heart, MessageSquareText, MessagesSquare, Plus } from 'lucide-react';
+import { ArrowUp, CalendarCheck, Check, ChevronLeft, ChevronRight, CircleDollarSign, Database, Hand, Pause, Play, Scale, Volume2, Send, Clock, House, BellOff, Hourglass, ShieldCheck, User, ArrowRight, TrendingUp, Heart, MessageSquareText, MessagesSquare, Plus, RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import CTAButton from '@/components/home-v2/primitives/CTAButton';
 import SectionHeader from '@/components/home-v2/primitives/SectionHeader';
@@ -1338,245 +1338,6 @@ export function RxRules({ it }) {
   );
 }
 
-// how long each job stays in the spotlight, and when inside it the job resolves (ms)
-const AFTER_MS = 3400;
-const AFTER_RESOLVE = 1100;
-
-const STAGE_TONES = {
-  blue: 'bg-[#E8EEF9] text-[#3A5A9A]',
-  amber: 'bg-[#FFF1E4] text-[#B4471A]',
-  slate: 'bg-ink/[0.06] text-ink/60',
-  orange: 'bg-[#FFE7D3] text-[#C2410C]',
-};
-
-/** What every job card opens with: the pipeline stage, when it happens, the job's name and one line on what Aurora does. */
-function JobHead({ x, on }) {
-  return (
-    <div>
-      <p className="flex items-center justify-between gap-3">
-        <span className={cn('inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium', STAGE_TONES[x.tone] || STAGE_TONES.slate)}>
-          <span className="h-1.5 w-1.5 rounded-full bg-current" aria-hidden="true" />
-          {x.stage}
-        </span>
-        <span className={cn('t-data text-[10.5px] uppercase tracking-[0.08em] transition-colors', on ? 'text-[#D9481C]' : 'text-ink/35')}>{x.when}</span>
-      </p>
-      <p className="mt-2.5 text-[17px] font-medium leading-snug tracking-[-0.01em] text-ink">{x.title}</p>
-      <p className="mt-1 text-[13px] leading-snug text-graphite">{x.text}</p>
-    </div>
-  );
-}
-
-/** Showing confirmation: the reminder text and the buyer's C, then the showing on the day's calendar turns confirmed. */
-function JobRemind({ x, on, done, reduce }) {
-  return (
-    <div className="flex h-full flex-col">
-      <JobHead x={x} on={on} />
-      {/* the text thread */}
-      <div className="mt-4 rounded-[16px] bg-[#F6F1E8] p-3">
-        <p className="rounded-[14px] rounded-bl-[4px] bg-white px-3 py-2 text-[13px] leading-snug text-ink shadow-[0_1px_2px_rgba(10,15,14,0.06)]">
-          <span className="mb-0.5 flex items-center gap-1.5 text-[10.5px] font-medium uppercase tracking-[0.06em] text-ink/40">
-            <img src="/brand/aurora-symbol-color.svg" alt="" width="11" height="11" className="h-[11px] w-[11px]" />
-            Aurora
-          </span>
-          {x.msg}
-        </p>
-        <div className="mt-2 flex h-7 justify-end">
-          <AnimatePresence>
-            {done ? (
-              <motion.span key="c" initial={reduce ? false : { opacity: 0, y: 8, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }} className="rounded-[14px] rounded-br-[4px] bg-[#2F7CF6] px-3 py-1 text-[13px] font-medium text-white">
-                {x.reply}
-              </motion.span>
-            ) : null}
-          </AnimatePresence>
-        </div>
-      </div>
-      {/* the broker's calendar for that day */}
-      <div className="mt-3 flex-1 rounded-[16px] p-3 shadow-[inset_0_0_0_1px_rgba(10,15,14,0.08)]">
-        <p className="text-[11.5px] font-medium text-ink/50">{x.event.day}</p>
-        <div className="mt-2 grid gap-0">
-          {x.hours.map((h) => (
-            <div key={h} className="flex items-start gap-2 border-t border-ink/[0.06] py-1.5 first:border-0">
-              <span className="t-data w-10 shrink-0 pt-0.5 text-[10.5px] text-ink/35">{h}</span>
-              {h === x.event.time ? (
-                <span className={cn('block min-w-0 flex-1 rounded-[10px] px-2.5 py-1.5 transition-colors duration-500', done ? 'bg-[#E4F4E8] shadow-[inset_3px_0_0_#2E9A58]' : 'bg-[#FFF8E6] shadow-[inset_3px_0_0_#E3A93B]')}>
-                  <span className="block truncate text-[12.5px] font-medium text-ink">{x.event.title}</span>
-                  <span className="mt-0.5 flex items-center justify-between gap-2">
-                    <span className="truncate text-[11px] text-slate">{x.event.who}</span>
-                  <span className={cn('inline-flex shrink-0 items-center gap-1 text-[11px] font-medium', done ? 'text-[#2E7A48]' : 'text-[#A46A12]')}>
-                    {done ? <Check className="h-3 w-3" strokeWidth={2.6} aria-hidden="true" /> : <Clock className="h-3 w-3" strokeWidth={2.2} aria-hidden="true" />}
-                    {done ? x.result : x.pending}
-                  </span>
-                  </span>
-                </span>
-              ) : (
-                <span className="h-6 flex-1" />
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/** Follow-up cadence: where this touch sits in the cadence, two homes that match, and the buyer hearts one. */
-function JobNurture({ x, on, done, reduce }) {
-  return (
-    <div className="flex h-full flex-col gap-3">
-      <div className="flex min-w-0 flex-col">
-        <JobHead x={x} on={on} />
-        {/* the cadence: where this message sits */}
-        <div className="mt-3 flex items-center gap-1" aria-hidden="true">
-          {x.cadence.map((c, i) => (
-            <React.Fragment key={c}>
-              <span className={cn('whitespace-nowrap rounded-full px-1.5 py-0.5 text-[10.5px] font-medium transition-colors', i < x.at ? 'bg-ink/[0.07] text-ink/50' : i === x.at ? 'bg-[#F25C2A] text-white' : 'text-ink/30 shadow-[inset_0_0_0_1px_rgba(10,15,14,0.1)]')}>{c}</span>
-              {i < x.cadence.length - 1 ? <span className="h-px w-1.5 shrink-0 bg-ink/15" /> : null}
-            </React.Fragment>
-          ))}
-        </div>
-        <p className="mt-3 rounded-[14px] rounded-bl-[4px] bg-[#F6F1E8] px-3 py-2 text-[13px] leading-snug text-ink">
-          <span className="mb-0.5 flex items-center gap-1.5 text-[10.5px] font-medium uppercase tracking-[0.06em] text-ink/40">
-            <img src="/brand/aurora-symbol-color.svg" alt="" width="11" height="11" className="h-[11px] w-[11px]" />
-            Aurora
-          </span>
-          {x.msg}
-        </p>
-      </div>
-      <div className="mt-auto flex flex-col">
-        <div className="grid grid-cols-2 gap-2">
-          {x.homes.map((h, i) => {
-            const picked = done && i === x.pick;
-            return (
-              <div key={h.price} className={cn('relative overflow-hidden rounded-[14px] bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.08)] transition-transform duration-500', picked ? '-translate-y-1 shadow-[0_0_0_2px_#F25C2A,0_16px_30px_-18px_rgba(242,92,42,0.6)]' : '')}>
-                <img src={h.image} alt="" className="h-[78px] w-full object-cover" loading="lazy" decoding="async" />
-                <span className={cn('absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full transition-colors duration-300', picked ? 'bg-[#F25C2A] text-white' : 'bg-white/90 text-ink/50')}>
-                  <motion.span animate={picked && !reduce ? { scale: [1, 1.35, 1] } : { scale: 1 }} transition={{ duration: 0.4 }}>
-                    <Heart className={cn('h-3.5 w-3.5', picked ? 'fill-current' : '')} strokeWidth={2.2} aria-hidden="true" />
-                  </motion.span>
-                </span>
-                <p className="px-2.5 pb-2 pt-1.5">
-                  <span className="block text-[14px] font-medium text-ink">{h.price}</span>
-                  <span className="block truncate text-[11px] text-slate">{h.meta}</span>
-                </p>
-              </div>
-            );
-          })}
-        </div>
-        <p className={cn('mt-2.5 flex h-6 items-center gap-1.5 text-[12.5px] font-medium text-[#B4471A] transition-opacity duration-500', done ? 'opacity-100' : 'opacity-0')}>
-          <CalendarCheck className="h-3.5 w-3.5" strokeWidth={2.2} aria-hidden="true" />
-          {x.result}
-        </p>
-      </div>
-    </div>
-  );
-}
-
-/** Database reactivation: a list of leads gone quiet in the CRM. Aurora writes to each; the ones who answer flip to Active. */
-function JobRevive({ x, on, done, reduce }) {
-  return (
-    <div className="flex h-full flex-col">
-      <JobHead x={x} on={on} />
-      {/* the CRM list */}
-      <div className="mb-3 mt-3 rounded-[14px] p-1.5 shadow-[inset_0_0_0_1px_rgba(10,15,14,0.08)]">
-        <p className="px-1.5 pb-1 pt-0.5 text-[10.5px] font-medium uppercase tracking-[0.06em] text-ink/40">{x.list}</p>
-        <ul>
-          {x.leads.map((l, i) => {
-            const live = done && l.replied;
-            return (
-              <li key={l.name} className={cn('flex items-center gap-2.5 rounded-[10px] px-1.5 py-1.5 transition-colors duration-500', live ? 'bg-[#FFF3E8]' : '')}>
-                <span className={cn('relative flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[10.5px] font-medium transition-colors duration-500', live ? 'bg-ink text-white' : 'bg-ink/10 text-ink/45')}>
-                  {l.initials}
-                  {live && !reduce ? <span className="ring-ping absolute inset-0 rounded-full bg-[#F25C2A]/30" /> : null}
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className={cn('block truncate text-[13px] font-medium leading-tight transition-colors', live ? 'text-ink' : 'text-ink/55')}>{l.name}</span>
-                  <span className={cn('block truncate text-[11px] leading-tight transition-colors', live ? 'text-[#2E7A48]' : 'text-slate')}>{live ? x.after : done ? x.sent : l.before}</span>
-                </span>
-                <span className="relative h-[22px] w-[54px] shrink-0 [perspective:400px]">
-                  <motion.span
-                    className="absolute inset-0 [transform-style:preserve-3d]"
-                    animate={{ rotateX: live ? 180 : 0 }}
-                    transition={{ duration: reduce ? 0 : 0.6, ease: EASE, delay: reduce || !live ? 0 : 0.18 * i }}
-                  >
-                    <span className="absolute inset-0 flex items-center justify-center rounded-full bg-ink/[0.07] text-[11px] font-medium text-ink/50 [backface-visibility:hidden]">{x.cold}</span>
-                    <span className="absolute inset-0 flex items-center justify-center rounded-full bg-[#E4F4E8] text-[11px] font-medium text-[#2E7A48] [backface-visibility:hidden] [transform:rotateX(180deg)]">{x.active}</span>
-                  </motion.span>
-                </span>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-      {/* one of the threads */}
-      <div className="mt-auto flex flex-col rounded-[16px] bg-[#F6F1E8] p-3">
-        <p className="rounded-[14px] rounded-bl-[4px] bg-white px-3 py-2 text-[13px] leading-snug text-ink shadow-[0_1px_2px_rgba(10,15,14,0.06)]">
-          <span className="mb-0.5 flex items-center gap-1.5 text-[10.5px] font-medium uppercase tracking-[0.06em] text-ink/40">
-            <img src="/brand/aurora-symbol-color.svg" alt="" width="11" height="11" className="h-[11px] w-[11px]" />
-            Aurora
-          </span>
-          {x.msg}
-        </p>
-        <div className="mt-2 flex min-h-[30px] justify-end">
-          <AnimatePresence>
-            {done ? (
-              <motion.span key="r" initial={reduce ? false : { opacity: 0, y: 8, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ delay: reduce ? 0 : 0.25 }} className="rounded-[14px] rounded-br-[4px] bg-ink px-3 py-1.5 text-[13px] text-white">
-                {x.reply}
-              </motion.span>
-            ) : null}
-          </AnimatePresence>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/** Listing appointments: a homeowner wants a valuation; Aurora offers times and one is booked with the broker. */
-function JobSeller({ x, on, done, reduce }) {
-  return (
-    <div className="flex h-full flex-col">
-      <JobHead x={x} on={on} />
-      <p className="mt-3 flex items-center gap-2.5">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-[#F6F1E8] text-[#D9481C]">
-          <House className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
-        </span>
-        <span className="min-w-0">
-          <span className="block text-[14px] font-medium text-ink">{x.address}</span>
-          <span className="block text-[11.5px] text-slate">{x.tag}</span>
-        </span>
-      </p>
-      <div className="mt-3 rounded-[16px] bg-[#F6F1E8] p-3">
-      <p className="rounded-[14px] rounded-bl-[4px] bg-white px-3 py-2 text-[13px] leading-snug text-ink shadow-[0_1px_2px_rgba(10,15,14,0.06)]">
-          <span className="mb-0.5 flex items-center gap-1.5 text-[10.5px] font-medium uppercase tracking-[0.06em] text-ink/40">
-            <img src="/brand/aurora-symbol-color.svg" alt="" width="11" height="11" className="h-[11px] w-[11px]" />
-            Aurora
-          </span>
-          {x.msg}
-      </p>
-      <div className="mt-2 flex flex-wrap gap-1.5">
-        {x.slots.map((sl, i) => {
-          const picked = done && i === x.pick;
-          return (
-            <span key={sl} className={cn('relative rounded-[10px] px-2.5 py-1.5 text-[12px] font-medium transition-colors duration-300', picked ? 'text-white' : 'bg-white/70 text-ink/60')}>
-              {picked ? <motion.span layoutId={reduce ? undefined : 'seller-slot'} className="absolute inset-0 rounded-[10px] bg-ink" /> : null}
-              <span className="relative">{sl}</span>
-            </span>
-          );
-        })}
-      </div>
-      </div>
-      <AnimatePresence>
-        {done ? (
-          <motion.p key="r" initial={reduce ? false : { opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: reduce ? 0 : 0.3 }} className="mt-auto flex items-center gap-2 pt-3 text-[12.5px] font-medium text-[#2E7A48]">
-            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-ink text-[10px] text-white">M</span>
-            {x.result}
-          </motion.p>
-        ) : null}
-      </AnimatePresence>
-    </div>
-  );
-}
-
-const JOBS = { remind: JobRemind, nurture: JobNurture, revive: JobRevive, seller: JobSeller };
 
 // The story of one goal, beat by beat (ms): the weeks so far and the dip, the cause, the change, then the weeks after it
 const BEAT_AT = [0, 2700, 5200, 7700];
@@ -1784,71 +1545,226 @@ function KpiGoals({ a, run, reduce, titleId }) {
   );
 }
 
+// One lead's journey: how long each step stays on screen before the next (ms), and the closing card
+const STEP_MS = 9000;
+const END_MS = 6000;
+const BUBBLE_GAP = 0.55; // seconds between the texts of one step
+
+/** A text in the thread: Aurora's on the left, the lead's on the right, or a listing card Aurora sent. */
+function JourneyBubble({ m, i, lead, labels, reduce }) {
+  const enter = reduce ? {} : { initial: { opacity: 0, y: 10 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.4, ease: EASE, delay: 0.35 + i * BUBBLE_GAP } };
+  if (m.home) {
+    return (
+      <motion.div {...enter} className="w-[230px] max-w-[80%] overflow-hidden rounded-[16px] rounded-bl-[6px] bg-white shadow-[0_1px_2px_rgba(10,15,14,0.08)]">
+        <img src={m.home.image} alt="" width="460" height="230" loading="lazy" decoding="async" className="h-[110px] w-full object-cover" />
+        <p className="px-3 pb-2.5 pt-2">
+          <span className="block text-[15px] font-medium text-ink">{m.home.price}</span>
+          <span className="block text-[12.5px] text-slate">{m.home.meta}</span>
+        </p>
+      </motion.div>
+    );
+  }
+  const mine = m.who === 'aurora';
+  return (
+    <motion.div {...enter} className={cn('flex max-w-[88%] flex-col', mine ? 'items-start' : 'items-end self-end')}>
+      <span className="mb-1 flex items-center gap-1.5 px-1 text-[11px] font-medium uppercase tracking-[0.06em] text-ink/40">
+        {mine ? <img src="/brand/aurora-symbol-color.svg" alt="" width="11" height="11" className="h-[11px] w-[11px]" /> : null}
+        {mine ? labels.you : lead.name.split(' ')[0]}
+      </span>
+      <p className={cn('rounded-[18px] px-3.5 py-2.5 text-[15px] leading-snug', mine ? 'rounded-bl-[6px] bg-white text-ink shadow-[0_1px_2px_rgba(10,15,14,0.08)]' : 'rounded-br-[6px] bg-ink text-white')}>{m.text}</p>
+    </motion.div>
+  );
+}
+
 /**
- * After the first reply: four jobs Aurora keeps doing for a lead, each drawn as the thing it is, in four equal cards. A spotlight
- * moves from one to the next, and each resolves in its own way (a stamp, a heart, a status flip, a slot).
+ * After the first reply: one lead's journey over three months, told a step at a time. Emma, the buyer from the
+ * speed-to-lead section, is shown at a cafe; a timeline of four steps runs above one stage that holds what happened,
+ * the texts themselves and what the brokerage sees in its calendar or CRM. Steps advance on their own while the
+ * section is on screen; a click on a step or the arrows takes over. Every step's text is in the HTML.
  */
 export function RxAfter({ it }) {
   const a = it.v3.after;
   const ref = useRef(null);
   const reduce = !!useReducedMotion();
-  const inView = useInViewport(ref, { threshold: 0.25 });
+  const inView = useInViewport(ref, { threshold: 0.3 });
   const visible = usePageVisible();
-  const run = !reduce && inView && visible;
-
-  // the spotlight: job j is on; it resolves AFTER_RESOLVE ms in; every job before it stays resolved
   const n = a.steps.length;
-  const [j, setJ] = useState(0);
-  const [resolved, setResolved] = useState(false);
+  const [k, setK] = useState(0); // 0..n-1 the steps, n the closing card
+  const [held, setHeld] = useState(false);
+  const [hover, setHover] = useState(false);
+  const run = !reduce && inView && visible && !held && !hover;
   useEffect(() => {
     if (!run) return undefined;
-    setResolved(false);
-    const r = setTimeout(() => setResolved(true), AFTER_RESOLVE);
-    const nx = setTimeout(() => setJ((x) => (x + 1) % (n + 1)), AFTER_MS);
-    return () => {
-      clearTimeout(r);
-      clearTimeout(nx);
-    };
-  }, [j, run, n]);
-
-  const show = (d) => (reduce ? {} : { initial: { opacity: 0, y: 16 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, amount: 'some' }, transition: { duration: 0.6, ease: EASE, delay: d } });
+    const id = setTimeout(() => setK((x) => (x + 1) % (n + 1)), k === n ? END_MS : STEP_MS);
+    return () => clearTimeout(id);
+  }, [k, run, n]);
+  const go = (x) => {
+    setHeld(true);
+    setK((x + n + 1) % (n + 1));
+  };
+  const step = k < n ? a.steps[k] : null;
+  const TeamIcon = step && step.icon === 'calendar' ? CalendarCheck : Database;
+  const video = useRef(null);
+  useEffect(() => {
+    const v = video.current;
+    if (!v) return;
+    if (inView && visible && !reduce) v.play().catch(() => {});
+    else v.pause();
+  }, [inView, visible, reduce]);
 
   return (
     <section data-nav-theme="light" aria-labelledby="rx-after-title" className="section relative pt-0">
       <div className="shell">
-        <div ref={ref} className="canvas canvas-grain relative overflow-hidden bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] p-4 xs:p-5 md:p-8 lg:px-10 lg:py-8 xl:px-14">
+        <div ref={ref} className="canvas canvas-grain relative overflow-hidden bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] p-4 xs:p-5 md:p-8 lg:px-10 lg:py-9 xl:px-14">
           <div aria-hidden="true" className="pointer-events-none absolute right-[4%] top-[-14%] h-[55%] w-[40%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.4),rgba(255,200,87,0))] blur-2xl" />
 
-          <div className="relative grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)] lg:items-end lg:gap-12">
+          <div className="relative grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,460px)] lg:items-end lg:gap-12">
             <h2 id="rx-after-title" className="text-[clamp(28px,2.4vw,36px)] font-medium leading-[1.08] tracking-[-0.022em] text-ink">
               {a.titleA} <span className="sm:block">{a.titleB}</span>
             </h2>
             <p className="pretty text-[15px] leading-[1.6] text-graphite md:text-[15.5px]">{a.text}</p>
           </div>
 
-          {/* the jobs: four equal cards on laptops, two by two on tablets, a row to swipe on phones */}
-          <ol className="relative mt-6 grid gap-3 max-sm:-mx-4 max-sm:flex max-sm:snap-x max-sm:snap-mandatory max-sm:overflow-x-auto max-sm:px-4 max-sm:pb-1 max-sm:[scrollbar-width:none] xs:max-sm:-mx-5 xs:max-sm:px-5 sm:grid-cols-2 lg:mt-7 lg:grid-cols-4 lg:gap-3.5 [&::-webkit-scrollbar]:hidden">
-            {a.steps.map((x, i) => {
-              const Job = JOBS[x.key];
-              const on = run ? i === j : false;
-              const done = reduce || !run ? true : i < j || (i === j && resolved);
-              return (
-                <motion.li
-                  key={x.key}
-                  {...show(0.08 * i)}
-                  aria-label={x.when + ': ' + x.title + '. ' + x.text}
-                  className={cn(
-                    'relative rounded-[22px] p-4 transition-shadow duration-500 max-sm:w-[86%] max-sm:shrink-0 max-sm:snap-center',
-                    'bg-white',
-                    on ? 'shadow-[0_0_0_2px_#F25C2A,0_30px_60px_-34px_rgba(242,92,42,0.55)]' : 'shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_24px_48px_-36px_rgba(90,50,20,0.4)]'
-                  )}
-                >
-                  <Job x={x} on={on} done={done} reduce={reduce} />
-                </motion.li>
-              );
-            })}
-          </ol>
+          {/* who this is, then the four steps as a timeline (no fill bar: a marker for each step, a check once it's done) */}
+          <div className="relative mt-7 grid gap-4 lg:grid-cols-[minmax(0,260px)_minmax(0,1fr)_auto] lg:items-center lg:gap-8">
+            <p className="flex items-center gap-3">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-ink text-[13px] font-medium text-white">{a.lead.initials}</span>
+              <span className="min-w-0">
+                <span className="block text-[15px] font-medium text-ink">{a.lead.name}</span>
+                <span className="block text-[12.5px] leading-snug text-slate">{a.lead.intro}</span>
+              </span>
+            </p>
+            <ol className="relative grid grid-cols-4" aria-label="Emma’s journey">
+              <span aria-hidden="true" className="absolute left-[12.5%] right-[12.5%] top-[13px] h-px bg-ink/15" />
+              {a.steps.map((x, i) => {
+                const cur = i === k;
+                const done = i < k;
+                return (
+                  <li key={x.key} className="relative flex justify-center">
+                    <button type="button" onClick={() => go(i)} aria-current={cur ? 'step' : undefined} className="group flex flex-col items-center gap-1.5 px-1 text-center">
+                      <span
+                        className={cn(
+                          'relative z-[1] flex h-[27px] w-[27px] items-center justify-center rounded-full text-[12px] font-medium transition-colors duration-300',
+                          cur ? 'bg-[#F25C2A] text-white shadow-[0_0_0_5px_rgba(242,92,42,0.15)]' : done ? 'bg-ink text-white' : 'bg-[#F6F1E8] text-ink/45 shadow-[inset_0_0_0_1.5px_rgba(10,15,14,0.18)] group-hover:text-ink'
+                        )}
+                      >
+                        {done ? <Check className="h-3.5 w-3.5" strokeWidth={2.6} aria-hidden="true" /> : i + 1}
+                      </span>
+                      <span className={cn('text-[12.5px] font-medium leading-tight transition-colors sm:text-[13.5px]', cur ? 'text-ink' : 'text-ink/55')}>
+                        <span className="sm:hidden">{x.short}</span>
+                        <span className="max-sm:hidden">{x.name}</span>
+                      </span>
+                      <span className="t-data text-[10.5px] text-ink/40 max-sm:hidden">{x.date}</span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ol>
+            <div className="flex gap-2 max-lg:hidden">
+              <button type="button" onClick={() => go(k - 1)} aria-label={a.labels.prev} className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-ink shadow-[0_0_0_1px_rgba(10,15,14,0.1)] hover:shadow-[0_0_0_1px_rgba(10,15,14,0.3)]">
+                <ChevronLeft className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
+              </button>
+              <button type="button" onClick={() => go(k + 1)} aria-label={a.labels.next} className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-ink shadow-[0_0_0_1px_rgba(10,15,14,0.1)] hover:shadow-[0_0_0_1px_rgba(10,15,14,0.3)]">
+                <ChevronRight className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
+              </button>
+            </div>
+          </div>
 
+          {/* the stage: Emma, then what happened, the texts, and what the team sees */}
+          <div
+            className="relative mt-5 grid overflow-hidden rounded-[24px] bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_30px_60px_-40px_rgba(90,50,20,0.45)] lg:grid-cols-[minmax(0,300px)_minmax(0,1fr)]"
+            onMouseEnter={() => setHover(true)}
+            onMouseLeave={() => setHover(false)}
+          >
+            <div className="relative aspect-[16/10] bg-[#E9E1D4] sm:aspect-[2/1] lg:aspect-auto lg:min-h-[400px]">
+              {reduce ? (
+                <img src={a.media.still} alt="" className="absolute inset-0 h-full w-full object-cover object-[50%_35%]" />
+              ) : (
+                <video ref={video} src={a.media.video} poster={a.media.poster} muted loop playsInline preload="metadata" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover object-[50%_35%]" />
+              )}
+              <span className="absolute bottom-3 left-3 rounded-full bg-white/85 px-2.5 py-1 text-[12px] font-medium text-ink backdrop-blur">{a.lead.name}</span>
+            </div>
+
+            <div className="relative min-w-0 p-5 md:p-6 lg:p-7" aria-live="polite">
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.div
+                  key={k}
+                  initial={reduce ? false : { opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={reduce ? undefined : { opacity: 0, y: -6, transition: { duration: 0.2 } }}
+                  transition={{ duration: 0.4, ease: EASE }}
+                  className="flex h-full flex-col"
+                >
+                  {step ? (
+                    <>
+                      <div className="grid gap-5 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-8">
+                        <div>
+                          <p className="t-data text-[11px] uppercase tracking-[0.08em] text-[#C2410C]">
+                            {String(k + 1).padStart(2, '0')} · {step.date}
+                          </p>
+                          <p className="mt-1.5 text-[22px] font-medium leading-tight tracking-[-0.015em] text-ink">{step.name}</p>
+                          <p className="mt-4 text-[11px] font-medium uppercase tracking-[0.08em] text-ink/40">{a.labels.happened}</p>
+                          <p className="pretty mt-1.5 text-[15px] leading-[1.6] text-graphite">{step.happened}</p>
+                        </div>
+                        <div className="flex min-h-[230px] flex-col gap-2.5 rounded-[18px] bg-[#F6F1E8] p-3.5 md:p-4">
+                          {step.thread.map((m, i) => (
+                            <JourneyBubble key={i} m={m} i={i} lead={a.lead} labels={a.labels} reduce={reduce} />
+                          ))}
+                        </div>
+                      </div>
+                      <motion.p
+                        initial={reduce ? false : { opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.4, delay: reduce ? 0 : 0.35 + step.thread.length * BUBBLE_GAP }}
+                        className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-[14px] bg-[#FBF8F3] px-4 py-3 shadow-[inset_0_0_0_1px_rgba(10,15,14,0.06)] lg:mt-auto"
+                      >
+                        <span className="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.08em] text-ink/45">
+                          <TeamIcon className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
+                          {a.labels.team}
+                        </span>
+                        <span className="min-w-0 text-[14px] font-medium text-ink">{step.team}</span>
+                      </motion.p>
+                    </>
+                  ) : (
+                    <div className="flex h-full flex-col justify-center py-4">
+                      <p className="t-data text-[11px] uppercase tracking-[0.08em] text-[#C2410C]">{a.ending.title}</p>
+                      <p className="pretty mt-2 max-w-[28em] text-[24px] font-medium leading-snug tracking-[-0.015em] text-ink">{a.ending.text}</p>
+                      <p className="mt-5 flex flex-wrap gap-2">
+                        {a.ending.chips.map((c) => (
+                          <span key={c} className="rounded-full bg-[#F6F1E8] px-3 py-1.5 text-[13px] font-medium text-ink">
+                            {c}
+                          </span>
+                        ))}
+                      </p>
+                      <button type="button" onClick={() => go(0)} className="mt-6 inline-flex w-fit items-center gap-1.5 text-[14px] font-medium text-ink underline decoration-ink/25 underline-offset-4 hover:decoration-ink">
+                        <RotateCcw className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
+                        {a.labels.replay}
+                      </button>
+                    </div>
+                  )}
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </div>
+
+          {/* phones and tablets: the arrows under the stage */}
+          <div className="mt-4 flex justify-center gap-2 lg:hidden">
+            <button type="button" onClick={() => go(k - 1)} aria-label={a.labels.prev} className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-ink shadow-[0_0_0_1px_rgba(10,15,14,0.1)]">
+              <ChevronLeft className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
+            </button>
+            <button type="button" onClick={() => go(k + 1)} aria-label={a.labels.next} className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-ink shadow-[0_0_0_1px_rgba(10,15,14,0.1)]">
+              <ChevronRight className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
+            </button>
+          </div>
+
+          {/* every step in the HTML, for search and screen readers */}
+          <ol className="sr-only">
+            {a.steps.map((x) => (
+              <li key={x.key}>
+                {x.name} ({x.date}). {x.happened} {x.thread.filter((m) => m.text).map((m) => (m.who === 'aurora' ? 'Aurora: ' : a.lead.name.split(' ')[0] + ': ') + m.text).join(' ')} {x.team}
+              </li>
+            ))}
+          </ol>
         </div>
         <p className="mt-4 text-[12px] text-slate">{a.note}</p>
       </div>
