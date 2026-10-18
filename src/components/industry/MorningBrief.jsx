@@ -59,7 +59,7 @@ export default function MorningBrief({ d }) {
           <div aria-hidden="true" className="pointer-events-none absolute left-[6%] top-[-30%] h-[70%] w-[40%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.45),rgba(255,200,87,0))] blur-2xl" />
 
           {/* the call */}
-          <div className="relative flex flex-col p-5 sm:p-7 lg:p-9">
+          <div className="relative flex flex-col p-4 xs:p-5 sm:p-7 lg:p-9">
             <div className="flex items-center gap-3">
               <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.06)]">
                 <img src="/brand/aurora-symbol-color.svg" alt="" width="20" height="20" className="h-5 w-5" />
@@ -71,7 +71,7 @@ export default function MorningBrief({ d }) {
               <span className="text-[13px] font-medium tabular-nums text-ink/55">{clock(live ? Math.min(t, c.duration) : c.duration)}</span>
             </div>
 
-            <div className="mt-6 flex min-h-[112px] items-start gap-4 sm:min-h-[124px] lg:mt-8">
+            <div className="mt-4 flex min-h-[96px] items-start gap-4 sm:mt-6 sm:min-h-[124px] lg:mt-8">
               <button
                 type="button"
                 onClick={play}
@@ -106,7 +106,7 @@ export default function MorningBrief({ d }) {
                 ) : (
                   <>
                     <p className="text-[19px] font-medium leading-tight tracking-[-0.01em] text-ink sm:text-[22px]">{status === 'done' ? c.again : c.listen}</p>
-                    <p className="mt-2 text-[14px] leading-snug text-graphite sm:text-[15px]">{call.sentence}</p>
+                    <p className="mt-2 text-[14px] leading-snug text-graphite max-sm:hidden sm:text-[15px]">{call.sentence}</p>
                     <p className="mt-2 flex items-center gap-1.5 text-[12.5px] font-medium text-[#B4471A]">
                       <Volume2 className="h-3.5 w-3.5" strokeWidth={2.2} aria-hidden="true" />
                       {c.meta}
@@ -117,7 +117,7 @@ export default function MorningBrief({ d }) {
             </div>
 
             {/* the recording, coloured by who is talking */}
-            <div className="mt-auto flex h-8 items-center gap-[2px] pt-6" aria-hidden="true">
+            <div className="mt-auto flex h-7 items-center gap-[2px] pt-4 sm:h-8 sm:pt-6" aria-hidden="true">
               {bars.map((v, i) => {
                 const ms = ((i + 0.5) / nb) * c.duration;
                 const who = whoAt(ms);
@@ -133,13 +133,13 @@ export default function MorningBrief({ d }) {
           </div>
 
           {/* what she reported and did, ticked off as she says it */}
-          <div className="relative border-t border-ink/[0.06] p-5 sm:p-7 lg:border-l lg:border-t-0 lg:p-9">
+          <div className="relative border-t border-ink/[0.06] p-4 xs:p-5 sm:p-7 lg:border-l lg:border-t-0 lg:p-9">
             <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-ink/45">{d.team}</p>
-            <ul className="mt-3 grid gap-2">
+            <ul className="mt-2.5 grid gap-1.5 sm:mt-3 sm:gap-2">
               {c.notes.slice(1).map((note, i) => {
                 const done = reached >= i + 1;
                 return (
-                  <li key={note.at} className={cn('flex items-center gap-3 rounded-[14px] px-3 py-2.5 text-[13.5px] transition-colors duration-500', done ? 'bg-white text-ink shadow-[0_1px_2px_rgba(10,15,14,0.06)]' : 'bg-white/40 text-ink/45')}>
+                  <li key={note.at} className={cn('flex items-center gap-3 rounded-[12px] px-3 py-1.5 text-[13px] transition-colors duration-500 sm:rounded-[14px] sm:py-2.5 sm:text-[13.5px]', done ? 'bg-white text-ink shadow-[0_1px_2px_rgba(10,15,14,0.06)]' : 'bg-white/40 text-ink/45')}>
                     <motion.span initial={false} animate={{ scale: done ? 1 : 0.85 }} transition={{ duration: 0.3, ease: EASE }} className={cn('flex h-5 w-5 shrink-0 items-center justify-center rounded-full', done ? 'bg-[#14A36B] text-white' : 'bg-ink/10 text-transparent')}>
                       <Check className="h-3 w-3" strokeWidth={3} aria-hidden="true" />
                     </motion.span>
