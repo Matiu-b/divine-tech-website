@@ -1643,7 +1643,7 @@ function CallPanel({ c, clock: cc, reduce }) {
     <div className="flex flex-col gap-3 rounded-[18px] bg-[#F6F1E8] p-2.5 xs:p-3.5 md:p-4">
       <div className="rounded-[16px] bg-white p-3 shadow-[0_1px_2px_rgba(10,15,14,0.08)] md:p-3.5">
         <div className="flex items-center gap-2.5 sm:gap-3">
-          <span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#FFF1E6] max-sm:hidden">
+          <span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#FFF1E6] max-lg:hidden">
             {speaking === 'aurora' ? <span className="ring-ping absolute inset-0 rounded-full bg-[#F25C2A]/25" /> : null}
             <img src="/brand/aurora-symbol-color.svg" alt="" width="18" height="18" className="relative h-[18px] w-[18px]" />
           </span>
@@ -1655,7 +1655,7 @@ function CallPanel({ c, clock: cc, reduce }) {
             {live ? (
               <>
                 {clock(Math.min(t, c.duration))}
-                <span className="max-sm:hidden"> / {clock(c.duration)}</span>
+                <span className="max-xl:hidden"> / {clock(c.duration)}</span>
               </>
             ) : (
               clock(c.duration)
