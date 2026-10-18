@@ -1731,7 +1731,7 @@ function JourneyStep({ step, n, a, reduce, cc }) {
       </p>
       <p className="pretty mt-2 text-[15px] leading-snug text-graphite md:mt-3 md:text-[16px]">{step.happened}</p>
       {/* phones and tablets: the steps as one short flowing line; laptops: two neat columns */}
-      <p className="mt-3 flex flex-wrap gap-x-2.5 gap-y-1 text-[12.5px] leading-snug text-ink xs:text-[13px] md:mt-4 md:text-[12.5px] lg:text-[13px] xl:hidden">
+      <p className="mt-3 flex flex-wrap gap-x-2.5 gap-y-1 text-[12.5px] leading-snug text-ink xs:text-[13px] md:mt-4 md:text-[13.5px] lg:text-[13px] xl:hidden">
         {step.points.map((x) => (
           <span key={x} className="inline-flex items-center gap-1.5 whitespace-nowrap">
             <span aria-hidden="true" className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#F25C2A]" />
@@ -1888,8 +1888,8 @@ export function RxAfter({ it }) {
           </div>
 
           {/* the stage: Emma's scene with the live layer over it, and beside it what happened */}
-          <div className="relative mt-4 grid overflow-hidden rounded-[24px] bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_30px_60px_-40px_rgba(90,50,20,0.45)] md:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] xl:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
-            <div className="relative aspect-[4/3] overflow-hidden bg-[#E9E1D4] md:aspect-auto md:min-h-[400px]">
+          <div className="relative mt-4 grid overflow-hidden rounded-[24px] bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_30px_60px_-40px_rgba(90,50,20,0.45)] lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] xl:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
+            <div className="relative aspect-[4/3] overflow-hidden bg-[#E9E1D4] sm:aspect-[16/9] lg:aspect-auto lg:min-h-[400px]">
               {a.steps.map((x, i) =>
                 reduce ? (
                   <img key={x.key} src={x.media.poster} alt="" className={cn('absolute inset-0 h-full w-full object-cover', i === k ? 'opacity-100' : 'opacity-0')} style={{ objectPosition: x.media.focus || '50% 35%' }} />
@@ -1913,7 +1913,7 @@ export function RxAfter({ it }) {
               )}
               <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-[linear-gradient(180deg,rgba(20,16,12,0),rgba(20,16,12,0.35))]" />
               {/* the live layer: the call to play, or the texts as they arrive */}
-              <div className="absolute inset-x-3 bottom-3 grid sm:inset-x-4 sm:bottom-4 md:right-auto md:w-[min(380px,calc(100%_-_32px))]">
+              <div className="absolute inset-x-3 bottom-3 grid sm:inset-x-4 sm:bottom-4 sm:right-auto sm:w-[min(380px,calc(100%_-_32px))]">
                 {a.steps.map((x, i) => (
                   <div key={x.key} className={cn('[grid-area:1/1] self-end transition-opacity duration-300', i === k ? 'opacity-100' : 'pointer-events-none invisible opacity-0')} aria-hidden={i === k ? undefined : true}>
                     {x.call ? <CallOverlay c={x.call} clock={cc} reduce={reduce} /> : <TextsOverlay step={x} a={a} active={i === k && running} reduce={reduce} />}
