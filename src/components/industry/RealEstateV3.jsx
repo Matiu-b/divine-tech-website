@@ -1569,235 +1569,191 @@ function KpiGoals({ a, run, reduce, titleId }) {
 
 // One lead's journey: how long a step stays on screen before the next (ms). The call step holds while it plays.
 const STEP_MS = 10000;
-const CALL_IDLE_MS = 13000;
+const CALL_IDLE_MS = 12000;
 const AFTER_CALL_MS = 2500;
-const BUBBLE_GAP = 0.55; // seconds between the texts of one step
+const MSG_GAP_MS = 2200; // between the texts of a step, as they arrive over the scene
+const SUB_WORDS = 7; // the call's subtitles show at most this many words at a time
 
-/** A text in the thread: Aurora's on the left, the lead's on the right. The sender shows once per run of texts. */
-function JourneyBubble({ m, i, lead, labels, reduce, label = true }) {
-  const enter = reduce ? {} : { initial: { opacity: 0, y: 10 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.4, ease: EASE, delay: 0.35 + i * BUBBLE_GAP } };
-  const mine = m.who === 'aurora';
-  return (
-    <motion.div {...enter} className={cn('flex max-w-[88%] flex-col', mine ? 'items-start' : 'items-end self-end')}>
-      {label ? (
-        <span className="mb-1 flex items-center gap-1.5 px-1 text-[11px] font-medium uppercase tracking-[0.06em] text-ink/40">
-          {mine ? <img src="/brand/aurora-symbol-color.svg" alt="" width="11" height="11" className="h-[11px] w-[11px]" /> : null}
-          {mine ? labels.you : lead.name.split(' ')[0]}
-        </span>
-      ) : null}
-      <p className={cn('rounded-[18px] px-3.5 py-2.5 text-[14px] leading-snug md:text-[15px]', mine ? 'rounded-bl-[6px] bg-white text-ink shadow-[0_1px_2px_rgba(10,15,14,0.08)]' : 'rounded-br-[6px] bg-ink text-white')}>
-        {m.cue ? <span className="mr-1 text-[12px] italic opacity-55">[{m.cue}]</span> : null}
-        {m.text}
-      </p>
-    </motion.div>
-  );
-}
-
-/** One line of the call, word by word as it is spoken, with the delivery the voice was given. */
-function CallLine({ cap, t, dim, c }) {
-  const mine = cap.who === 'aurora';
+/** Which slice of a line is on screen as a subtitle: the chunk of words that holds the word being spoken. */
+function subtitle(cap, t) {
   const words = cap.text.split(' ');
-  return (
-    <div className={cn('transition-opacity duration-500', dim ? 'opacity-40' : 'opacity-100')}>
-      <p className={cn('flex items-center gap-1.5 text-[10.5px] font-medium uppercase tracking-[0.07em]', mine ? 'text-[#B4471A]' : 'text-slate')}>
-        {mine ? 'Aurora' : c.caller}
-        {cap.cue ? <span className="font-normal normal-case italic tracking-normal text-ink/40">[{cap.cue}]</span> : null}
-      </p>
-      <p className="mt-0.5 text-[15px] leading-[1.42] tracking-[-0.005em] text-ink md:text-[16px]">
-        <span className="sr-only">{cap.text}</span>
-        <span aria-hidden="true">
-          {words.map((w, i) => (
-            <span key={i} className={cn('transition-opacity duration-200', t >= cap.at + (cap.words[i] || 0) ? 'opacity-100' : 'opacity-[0.14]')}>
-              {w}
-              {i < words.length - 1 ? ' ' : ''}
-            </span>
-          ))}
-        </span>
-      </p>
-    </div>
-  );
+  let w = 0;
+  cap.words.forEach((ms, i) => {
+    if (t >= cap.at + ms) w = i;
+  });
+  const start = Math.floor(w / SUB_WORDS) * SUB_WORDS;
+  return { words, start, end: Math.min(words.length, start + SUB_WORDS) };
 }
 
 /**
- * The call, the peak of the story, shown as a call rather than a chat: who is calling, the recording's own waveform
- * (Aurora's turns in orange, Emma's in ink) with the call's three turning points marked on it, and the words as
- * subtitles. Before it plays, those three moments are listed with their times; each one plays the call from there.
- * While it plays, every line lights up as it is spoken.
+ * The call, laid over Emma's scene in one small glass box. Before it plays: a play button, the recording's own
+ * waveform (Aurora's turns in orange, Emma's in ink) and its length. Once it plays, the same box shows the call as
+ * live subtitles, word by word, with the speaker and the delivery the voice was given.
  */
-function CallPanel({ c, clock: cc, reduce }) {
-  const { t, status, play, seek } = cc;
+function CallOverlay({ c, clock: cc, reduce }) {
+  const { t, status, play } = cc;
   const live = status === 'playing' || status === 'paused';
   const k = lastIndex(c.captions, t);
   const cap = c.captions[k];
-  const prev = k > 0 ? c.captions[k - 1] : null;
   const speaking = status === 'playing' && t >= cap.at && t <= cap.end + 150 ? cap.who : null;
-  const n = c.wave.length;
-  // who is speaking in each slice of the waveform
+  const sub = subtitle(cap, t);
+  const bars = c.wave.filter((_, i) => i % 2 === 0);
+  const n = bars.length;
   const whoAt = (ms) => {
     const x = c.captions.find((q) => ms >= q.at - 150 && ms <= q.end + 150);
     return x ? x.who : null;
   };
   const played = live || status === 'done' ? t : -1;
-  const timeOf = (ms) => clock(ms);
   return (
-    <div className="flex flex-col gap-3 rounded-[18px] bg-[#F6F1E8] p-2.5 xs:p-3.5 md:p-4">
-      <div className="rounded-[16px] bg-white p-3 shadow-[0_1px_2px_rgba(10,15,14,0.08)] md:p-3.5">
-        <div className="flex items-center gap-2.5 sm:gap-3">
-          <span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#FFF1E6] max-lg:hidden">
-            {speaking === 'aurora' ? <span className="ring-ping absolute inset-0 rounded-full bg-[#F25C2A]/25" /> : null}
-            <img src="/brand/aurora-symbol-color.svg" alt="" width="18" height="18" className="relative h-[18px] w-[18px]" />
-          </span>
-          <span className="min-w-0 flex-1">
-            <span className="block truncate text-[14px] font-medium leading-tight text-ink">{c.title}</span>
-            <span className="block truncate text-[12px] text-slate">{c.meta}</span>
-          </span>
-          <span className="shrink-0 text-[12.5px] font-medium tabular-nums text-ink/60">
-            {live ? (
-              <>
-                {clock(Math.min(t, c.duration))}
-                <span className="max-xl:hidden"> / {clock(c.duration)}</span>
-              </>
-            ) : (
-              clock(c.duration)
-            )}
-          </span>
+    <LiquidGlass className="rounded-[18px] p-3" style={{ '--lg-tint-a': 'rgba(255,252,247,0.9)', '--lg-tint-b': 'rgba(255,249,241,0.82)' }}>
+      <div className="flex items-center gap-3">
+        <button
+          type="button"
+          onClick={play}
+          aria-label={status === 'playing' ? c.pause : status === 'paused' ? c.resume : status === 'done' ? c.again : c.listen}
+          className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(140deg,#FF8A3D,#F25C2A)] text-white shadow-[0_10px_24px_-10px_rgba(242,92,42,0.8)] transition-transform hover:scale-105"
+        >
+          {status === 'idle' && !reduce ? <span className="ring-ping absolute inset-0 rounded-full bg-[#F25C2A]/30" /> : null}
+          {status === 'playing' ? <Pause className="relative h-4 w-4 fill-current" strokeWidth={2.2} aria-hidden="true" /> : <Play className="relative ml-0.5 h-4 w-4 fill-current" strokeWidth={2.2} aria-hidden="true" />}
+        </button>
+        <div className="min-w-0 flex-1">
+          {live ? (
+            <>
+              <p className={cn('flex items-center gap-1.5 text-[10.5px] font-medium uppercase tracking-[0.07em]', cap.who === 'aurora' ? 'text-[#B4471A]' : 'text-slate')}>
+                {cap.who === 'aurora' ? 'Aurora' : c.caller}
+                {cap.cue ? <span className="font-normal normal-case italic tracking-normal text-ink/40">[{cap.cue}]</span> : null}
+              </p>
+              <p className="mt-0.5 h-[38px] overflow-hidden text-[14px] leading-[1.35] text-ink" aria-live="off">
+                <span className="sr-only">{cap.text}</span>
+                <span aria-hidden="true">
+                  {sub.words.slice(sub.start, sub.end).map((w, j) => {
+                    const i = sub.start + j;
+                    return (
+                      <span key={i} className={cn('transition-opacity duration-200', t >= cap.at + (cap.words[i] || 0) ? 'opacity-100' : 'opacity-[0.18]')}>
+                        {w}
+                        {i < sub.end - 1 ? ' ' : ''}
+                      </span>
+                    );
+                  })}
+                </span>
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="truncate text-[14px] font-medium leading-tight text-ink">{status === 'done' ? c.again : c.listen}</p>
+              <p className="mt-0.5 flex items-center gap-1 truncate text-[12px] text-slate">
+                <Volume2 className="h-3.5 w-3.5 shrink-0 text-[#B4471A]" strokeWidth={2.2} aria-hidden="true" />
+                {c.meta}
+              </p>
+            </>
+          )}
         </div>
-
-        <div className="mt-3 flex items-center gap-3">
-          <button
-            type="button"
-            onClick={play}
-            aria-label={status === 'playing' ? c.pause : status === 'paused' ? c.resume : status === 'done' ? c.again : c.listen}
-            className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(140deg,#FF8A3D,#F25C2A)] text-white shadow-[0_10px_24px_-10px_rgba(242,92,42,0.8)] transition-transform hover:scale-105"
-          >
-            {status === 'idle' && !reduce ? <span className="ring-ping absolute inset-0 rounded-full bg-[#F25C2A]/30" /> : null}
-            {status === 'playing' ? <Pause className="relative h-4 w-4 fill-current" strokeWidth={2.2} aria-hidden="true" /> : <Play className="relative ml-0.5 h-4 w-4 fill-current" strokeWidth={2.2} aria-hidden="true" />}
-          </button>
-          {/* the recording itself: one bar per slice, coloured by who is talking, brighter once it has played */}
-          <div className="relative flex h-10 min-w-0 flex-1 items-center gap-[2px]" aria-hidden="true">
-            {c.wave.map((v, i) => {
-              const ms = ((i + 0.5) / n) * c.duration;
-              const who = whoAt(ms);
-              const done = played >= ms;
-              return (
-                <span
-                  key={i}
-                  className={cn('min-w-0 flex-1 rounded-full transition-opacity duration-200', who === 'aurora' ? 'bg-[#F25C2A]' : who ? 'bg-ink' : 'bg-ink/30', i % 2 === 1 && 'max-sm:hidden', played < 0 ? 'opacity-60' : done ? 'opacity-100' : 'opacity-25')}
-                  style={{ height: Math.max(10, v * 100) + '%' }}
-                />
-              );
-            })}
-            {c.moments.map((m, j) => (
-              <span
-                key={m}
-                className="absolute top-[-9px] flex h-[18px] w-[18px] -translate-x-1/2 items-center justify-center rounded-full bg-ink text-[10px] font-medium text-white ring-2 ring-white"
-                style={{ left: (c.captions[m].at / c.duration) * 100 + '%' }}
-              >
-                {j + 1}
-              </span>
-            ))}
-          </div>
-        </div>
+        <span className="shrink-0 self-start text-[12px] font-medium tabular-nums text-ink/55">{clock(live ? Math.min(t, c.duration) : c.duration)}</span>
       </div>
+      {/* the recording itself: one bar per slice, coloured by who is talking, brighter once it has played */}
+      <div className="mt-2.5 flex h-6 items-center gap-[2px]" aria-hidden="true">
+        {bars.map((v, i) => {
+          const ms = ((i + 0.5) / n) * c.duration;
+          const who = whoAt(ms);
+          return (
+            <span
+              key={i}
+              className={cn('min-w-0 flex-1 rounded-full transition-opacity duration-200', who === 'aurora' ? 'bg-[#F25C2A]' : who ? 'bg-ink' : 'bg-ink/30', played < 0 ? 'opacity-55' : played >= ms ? 'opacity-100' : 'opacity-20')}
+              style={{ height: Math.max(14, v * 100) + '%' }}
+            />
+          );
+        })}
+      </div>
+    </LiquidGlass>
+  );
+}
 
-      {live ? (
-        <div className="grid h-[190px] content-end gap-3 overflow-hidden px-1 [mask-image:linear-gradient(to_bottom,transparent,#000_25%)] md:h-[176px]">
-          {prev ? <CallLine key={k - 1} cap={prev} t={t} dim c={c} /> : null}
-          <CallLine key={k} cap={cap} t={t} c={c} />
-        </div>
-      ) : (
-        <div className="flex min-h-[190px] flex-col md:min-h-[176px]">
-          <p className="sr-only">{c.prompt}</p>
-          <ol className="grid gap-0.5">
-            {c.moments.map((m, j) => {
-              const x = c.captions[m];
-              return (
-                <li key={m}>
-                  <button type="button" onClick={() => seek(x.at)} className="group flex w-full gap-2.5 rounded-[12px] px-1 py-1 text-left transition-colors hover:bg-white/70">
-                    <span className="mt-0.5 flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full bg-ink text-[10px] font-medium text-white">{j + 1}</span>
-                    <span className="min-w-0">
-                      <span className="flex items-center gap-1.5 text-[10.5px] font-medium uppercase tracking-[0.07em]">
-                        <span className="tabular-nums text-ink/45">{timeOf(x.at)}</span>
-                        <span className={x.who === 'aurora' ? 'text-[#B4471A]' : 'text-slate'}>{x.who === 'aurora' ? 'Aurora' : c.caller}</span>
-                        <span className="text-ink/35">· {c.momentLabels[j]}</span>
-                      </span>
-                      <span className="mt-0.5 line-clamp-2 text-[14px] leading-snug text-ink md:line-clamp-none md:text-[14.5px]">
-                        <span className="text-ink/40">“</span>
-                        {x.text}
-                        <span className="text-ink/40">”</span>
-                      </span>
-                    </span>
-                  </button>
-                </li>
-              );
-            })}
-          </ol>
-        </div>
-      )}
+/** The texts of a step, laid over its scene: they arrive one at a time, like notifications on a phone. */
+function TextsOverlay({ step, a, active, reduce }) {
+  const n = step.thread.length;
+  const [shown, setShown] = useState(reduce ? n : 0);
+  useEffect(() => {
+    if (reduce || !active) {
+      setShown(reduce ? n : 0);
+      return undefined;
+    }
+    setShown(0);
+    const ids = step.thread.map((_, i) => setTimeout(() => setShown(i + 1), 500 + i * MSG_GAP_MS));
+    return () => ids.forEach(clearTimeout);
+  }, [active, reduce, n, step.thread]);
+  const list = step.thread.slice(Math.max(0, shown - 2), shown);
+  return (
+    <div className="flex min-h-[132px] flex-col justify-end gap-2">
+      <AnimatePresence initial={false}>
+        {list.map((m, j) => {
+          const i = Math.max(0, shown - 2) + j;
+          const mine = m.who === 'aurora';
+          return (
+            <motion.div
+              key={i}
+              layout={!reduce}
+              initial={reduce ? false : { opacity: 0, y: 14, scale: 0.97 }}
+              animate={{ opacity: j === list.length - 1 ? 1 : 0.7, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -8, transition: { duration: 0.2 } }}
+              transition={{ duration: 0.4, ease: EASE }}
+            >
+              <LiquidGlass className="flex items-start gap-2.5 rounded-[16px] px-3 py-2.5" style={{ '--lg-tint-a': 'rgba(255,252,247,0.9)', '--lg-tint-b': 'rgba(255,249,241,0.82)' }}>
+                <span className={cn('flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[10.5px] font-medium', mine ? 'bg-[#FFF1E6]' : 'bg-ink text-white')}>
+                  {mine ? <img src="/brand/aurora-symbol-color.svg" alt="" width="14" height="14" className="h-3.5 w-3.5" /> : a.lead.initials}
+                </span>
+                <span className="min-w-0">
+                  <span className="block text-[10.5px] font-medium uppercase tracking-[0.07em] text-ink/45">{mine ? a.labels.you : a.lead.name.split(' ')[0]} · {a.labels.text}</span>
+                  <span className="mt-0.5 block text-[13.5px] leading-snug text-ink">{m.text}</span>
+                </span>
+              </LiquidGlass>
+            </motion.div>
+          );
+        })}
+      </AnimatePresence>
     </div>
   );
 }
 
-/** One step on the stage: what happened, then the call or the texts, then what the team sees. */
+/** One step's explanation: the step and its date, one line on what changed, the steps Aurora took, what the team sees. */
 function JourneyStep({ step, n, a, reduce, cc }) {
   const TeamIcon = step.icon === 'calendar' ? CalendarCheck : step.icon === 'phone' ? PhoneOutgoing : Database;
   const c = step.call;
   // during the call the team line follows it; otherwise it shows where things ended up
   const playing = c && cc && (cc.status === 'playing' || cc.status === 'paused');
   const team = playing ? c.notes[lastIndex(c.notes, cc.t)].text : step.team;
-  const n2 = c ? 4 : step.thread.length;
   return (
     <motion.div initial={reduce ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: EASE }} className="flex h-full flex-col">
-      <div className="grid gap-4 md:mb-5 md:gap-5 xl:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] xl:gap-7">
-        <div>
-          <p className="t-data text-[11px] uppercase tracking-[0.08em] text-[#C2410C]">
-            {String(n + 1).padStart(2, '0')} · {step.date}
-          </p>
-          <p className="mt-1.5 text-[20px] font-medium leading-tight tracking-[-0.015em] text-ink md:text-[22px]">{step.name}</p>
-          <p className="pretty mt-1.5 text-[14.5px] leading-snug text-graphite md:mt-2 md:text-[15px]">{step.happened}</p>
-          {/* what Aurora did, as a short flow of steps */}
-          {step.points ? (
-            <ol className="mt-2.5 flex flex-wrap items-center gap-x-1 gap-y-1.5 md:mt-3.5" aria-label={a.labels.happened}>
-              {step.points.map((x, i) => (
-                <li key={x} className="flex items-center gap-1">
-                  <span className="rounded-full bg-[#FFF1E6] px-2.5 py-1 text-[12.5px] font-medium leading-none text-[#B4471A]">{x}</span>
-                  {i < step.points.length - 1 ? <ArrowRight className="h-3 w-3 text-ink/30" strokeWidth={2.2} aria-hidden="true" /> : null}
-                </li>
-              ))}
-            </ol>
-          ) : null}
-        </div>
-        {c ? (
-          <CallPanel c={c} clock={cc} reduce={reduce} />
-        ) : (
-          <div className="flex flex-col gap-2.5 rounded-[18px] bg-[#F6F1E8] p-3.5 md:p-4">
-            {step.thread.map((m, i) => (
-              <JourneyBubble key={i} m={m} i={i} lead={a.lead} labels={a.labels} reduce={reduce} label={i === 0 || step.thread[i - 1].who !== m.who} />
-            ))}
-          </div>
-        )}
-      </div>
-      <motion.p
-        initial={reduce ? false : { opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.4, delay: reduce ? 0 : 0.35 + n2 * BUBBLE_GAP }}
-        className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-0.5 rounded-[14px] bg-[#FBF8F3] px-3.5 py-2.5 shadow-[inset_0_0_0_1px_rgba(10,15,14,0.06)] md:mt-auto md:px-4 md:py-3"
-      >
+      <p className="flex flex-wrap items-baseline gap-x-2.5 gap-y-0.5">
+        <span className="text-[20px] font-medium leading-tight tracking-[-0.015em] text-ink md:text-[22px]">{step.name}</span>
+        <span className="t-data text-[11px] uppercase tracking-[0.08em] text-[#C2410C]">
+          {String(n + 1).padStart(2, '0')} · {step.date}
+        </span>
+      </p>
+      <p className="pretty mt-2 text-[15px] leading-snug text-graphite md:mt-3 md:text-[16px]">{step.happened}</p>
+      <ul className="mt-3 grid gap-1.5 md:mt-4 md:gap-2">
+        {step.points.map((x) => (
+          <li key={x} className="flex items-center gap-2.5 text-[14px] leading-snug text-ink md:text-[15px]">
+            <span aria-hidden="true" className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#F25C2A]" />
+            {x}
+          </li>
+        ))}
+      </ul>
+      <p className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-0.5 rounded-[14px] bg-[#FBF8F3] px-3.5 py-2.5 shadow-[inset_0_0_0_1px_rgba(10,15,14,0.06)] md:mt-auto md:px-4 md:py-3">
         <span className="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.08em] text-ink/45">
           <TeamIcon className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
           {a.labels.team}
         </span>
         <span className="min-w-0 text-[13px] font-medium leading-snug text-ink md:text-[14px]">{team}</span>
-      </motion.p>
+      </p>
     </motion.div>
   );
 }
 
 /**
  * After the first reply: one lead's journey in three steps. Emma, the buyer from the speed-to-lead section, went
- * quiet; Aurora calls her back (the call can be heard, with its words lighting up as they are spoken), Marcus shows
- * her a house, and she closes. Each step has its own short scene of her. Steps advance on their own while the
- * section is on screen; the call holds the step while it plays. Every step's text is in the HTML.
+ * quiet; Aurora calls her back, Marcus shows her a house, and she closes. Each step is one screen: Emma's scene with
+ * the live layer over it (the call to play, or the texts arriving), and beside it what happened and what the team
+ * sees. Steps advance on their own while the section is on screen; the call holds its step while it plays.
  */
 export function RxAfter({ it }) {
   const a = it.v3.after;
@@ -1814,13 +1770,14 @@ export function RxAfter({ it }) {
   const [k, setK] = useState(0);
   const [nonce, setNonce] = useState(0);
   const callBusy = k === ci && (cc.status === 'playing' || cc.status === 'paused');
+  const running = !reduce && inView && visible;
 
   useEffect(() => {
-    if (reduce || !inView || !visible || callBusy) return undefined;
+    if (!running || callBusy) return undefined;
     const ms = k === ci ? (cc.status === 'done' ? AFTER_CALL_MS : CALL_IDLE_MS) : STEP_MS;
     const id = setTimeout(() => setK((x) => (x + 1) % n), ms);
     return () => clearTimeout(id);
-  }, [k, nonce, reduce, inView, visible, callBusy, cc.status, ci, n]);
+  }, [k, nonce, running, callBusy, cc.status, ci, n]);
 
   // leaving the call step stops the call; coming back to it starts fresh
   useEffect(() => {
@@ -1831,15 +1788,25 @@ export function RxAfter({ it }) {
   useEffect(() => {
     videos.current.forEach((v, i) => {
       if (!v) return;
-      if (i === k && inView && visible && !reduce) v.play().catch(() => {});
+      if (i === k && running) v.play().catch(() => {});
       else v.pause();
     });
-  }, [k, inView, visible, reduce]);
+  }, [k, running]);
 
   const go = (x) => {
     setK((x + n) % n);
     setNonce((v) => v + 1);
   };
+  const arrows = (size) => (
+    <>
+      <button type="button" onClick={() => go(k - 1)} aria-label={a.labels.prev} className={cn('flex items-center justify-center rounded-full bg-white text-ink shadow-[0_0_0_1px_rgba(10,15,14,0.1)] hover:shadow-[0_0_0_1px_rgba(10,15,14,0.3)]', size)}>
+        <ChevronLeft className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
+      </button>
+      <button type="button" onClick={() => go(k + 1)} aria-label={a.labels.next} className={cn('flex items-center justify-center rounded-full bg-white text-ink shadow-[0_0_0_1px_rgba(10,15,14,0.1)] hover:shadow-[0_0_0_1px_rgba(10,15,14,0.3)]', size)}>
+        <ChevronRight className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
+      </button>
+    </>
+  );
 
   return (
     <section data-nav-theme="light" aria-labelledby="rx-after-title" className="section relative pt-0">
@@ -1856,7 +1823,7 @@ export function RxAfter({ it }) {
 
           {/* who this is, then the three steps (a marker for each step and a check once it's done; no fill bar) */}
           <div className="relative mt-6 grid gap-4 xl:grid-cols-[minmax(0,280px)_minmax(0,1fr)_auto] xl:items-center xl:gap-8">
-            <p className="flex items-center gap-3">
+            <p className="flex items-center gap-3 max-sm:hidden">
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-ink text-[13px] font-medium text-white">{a.lead.initials}</span>
               <span className="min-w-0">
                 <span className="block text-[15px] font-medium text-ink">{a.lead.name}</span>
@@ -1886,22 +1853,15 @@ export function RxAfter({ it }) {
                 );
               })}
             </ol>
-            <div className="flex gap-2 max-xl:hidden">
-              <button type="button" onClick={() => go(k - 1)} aria-label={a.labels.prev} className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-ink shadow-[0_0_0_1px_rgba(10,15,14,0.1)] hover:shadow-[0_0_0_1px_rgba(10,15,14,0.3)]">
-                <ChevronLeft className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
-              </button>
-              <button type="button" onClick={() => go(k + 1)} aria-label={a.labels.next} className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-ink shadow-[0_0_0_1px_rgba(10,15,14,0.1)] hover:shadow-[0_0_0_1px_rgba(10,15,14,0.3)]">
-                <ChevronRight className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
-              </button>
-            </div>
+            <div className="flex gap-2 max-xl:hidden">{arrows('h-10 w-10')}</div>
           </div>
 
-          {/* the stage: Emma in this step's scene, then what happened, the call or the texts, and what the team sees */}
-          <div className="relative mt-4 grid overflow-hidden rounded-[24px] bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_30px_60px_-40px_rgba(90,50,20,0.45)] md:grid-cols-[minmax(0,240px)_minmax(0,1fr)] xl:grid-cols-[minmax(0,280px)_minmax(0,1fr)]">
-            <div className="relative aspect-[5/2] bg-[#E9E1D4] md:aspect-auto md:min-h-[360px]">
+          {/* the stage: Emma's scene with the live layer over it, and beside it what happened */}
+          <div className="relative mt-4 grid overflow-hidden rounded-[24px] bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_30px_60px_-40px_rgba(90,50,20,0.45)] md:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] xl:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
+            <div className="relative aspect-[4/3] overflow-hidden bg-[#E9E1D4] md:aspect-auto md:min-h-[400px]">
               {a.steps.map((x, i) =>
                 reduce ? (
-                  <img key={x.key} src={x.media.poster} alt="" style={{ objectPosition: x.media.focus }} className={cn('absolute inset-0 h-full w-full object-cover', i === k ? 'opacity-100' : 'opacity-0')} />
+                  <img key={x.key} src={x.media.poster} alt="" className={cn('absolute inset-0 h-full w-full object-cover', i === k ? 'opacity-100' : 'opacity-0')} style={{ objectPosition: x.media.focus || '50% 35%' }} />
                 ) : (
                   <video
                     key={x.key}
@@ -1915,15 +1875,24 @@ export function RxAfter({ it }) {
                     playsInline
                     preload={i === 0 ? 'metadata' : 'none'}
                     aria-hidden="true"
-                    style={{ objectPosition: x.media.focus }}
                     className={cn('absolute inset-0 h-full w-full object-cover transition-opacity duration-700', i === k ? 'opacity-100' : 'opacity-0')}
+                    style={{ objectPosition: x.media.focus || '50% 35%' }}
                   />
                 )
               )}
+              <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-[linear-gradient(180deg,rgba(20,16,12,0),rgba(20,16,12,0.35))]" />
+              {/* the live layer: the call to play, or the texts as they arrive */}
+              <div className="absolute inset-x-3 bottom-3 grid sm:inset-x-4 sm:bottom-4 md:right-auto md:w-[min(380px,calc(100%_-_32px))]">
+                {a.steps.map((x, i) => (
+                  <div key={x.key} className={cn('[grid-area:1/1] self-end transition-opacity duration-300', i === k ? 'opacity-100' : 'pointer-events-none invisible opacity-0')} aria-hidden={i === k ? undefined : true}>
+                    {x.call ? <CallOverlay c={x.call} clock={cc} reduce={reduce} /> : <TextsOverlay step={x} a={a} active={i === k && running} reduce={reduce} />}
+                  </div>
+                ))}
+              </div>
               {call ? <audio ref={audioRef} src={call.audio} preload="none" onEnded={cc.ended} /> : null}
             </div>
 
-            {/* every step is laid in the same grid cell, so the stage is as tall as the longest step and never jumps */}
+            {/* every step's explanation in the same grid cell, so the stage is as tall as the longest and never jumps */}
             <div className="relative grid min-w-0 p-4 xs:p-5 md:p-6 lg:px-7 lg:py-6" aria-live="polite">
               {a.steps.map((x, i) => (
                 <div key={x.key} className={cn('[grid-area:1/1]', i === k ? '' : 'invisible')} aria-hidden={i === k ? undefined : true}>
@@ -1934,20 +1903,13 @@ export function RxAfter({ it }) {
           </div>
 
           {/* phones and tablets: the arrows under the stage */}
-          <div className="mt-4 flex justify-center gap-2 xl:hidden">
-            <button type="button" onClick={() => go(k - 1)} aria-label={a.labels.prev} className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-ink shadow-[0_0_0_1px_rgba(10,15,14,0.1)]">
-              <ChevronLeft className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
-            </button>
-            <button type="button" onClick={() => go(k + 1)} aria-label={a.labels.next} className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-ink shadow-[0_0_0_1px_rgba(10,15,14,0.1)]">
-              <ChevronRight className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
-            </button>
-          </div>
+          <div className="mt-4 flex justify-center gap-2 xl:hidden">{arrows('h-11 w-11')}</div>
 
           {/* every step in the HTML, for search and screen readers */}
           <ol className="sr-only">
             {a.steps.map((x) => (
               <li key={x.key}>
-                {x.name} ({x.date}). {x.happened} {(x.points || []).join('. ')}{' '}
+                {x.name} ({x.date}). {x.happened} {x.points.join('. ')}.{' '}
                 {(x.call ? x.call.captions : x.thread).map((m) => (m.who === 'aurora' ? 'Aurora: ' : a.lead.name.split(' ')[0] + ': ') + m.text).join(' ')} {x.team}
               </li>
             ))}

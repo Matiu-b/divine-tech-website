@@ -255,19 +255,19 @@ export const industries = [
         // One lead's journey in three steps: the call that brought her back, the showing, the closing.
         // Emma is the buyer from the speed-to-lead section; Marcus is the broker there too. Illustrative.
         lead: { name: 'Emma Clarke', initials: 'EC', intro: 'Asked about 18 Willow Court in March, then went quiet' },
-        labels: { happened: 'What happened', team: 'What your team sees', prev: 'Previous step', next: 'Next step', you: 'Aurora', replay: 'Watch again' },
+        labels: { team: 'What your team sees', prev: 'Previous step', next: 'Next step', you: 'Aurora', text: 'Text' },
         steps: [
           {
             key: 'call', name: 'Reactivation call', date: 'Jun 2', icon: 'phone',
             media: { video: '/media/real-estate/emma-desk.mp4', poster: '/media/real-estate/emma-desk-poster.webp', focus: '50% 22%' },
-            happened: 'Two months of silence, turned into a booked showing with one phone call.',
+            happened: 'Two months of silence, turned into a booked showing with one call.',
             points: ['No reply for 2 months', 'AI voice agent calls', 'Objections handled', 'Showing booked'],
             call: {
               audio: '/media/real-estate/emma-call-2.mp3',
               duration: 72910,
               title: 'Aurora calls Emma',
-              meta: 'Outgoing · Tue 5:40 pm',
-              listen: 'Hear the call',
+              meta: 'Sound on · Tue 5:40 pm',
+              listen: 'Hear Aurora’s call',
               again: 'Hear it again',
               sound: 'Sound on',
               pause: 'Pause the call',
