@@ -256,14 +256,6 @@ export default function FieldMap({ d }) {
   const here = !driving;
   const toFrame = ([x, y]) => ({ left: x * box.s + box.ox, top: y * box.s + box.oy });
   const wide = box.w >= 600;
-  // the clip card sits beside its stop, on the side with more room, and inside the map
-  const card = (at) => {
-    const { left: x, top: y } = toFrame(at);
-    const cw = box.w >= 1000 ? 270 : 250;
-    const ch = cw * 0.5625 + 40;
-    const lx = x < box.w / 2 ? x + 22 : x - 22 - cw;
-    return { width: cw, left: Math.max(12, Math.min(box.w - cw - 12, lx)), top: Math.max(12, Math.min(box.h - ch - 12, y - ch / 2)) };
-  };
   const total = d.stops.reduce((a, s) => a + s.drive, 0);
 
   const plan = (
@@ -370,7 +362,7 @@ export default function FieldMap({ d }) {
               </span>
             ))}
 
-            {/* the job the van is at: a place card beside the stop with a clip of Jake on the job (on phones, in the corner) */}
+            {/* the job the van is at: a card in the corner with a clip of Jake on the job, like a maps app's street view */}
             <AnimatePresence>
               {here ? (
                 <motion.div
@@ -379,8 +371,8 @@ export default function FieldMap({ d }) {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.3, ease: EASE }}
-                  className={cn('pointer-events-none absolute z-[3] overflow-hidden rounded-[12px] bg-white p-1 shadow-[0_10px_30px_-8px_rgba(10,15,14,0.35)] sm:rounded-[14px] sm:p-1.5', wide ? '' : 'bottom-2 right-2 w-[56%] sm:w-[250px]')}
-                  style={wide ? card(d.stops[leg].at) : undefined}
+                  className={cn('pointer-events-none absolute z-[3] overflow-hidden rounded-[12px] bg-white p-1 shadow-[0_10px_30px_-8px_rgba(10,15,14,0.35)] sm:rounded-[14px] sm:p-1.5', wide ? 'right-4 top-4' : 'bottom-2 right-2 w-[56%] sm:w-[250px]')}
+                  style={wide ? { width: box.w >= 1000 ? 280 : 250 } : undefined}
                 >
                   <JobClip s={d.stops[leg]} play={inView && visible && !reduce} />
                   <span className="block truncate px-1 pb-0.5 pt-1 text-[11px] sm:px-1.5 sm:pt-1.5 sm:text-[12px]">
