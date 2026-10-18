@@ -1618,13 +1618,13 @@ function CallPanel({ c, a, clock: cc, reduce }) {
   const speaking = status === 'playing' && t >= cap.at && t <= cap.end + 150 ? cap.who : null;
   return (
     <div className="flex flex-col gap-3 rounded-[18px] bg-[#F6F1E8] p-3.5 md:p-4">
-      <div className="flex items-center gap-3 rounded-[16px] bg-white px-3 py-2.5 shadow-[0_1px_2px_rgba(10,15,14,0.08)]">
-        <span className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#FFF1E6]">
+      <div className="flex items-center gap-2.5 rounded-[16px] bg-white px-3 py-2.5 shadow-[0_1px_2px_rgba(10,15,14,0.08)] sm:gap-3">
+        <span className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#FFF1E6] sm:h-10 sm:w-10">
           {speaking === 'aurora' ? <span className="ring-ping absolute inset-0 rounded-full bg-[#F25C2A]/25" /> : null}
           <img src="/brand/aurora-symbol-color.svg" alt="" width="20" height="20" className="relative h-5 w-5" />
         </span>
         <span className="min-w-0 flex-1">
-          <span className="block text-[14px] font-medium leading-tight text-ink">{c.title}</span>
+          <span className="block truncate text-[14px] font-medium leading-tight text-ink">{c.title}</span>
           {live ? (
             <span className="block truncate text-[12px] text-slate">
               {c.meta} · <span className="tabular-nums">{clock(Math.min(t, c.duration))}</span>
@@ -1632,7 +1632,8 @@ function CallPanel({ c, a, clock: cc, reduce }) {
           ) : (
             <span className="flex items-center gap-1 truncate text-[12px] font-medium text-[#B4471A]">
               <Volume2 className="h-3.5 w-3.5 shrink-0" strokeWidth={2.2} aria-hidden="true" />
-              {status === 'done' ? c.again : c.listen} · {c.sound} · <span className="tabular-nums">{clock(c.duration)}</span>
+              {status === 'done' ? c.again : c.listen}
+              <span className="max-xs:hidden"> · {c.sound}</span> · <span className="tabular-nums">{clock(c.duration)}</span>
             </span>
           )}
         </span>

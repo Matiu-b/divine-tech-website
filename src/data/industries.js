@@ -303,7 +303,7 @@ export const industries = [
                 { at: 59380, text: 'Calendar · Sat 11:00 showing + condo valuation · Marcus' },
               ],
             },
-            team: 'CRM · Cold → Active · Buying and selling · Sat 11:00 showing, then condo valuation · Marcus',
+            team: 'CRM · Cold → Active · Buyer and seller · Showing Sat 11:00 · Marcus',
           },
           {
             key: 'showing', name: 'The showing', date: 'Jun 6', icon: 'calendar',
