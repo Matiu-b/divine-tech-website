@@ -219,6 +219,26 @@
     900,
     1400
    ]
+  },
+  {
+   "kind": "image",
+   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_125546_53c4b651-52a7-458b-ab6f-b77bec71e3f8.png",
+   "out": "public/media/home-services/hero-a",
+   "widths": [
+    900,
+    1400,
+    2000
+   ]
+  },
+  {
+   "kind": "image",
+   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_125545_a5b34753-dc2c-450a-affb-eadb4222baff.png",
+   "out": "public/media/home-services/hero-b",
+   "widths": [
+    900,
+    1400,
+    2000
+   ]
   }
  ]
 }
