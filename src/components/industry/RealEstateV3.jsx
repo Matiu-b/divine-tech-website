@@ -1721,7 +1721,7 @@ function CallPanel({ c, clock: cc, reduce }) {
                         <span className={x.who === 'aurora' ? 'text-[#B4471A]' : 'text-slate'}>{x.who === 'aurora' ? 'Aurora' : c.caller}</span>
                         <span className="text-ink/35">· {c.momentLabels[j]}</span>
                       </span>
-                      <span className="mt-0.5 block text-[14px] leading-snug text-ink group-hover:text-ink md:text-[14.5px]">
+                      <span className="mt-0.5 line-clamp-2 text-[14px] leading-snug text-ink md:line-clamp-none md:text-[14.5px]">
                         <span className="text-ink/40">“</span>
                         {x.text}
                         <span className="text-ink/40">”</span>
@@ -1754,17 +1754,17 @@ function JourneyStep({ step, n, a, reduce, cc }) {
             {String(n + 1).padStart(2, '0')} · {step.date}
           </p>
           <p className="mt-1.5 text-[20px] font-medium leading-tight tracking-[-0.015em] text-ink md:text-[22px]">{step.name}</p>
-          <p className="mt-3 text-[11px] font-medium uppercase tracking-[0.08em] text-ink/40 md:mt-4">{a.labels.happened}</p>
-          <p className="pretty mt-1.5 text-[15px] font-medium leading-snug text-ink md:text-[16px]">{step.happened}</p>
+          <p className="pretty mt-1.5 text-[14.5px] leading-snug text-graphite md:mt-2 md:text-[15px]">{step.happened}</p>
+          {/* what Aurora did, as a short flow of steps */}
           {step.points ? (
-            <ul className="mt-3 grid gap-2">
-              {step.points.map((x) => (
-                <li key={x} className="flex gap-2.5 text-[14px] leading-snug text-graphite md:text-[14.5px]">
-                  <span aria-hidden="true" className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#F25C2A]" />
-                  {x}
+            <ol className="mt-2.5 flex flex-wrap items-center gap-x-1 gap-y-1.5 md:mt-3.5" aria-label={a.labels.happened}>
+              {step.points.map((x, i) => (
+                <li key={x} className="flex items-center gap-1">
+                  <span className="rounded-full bg-[#FFF1E6] px-2.5 py-1 text-[12.5px] font-medium leading-none text-[#B4471A]">{x}</span>
+                  {i < step.points.length - 1 ? <ArrowRight className="h-3 w-3 text-ink/30" strokeWidth={2.2} aria-hidden="true" /> : null}
                 </li>
               ))}
-            </ul>
+            </ol>
           ) : null}
         </div>
         {c ? (
@@ -1898,10 +1898,10 @@ export function RxAfter({ it }) {
 
           {/* the stage: Emma in this step's scene, then what happened, the call or the texts, and what the team sees */}
           <div className="relative mt-4 grid overflow-hidden rounded-[24px] bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_30px_60px_-40px_rgba(90,50,20,0.45)] md:grid-cols-[minmax(0,240px)_minmax(0,1fr)] xl:grid-cols-[minmax(0,280px)_minmax(0,1fr)]">
-            <div className="relative aspect-[16/9] bg-[#E9E1D4] sm:aspect-[2/1] md:aspect-auto md:min-h-[360px]">
+            <div className="relative aspect-[5/2] bg-[#E9E1D4] md:aspect-auto md:min-h-[360px]">
               {a.steps.map((x, i) =>
                 reduce ? (
-                  <img key={x.key} src={x.media.poster} alt="" className={cn('absolute inset-0 h-full w-full object-cover object-[50%_35%]', i === k ? 'opacity-100' : 'opacity-0')} />
+                  <img key={x.key} src={x.media.poster} alt="" style={{ objectPosition: x.media.focus }} className={cn('absolute inset-0 h-full w-full object-cover', i === k ? 'opacity-100' : 'opacity-0')} />
                 ) : (
                   <video
                     key={x.key}
@@ -1915,7 +1915,8 @@ export function RxAfter({ it }) {
                     playsInline
                     preload={i === 0 ? 'metadata' : 'none'}
                     aria-hidden="true"
-                    className={cn('absolute inset-0 h-full w-full object-cover object-[50%_35%] transition-opacity duration-700', i === k ? 'opacity-100' : 'opacity-0')}
+                    style={{ objectPosition: x.media.focus }}
+                    className={cn('absolute inset-0 h-full w-full object-cover transition-opacity duration-700', i === k ? 'opacity-100' : 'opacity-0')}
                   />
                 )
               )}

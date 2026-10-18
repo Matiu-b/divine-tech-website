@@ -259,9 +259,9 @@ export const industries = [
         steps: [
           {
             key: 'call', name: 'Reactivation call', date: 'Jun 2', icon: 'phone',
-            media: { video: '/media/real-estate/emma-desk.mp4', poster: '/media/real-estate/emma-desk-poster.webp' },
+            media: { video: '/media/real-estate/emma-desk.mp4', poster: '/media/real-estate/emma-desk-poster.webp', focus: '50% 22%' },
             happened: 'Two months of silence, turned into a booked showing with one phone call.',
-            points: ['Stopped replying to texts after Willow Court', 'Aurora’s AI voice agent calls her', 'Handles both objections: the condo and the timing', 'Pushes for a meeting and books it with Marcus'],
+            points: ['No reply for 2 months', 'AI voice agent calls', 'Objections handled', 'Showing booked'],
             call: {
               audio: '/media/real-estate/emma-call-2.mp3',
               duration: 72910,
@@ -312,9 +312,9 @@ export const industries = [
           },
           {
             key: 'showing', name: 'The showing', date: 'Jun 6', icon: 'calendar',
-            media: { video: '/media/real-estate/emma-showing.mp4', poster: '/media/real-estate/emma-showing-poster.webp' },
+            media: { video: '/media/real-estate/emma-showing.mp4', poster: '/media/real-estate/emma-showing-poster.webp', focus: '50% 38%' },
             happened: 'Marcus walks in already knowing everything from the call.',
-            points: ['Reminder text the morning of the showing', 'Call notes in the CRM before the tour', 'Condo valued the same afternoon', 'Offer requested that day'],
+            points: ['Reminder sent', 'Call notes to Marcus', 'Condo valued', 'Offer requested'],
             thread: [
               { who: 'aurora', text: 'Morning, Emma! Marcus will meet you at 12 Aspen Court at 11, then head over to your condo.' },
               { who: 'aurora', text: 'How did the house feel?' },
@@ -324,9 +324,9 @@ export const industries = [
           },
           {
             key: 'closing', name: 'Closing day', date: 'Jul 24', icon: 'crm',
-            media: { video: '/media/real-estate/emma-closing.mp4', poster: '/media/real-estate/emma-closing-poster.webp' },
+            media: { video: '/media/real-estate/emma-closing.mp4', poster: '/media/real-estate/emma-closing-poster.webp', focus: '50% 42%' },
             happened: 'A lead who had gone quiet, now two closed deals.',
-            points: ['Closing reminder with what to bring', 'She buys 12 Aspen Court', 'Her condo sells with Marcus the same month'],
+            points: ['Closing reminder', 'Home bought', 'Condo sold', 'Two deals closed'],
             thread: [
               { who: 'aurora', text: 'Big day, Emma! Closing is at 2 at the title office. Bring your ID, and Marcus will have the keys.' },
               { who: 'lead', text: 'Signed! We have the keys!' },
