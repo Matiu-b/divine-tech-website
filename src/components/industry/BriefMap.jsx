@@ -122,21 +122,24 @@ function Town({ m, beat, reduce }) {
 /** A small tag pinned to a point on the map. */
 function Tag({ at, tone = 'ink', children, show }) {
   const tones = { ink: 'bg-ink text-white', amber: 'bg-[#FFF1E6] text-[#9A3A12] shadow-[0_0_0_1px_rgba(242,92,42,0.35)]', green: 'bg-[#E4F4E8] text-[#1F7A4C] shadow-[0_0_0_1px_rgba(20,163,107,0.3)]', white: 'bg-white text-ink' };
+  // near an edge the tag opens inward, so it is never cut off (the position sits on a plain span; the motion is inside)
+  const shift = at[0] > W * 0.62 ? '-translate-x-[88%]' : at[0] < W * 0.34 ? '-translate-x-[12%]' : '-translate-x-1/2';
   return (
-    <AnimatePresence>
-      {show ? (
-        <motion.span
-          initial={{ opacity: 0, y: 6, scale: 0.96 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: -4 }}
-          transition={{ duration: 0.35, ease: EASE }}
-          className={cn('pointer-events-none absolute z-[2] -translate-y-[calc(100%+12px)]', at[0] > W * 0.62 ? '-translate-x-[88%]' : at[0] < W * 0.34 ? '-translate-x-[12%]' : '-translate-x-1/2', 'whitespace-nowrap rounded-full px-2.5 py-1 text-[11.5px] font-medium shadow-[0_6px_16px_-8px_rgba(10,15,14,0.35)] sm:text-[12px]', tones[tone])}
-          style={pct(at[0], at[1])}
-        >
-          {children}
-        </motion.span>
-      ) : null}
-    </AnimatePresence>
+    <span className={cn('pointer-events-none absolute z-[2] -translate-y-[calc(100%+12px)]', shift)} style={pct(at[0], at[1])}>
+      <AnimatePresence>
+        {show ? (
+          <motion.span
+            initial={{ opacity: 0, y: 6, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.35, ease: EASE }}
+            className={cn('block whitespace-nowrap rounded-full px-2.5 py-1 text-[11.5px] font-medium shadow-[0_6px_16px_-8px_rgba(10,15,14,0.35)] sm:text-[12px]', tones[tone])}
+          >
+            {children}
+          </motion.span>
+        ) : null}
+      </AnimatePresence>
+    </span>
   );
 }
 
