@@ -374,7 +374,7 @@ export default function FieldMap({ d }) {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.3, ease: EASE }}
-                  className={cn('pointer-events-none absolute z-[3] overflow-hidden rounded-[12px] bg-white p-1 shadow-[0_10px_30px_-8px_rgba(10,15,14,0.35)] sm:rounded-[14px] sm:p-1.5', wide ? '' : 'bottom-2 right-2 w-[56%] sm:w-[250px]')}
+                  className={cn('pointer-events-none absolute z-[3] overflow-hidden rounded-[12px] bg-white p-1 shadow-[0_10px_30px_-8px_rgba(10,15,14,0.35)] sm:rounded-[14px] sm:p-1.5', wide ? '' : cn('bottom-2 w-[56%] sm:w-[250px]', d.stops[leg].at[0] > 700 ? 'left-2' : 'right-2'))}
                   style={wide ? clipAt : undefined}
                 >
                   <JobClip s={d.stops[leg]} play={inView && visible && !reduce} />
