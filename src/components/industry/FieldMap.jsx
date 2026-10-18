@@ -193,7 +193,7 @@ function Stop({ s, i, open, here, reduce, labels }) {
     <li className={cn('rounded-[16px] transition-colors duration-300', open ? 'bg-white shadow-[0_1px_3px_rgba(10,15,14,0.08)]' : '')}>
       <div className="flex items-center gap-3 px-3 py-2">
         <span className={cn('flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[11.5px] font-semibold transition-colors duration-300', open ? 'bg-[#F25C2A] text-white' : 'bg-ink/[0.07] text-ink/60')}>{i + 1}</span>
-        <span className="w-[54px] shrink-0 text-[12.5px] font-medium tabular-nums text-ink/60">{s.time}</span>
+        <span className="w-[58px] shrink-0 whitespace-nowrap text-[12px] font-medium tabular-nums text-ink/60">{s.time}</span>
         <span className={cn('min-w-0 flex-1 truncate text-[13.5px] font-medium', open ? 'text-ink' : 'text-ink/70')}>{s.job}</span>
         {open ? <span className="shrink-0 rounded-full bg-[#FFF1E6] px-2 py-0.5 text-[10.5px] font-medium text-[#B4471A]">{here ? labels.here : labels.next}</span> : null}
       </div>
