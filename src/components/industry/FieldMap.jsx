@@ -286,8 +286,8 @@ export default function FieldMap({ d }) {
           titleA={d.titleA}
           text={
             <>
-              <span className="sm:hidden">{d.textShort}</span>
-              <span className="max-sm:hidden">{d.text}</span>
+              <span className="lg:hidden">{d.textShort}</span>
+              <span className="max-lg:hidden">{d.text}</span>
             </>
           }
           layout="split"
