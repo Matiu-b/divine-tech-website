@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { AnimatePresence, m as motion, useReducedMotion } from 'framer-motion';
 import { Car, Package, Wrench } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -149,48 +149,75 @@ function useCover(ref) {
 }
 
 const DRIVE_MS = 2200;
-const STOP_MS = 7000; // long enough to watch the job's clip
+const ZOOM_MS = 700; // the map zooms into the stop, then the clip takes over (and the reverse on the way out)
+const CLIP_MAX_MS = 9000; // in case a clip can't play, the day still moves on
 
 /**
- * The van's day: leg i drives to stop i, then it waits at the stop. Returns the leg, whether it is driving, and how far
- * along the leg it is (0 to 1). Runs while the map is on screen; holds the first stop for reduced motion.
+ * The van's day, in turns: it drives leg i to stop i on the map ('drive'); the map zooms in and the clip of that job
+ * plays ('job'); when the clip ends the map zooms back out ('leave') and it drives on. Returns the leg, the phase, how far
+ * along the leg the van is (0 to 1) and `done`, to call when the clip ends. Runs while the map is on screen; holds the
+ * first stop on the map for reduced motion.
  */
-function useDrive(n, running, still) {
-  const [state, setState] = useState({ leg: 0, driving: !still, p: still ? 1 : 0 });
+function useDay(n, running, still) {
+  const [state, setState] = useState({ leg: 0, phase: still ? 'job' : 'drive', p: still ? 1 : 0 });
+  const done = useCallback(() => setState((q) => (q.phase === 'job' ? { ...q, phase: 'leave' } : q)), []);
   useEffect(() => {
     if (still) {
-      setState({ leg: 0, driving: false, p: 1 });
+      setState({ leg: 0, phase: 'job', p: 1 });
       return undefined;
     }
     if (!running) return undefined;
     let raf = 0;
     let timer = 0;
-    const drive = (leg) => {
-      const t0 = performance.now();
+    if (state.phase === 'drive') {
+      const t0 = performance.now() - state.p * DRIVE_MS;
       const tick = (now) => {
         const p = Math.min(1, (now - t0) / DRIVE_MS);
-        setState({ leg, driving: p < 1, p });
+        setState((q) => ({ ...q, p, phase: p < 1 ? 'drive' : 'job' }));
         if (p < 1) raf = requestAnimationFrame(tick);
-        else timer = window.setTimeout(() => drive((leg + 1) % n), leg === n - 1 ? STOP_MS + 1500 : STOP_MS);
       };
       raf = requestAnimationFrame(tick);
-    };
-    drive(state.leg);
+    } else if (state.phase === 'job') {
+      timer = window.setTimeout(done, CLIP_MAX_MS);
+    } else {
+      const last = state.leg === n - 1;
+      timer = window.setTimeout(() => setState({ leg: (state.leg + 1) % n, phase: 'drive', p: 0 }), ZOOM_MS + (last ? 1400 : 150));
+    }
     return () => {
       cancelAnimationFrame(raf);
       window.clearTimeout(timer);
     };
-  }, [running, still, n]); // eslint-disable-line react-hooks/exhaustive-deps
-  return state;
+  }, [running, still, n, state.phase, state.leg, done]); // eslint-disable-line react-hooks/exhaustive-deps
+  return { ...state, done };
 }
 
-/** Jake on the job: the clip plays once, muted, while the van is there; the still stands in when it can't play. */
-function JobClip({ s, play }) {
+/** Jake on the job, over the whole map: the clip plays once, muted, and says when it has ended. */
+function JobClip({ s, i, play, onEnded, labels }) {
+  const v = useRef(null);
+  useEffect(() => {
+    const el = v.current;
+    if (!el) return;
+    if (!play) {
+      el.pause();
+      return undefined;
+    }
+    // starts once the zoom has landed and the clip is fading in
+    const t = window.setTimeout(() => el.play().catch(() => {}), 450);
+    return () => window.clearTimeout(t);
+  }, [play]);
   return (
-    <span className="relative block aspect-video w-full overflow-hidden rounded-[9px] sm:rounded-[10px]">
-      <img src={s.poster} alt="" className="absolute inset-0 h-full w-full object-cover" />
-      {play ? <video src={s.video} poster={s.poster} className="absolute inset-0 h-full w-full object-cover" autoPlay muted playsInline preload="auto" aria-hidden="true" /> : null}
-    </span>
+    <>
+      <video ref={v} src={s.video} poster={s.poster} className="absolute inset-0 h-full w-full object-cover" muted playsInline preload="auto" onEnded={onEnded} aria-hidden="true" />
+      <span className="absolute inset-x-0 bottom-0 h-24 bg-[linear-gradient(to_top,rgba(10,15,14,0.6),rgba(10,15,14,0))]" aria-hidden="true" />
+      <span className="absolute bottom-3 left-3 flex max-w-[calc(100%-24px)] items-center gap-2 rounded-full bg-white py-1 pl-1 pr-3 text-[12px] shadow-[0_2px_8px_rgba(10,15,14,0.25)] sm:bottom-4 sm:left-4 sm:text-[13px]">
+        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#F25C2A] text-[11.5px] font-semibold text-white">{i + 1}</span>
+        <span className="truncate">
+          <span className="font-medium text-ink">{s.job}</span>
+          <span className="text-slate"> · {s.address.split(', ').pop()} · {s.time}</span>
+        </span>
+      </span>
+      <span className="absolute right-3 top-3 rounded-full bg-[#0A0F0E]/55 px-2.5 py-1 text-[11px] font-medium text-white backdrop-blur-sm sm:right-4 sm:top-4">{labels.here}</span>
+    </>
   );
 }
 
@@ -242,7 +269,10 @@ export default function FieldMap({ d }) {
   const inView = useInViewport(ref, { threshold: 0.25 });
   const visible = usePageVisible();
   const n = d.stops.length;
-  const { leg, driving, p } = useDrive(n, inView && visible, reduce);
+  const running = inView && visible;
+  const { leg, phase, p, done } = useDay(n, running, reduce);
+  const driving = phase === 'drive';
+  const onJob = phase === 'job' && !reduce;
 
   // where the van is: along leg `leg`, `p` of the way
   const [van, setVan] = useState(d.yard);
@@ -255,12 +285,8 @@ export default function FieldMap({ d }) {
 
   const here = !driving;
   const toFrame = ([x, y]) => ({ left: x * box.s + box.ox, top: y * box.s + box.oy });
-  const wide = box.w >= 600;
-  // on a big map the clip sits low in the middle, over the empty south of the county; on a smaller one, top right.
-  // Either way it stays clear of the route.
-  const big = box.w >= 900;
-  const cw = big ? 340 : 220;
-  const clipAt = big ? { width: cw, left: Math.round(Math.min(box.w - cw - 64, Math.max(220, (box.w - cw) / 2 + 30))), bottom: 16 } : { width: cw, right: 14, top: 14 };
+  // at a stop the map zooms into it before the clip takes over
+  const zoomAt = toFrame(d.stops[leg].at);
   const total = d.stops.reduce((a, s) => a + s.drive, 0);
 
   const plan = (
@@ -312,82 +338,71 @@ export default function FieldMap({ d }) {
         <div ref={ref} className="canvas relative mt-5 grid overflow-hidden bg-[#FBF9F5] shadow-[0_0_0_1px_rgba(10,15,14,0.08),0_30px_60px_-40px_rgba(60,50,30,0.45)] sm:mt-8 md:mt-12 lg:h-[clamp(520px,calc(100svh_-_300px),640px)] lg:grid-cols-[minmax(0,1fr)_380px]">
           {/* the map */}
           <div ref={frame} className="relative aspect-[3/2] overflow-hidden bg-[#EEEBE4] sm:aspect-[16/9] lg:aspect-auto lg:h-full">
-            <div className="absolute" style={{ left: box.ox, top: box.oy, width: W * box.s, height: H * box.s }}>
-              <svg viewBox={`0 0 ${W} ${H}`} className="block h-full w-full overflow-visible" aria-hidden="true">
-                <Region />
-                {/* the order the jobs were booked in: a zigzag across the county */}
-                <path d={pts([d.yard, ...d.booked.order.map((k) => d.stops[k].at)])} fill="none" stroke="#0A0F0E" strokeOpacity="0.28" strokeWidth={1.8} strokeDasharray="4 6" strokeLinecap="round" strokeLinejoin="round" />
-                {/* the route, leg by leg, with a white edge like a maps app */}
-                {d.stops.map((s, i) => (
-                  <path key={'e' + i} d={s.leg} fill="none" stroke="#fff" strokeWidth={9} strokeLinecap="round" strokeLinejoin="round" />
-                ))}
-                {d.stops.map((s, i) => (
-                  <path
-                    key={'r' + i}
-                    ref={(el) => {
-                      legs.current[i] = el;
-                    }}
-                    d={s.leg}
-                    fill="none"
-                    stroke="#F25C2A"
-                    strokeOpacity={i < leg || (i === leg && !driving) ? 0.45 : 1}
-                    strokeWidth={5}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                ))}
-                {/* the yard */}
-                <g>
-                  <circle cx={d.yard[0]} cy={d.yard[1]} r={10} fill="#0A0F0E" stroke="#fff" strokeWidth={2.5} />
-                  <path d={`M${d.yard[0] - 4.5} ${d.yard[1] + 3.5} V${d.yard[1] - 1.5} L${d.yard[0]} ${d.yard[1] - 5.5} L${d.yard[0] + 4.5} ${d.yard[1] - 1.5} V${d.yard[1] + 3.5} Z`} fill="#fff" />
-                </g>
-                {/* the stops */}
-                {d.stops.map((s, i) => (
-                  <g key={'s' + i}>
-                    <circle cx={s.at[0]} cy={s.at[1]} r={10} fill={i === leg ? '#F25C2A' : '#fff'} stroke="#F25C2A" strokeWidth={2.5} />
-                    <text x={s.at[0]} y={s.at[1] + 0.5} textAnchor="middle" dominantBaseline="central" fontSize="9.5" fontWeight="700" fill={i === leg ? '#fff' : '#F25C2A'} fontFamily="inherit">
-                      {i + 1}
-                    </text>
+            {/* the map, and the drive times on it; zooms into the stop when the van gets there */}
+            <div
+              className="absolute inset-0 transition-transform ease-[cubic-bezier(0.65,0,0.35,1)]"
+              style={{ transformOrigin: `${zoomAt.left}px ${zoomAt.top}px`, transform: phase === 'job' && !reduce ? 'scale(2.2)' : 'none', transitionDuration: `${ZOOM_MS}ms` }}
+            >
+              <div className="absolute" style={{ left: box.ox, top: box.oy, width: W * box.s, height: H * box.s }}>
+                <svg viewBox={`0 0 ${W} ${H}`} className="block h-full w-full overflow-visible" aria-hidden="true">
+                  <Region />
+                  {/* the order the jobs were booked in: a zigzag across the county */}
+                  <path d={pts([d.yard, ...d.booked.order.map((k) => d.stops[k].at)])} fill="none" stroke="#0A0F0E" strokeOpacity="0.28" strokeWidth={1.8} strokeDasharray="4 6" strokeLinecap="round" strokeLinejoin="round" />
+                  {/* the route, leg by leg, with a white edge like a maps app */}
+                  {d.stops.map((s, i) => (
+                    <path key={'e' + i} d={s.leg} fill="none" stroke="#fff" strokeWidth={9} strokeLinecap="round" strokeLinejoin="round" />
+                  ))}
+                  {d.stops.map((s, i) => (
+                    <path
+                      key={'r' + i}
+                      ref={(el) => {
+                        legs.current[i] = el;
+                      }}
+                      d={s.leg}
+                      fill="none"
+                      stroke="#F25C2A"
+                      strokeOpacity={i < leg || (i === leg && !driving) ? 0.45 : 1}
+                      strokeWidth={5}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  ))}
+                  {/* the yard */}
+                  <g>
+                    <circle cx={d.yard[0]} cy={d.yard[1]} r={10} fill="#0A0F0E" stroke="#fff" strokeWidth={2.5} />
+                    <path d={`M${d.yard[0] - 4.5} ${d.yard[1] + 3.5} V${d.yard[1] - 1.5} L${d.yard[0]} ${d.yard[1] - 5.5} L${d.yard[0] + 4.5} ${d.yard[1] - 1.5} V${d.yard[1] + 3.5} Z`} fill="#fff" />
                   </g>
-                ))}
-                {/* the van */}
-                <g transform={`translate(${van[0]} ${van[1]})`}>
-                  <circle r={13} fill="#F25C2A" fillOpacity={0.18} />
-                  <circle r={8.5} fill="#0A0F0E" stroke="#fff" strokeWidth={2.2} />
-                  <path d="M-4.5 1.8 V-2.4 H1.2 L3.2 -0.4 H4.5 V1.8 Z" fill="#fff" />
-                </g>
-              </svg>
+                  {/* the stops */}
+                  {d.stops.map((s, i) => (
+                    <g key={'s' + i}>
+                      <circle cx={s.at[0]} cy={s.at[1]} r={10} fill={i === leg ? '#F25C2A' : '#fff'} stroke="#F25C2A" strokeWidth={2.5} />
+                      <text x={s.at[0]} y={s.at[1] + 0.5} textAnchor="middle" dominantBaseline="central" fontSize="9.5" fontWeight="700" fill={i === leg ? '#fff' : '#F25C2A'} fontFamily="inherit">
+                        {i + 1}
+                      </text>
+                    </g>
+                  ))}
+                  {/* the van */}
+                  <g transform={`translate(${van[0]} ${van[1]})`}>
+                    <circle r={13} fill="#F25C2A" fillOpacity={0.18} />
+                    <circle r={8.5} fill="#0A0F0E" stroke="#fff" strokeWidth={2.2} />
+                    <path d="M-4.5 1.8 V-2.4 H1.2 L3.2 -0.4 H4.5 V1.8 Z" fill="#fff" />
+                  </g>
+                </svg>
+              </div>
+
+              {/* drive times on the route, like a maps app */}
+              {d.stops.map((s, i) => (
+                <span key={'t' + i} className={cn('pointer-events-none absolute z-[1] flex -translate-x-1/2 -translate-y-1/2 items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium shadow-[0_1px_4px_rgba(10,15,14,0.18)] transition-colors duration-300 max-sm:hidden', i === leg && driving ? 'bg-ink text-white' : 'bg-white text-ink')} style={toFrame(s.mid)}>
+                  <Car className="h-3 w-3" strokeWidth={2.2} aria-hidden="true" />
+                  {s.drive} {d.labels.min}
+                </span>
+              ))}
             </div>
 
-            {/* drive times on the route, like a maps app */}
-            {d.stops.map((s, i) => (
-              <span key={'t' + i} className={cn('pointer-events-none absolute z-[1] flex -translate-x-1/2 -translate-y-1/2 items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium shadow-[0_1px_4px_rgba(10,15,14,0.18)] transition-colors duration-300 max-sm:hidden', i === leg && driving ? 'bg-ink text-white' : 'bg-white text-ink')} style={toFrame(s.mid)}>
-                <Car className="h-3 w-3" strokeWidth={2.2} aria-hidden="true" />
-                {s.drive} {d.labels.min}
-              </span>
-            ))}
-
-            {/* the job the van is at: a card with a clip of Jake on the job, like a maps app's street view */}
-            <AnimatePresence>
-              {here ? (
-                <motion.div
-                  key={leg}
-                  initial={reduce ? false : { opacity: 0, scale: 0.96 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3, ease: EASE }}
-                  className={cn('pointer-events-none absolute z-[3] overflow-hidden rounded-[12px] bg-white p-1 shadow-[0_10px_30px_-8px_rgba(10,15,14,0.35)] sm:rounded-[14px] sm:p-1.5', wide ? '' : cn('bottom-2 w-[56%] sm:w-[250px]', d.stops[leg].at[0] > 700 ? 'left-2' : 'right-2'))}
-                  style={wide ? clipAt : undefined}
-                >
-                  <JobClip s={d.stops[leg]} play={inView && visible && !reduce} />
-                  <span className="block truncate px-1 pb-0.5 pt-1 text-[11px] sm:px-1.5 sm:pt-1.5 sm:text-[12px]">
-                    <span className="mr-1.5 inline-flex h-4 w-4 sm:h-[18px] sm:w-[18px] items-center justify-center rounded-full bg-[#F25C2A] align-[-3px] text-[10.5px] font-semibold text-white">{leg + 1}</span>
-                    <span className="font-medium text-ink">{d.stops[leg].job}</span>
-                    <span className="text-slate max-sm:hidden"> · {d.stops[leg].time}</span>
-                  </span>
-                </motion.div>
-              ) : null}
-            </AnimatePresence>
+            {/* the job the van is at: the map gives way to a clip of Jake on that job, then comes back when it ends */}
+            <div className={cn('absolute inset-0 z-[4] bg-ink transition-opacity duration-500', onJob ? 'opacity-100 delay-300' : 'pointer-events-none opacity-0')} aria-hidden={!onJob}>
+              {d.stops.map((s, i) => (i === leg && !reduce ? <JobClip key={i} s={s} i={i} play={onJob && running} onEnded={done} labels={d.labels} /> : null))}
+            </div>
 
             {/* the two routes, like a maps app's route options */}
             <div className="absolute bottom-3 left-3 flex flex-col gap-1 rounded-[14px] bg-white px-3 py-2 text-[11.5px] shadow-[0_2px_6px_rgba(10,15,14,0.14)] max-sm:hidden sm:bottom-4 sm:left-4">
