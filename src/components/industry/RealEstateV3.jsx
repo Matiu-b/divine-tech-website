@@ -1555,11 +1555,11 @@ function JourneyBubble({ m, i, lead, labels, reduce }) {
   const enter = reduce ? {} : { initial: { opacity: 0, y: 10 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.4, ease: EASE, delay: 0.35 + i * BUBBLE_GAP } };
   if (m.home) {
     return (
-      <motion.div {...enter} className="w-[230px] max-w-[80%] overflow-hidden rounded-[16px] rounded-bl-[6px] bg-white shadow-[0_1px_2px_rgba(10,15,14,0.08)]">
-        <img src={m.home.image} alt="" width="460" height="230" loading="lazy" decoding="async" className="h-[110px] w-full object-cover" />
-        <p className="px-3 pb-2.5 pt-2">
+      <motion.div {...enter} className="flex w-[260px] max-w-[88%] items-stretch overflow-hidden rounded-[16px] rounded-bl-[6px] bg-white shadow-[0_1px_2px_rgba(10,15,14,0.08)]">
+        <img src={m.home.image} alt="" width="200" height="150" loading="lazy" decoding="async" className="w-[96px] shrink-0 object-cover" />
+        <p className="flex flex-col justify-center px-3 py-2.5">
           <span className="block text-[15px] font-medium text-ink">{m.home.price}</span>
-          <span className="block text-[12.5px] text-slate">{m.home.meta}</span>
+          <span className="block text-[12.5px] leading-snug text-slate">{m.home.meta}</span>
         </p>
       </motion.div>
     );
@@ -1572,6 +1572,42 @@ function JourneyBubble({ m, i, lead, labels, reduce }) {
         {mine ? labels.you : lead.name.split(' ')[0]}
       </span>
       <p className={cn('rounded-[18px] px-3.5 py-2.5 text-[15px] leading-snug', mine ? 'rounded-bl-[6px] bg-white text-ink shadow-[0_1px_2px_rgba(10,15,14,0.08)]' : 'rounded-br-[6px] bg-ink text-white')}>{m.text}</p>
+    </motion.div>
+  );
+}
+
+/** One step on the stage: what happened, the texts, then what the team sees. Animates in when it becomes the current step. */
+function JourneyStep({ step, n, a, reduce }) {
+  const TeamIcon = step.icon === 'calendar' ? CalendarCheck : Database;
+  return (
+    <motion.div initial={reduce ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: EASE }} className="flex h-full flex-col">
+      <div className="grid gap-5 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-8">
+        <div>
+          <p className="t-data text-[11px] uppercase tracking-[0.08em] text-[#C2410C]">
+            {String(n + 1).padStart(2, '0')} · {step.date}
+          </p>
+          <p className="mt-1.5 text-[22px] font-medium leading-tight tracking-[-0.015em] text-ink">{step.name}</p>
+          <p className="mt-4 text-[11px] font-medium uppercase tracking-[0.08em] text-ink/40">{a.labels.happened}</p>
+          <p className="pretty mt-1.5 text-[15px] leading-[1.6] text-graphite">{step.happened}</p>
+        </div>
+        <div className="flex flex-col gap-2.5 rounded-[18px] bg-[#F6F1E8] p-3.5 md:p-4">
+          {step.thread.map((m, i) => (
+            <JourneyBubble key={i} m={m} i={i} lead={a.lead} labels={a.labels} reduce={reduce} />
+          ))}
+        </div>
+      </div>
+      <motion.p
+        initial={reduce ? false : { opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4, delay: reduce ? 0 : 0.35 + step.thread.length * BUBBLE_GAP }}
+        className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-[14px] bg-[#FBF8F3] px-4 py-3 shadow-[inset_0_0_0_1px_rgba(10,15,14,0.06)] lg:mt-auto"
+      >
+        <span className="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.08em] text-ink/45">
+          <TeamIcon className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
+          {a.labels.team}
+        </span>
+        <span className="min-w-0 text-[14px] font-medium text-ink">{step.team}</span>
+      </motion.p>
     </motion.div>
   );
 }
@@ -1602,8 +1638,6 @@ export function RxAfter({ it }) {
     setHeld(true);
     setK((x + n + 1) % (n + 1));
   };
-  const step = k < n ? a.steps[k] : null;
-  const TeamIcon = step && step.icon === 'calendar' ? CalendarCheck : Database;
   const video = useRef(null);
   useEffect(() => {
     const v = video.current;
@@ -1650,7 +1684,7 @@ export function RxAfter({ it }) {
                       >
                         {done ? <Check className="h-3.5 w-3.5" strokeWidth={2.6} aria-hidden="true" /> : i + 1}
                       </span>
-                      <span className={cn('text-[12.5px] font-medium leading-tight transition-colors sm:text-[13.5px]', cur ? 'text-ink' : 'text-ink/55')}>
+                      <span className={cn('text-[11.5px] font-medium leading-tight transition-colors xs:text-[12.5px] sm:text-[13.5px]', cur ? 'text-ink' : 'text-ink/55')}>
                         <span className="sm:hidden">{x.short}</span>
                         <span className="max-sm:hidden">{x.name}</span>
                       </span>
@@ -1676,7 +1710,7 @@ export function RxAfter({ it }) {
             onMouseEnter={() => setHover(true)}
             onMouseLeave={() => setHover(false)}
           >
-            <div className="relative aspect-[16/10] bg-[#E9E1D4] sm:aspect-[2/1] lg:aspect-auto lg:min-h-[400px]">
+            <div className="relative aspect-[16/9] bg-[#E9E1D4] sm:aspect-[2/1] lg:aspect-auto lg:min-h-[340px]">
               {reduce ? (
                 <img src={a.media.still} alt="" className="absolute inset-0 h-full w-full object-cover object-[50%_35%]" />
               ) : (
@@ -1685,65 +1719,36 @@ export function RxAfter({ it }) {
               <span className="absolute bottom-3 left-3 rounded-full bg-white/85 px-2.5 py-1 text-[12px] font-medium text-ink backdrop-blur">{a.lead.name}</span>
             </div>
 
-            <div className="relative min-w-0 p-5 md:p-6 lg:p-7" aria-live="polite">
-              <AnimatePresence mode="wait" initial={false}>
+            {/* every step is laid in the same grid cell, so the stage is as tall as the longest step and never jumps */}
+            <div className="relative grid min-w-0 p-5 md:p-6 lg:px-7 lg:py-6" aria-live="polite">
+              {a.steps.map((x, i) => (
+                <div key={x.key} className={cn('[grid-area:1/1]', i === k ? '' : 'invisible')} aria-hidden={i === k ? undefined : true}>
+                  <JourneyStep key={i === k ? 'on' : 'off'} step={x} n={i} a={a} reduce={reduce || i !== k} />
+                </div>
+              ))}
+              <div className={cn('[grid-area:1/1]', k === n ? '' : 'invisible')} aria-hidden={k === n ? undefined : true}>
                 <motion.div
-                  key={k}
-                  initial={reduce ? false : { opacity: 0, y: 8 }}
+                  key={k === n ? 'on' : 'off'}
+                  initial={reduce || k !== n ? false : { opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={reduce ? undefined : { opacity: 0, y: -6, transition: { duration: 0.2 } }}
-                  transition={{ duration: 0.4, ease: EASE }}
-                  className="flex h-full flex-col"
+                  transition={{ duration: 0.45, ease: EASE }}
+                  className="flex h-full flex-col justify-center py-4"
                 >
-                  {step ? (
-                    <>
-                      <div className="grid gap-5 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-8">
-                        <div>
-                          <p className="t-data text-[11px] uppercase tracking-[0.08em] text-[#C2410C]">
-                            {String(k + 1).padStart(2, '0')} · {step.date}
-                          </p>
-                          <p className="mt-1.5 text-[22px] font-medium leading-tight tracking-[-0.015em] text-ink">{step.name}</p>
-                          <p className="mt-4 text-[11px] font-medium uppercase tracking-[0.08em] text-ink/40">{a.labels.happened}</p>
-                          <p className="pretty mt-1.5 text-[15px] leading-[1.6] text-graphite">{step.happened}</p>
-                        </div>
-                        <div className="flex min-h-[230px] flex-col gap-2.5 rounded-[18px] bg-[#F6F1E8] p-3.5 md:p-4">
-                          {step.thread.map((m, i) => (
-                            <JourneyBubble key={i} m={m} i={i} lead={a.lead} labels={a.labels} reduce={reduce} />
-                          ))}
-                        </div>
-                      </div>
-                      <motion.p
-                        initial={reduce ? false : { opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.4, delay: reduce ? 0 : 0.35 + step.thread.length * BUBBLE_GAP }}
-                        className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-[14px] bg-[#FBF8F3] px-4 py-3 shadow-[inset_0_0_0_1px_rgba(10,15,14,0.06)] lg:mt-auto"
-                      >
-                        <span className="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.08em] text-ink/45">
-                          <TeamIcon className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
-                          {a.labels.team}
-                        </span>
-                        <span className="min-w-0 text-[14px] font-medium text-ink">{step.team}</span>
-                      </motion.p>
-                    </>
-                  ) : (
-                    <div className="flex h-full flex-col justify-center py-4">
-                      <p className="t-data text-[11px] uppercase tracking-[0.08em] text-[#C2410C]">{a.ending.title}</p>
-                      <p className="pretty mt-2 max-w-[28em] text-[24px] font-medium leading-snug tracking-[-0.015em] text-ink">{a.ending.text}</p>
-                      <p className="mt-5 flex flex-wrap gap-2">
-                        {a.ending.chips.map((c) => (
-                          <span key={c} className="rounded-full bg-[#F6F1E8] px-3 py-1.5 text-[13px] font-medium text-ink">
-                            {c}
-                          </span>
-                        ))}
-                      </p>
-                      <button type="button" onClick={() => go(0)} className="mt-6 inline-flex w-fit items-center gap-1.5 text-[14px] font-medium text-ink underline decoration-ink/25 underline-offset-4 hover:decoration-ink">
-                        <RotateCcw className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
-                        {a.labels.replay}
-                      </button>
-                    </div>
-                  )}
+                  <p className="t-data text-[11px] uppercase tracking-[0.08em] text-[#C2410C]">{a.ending.title}</p>
+                  <p className="pretty mt-2 max-w-[28em] text-[22px] font-medium leading-snug tracking-[-0.015em] text-ink md:text-[24px]">{a.ending.text}</p>
+                  <p className="mt-5 flex flex-wrap gap-2">
+                    {a.ending.chips.map((c) => (
+                      <span key={c} className="rounded-full bg-[#F6F1E8] px-3 py-1.5 text-[13px] font-medium text-ink">
+                        {c}
+                      </span>
+                    ))}
+                  </p>
+                  <button type="button" onClick={() => go(0)} tabIndex={k === n ? undefined : -1} className="mt-6 inline-flex w-fit items-center gap-1.5 text-[14px] font-medium text-ink underline decoration-ink/25 underline-offset-4 hover:decoration-ink">
+                    <RotateCcw className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
+                    {a.labels.replay}
+                  </button>
                 </motion.div>
-              </AnimatePresence>
+              </div>
             </div>
           </div>
 
