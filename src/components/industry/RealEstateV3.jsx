@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, m as motion, useReducedMotion } from 'framer-motion';
-import { ArrowUp, CalendarCheck, Check, ChevronLeft, CircleDollarSign, Database, Hand, Pause, Play, Scale, Volume2, Send, Clock, House, BellOff, Hourglass, ShieldCheck, User, ArrowRight, TrendingUp, Heart, MessageSquareText, MessagesSquare, Plus } from 'lucide-react';
+import { ArrowUp, CalendarCheck, Check, ChevronLeft, ChevronRight, CircleDollarSign, Database, Hand, Pause, Play, Scale, Volume2, Send, Clock, House, BellOff, Hourglass, ShieldCheck, User, ArrowRight, TrendingUp, Heart, MessageSquareText, MessagesSquare, Plus, PhoneOutgoing } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import CTAButton from '@/components/home-v2/primitives/CTAButton';
 import SectionHeader from '@/components/home-v2/primitives/SectionHeader';
@@ -89,7 +89,29 @@ function useCallClock(c, { audioRef }) {
     setT(c.duration);
     setStatus('done');
   };
-  return { t, status, play, ended };
+  // play from a given moment (the journey's call jumps to a line when it is clicked)
+  const seek = (ms) => {
+    const a = audioRef.current;
+    now.current = ms;
+    setT(ms);
+    silent.current = !a;
+    if (a) {
+      a.currentTime = ms / 1000;
+      a.play().catch(() => {
+        silent.current = true;
+      });
+    }
+    setStatus('playing');
+  };
+  // back to the start, without playing (the journey uses it when its call step is left)
+  const reset = () => {
+    const a = audioRef.current;
+    if (a && !a.paused) a.pause();
+    now.current = 0;
+    setT(0);
+    setStatus('idle');
+  };
+  return { t, status, play, ended, reset, seek };
 }
 
 const lastIndex = (list, t) => {
@@ -1338,245 +1360,6 @@ export function RxRules({ it }) {
   );
 }
 
-// how long each job stays in the spotlight, and when inside it the job resolves (ms)
-const AFTER_MS = 3400;
-const AFTER_RESOLVE = 1100;
-
-const STAGE_TONES = {
-  blue: 'bg-[#E8EEF9] text-[#3A5A9A]',
-  amber: 'bg-[#FFF1E4] text-[#B4471A]',
-  slate: 'bg-ink/[0.06] text-ink/60',
-  orange: 'bg-[#FFE7D3] text-[#C2410C]',
-};
-
-/** What every job card opens with: the pipeline stage, when it happens, the job's name and one line on what Aurora does. */
-function JobHead({ x, on }) {
-  return (
-    <div>
-      <p className="flex items-center justify-between gap-3">
-        <span className={cn('inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium', STAGE_TONES[x.tone] || STAGE_TONES.slate)}>
-          <span className="h-1.5 w-1.5 rounded-full bg-current" aria-hidden="true" />
-          {x.stage}
-        </span>
-        <span className={cn('t-data text-[10.5px] uppercase tracking-[0.08em] transition-colors', on ? 'text-[#D9481C]' : 'text-ink/35')}>{x.when}</span>
-      </p>
-      <p className="mt-2.5 text-[17px] font-medium leading-snug tracking-[-0.01em] text-ink">{x.title}</p>
-      <p className="mt-1 text-[13px] leading-snug text-graphite">{x.text}</p>
-    </div>
-  );
-}
-
-/** Showing confirmation: the reminder text and the buyer's C, then the showing on the day's calendar turns confirmed. */
-function JobRemind({ x, on, done, reduce }) {
-  return (
-    <div className="flex h-full flex-col">
-      <JobHead x={x} on={on} />
-      {/* the text thread */}
-      <div className="mt-4 rounded-[16px] bg-[#F6F1E8] p-3">
-        <p className="rounded-[14px] rounded-bl-[4px] bg-white px-3 py-2 text-[13px] leading-snug text-ink shadow-[0_1px_2px_rgba(10,15,14,0.06)]">
-          <span className="mb-0.5 flex items-center gap-1.5 text-[10.5px] font-medium uppercase tracking-[0.06em] text-ink/40">
-            <img src="/brand/aurora-symbol-color.svg" alt="" width="11" height="11" className="h-[11px] w-[11px]" />
-            Aurora
-          </span>
-          {x.msg}
-        </p>
-        <div className="mt-2 flex h-7 justify-end">
-          <AnimatePresence>
-            {done ? (
-              <motion.span key="c" initial={reduce ? false : { opacity: 0, y: 8, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }} className="rounded-[14px] rounded-br-[4px] bg-[#2F7CF6] px-3 py-1 text-[13px] font-medium text-white">
-                {x.reply}
-              </motion.span>
-            ) : null}
-          </AnimatePresence>
-        </div>
-      </div>
-      {/* the broker's calendar for that day */}
-      <div className="mt-3 flex-1 rounded-[16px] p-3 shadow-[inset_0_0_0_1px_rgba(10,15,14,0.08)]">
-        <p className="text-[11.5px] font-medium text-ink/50">{x.event.day}</p>
-        <div className="mt-2 grid gap-0">
-          {x.hours.map((h) => (
-            <div key={h} className="flex items-start gap-2 border-t border-ink/[0.06] py-1.5 first:border-0">
-              <span className="t-data w-10 shrink-0 pt-0.5 text-[10.5px] text-ink/35">{h}</span>
-              {h === x.event.time ? (
-                <span className={cn('block min-w-0 flex-1 rounded-[10px] px-2.5 py-1.5 transition-colors duration-500', done ? 'bg-[#E4F4E8] shadow-[inset_3px_0_0_#2E9A58]' : 'bg-[#FFF8E6] shadow-[inset_3px_0_0_#E3A93B]')}>
-                  <span className="block truncate text-[12.5px] font-medium text-ink">{x.event.title}</span>
-                  <span className="mt-0.5 flex items-center justify-between gap-2">
-                    <span className="truncate text-[11px] text-slate">{x.event.who}</span>
-                  <span className={cn('inline-flex shrink-0 items-center gap-1 text-[11px] font-medium', done ? 'text-[#2E7A48]' : 'text-[#A46A12]')}>
-                    {done ? <Check className="h-3 w-3" strokeWidth={2.6} aria-hidden="true" /> : <Clock className="h-3 w-3" strokeWidth={2.2} aria-hidden="true" />}
-                    {done ? x.result : x.pending}
-                  </span>
-                  </span>
-                </span>
-              ) : (
-                <span className="h-6 flex-1" />
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/** Follow-up cadence: where this touch sits in the cadence, two homes that match, and the buyer hearts one. */
-function JobNurture({ x, on, done, reduce }) {
-  return (
-    <div className="flex h-full flex-col gap-3">
-      <div className="flex min-w-0 flex-col">
-        <JobHead x={x} on={on} />
-        {/* the cadence: where this message sits */}
-        <div className="mt-3 flex items-center gap-1" aria-hidden="true">
-          {x.cadence.map((c, i) => (
-            <React.Fragment key={c}>
-              <span className={cn('whitespace-nowrap rounded-full px-1.5 py-0.5 text-[10.5px] font-medium transition-colors', i < x.at ? 'bg-ink/[0.07] text-ink/50' : i === x.at ? 'bg-[#F25C2A] text-white' : 'text-ink/30 shadow-[inset_0_0_0_1px_rgba(10,15,14,0.1)]')}>{c}</span>
-              {i < x.cadence.length - 1 ? <span className="h-px w-1.5 shrink-0 bg-ink/15" /> : null}
-            </React.Fragment>
-          ))}
-        </div>
-        <p className="mt-3 rounded-[14px] rounded-bl-[4px] bg-[#F6F1E8] px-3 py-2 text-[13px] leading-snug text-ink">
-          <span className="mb-0.5 flex items-center gap-1.5 text-[10.5px] font-medium uppercase tracking-[0.06em] text-ink/40">
-            <img src="/brand/aurora-symbol-color.svg" alt="" width="11" height="11" className="h-[11px] w-[11px]" />
-            Aurora
-          </span>
-          {x.msg}
-        </p>
-      </div>
-      <div className="mt-auto flex flex-col">
-        <div className="grid grid-cols-2 gap-2">
-          {x.homes.map((h, i) => {
-            const picked = done && i === x.pick;
-            return (
-              <div key={h.price} className={cn('relative overflow-hidden rounded-[14px] bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.08)] transition-transform duration-500', picked ? '-translate-y-1 shadow-[0_0_0_2px_#F25C2A,0_16px_30px_-18px_rgba(242,92,42,0.6)]' : '')}>
-                <img src={h.image} alt="" className="h-[78px] w-full object-cover" loading="lazy" decoding="async" />
-                <span className={cn('absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full transition-colors duration-300', picked ? 'bg-[#F25C2A] text-white' : 'bg-white/90 text-ink/50')}>
-                  <motion.span animate={picked && !reduce ? { scale: [1, 1.35, 1] } : { scale: 1 }} transition={{ duration: 0.4 }}>
-                    <Heart className={cn('h-3.5 w-3.5', picked ? 'fill-current' : '')} strokeWidth={2.2} aria-hidden="true" />
-                  </motion.span>
-                </span>
-                <p className="px-2.5 pb-2 pt-1.5">
-                  <span className="block text-[14px] font-medium text-ink">{h.price}</span>
-                  <span className="block truncate text-[11px] text-slate">{h.meta}</span>
-                </p>
-              </div>
-            );
-          })}
-        </div>
-        <p className={cn('mt-2.5 flex h-6 items-center gap-1.5 text-[12.5px] font-medium text-[#B4471A] transition-opacity duration-500', done ? 'opacity-100' : 'opacity-0')}>
-          <CalendarCheck className="h-3.5 w-3.5" strokeWidth={2.2} aria-hidden="true" />
-          {x.result}
-        </p>
-      </div>
-    </div>
-  );
-}
-
-/** Database reactivation: a list of leads gone quiet in the CRM. Aurora writes to each; the ones who answer flip to Active. */
-function JobRevive({ x, on, done, reduce }) {
-  return (
-    <div className="flex h-full flex-col">
-      <JobHead x={x} on={on} />
-      {/* the CRM list */}
-      <div className="mb-3 mt-3 rounded-[14px] p-1.5 shadow-[inset_0_0_0_1px_rgba(10,15,14,0.08)]">
-        <p className="px-1.5 pb-1 pt-0.5 text-[10.5px] font-medium uppercase tracking-[0.06em] text-ink/40">{x.list}</p>
-        <ul>
-          {x.leads.map((l, i) => {
-            const live = done && l.replied;
-            return (
-              <li key={l.name} className={cn('flex items-center gap-2.5 rounded-[10px] px-1.5 py-1.5 transition-colors duration-500', live ? 'bg-[#FFF3E8]' : '')}>
-                <span className={cn('relative flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[10.5px] font-medium transition-colors duration-500', live ? 'bg-ink text-white' : 'bg-ink/10 text-ink/45')}>
-                  {l.initials}
-                  {live && !reduce ? <span className="ring-ping absolute inset-0 rounded-full bg-[#F25C2A]/30" /> : null}
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className={cn('block truncate text-[13px] font-medium leading-tight transition-colors', live ? 'text-ink' : 'text-ink/55')}>{l.name}</span>
-                  <span className={cn('block truncate text-[11px] leading-tight transition-colors', live ? 'text-[#2E7A48]' : 'text-slate')}>{live ? x.after : done ? x.sent : l.before}</span>
-                </span>
-                <span className="relative h-[22px] w-[54px] shrink-0 [perspective:400px]">
-                  <motion.span
-                    className="absolute inset-0 [transform-style:preserve-3d]"
-                    animate={{ rotateX: live ? 180 : 0 }}
-                    transition={{ duration: reduce ? 0 : 0.6, ease: EASE, delay: reduce || !live ? 0 : 0.18 * i }}
-                  >
-                    <span className="absolute inset-0 flex items-center justify-center rounded-full bg-ink/[0.07] text-[11px] font-medium text-ink/50 [backface-visibility:hidden]">{x.cold}</span>
-                    <span className="absolute inset-0 flex items-center justify-center rounded-full bg-[#E4F4E8] text-[11px] font-medium text-[#2E7A48] [backface-visibility:hidden] [transform:rotateX(180deg)]">{x.active}</span>
-                  </motion.span>
-                </span>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-      {/* one of the threads */}
-      <div className="mt-auto flex flex-col rounded-[16px] bg-[#F6F1E8] p-3">
-        <p className="rounded-[14px] rounded-bl-[4px] bg-white px-3 py-2 text-[13px] leading-snug text-ink shadow-[0_1px_2px_rgba(10,15,14,0.06)]">
-          <span className="mb-0.5 flex items-center gap-1.5 text-[10.5px] font-medium uppercase tracking-[0.06em] text-ink/40">
-            <img src="/brand/aurora-symbol-color.svg" alt="" width="11" height="11" className="h-[11px] w-[11px]" />
-            Aurora
-          </span>
-          {x.msg}
-        </p>
-        <div className="mt-2 flex min-h-[30px] justify-end">
-          <AnimatePresence>
-            {done ? (
-              <motion.span key="r" initial={reduce ? false : { opacity: 0, y: 8, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ delay: reduce ? 0 : 0.25 }} className="rounded-[14px] rounded-br-[4px] bg-ink px-3 py-1.5 text-[13px] text-white">
-                {x.reply}
-              </motion.span>
-            ) : null}
-          </AnimatePresence>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/** Listing appointments: a homeowner wants a valuation; Aurora offers times and one is booked with the broker. */
-function JobSeller({ x, on, done, reduce }) {
-  return (
-    <div className="flex h-full flex-col">
-      <JobHead x={x} on={on} />
-      <p className="mt-3 flex items-center gap-2.5">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-[#F6F1E8] text-[#D9481C]">
-          <House className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
-        </span>
-        <span className="min-w-0">
-          <span className="block text-[14px] font-medium text-ink">{x.address}</span>
-          <span className="block text-[11.5px] text-slate">{x.tag}</span>
-        </span>
-      </p>
-      <div className="mt-3 rounded-[16px] bg-[#F6F1E8] p-3">
-      <p className="rounded-[14px] rounded-bl-[4px] bg-white px-3 py-2 text-[13px] leading-snug text-ink shadow-[0_1px_2px_rgba(10,15,14,0.06)]">
-          <span className="mb-0.5 flex items-center gap-1.5 text-[10.5px] font-medium uppercase tracking-[0.06em] text-ink/40">
-            <img src="/brand/aurora-symbol-color.svg" alt="" width="11" height="11" className="h-[11px] w-[11px]" />
-            Aurora
-          </span>
-          {x.msg}
-      </p>
-      <div className="mt-2 flex flex-wrap gap-1.5">
-        {x.slots.map((sl, i) => {
-          const picked = done && i === x.pick;
-          return (
-            <span key={sl} className={cn('relative rounded-[10px] px-2.5 py-1.5 text-[12px] font-medium transition-colors duration-300', picked ? 'text-white' : 'bg-white/70 text-ink/60')}>
-              {picked ? <motion.span layoutId={reduce ? undefined : 'seller-slot'} className="absolute inset-0 rounded-[10px] bg-ink" /> : null}
-              <span className="relative">{sl}</span>
-            </span>
-          );
-        })}
-      </div>
-      </div>
-      <AnimatePresence>
-        {done ? (
-          <motion.p key="r" initial={reduce ? false : { opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: reduce ? 0 : 0.3 }} className="mt-auto flex items-center gap-2 pt-3 text-[12.5px] font-medium text-[#2E7A48]">
-            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-ink text-[10px] text-white">M</span>
-            {x.result}
-          </motion.p>
-        ) : null}
-      </AnimatePresence>
-    </div>
-  );
-}
-
-const JOBS = { remind: JobRemind, nurture: JobNurture, revive: JobRevive, seller: JobSeller };
 
 // The story of one goal, beat by beat (ms): the weeks so far and the dip, the cause, the change, then the weeks after it
 const BEAT_AT = [0, 2700, 5200, 7700];
@@ -1784,34 +1567,253 @@ function KpiGoals({ a, run, reduce, titleId }) {
   );
 }
 
+// One lead's journey: how long a step stays on screen before the next (ms). The call step holds while it plays.
+const STEP_MS = 10000;
+const CALL_IDLE_MS = 12000;
+const AFTER_CALL_MS = 2500;
+const MSG_GAP_MS = 2200; // between the texts of a step, as they arrive over the scene
+const SUB_WORDS = 7; // the call's subtitles show at most this many words at a time
+
+/** Which slice of a line is on screen as a subtitle: the chunk of words that holds the word being spoken. */
+function subtitle(cap, t) {
+  const words = cap.text.split(' ');
+  let w = 0;
+  cap.words.forEach((ms, i) => {
+    if (t >= cap.at + ms) w = i;
+  });
+  const start = Math.floor(w / SUB_WORDS) * SUB_WORDS;
+  return { words, start, end: Math.min(words.length, start + SUB_WORDS) };
+}
+
 /**
- * After the first reply: four jobs Aurora keeps doing for a lead, each drawn as the thing it is, in four equal cards. A spotlight
- * moves from one to the next, and each resolves in its own way (a stamp, a heart, a status flip, a slot).
+ * The call, laid over Emma's scene in one small glass box. Before it plays: a play button, the recording's own
+ * waveform (Aurora's turns in orange, Emma's in ink) and its length. Once it plays, the same box shows the call as
+ * live subtitles, word by word, with the speaker and the delivery the voice was given.
+ */
+function CallOverlay({ c, clock: cc, reduce }) {
+  const { t, status, play } = cc;
+  const live = status === 'playing' || status === 'paused';
+  const k = lastIndex(c.captions, t);
+  const cap = c.captions[k];
+  const speaking = status === 'playing' && t >= cap.at && t <= cap.end + 150 ? cap.who : null;
+  const sub = subtitle(cap, t);
+  const bars = c.wave.filter((_, i) => i % 2 === 0);
+  const n = bars.length;
+  const whoAt = (ms) => {
+    const x = c.captions.find((q) => ms >= q.at - 150 && ms <= q.end + 150);
+    return x ? x.who : null;
+  };
+  const played = live || status === 'done' ? t : -1;
+  return (
+    <LiquidGlass className="rounded-[18px] p-3" style={{ '--lg-tint-a': 'rgba(255,252,247,0.9)', '--lg-tint-b': 'rgba(255,249,241,0.82)' }}>
+      <div className="flex items-center gap-3">
+        <button
+          type="button"
+          onClick={play}
+          aria-label={status === 'playing' ? c.pause : status === 'paused' ? c.resume : status === 'done' ? c.again : c.listen}
+          className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(140deg,#FF8A3D,#F25C2A)] text-white shadow-[0_10px_24px_-10px_rgba(242,92,42,0.8)] transition-transform hover:scale-105"
+        >
+          {status === 'idle' && !reduce ? <span className="ring-ping absolute inset-0 rounded-full bg-[#F25C2A]/30" /> : null}
+          {status === 'playing' ? <Pause className="relative h-4 w-4 fill-current" strokeWidth={2.2} aria-hidden="true" /> : <Play className="relative ml-0.5 h-4 w-4 fill-current" strokeWidth={2.2} aria-hidden="true" />}
+        </button>
+        <div className="min-w-0 flex-1">
+          {live ? (
+            <>
+              <p className={cn('flex items-center gap-1.5 text-[10.5px] font-medium uppercase tracking-[0.07em]', cap.who === 'aurora' ? 'text-[#B4471A]' : 'text-slate')}>
+                {cap.who === 'aurora' ? 'Aurora' : c.caller}
+                {cap.cue ? <span className="font-normal normal-case italic tracking-normal text-ink/40">[{cap.cue}]</span> : null}
+              </p>
+              <p className="mt-0.5 h-[38px] overflow-hidden text-[14px] leading-[1.35] text-ink" aria-live="off">
+                <span className="sr-only">{cap.text}</span>
+                <span aria-hidden="true">
+                  {sub.words.slice(sub.start, sub.end).map((w, j) => {
+                    const i = sub.start + j;
+                    return (
+                      <span key={i} className={cn('transition-opacity duration-200', t >= cap.at + (cap.words[i] || 0) ? 'opacity-100' : 'opacity-[0.18]')}>
+                        {w}
+                        {i < sub.end - 1 ? ' ' : ''}
+                      </span>
+                    );
+                  })}
+                </span>
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="truncate text-[14px] font-medium leading-tight text-ink">{status === 'done' ? c.again : c.listen}</p>
+              <p className="mt-0.5 flex items-center gap-1 truncate text-[12px] text-slate">
+                <Volume2 className="h-3.5 w-3.5 shrink-0 text-[#B4471A]" strokeWidth={2.2} aria-hidden="true" />
+                {c.meta}
+              </p>
+            </>
+          )}
+        </div>
+        <span className="shrink-0 self-start text-[12px] font-medium tabular-nums text-ink/55">{clock(live ? Math.min(t, c.duration) : c.duration)}</span>
+      </div>
+      {/* the recording itself: one bar per slice, coloured by who is talking, brighter once it has played */}
+      <div className={cn('mt-2.5 flex h-6 items-center gap-[2px]', !live && 'max-sm:hidden')} aria-hidden="true">
+        {bars.map((v, i) => {
+          const ms = ((i + 0.5) / n) * c.duration;
+          const who = whoAt(ms);
+          return (
+            <span
+              key={i}
+              className={cn('min-w-0 flex-1 rounded-full transition-opacity duration-200', who === 'aurora' ? 'bg-[#F25C2A]' : who ? 'bg-ink' : 'bg-ink/30', played < 0 ? 'opacity-55' : played >= ms ? 'opacity-100' : 'opacity-20')}
+              style={{ height: Math.max(14, v * 100) + '%' }}
+            />
+          );
+        })}
+      </div>
+    </LiquidGlass>
+  );
+}
+
+/** The texts of a step, laid over its scene: they arrive one at a time, like notifications on a phone. */
+function TextsOverlay({ step, a, active, reduce }) {
+  const n = step.thread.length;
+  const [shown, setShown] = useState(reduce ? n : 0);
+  useEffect(() => {
+    if (reduce || !active) {
+      setShown(reduce ? n : 0);
+      return undefined;
+    }
+    setShown(0);
+    const ids = step.thread.map((_, i) => setTimeout(() => setShown(i + 1), 500 + i * MSG_GAP_MS));
+    return () => ids.forEach(clearTimeout);
+  }, [active, reduce, n, step.thread]);
+  const list = step.thread.slice(Math.max(0, shown - 1), shown);
+  return (
+    <div className="grid min-h-[64px] items-end">
+      <AnimatePresence initial={false}>
+        {list.map((m, j) => {
+          const i = Math.max(0, shown - 1) + j;
+          const mine = m.who === 'aurora';
+          return (
+            <motion.div
+              key={i}
+              className="[grid-area:1/1]"
+              initial={reduce ? false : { opacity: 0, y: 14, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -8, transition: { duration: 0.2 } }}
+              transition={{ duration: 0.4, ease: EASE }}
+            >
+              <LiquidGlass className="flex items-start gap-2.5 rounded-[16px] px-3 py-2.5" style={{ '--lg-tint-a': 'rgba(255,252,247,0.9)', '--lg-tint-b': 'rgba(255,249,241,0.82)' }}>
+                <span className={cn('flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[10.5px] font-medium', mine ? 'bg-[#FFF1E6]' : 'bg-ink text-white')}>
+                  {mine ? <img src="/brand/aurora-symbol-color.svg" alt="" width="14" height="14" className="h-3.5 w-3.5" /> : a.lead.initials}
+                </span>
+                <span className="min-w-0">
+                  <span className="block text-[10.5px] font-medium uppercase tracking-[0.07em] text-ink/45">{mine ? a.labels.you : a.lead.name.split(' ')[0]} · {a.labels.text}</span>
+                  <span className="mt-0.5 block text-[13.5px] leading-snug text-ink">{m.text}</span>
+                </span>
+              </LiquidGlass>
+            </motion.div>
+          );
+        })}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+/** One step's explanation: the step and its date, one line on what changed, the steps Aurora took, what the team sees. */
+function JourneyStep({ step, n, a, reduce, cc }) {
+  const TeamIcon = step.icon === 'calendar' ? CalendarCheck : step.icon === 'phone' ? PhoneOutgoing : Database;
+  const c = step.call;
+  // during the call the team line follows it; otherwise it shows where things ended up
+  const playing = c && cc && (cc.status === 'playing' || cc.status === 'paused');
+  const team = playing ? c.notes[lastIndex(c.notes, cc.t)].text : step.team;
+  return (
+    <motion.div initial={reduce ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: EASE }} className="flex h-full flex-col">
+      <p className="flex flex-wrap items-baseline gap-x-2.5 gap-y-0.5">
+        <span className="text-[20px] font-medium leading-tight tracking-[-0.015em] text-ink md:text-[22px]">{step.name}</span>
+        <span className="t-data text-[11px] uppercase tracking-[0.08em] text-[#C2410C]">
+          {String(n + 1).padStart(2, '0')} · {step.date}
+        </span>
+      </p>
+      <p className="pretty mt-2 text-[15px] leading-snug text-ink md:mt-3 md:text-[17px] md:leading-[1.45]">{step.happened}</p>
+      <p className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-0.5 rounded-[14px] bg-[#FBF8F3] px-3.5 py-2.5 shadow-[inset_0_0_0_1px_rgba(10,15,14,0.06)] md:mt-auto md:px-4 md:py-3">
+        <span className="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.08em] text-ink/45">
+          <TeamIcon className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
+          {a.labels.team}
+        </span>
+        <span className="min-w-0 text-[13px] font-medium leading-snug text-ink md:text-[14px]">{team}</span>
+      </p>
+    </motion.div>
+  );
+}
+
+/**
+ * After the first reply: one lead's journey in three steps. Emma, the buyer from the speed-to-lead section, went
+ * quiet; Aurora calls her back, Marcus shows her a house, and she closes. Each step is one screen: Emma's scene with
+ * the live layer over it (the call to play, or the texts arriving), and beside it what happened and what the team
+ * sees. Steps advance on their own while the section is on screen; the call holds its step while it plays.
  */
 export function RxAfter({ it }) {
   const a = it.v3.after;
   const ref = useRef(null);
+  const audioRef = useRef(null);
+  const videos = useRef([]);
   const reduce = !!useReducedMotion();
-  const inView = useInViewport(ref, { threshold: 0.25 });
+  const inView = useInViewport(ref, { threshold: 0.12 });
   const visible = usePageVisible();
-  const run = !reduce && inView && visible;
-
-  // the spotlight: job j is on; it resolves AFTER_RESOLVE ms in; every job before it stays resolved
   const n = a.steps.length;
-  const [j, setJ] = useState(0);
-  const [resolved, setResolved] = useState(false);
+  const ci = a.steps.findIndex((x) => x.call);
+  const call = ci >= 0 ? a.steps[ci].call : null;
+  const cc = useCallClock(call || { duration: 0 }, { audioRef });
+  const [k, setK] = useState(0);
+  const [nonce, setNonce] = useState(0);
+  const callBusy = k === ci && (cc.status === 'playing' || cc.status === 'paused');
+  const running = !reduce && inView && visible;
+  // the later steps open once the call has been played (it is the point of the story)
+  const [heard, setHeard] = useState(ci < 0);
   useEffect(() => {
-    if (!run) return undefined;
-    setResolved(false);
-    const r = setTimeout(() => setResolved(true), AFTER_RESOLVE);
-    const nx = setTimeout(() => setJ((x) => (x + 1) % (n + 1)), AFTER_MS);
-    return () => {
-      clearTimeout(r);
-      clearTimeout(nx);
-    };
-  }, [j, run, n]);
+    if (cc.status === 'playing') setHeard(true);
+  }, [cc.status]);
+  const locked = (i) => !heard && i > ci;
 
-  const show = (d) => (reduce ? {} : { initial: { opacity: 0, y: 16 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, amount: 'some' }, transition: { duration: 0.6, ease: EASE, delay: d } });
+  useEffect(() => {
+    if (!running || callBusy || (k === ci && !heard)) return undefined;
+    const ms = k === ci ? (cc.status === 'done' ? AFTER_CALL_MS : CALL_IDLE_MS) : STEP_MS;
+    const id = setTimeout(() => setK((x) => (x + 1) % n), ms);
+    return () => clearTimeout(id);
+  }, [k, nonce, running, callBusy, heard, cc.status, ci, n]);
+
+  // leaving the call step stops the call; coming back to it starts fresh
+  useEffect(() => {
+    if (k !== ci) cc.reset();
+  }, [k]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // only the current step's scene plays, and only while the section is on screen
+  useEffect(() => {
+    videos.current.forEach((v, i) => {
+      if (!v) return;
+      if (i === k && running) v.play().catch(() => {});
+      else v.pause();
+    });
+  }, [k, running]);
+
+  const go = (x) => {
+    const to = (x + n) % n;
+    if (locked(to)) return;
+    setK(to);
+    setNonce((v) => v + 1);
+  };
+  const arrows = (size) => (
+    <>
+      <button type="button" onClick={() => go(k - 1)} aria-label={a.labels.prev} className={cn('flex items-center justify-center rounded-full bg-white text-ink shadow-[0_0_0_1px_rgba(10,15,14,0.1)] hover:shadow-[0_0_0_1px_rgba(10,15,14,0.3)]', size)}>
+        <ChevronLeft className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
+      </button>
+      <button
+        type="button"
+        onClick={() => go(k + 1)}
+        disabled={locked((k + 1) % n)}
+        aria-label={locked((k + 1) % n) ? a.labels.locked : a.labels.next}
+        title={locked((k + 1) % n) ? a.labels.locked : undefined}
+        className={cn('flex items-center justify-center rounded-full bg-white text-ink shadow-[0_0_0_1px_rgba(10,15,14,0.1)] hover:shadow-[0_0_0_1px_rgba(10,15,14,0.3)] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:shadow-[0_0_0_1px_rgba(10,15,14,0.1)]', size)}
+      >
+        <ChevronRight className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
+      </button>
+    </>
+  );
 
   return (
     <section data-nav-theme="light" aria-labelledby="rx-after-title" className="section relative pt-0">
@@ -1819,36 +1821,113 @@ export function RxAfter({ it }) {
         <div ref={ref} className="canvas canvas-grain relative overflow-hidden bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] p-4 xs:p-5 md:p-8 lg:px-10 lg:py-8 xl:px-14">
           <div aria-hidden="true" className="pointer-events-none absolute right-[4%] top-[-14%] h-[55%] w-[40%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.4),rgba(255,200,87,0))] blur-2xl" />
 
-          <div className="relative grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)] lg:items-end lg:gap-12">
+          <div className="relative grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,460px)] lg:items-end lg:gap-12">
             <h2 id="rx-after-title" className="text-[clamp(28px,2.4vw,36px)] font-medium leading-[1.08] tracking-[-0.022em] text-ink">
               {a.titleA} <span className="sm:block">{a.titleB}</span>
             </h2>
             <p className="pretty text-[15px] leading-[1.6] text-graphite md:text-[15.5px]">{a.text}</p>
           </div>
 
-          {/* the jobs: four equal cards on laptops, two by two on tablets, a row to swipe on phones */}
-          <ol className="relative mt-6 grid gap-3 max-sm:-mx-4 max-sm:flex max-sm:snap-x max-sm:snap-mandatory max-sm:overflow-x-auto max-sm:px-4 max-sm:pb-1 max-sm:[scrollbar-width:none] xs:max-sm:-mx-5 xs:max-sm:px-5 sm:grid-cols-2 lg:mt-7 lg:grid-cols-4 lg:gap-3.5 [&::-webkit-scrollbar]:hidden">
-            {a.steps.map((x, i) => {
-              const Job = JOBS[x.key];
-              const on = run ? i === j : false;
-              const done = reduce || !run ? true : i < j || (i === j && resolved);
-              return (
-                <motion.li
-                  key={x.key}
-                  {...show(0.08 * i)}
-                  aria-label={x.when + ': ' + x.title + '. ' + x.text}
-                  className={cn(
-                    'relative rounded-[22px] p-4 transition-shadow duration-500 max-sm:w-[86%] max-sm:shrink-0 max-sm:snap-center',
-                    'bg-white',
-                    on ? 'shadow-[0_0_0_2px_#F25C2A,0_30px_60px_-34px_rgba(242,92,42,0.55)]' : 'shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_24px_48px_-36px_rgba(90,50,20,0.4)]'
-                  )}
-                >
-                  <Job x={x} on={on} done={done} reduce={reduce} />
-                </motion.li>
-              );
-            })}
-          </ol>
+          {/* who this is, then the three steps (a marker for each step and a check once it's done; no fill bar) */}
+          <div className="relative mt-6 grid gap-4 xl:grid-cols-[minmax(0,280px)_minmax(0,1fr)_auto] xl:items-center xl:gap-8">
+            <p className="flex items-center gap-3 max-sm:hidden">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-ink text-[13px] font-medium text-white">{a.lead.initials}</span>
+              <span className="min-w-0">
+                <span className="block text-[15px] font-medium text-ink">{a.lead.name}</span>
+                <span className="block text-[12.5px] leading-snug text-slate">{a.lead.intro}</span>
+              </span>
+            </p>
+            <ol className="relative grid" style={{ gridTemplateColumns: `repeat(${n}, minmax(0, 1fr))` }} aria-label="Emma’s journey">
+              <span aria-hidden="true" className="absolute top-[13px] h-px bg-ink/15" style={{ left: `${50 / n}%`, right: `${50 / n}%` }} />
+              {a.steps.map((x, i) => {
+                const cur = i === k;
+                const done = i < k;
+                return (
+                  <li key={x.key} className="relative flex justify-center">
+                    <button
+                      type="button"
+                      onClick={() => go(i)}
+                      disabled={locked(i)}
+                      title={locked(i) ? a.labels.locked : undefined}
+                      aria-current={cur ? 'step' : undefined}
+                      className="group flex flex-col items-center gap-1.5 px-1 text-center transition-opacity disabled:cursor-not-allowed disabled:opacity-45"
+                    >
+                      <span
+                        className={cn(
+                          'relative z-[1] flex h-[27px] w-[27px] items-center justify-center rounded-full text-[12px] font-medium transition-colors duration-300',
+                          cur ? 'bg-[#F25C2A] text-white shadow-[0_0_0_5px_rgba(242,92,42,0.15)]' : done ? 'bg-ink text-white' : 'bg-[#F6F1E8] text-ink/45 shadow-[inset_0_0_0_1.5px_rgba(10,15,14,0.18)] group-hover:text-ink'
+                        )}
+                      >
+                        {done ? <Check className="h-3.5 w-3.5" strokeWidth={2.6} aria-hidden="true" /> : i + 1}
+                      </span>
+                      <span className={cn('text-[12px] font-medium leading-tight transition-colors xs:text-[12.5px] sm:text-[13.5px]', cur ? 'text-ink' : 'text-ink/55')}>{x.name}</span>
+                      <span className="t-data text-[10.5px] text-ink/40 max-sm:hidden">{x.date}</span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ol>
+            <div className="flex gap-2 max-xl:hidden">{arrows('h-10 w-10')}</div>
+          </div>
 
+          {/* the stage: Emma's scene with the live layer over it, and beside it what happened */}
+          <div className="relative mt-4 grid overflow-hidden rounded-[24px] bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_30px_60px_-40px_rgba(90,50,20,0.45)] lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] xl:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
+            <div className="relative aspect-[4/3] overflow-hidden bg-[#E9E1D4] sm:aspect-[16/9] lg:aspect-auto lg:min-h-[340px]">
+              {a.steps.map((x, i) =>
+                reduce ? (
+                  <img key={x.key} src={x.media.poster} alt="" className={cn('absolute inset-0 h-full w-full object-cover', i === k ? 'opacity-100' : 'opacity-0')} style={{ objectPosition: x.media.focus || '50% 35%' }} />
+                ) : (
+                  <video
+                    key={x.key}
+                    ref={(el) => {
+                      videos.current[i] = el;
+                    }}
+                    src={x.media.video}
+                    poster={x.media.poster}
+                    muted
+                    loop
+                    playsInline
+                    preload={i === 0 ? 'metadata' : 'none'}
+                    aria-hidden="true"
+                    className={cn('absolute inset-0 h-full w-full object-cover transition-opacity duration-700', i === k ? 'opacity-100' : 'opacity-0')}
+                    style={{ objectPosition: x.media.focus || '50% 35%' }}
+                  />
+                )
+              )}
+              <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-[linear-gradient(180deg,rgba(20,16,12,0),rgba(20,16,12,0.35))]" />
+              {/* the live layer: the call to play, or the texts as they arrive */}
+              <div className="absolute inset-x-3 bottom-3 grid sm:inset-x-4 sm:bottom-4 sm:right-auto sm:w-[min(380px,calc(100%_-_32px))]">
+                {a.steps.map((x, i) => (
+                  <div key={x.key} className={cn('[grid-area:1/1] self-end transition-opacity duration-300', i === k ? 'opacity-100' : 'pointer-events-none invisible opacity-0')} aria-hidden={i === k ? undefined : true}>
+                    {x.call ? <CallOverlay c={x.call} clock={cc} reduce={reduce} /> : <TextsOverlay step={x} a={a} active={i === k && running} reduce={reduce} />}
+                  </div>
+                ))}
+              </div>
+              {call ? <audio ref={audioRef} src={call.audio} preload="none" onEnded={cc.ended} /> : null}
+            </div>
+
+            {/* every step's explanation in the same grid cell, so the stage is as tall as the longest and never jumps */}
+            <div className="relative grid min-w-0 p-4 xs:p-5 md:p-6 lg:px-7 lg:py-6" aria-live="polite">
+              {a.steps.map((x, i) => (
+                <div key={x.key} className={cn('[grid-area:1/1]', i === k ? '' : 'invisible')} aria-hidden={i === k ? undefined : true}>
+                  <JourneyStep key={i === k ? 'on' : 'off'} step={x} n={i} a={a} reduce={reduce || i !== k} cc={x.call ? cc : null} />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* phones and tablets: the arrows under the stage */}
+          <div className="mt-4 flex justify-center gap-2 xl:hidden">{arrows('h-11 w-11')}</div>
+
+          {/* every step in the HTML, for search and screen readers */}
+          <ol className="sr-only">
+            {a.steps.map((x) => (
+              <li key={x.key}>
+                {x.name} ({x.date}). {x.happened}{' '}
+                {(x.call ? x.call.captions : x.thread).map((m) => (m.who === 'aurora' ? 'Aurora: ' : a.lead.name.split(' ')[0] + ': ') + m.text).join(' ')} {x.team}
+              </li>
+            ))}
+          </ol>
         </div>
         <p className="mt-4 text-[12px] text-slate">{a.note}</p>
       </div>
