@@ -1767,7 +1767,7 @@ export function RxAfter({ it }) {
         <div ref={ref} className="canvas canvas-grain relative overflow-hidden bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] p-4 xs:p-5 md:p-8 lg:px-10 lg:py-8 xl:px-14">
           <div aria-hidden="true" className="pointer-events-none absolute right-[4%] top-[-14%] h-[55%] w-[40%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.4),rgba(255,200,87,0))] blur-2xl" />
 
-          <div className="relative grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,520px)] lg:items-end lg:gap-12">
+          <div className="relative grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,460px)] lg:items-end lg:gap-12">
             <h2 id="rx-after-title" className="text-[clamp(28px,2.4vw,36px)] font-medium leading-[1.08] tracking-[-0.022em] text-ink">
               {a.titleA} <span className="sm:block">{a.titleB}</span>
             </h2>
