@@ -279,19 +279,20 @@ export const industries = [
             team: 'CRM · Showing requested · 41 Birch Lane · Marcus',
           },
           {
-            key: 'reactivation', name: 'Reactivation', short: 'Reactivation', date: 'Jun 2', icon: 'crm',
-            happened: 'Emma passed on Birch Lane and went quiet for a month. Aurora reached back out with a new listing near the one she liked, and this time she had news.',
+            key: 'reactivation', name: 'Reactivation call', short: 'Reactivation', date: 'Jun 2', icon: 'crm',
+            happened: 'Emma passed on Birch Lane and stopped answering texts. A month later Aurora called her about a new listing near the one she liked, and this time she had news.',
             thread: [
-              { who: 'aurora', text: 'A three-bedroom just listed two streets from Birch Lane. Still planning a move this summer?' },
-              { who: 'lead', text: 'Yes, but we’d need to sell our condo first.' },
+              { call: { title: 'Aurora called Emma', meta: 'Tue 5:40 pm · 2 min 14 s' } },
+              { who: 'aurora', text: 'Hi Emma, this is Aurora, Harbor Lane Realty’s AI assistant. A three-bedroom just listed two streets from Birch Lane. Are you still planning to move this summer?' },
+              { who: 'lead', text: 'We are, but we’d have to sell our condo first.' },
             ],
-            team: 'CRM · Emma Clarke · Cold → Active · Note: has a condo to sell',
+            team: 'CRM · Call summary · Cold → Active · Moving this summer, has a condo to sell',
           },
           {
             key: 'listing', name: 'Listing appointment', short: 'Listing', date: 'Jun 3', icon: 'calendar',
-            happened: 'That reply made Emma a seller as well as a buyer. Aurora offered a valuation visit and put it on Marcus’s calendar.',
+            happened: 'That call made Emma a seller as well as a buyer. The next morning Aurora texted to offer a valuation visit, then put it on Marcus’s calendar.',
             thread: [
-              { who: 'aurora', text: 'Marcus can come by to value your condo this Thursday. Would 3:00 or 5:00 work better?' },
+              { who: 'aurora', text: 'Hi Emma, following up on our call. Marcus can come by to value your condo this Thursday. Would 3:00 or 5:00 work better?' },
               { who: 'lead', text: '5 works.' },
               { who: 'aurora', text: 'Booked. Marcus will text you when he’s on his way.' },
             ],

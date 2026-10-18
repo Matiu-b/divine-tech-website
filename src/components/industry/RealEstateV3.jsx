@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, m as motion, useReducedMotion } from 'framer-motion';
-import { ArrowUp, CalendarCheck, Check, ChevronLeft, ChevronRight, CircleDollarSign, Database, Hand, Pause, Play, Scale, Volume2, Send, Clock, House, BellOff, Hourglass, ShieldCheck, User, ArrowRight, TrendingUp, Heart, MessageSquareText, MessagesSquare, Plus, RotateCcw } from 'lucide-react';
+import { ArrowUp, CalendarCheck, Check, ChevronLeft, ChevronRight, CircleDollarSign, Database, Hand, Pause, Play, Scale, Volume2, Send, Clock, House, BellOff, Hourglass, ShieldCheck, User, ArrowRight, TrendingUp, Heart, MessageSquareText, MessagesSquare, Plus, RotateCcw, PhoneOutgoing } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import CTAButton from '@/components/home-v2/primitives/CTAButton';
 import SectionHeader from '@/components/home-v2/primitives/SectionHeader';
@@ -1551,8 +1551,26 @@ const END_MS = 6000;
 const BUBBLE_GAP = 0.55; // seconds between the texts of one step
 
 /** A text in the thread: Aurora's on the left, the lead's on the right, or a listing card Aurora sent. */
-function JourneyBubble({ m, i, lead, labels, reduce }) {
+function JourneyBubble({ m, i, lead, labels, reduce, label = true }) {
   const enter = reduce ? {} : { initial: { opacity: 0, y: 10 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.4, ease: EASE, delay: 0.35 + i * BUBBLE_GAP } };
+  if (m.call) {
+    return (
+      <motion.div {...enter} className="flex items-center gap-3 rounded-[16px] bg-white px-3 py-2.5 shadow-[0_1px_2px_rgba(10,15,14,0.08)]">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#F25C2A] text-white">
+          <PhoneOutgoing className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-[14px] font-medium text-ink">{m.call.title}</span>
+          <span className="block text-[12.5px] text-slate">{m.call.meta}</span>
+        </span>
+        <span aria-hidden="true" className="flex h-5 items-center gap-[3px] max-xs:hidden">
+          {[8, 14, 20, 11, 17, 7, 13, 19, 10, 6].map((h, j) => (
+            <span key={j} className="w-[3px] rounded-full bg-[#F25C2A]/55" style={{ height: h }} />
+          ))}
+        </span>
+      </motion.div>
+    );
+  }
   if (m.home) {
     return (
       <motion.div {...enter} className="flex w-[260px] max-w-[88%] items-stretch overflow-hidden rounded-[16px] rounded-bl-[6px] bg-white shadow-[0_1px_2px_rgba(10,15,14,0.08)]">
@@ -1567,11 +1585,13 @@ function JourneyBubble({ m, i, lead, labels, reduce }) {
   const mine = m.who === 'aurora';
   return (
     <motion.div {...enter} className={cn('flex max-w-[88%] flex-col', mine ? 'items-start' : 'items-end self-end')}>
-      <span className="mb-1 flex items-center gap-1.5 px-1 text-[11px] font-medium uppercase tracking-[0.06em] text-ink/40">
-        {mine ? <img src="/brand/aurora-symbol-color.svg" alt="" width="11" height="11" className="h-[11px] w-[11px]" /> : null}
-        {mine ? labels.you : lead.name.split(' ')[0]}
-      </span>
-      <p className={cn('rounded-[18px] px-3.5 py-2.5 text-[15px] leading-snug', mine ? 'rounded-bl-[6px] bg-white text-ink shadow-[0_1px_2px_rgba(10,15,14,0.08)]' : 'rounded-br-[6px] bg-ink text-white')}>{m.text}</p>
+      {label ? (
+        <span className="mb-1 flex items-center gap-1.5 px-1 text-[11px] font-medium uppercase tracking-[0.06em] text-ink/40">
+          {mine ? <img src="/brand/aurora-symbol-color.svg" alt="" width="11" height="11" className="h-[11px] w-[11px]" /> : null}
+          {mine ? labels.you : lead.name.split(' ')[0]}
+        </span>
+      ) : null}
+      <p className={cn('rounded-[18px] px-3.5 py-2.5 text-[14px] leading-snug md:text-[15px]', mine ? 'rounded-bl-[6px] bg-white text-ink shadow-[0_1px_2px_rgba(10,15,14,0.08)]' : 'rounded-br-[6px] bg-ink text-white')}>{m.text}</p>
     </motion.div>
   );
 }
@@ -1581,18 +1601,18 @@ function JourneyStep({ step, n, a, reduce }) {
   const TeamIcon = step.icon === 'calendar' ? CalendarCheck : Database;
   return (
     <motion.div initial={reduce ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: EASE }} className="flex h-full flex-col">
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-8">
+      <div className="grid gap-4 md:gap-5 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-8">
         <div>
           <p className="t-data text-[11px] uppercase tracking-[0.08em] text-[#C2410C]">
             {String(n + 1).padStart(2, '0')} · {step.date}
           </p>
-          <p className="mt-1.5 text-[22px] font-medium leading-tight tracking-[-0.015em] text-ink">{step.name}</p>
-          <p className="mt-4 text-[11px] font-medium uppercase tracking-[0.08em] text-ink/40">{a.labels.happened}</p>
-          <p className="pretty mt-1.5 text-[15px] leading-[1.6] text-graphite">{step.happened}</p>
+          <p className="mt-1.5 text-[20px] font-medium leading-tight tracking-[-0.015em] text-ink md:text-[22px]">{step.name}</p>
+          <p className="mt-3 text-[11px] font-medium uppercase tracking-[0.08em] text-ink/40 md:mt-4">{a.labels.happened}</p>
+          <p className="pretty mt-1.5 text-[14.5px] leading-[1.55] text-graphite md:text-[15px] md:leading-[1.6]">{step.happened}</p>
         </div>
         <div className="flex flex-col gap-2.5 rounded-[18px] bg-[#F6F1E8] p-3.5 md:p-4">
           {step.thread.map((m, i) => (
-            <JourneyBubble key={i} m={m} i={i} lead={a.lead} labels={a.labels} reduce={reduce} />
+            <JourneyBubble key={i} m={m} i={i} lead={a.lead} labels={a.labels} reduce={reduce} label={i === 0 || step.thread[i - 1].who !== m.who} />
           ))}
         </div>
       </div>
@@ -1600,13 +1620,13 @@ function JourneyStep({ step, n, a, reduce }) {
         initial={reduce ? false : { opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.4, delay: reduce ? 0 : 0.35 + step.thread.length * BUBBLE_GAP }}
-        className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-[14px] bg-[#FBF8F3] px-4 py-3 shadow-[inset_0_0_0_1px_rgba(10,15,14,0.06)] lg:mt-auto"
+        className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-0.5 rounded-[14px] bg-[#FBF8F3] px-3.5 py-2.5 md:mt-5 md:px-4 md:py-3 shadow-[inset_0_0_0_1px_rgba(10,15,14,0.06)] lg:mt-auto"
       >
         <span className="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.08em] text-ink/45">
           <TeamIcon className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
           {a.labels.team}
         </span>
-        <span className="min-w-0 text-[14px] font-medium text-ink">{step.team}</span>
+        <span className="min-w-0 text-[13px] font-medium leading-snug text-ink md:text-[14px]">{step.team}</span>
       </motion.p>
     </motion.div>
   );
@@ -1685,8 +1705,7 @@ export function RxAfter({ it }) {
                         {done ? <Check className="h-3.5 w-3.5" strokeWidth={2.6} aria-hidden="true" /> : i + 1}
                       </span>
                       <span className={cn('text-[11.5px] font-medium leading-tight transition-colors xs:text-[12.5px] sm:text-[13.5px]', cur ? 'text-ink' : 'text-ink/55')}>
-                        <span className="sm:hidden">{x.short}</span>
-                        <span className="max-sm:hidden">{x.name}</span>
+                        <span className="max-sm:sr-only">{x.name}</span>
                       </span>
                       <span className="t-data text-[10.5px] text-ink/40 max-sm:hidden">{x.date}</span>
                     </button>
@@ -1720,7 +1739,7 @@ export function RxAfter({ it }) {
             </div>
 
             {/* every step is laid in the same grid cell, so the stage is as tall as the longest step and never jumps */}
-            <div className="relative grid min-w-0 p-5 md:p-6 lg:px-7 lg:py-6" aria-live="polite">
+            <div className="relative grid min-w-0 p-4 xs:p-5 md:p-6 lg:px-7 lg:py-6" aria-live="polite">
               {a.steps.map((x, i) => (
                 <div key={x.key} className={cn('[grid-area:1/1]', i === k ? '' : 'invisible')} aria-hidden={i === k ? undefined : true}>
                   <JourneyStep key={i === k ? 'on' : 'off'} step={x} n={i} a={a} reduce={reduce || i !== k} />
