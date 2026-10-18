@@ -1651,7 +1651,7 @@ function CallOverlay({ c, clock: cc, reduce }) {
         <span className="shrink-0 self-start text-[12px] font-medium tabular-nums text-ink/55">{clock(live ? Math.min(t, c.duration) : c.duration)}</span>
       </div>
       {/* the recording itself: one bar per slice, coloured by who is talking, brighter once it has played */}
-      <div className="mt-2.5 flex h-6 items-center gap-[2px]" aria-hidden="true">
+      <div className={cn('mt-2.5 flex h-6 items-center gap-[2px]', !live && 'max-sm:hidden')} aria-hidden="true">
         {bars.map((v, i) => {
           const ms = ((i + 0.5) / n) * c.duration;
           const who = whoAt(ms);
@@ -1681,19 +1681,19 @@ function TextsOverlay({ step, a, active, reduce }) {
     const ids = step.thread.map((_, i) => setTimeout(() => setShown(i + 1), 500 + i * MSG_GAP_MS));
     return () => ids.forEach(clearTimeout);
   }, [active, reduce, n, step.thread]);
-  const list = step.thread.slice(Math.max(0, shown - 2), shown);
+  const list = step.thread.slice(Math.max(0, shown - 1), shown);
   return (
-    <div className="flex min-h-[132px] flex-col justify-end gap-2">
+    <div className="grid min-h-[64px] items-end">
       <AnimatePresence initial={false}>
         {list.map((m, j) => {
-          const i = Math.max(0, shown - 2) + j;
+          const i = Math.max(0, shown - 1) + j;
           const mine = m.who === 'aurora';
           return (
             <motion.div
               key={i}
-              layout={!reduce}
+              className="[grid-area:1/1]"
               initial={reduce ? false : { opacity: 0, y: 14, scale: 0.97 }}
-              animate={{ opacity: j === list.length - 1 ? 1 : 0.7, y: 0, scale: 1 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -8, transition: { duration: 0.2 } }}
               transition={{ duration: 0.4, ease: EASE }}
             >

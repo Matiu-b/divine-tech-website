@@ -266,7 +266,7 @@ export const industries = [
               audio: '/media/real-estate/emma-call-2.mp3',
               duration: 72910,
               title: 'Aurora calls Emma',
-              meta: 'Sound on · Tue 5:40 pm',
+              meta: 'Sound on',
               listen: 'Hear Aurora’s call',
               again: 'Hear it again',
               sound: 'Sound on',
