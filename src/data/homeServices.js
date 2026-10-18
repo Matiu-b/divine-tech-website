@@ -76,7 +76,7 @@ export const hsHear = {
       tab: 'With your team',
       tabShort: 'Your team',
       name: 'The morning brief',
-      sentence: 'At 8 am the owner hears the night in a minute: what got booked, which invoice was held, and who’s off Friday.',
+      sentence: 'One thing needs Dana today: an invoice that doesn’t match the hours on site. She decides in one sentence, and Aurora does the rest.',
       media: { poster: '/media/home-services/hear-brief-1400.webp', srcSet: '/media/home-services/hear-brief-900.webp 900w, /media/home-services/hear-brief-1400.webp 1400w', video: null, focus: '50% 40%' },
       call: {
         audio: '/media/home-services/call-brief-2.mp3',
