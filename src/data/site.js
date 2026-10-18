@@ -429,6 +429,96 @@ export const outcomes = {
   note: 'Every action plan starts from your numbers: where the hours go today and what each step should change.',
 };
 
+// One working day at a home services company (home page): what Aurora does from 9 to 5, out front with customers
+// and behind the scenes with the team: field technicians, freelancers, the office. Illustrative.
+export const homeDay = {
+  titleA: 'One AI teammate, from 9 to 5.',
+  text: 'A day at a home services company with 14 technicians in the field and a bench of freelancers. Some of the work faces customers. Most of it runs the company.',
+  lanes: { team: 'Your team', customers: 'Your customers' },
+  labels: { prev: 'Earlier', next: 'Later' },
+  company: 'Northline Home Services',
+  events: [
+    {
+      key: 'routes', time: '9:00', lane: 'team', kind: 'routes',
+      title: 'Plans the day for 14 technicians',
+      text: 'Jobs grouped by area and skill, so nobody crosses town twice.',
+      routes: [
+        { who: 'Jake · HVAC', jobs: 4, color: '#F25C2A', d: 'M30 150 L80 120 L120 132 L170 86 L210 70' },
+        { who: 'Ana · Plumbing', jobs: 3, color: '#0A0F0E', d: 'M40 40 L90 60 L140 44 L190 52' },
+        { who: 'Rivera · Freelance electrician', jobs: 2, color: '#14A36B', d: 'M250 160 L270 120 L300 104' },
+      ],
+    },
+    {
+      key: 'booking', time: '9:20', lane: 'customers', kind: 'thread',
+      title: 'Books a same-day visit',
+      text: 'An AC stopped working. A visit is on Jake’s route before anyone in the office reads the text.',
+      thread: [
+        { who: 'them', name: 'Customer', text: 'Our AC just died and it’s 90 degrees in here. Can someone come today?' },
+        { who: 'aurora', text: 'Yes. Jake can be there between 1 and 3 pm. Shall I book it?' },
+        { who: 'them', name: 'Customer', text: 'Please!' },
+      ],
+      result: 'Booked · 1–3 pm · Jake',
+    },
+    {
+      key: 'invoice', time: '10:15', lane: 'team', kind: 'invoice',
+      title: 'Checks a freelancer’s invoice',
+      text: 'Hours billed against time on site. One line didn’t match, so it went to Dana before payment.',
+      invoice: {
+        from: 'Rivera Electric · freelancer', number: 'Invoice #2291', total: '$1,840',
+        checks: [
+          { ok: true, text: 'Rate matches the contract' },
+          { ok: true, text: 'Job 405 closed by the customer' },
+          { ok: false, text: '6.0 h billed, 4.5 h on site' },
+        ],
+        status: 'Sent to Dana for approval',
+      },
+    },
+    {
+      key: 'quote', time: '11:30', lane: 'customers', kind: 'quote',
+      title: 'Follows up on a quote',
+      text: 'A furnace replacement quoted last week. One reminder, and the deposit came in.',
+      quote: { item: 'Furnace replacement', amount: '$4,200', status: 'Accepted · deposit paid' },
+    },
+    {
+      key: 'part', time: '12:40', lane: 'team', kind: 'thread',
+      title: 'Finds a part for a tech in the field',
+      text: 'Mike needed a capacitor. Aurora checked every van and sent him to the nearest one.',
+      thread: [
+        { who: 'them', name: 'Mike · Tech', text: 'Do we have a 45/5 capacitor anywhere? Job 412.' },
+        { who: 'aurora', text: 'Van 7 has two, parked 6 minutes from you. I’ve let Sam know you’re coming.' },
+      ],
+      result: 'Stock updated · Van 7',
+    },
+    {
+      key: 'reroute', time: '14:10', lane: 'team', kind: 'reroute',
+      title: 'Reshuffles a route that ran long',
+      text: 'A job took an extra hour. Two visits moved, and both customers agreed by text.',
+      moves: [
+        { job: '3:00 pm · Oak St', to: 'Ana · 3:30 pm', ok: 'Customer confirmed' },
+        { job: '4:00 pm · Pine Ave', to: 'Jake · 4:45 pm', ok: 'Customer confirmed' },
+      ],
+    },
+    {
+      key: 'compliance', time: '15:30', lane: 'team', kind: 'compliance',
+      title: 'Keeps freelancers compliant',
+      text: 'Rivera’s insurance certificate expires Friday. Aurora asked for the new one and filed it.',
+      doc: { name: 'Certificate of insurance · Rivera Electric', was: 'Expires Fri, Oct 24', now: 'Renewed to Oct 2027' },
+    },
+    {
+      key: 'summary', time: '16:55', lane: 'team', kind: 'summary',
+      title: 'Wraps up the day for the owner',
+      text: 'What got done, what needs a decision, and who gets paid on Friday.',
+      summary: [
+        ['Jobs completed', '39'],
+        ['Freelancer invoices approved', '6'],
+        ['Payouts scheduled', 'Fri'],
+        ['Needs your OK', '1'],
+      ],
+    },
+  ],
+  note: 'An example day. The company, people and figures are illustrative.',
+};
+
 // How it works (home page): three plain steps from the customer's side, each saying who does it.
 export const howItWorks = {
   eyebrow: 'How it works',
