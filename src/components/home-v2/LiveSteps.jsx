@@ -129,7 +129,7 @@ export default function LiveSteps() {
           </ol>
 
           {/* the stage: every step in the same cell, so it never changes height */}
-          <div className="relative mt-5 grid md:mt-6" aria-live="polite">
+          <div className="relative mt-4 grid md:mt-6" aria-live="polite">
             {L.steps.map((x, i) => {
               const on = i === k;
               return (
@@ -138,8 +138,8 @@ export default function LiveSteps() {
                     <p className="text-[12px] font-medium uppercase tracking-[0.08em] text-[#14A36B]">
                       {String(i + 1).padStart(2, '0')} · {x.who}
                     </p>
-                    <h3 className="mt-2 text-[22px] font-medium leading-tight tracking-[-0.015em] text-ink md:text-[26px]">{x.name}</h3>
-                    <p className="pretty mt-3 max-w-[30em] text-[15px] leading-snug text-ink md:text-[17px] md:leading-[1.45]">{x.sentence}</p>
+                    <h3 className="mt-1.5 text-[19px] font-medium leading-tight tracking-[-0.015em] text-ink md:mt-2 md:text-[26px]">{x.name}</h3>
+                    <p className="pretty mt-2 max-w-[30em] text-[14.5px] leading-snug text-ink md:mt-3 md:text-[17px] md:leading-[1.45]">{x.sentence}</p>
                     <div className="mt-6 flex items-center gap-2 max-md:hidden">
                       {arrows('h-10 w-10')}
                       <a
@@ -162,12 +162,12 @@ export default function LiveSteps() {
             })}
           </div>
 
-          <div className="mt-4 flex items-center justify-center gap-2 md:hidden">
-            {arrows('h-11 w-11')}
-            <a href={L.more.href} className="ml-2 inline-flex items-center gap-1.5 text-[14px] font-medium text-ink underline decoration-ink/25 underline-offset-4">
+          <p className="mt-4 text-center md:hidden">
+            <a href={L.more.href} className="inline-flex items-center gap-1.5 text-[14px] font-medium text-ink underline decoration-ink/25 underline-offset-4">
               {L.more.label}
+              <ArrowRight className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
             </a>
-          </div>
+          </p>
         </div>
       </div>
     </section>

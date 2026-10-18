@@ -66,10 +66,11 @@ export default function HearAurora() {
                   role="tab"
                   aria-selected={on}
                   onClick={() => setK(i)}
-                  className={cn('flex h-10 items-center gap-2 rounded-full px-4 text-[13.5px] font-medium transition-colors', on ? 'bg-ink text-white' : 'bg-white/70 text-ink hover:bg-white')}
+                  className={cn('flex h-10 items-center gap-2 whitespace-nowrap rounded-full px-3.5 text-[13px] font-medium transition-colors sm:px-4 sm:text-[13.5px]', on ? 'bg-ink text-white' : 'bg-white/70 text-ink hover:bg-white')}
                 >
                   <Icon className="h-4 w-4" strokeWidth={1.8} aria-hidden="true" />
-                  {x.tab}
+                  <span className="sm:hidden">{x.tabShort}</span>
+                  <span className="max-sm:hidden">{x.tab}</span>
                 </button>
               );
             })}

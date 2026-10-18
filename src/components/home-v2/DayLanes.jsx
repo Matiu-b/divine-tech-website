@@ -269,6 +269,14 @@ export default function DayLanes() {
 
           {/* the day: hours across, the two lanes under them, a marker for every moment */}
           <div className="relative">
+            <p className="mb-2 flex gap-4 text-[12px] font-medium text-ink sm:hidden">
+              {['customers', 'team'].map((lane) => (
+                <span key={lane} className="flex items-center gap-1.5">
+                  <span className="h-2 w-2 rounded-full" style={{ background: LANE_TONE[lane] }} />
+                  {D.lanes[lane]}
+                </span>
+              ))}
+            </p>
             <div className="relative ml-0 h-5 sm:ml-[132px]">
               {HOURS.map((h) => (
                 <span
@@ -288,9 +296,6 @@ export default function DayLanes() {
                 </span>
                 <div className="relative h-8 flex-1">
                   <span aria-hidden="true" className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-ink/12" />
-                  <span aria-hidden="true" className="absolute left-0 top-1/2 -translate-y-1/2 rounded-full px-1.5 text-[10px] font-medium uppercase tracking-[0.06em] sm:hidden" style={{ color: LANE_TONE[lane] }}>
-                    {lane === 'team' ? 'Team' : 'Customers'}
-                  </span>
                   {D.events.map((ev, i) =>
                     ev.lane === lane ? (
                       <button
@@ -318,23 +323,25 @@ export default function DayLanes() {
           </div>
 
           {/* the moment that is on: every moment sits in the same cell, so the stage never changes height */}
-          <div className="relative mt-5 grid md:mt-6" aria-live="polite">
+          <div className="relative mt-4 grid md:mt-6" aria-live="polite">
             {D.events.map((ev, i) => {
               const Art = ARTIFACT[ev.kind];
               const on = i === k;
               return (
                 <div key={ev.key} className={cn('[grid-area:1/1] grid gap-5 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] md:items-center md:gap-10', on ? '' : 'invisible')} aria-hidden={on ? undefined : true}>
                   <motion.div key={on ? 'on' : 'off'} initial={reduce || !on ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, ease: EASE }}>
-                    <p className="flex items-baseline gap-2">
-                      <span className="text-[40px] font-medium leading-none tracking-[-0.03em] text-ink tabular-nums md:text-[48px]">{clockLabel(ev.time)}</span>
-                      <span className="text-[15px] font-medium text-ink/45">{ampm(ev.time)}</span>
-                    </p>
-                    <p className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-white/70 px-2.5 py-1 text-[12px] font-medium text-ink">
-                      <span className="h-2 w-2 rounded-full" style={{ background: LANE_TONE[ev.lane] }} />
-                      {D.lanes[ev.lane]}
-                    </p>
-                    <h3 className="mt-3 text-[20px] font-medium leading-tight tracking-[-0.015em] text-ink md:text-[24px]">{ev.title}</h3>
-                    <p className="pretty mt-2 max-w-[30em] text-[15px] leading-[1.55] text-graphite">{ev.text}</p>
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-2 md:block">
+                      <p className="flex items-baseline gap-1.5">
+                        <span className="text-[32px] font-medium leading-none tracking-[-0.03em] text-ink tabular-nums md:text-[48px]">{clockLabel(ev.time)}</span>
+                        <span className="text-[14px] font-medium text-ink/45 md:text-[15px]">{ampm(ev.time)}</span>
+                      </p>
+                      <p className="inline-flex items-center gap-1.5 rounded-full bg-white/70 px-2.5 py-1 text-[12px] font-medium text-ink md:mt-3">
+                        <span className="h-2 w-2 rounded-full" style={{ background: LANE_TONE[ev.lane] }} />
+                        {D.lanes[ev.lane]}
+                      </p>
+                    </div>
+                    <h3 className="mt-3 text-[18px] font-medium leading-tight tracking-[-0.015em] text-ink md:text-[24px]">{ev.title}</h3>
+                    <p className="pretty mt-1.5 max-w-[30em] text-[14.5px] leading-[1.5] text-graphite md:mt-2 md:text-[15px] md:leading-[1.55]">{ev.text}</p>
                     <div className="mt-5 flex gap-2 max-md:hidden">
                       <button type="button" onClick={() => go(k - 1)} aria-label={D.labels.prev} className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-ink shadow-[0_0_0_1px_rgba(10,15,14,0.1)] hover:shadow-[0_0_0_1px_rgba(10,15,14,0.3)]">
                         <ChevronLeft className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
@@ -348,15 +355,6 @@ export default function DayLanes() {
                 </div>
               );
             })}
-          </div>
-
-          <div className="mt-4 flex justify-center gap-2 md:hidden">
-            <button type="button" onClick={() => go(k - 1)} aria-label={D.labels.prev} className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-ink shadow-[0_0_0_1px_rgba(10,15,14,0.1)]">
-              <ChevronLeft className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
-            </button>
-            <button type="button" onClick={() => go(k + 1)} aria-label={D.labels.next} className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-ink shadow-[0_0_0_1px_rgba(10,15,14,0.1)]">
-              <ChevronRight className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
-            </button>
           </div>
 
           {/* the whole day in the HTML, for search and screen readers */}

@@ -454,6 +454,7 @@ export const homeHear = {
     {
       key: 'customer',
       tab: 'With a customer',
+      tabShort: 'Customer',
       name: 'An after-hours call',
       sentence: 'An AC dies at 8:40 pm. Aurora checks the easy fix, quotes the after-hours fee and books a tech for tonight.',
       media: { poster: '/media/home/hear-customer-1400.webp', srcSet: '/media/home/hear-customer-900.webp 900w, /media/home/hear-customer-1400.webp 1400w', video: null, focus: '50% 40%' },
@@ -501,6 +502,7 @@ export const homeHear = {
     {
       key: 'team',
       tab: 'With your team',
+      tabShort: 'Your team',
       name: 'The morning brief',
       sentence: 'At 8 am the owner hears the night in a minute: what got booked, which invoice was held, and who’s off Friday.',
       media: { poster: '/media/home/hear-brief-1400.webp', srcSet: '/media/home/hear-brief-900.webp 900w, /media/home/hear-brief-1400.webp 1400w', video: null, focus: '50% 40%' },
