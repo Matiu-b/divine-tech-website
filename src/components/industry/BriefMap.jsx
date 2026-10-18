@@ -23,12 +23,40 @@ function Town({ m, beat, reduce }) {
   return (
     <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid slice" className="absolute inset-0 h-full w-full" aria-hidden="true">
       <rect width={W} height={H} fill="#F7F3EA" />
-      {/* blocks between the streets; one of them a park */}
+      {/* blocks between the streets, each with its houses; one block is a park */}
       {Array.from({ length: 7 }, (_, c) =>
-        Array.from({ length: 5 }, (_, r) => (
-          <rect key={`${c}-${r}`} x={c * 90 + 7} y={r * 72 + 7} width={76} height={58} rx={6} fill={c === 3 && r === 1 ? '#DDEBDD' : '#ECE6DA'} />
-        ))
+        Array.from({ length: 5 }, (_, r) => {
+          const x = c * 90 + 7;
+          const y = r * 72 + 7;
+          const park = c === 3 && r === 1;
+          return (
+            <g key={`${c}-${r}`}>
+              <rect x={x} y={y} width={76} height={58} rx={6} fill={park ? '#DCEAD9' : '#EEE8DC'} />
+              {park
+                ? [
+                    [18, 16],
+                    [40, 30],
+                    [58, 14],
+                    [26, 42],
+                    [56, 44],
+                  ].map(([dx, dy], i) => <circle key={i} cx={x + dx} cy={y + dy} r={6} fill="#C5DCC1" />)
+                : [0, 1, 2, 3].flatMap((i) =>
+                    [0, 1].map((j) => <rect key={`${i}${j}`} x={x + 6 + i * 17} y={y + (j ? 33 : 6)} width={13} height={19} rx={2.5} fill="#E3DCCD" />)
+                  )}
+            </g>
+          );
+        })
       )}
+      {/* a few street names, so it reads as a town */}
+      {[
+        ['Maple St', 316, 69, 0],
+        ['Oak Ave', 87, 112, -90],
+        ['Pine Ave', 447, 336, -90],
+      ].map(([n, x, y, rot]) => (
+        <text key={n} x={x} y={y} transform={rot ? `rotate(${rot} ${x} ${y})` : undefined} fontSize="7.5" letterSpacing="0.6" fill="#0A0F0E" fillOpacity="0.32" fontFamily="inherit">
+          {n.toUpperCase()}
+        </text>
+      ))}
       {/* the routes: faint before the brief, drawn when Aurora says they are set */}
       {m.routes.map((r, i) => {
         const faded = r.key === 'ana' && on(5);
@@ -157,7 +185,7 @@ export default function BriefMap({ d }) {
 
         <div ref={ref} className="relative mt-5 sm:mt-8 md:mt-12">
           {/* the map */}
-          <div className="canvas relative aspect-[4/3] overflow-hidden shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_30px_60px_-40px_rgba(90,50,20,0.45)] sm:aspect-[16/9] lg:aspect-[16/8]">
+          <div className="canvas relative aspect-[4/3] overflow-hidden shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_30px_60px_-40px_rgba(90,50,20,0.45)] sm:aspect-[16/9] lg:aspect-[16/7]">
             <Town m={m} beat={beat} reduce={reduce} />
             <Tag at={m.van} show={beat >= 2} tone="white">
               {m.labels.van}
