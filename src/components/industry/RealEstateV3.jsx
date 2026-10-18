@@ -1617,9 +1617,9 @@ function CallPanel({ c, a, clock: cc, reduce }) {
   const prev = k > 0 ? c.captions[k - 1] : null;
   const speaking = status === 'playing' && t >= cap.at && t <= cap.end + 150 ? cap.who : null;
   return (
-    <div className="flex flex-col gap-3 rounded-[18px] bg-[#F6F1E8] p-3.5 md:p-4">
+    <div className="flex flex-col gap-3 rounded-[18px] bg-[#F6F1E8] p-2.5 xs:p-3.5 md:p-4">
       <div className="flex items-center gap-2.5 rounded-[16px] bg-white px-3 py-2.5 shadow-[0_1px_2px_rgba(10,15,14,0.08)] sm:gap-3">
-        <span className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#FFF1E6] sm:h-10 sm:w-10">
+        <span className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#FFF1E6] max-sm:hidden">
           {speaking === 'aurora' ? <span className="ring-ping absolute inset-0 rounded-full bg-[#F25C2A]/25" /> : null}
           <img src="/brand/aurora-symbol-color.svg" alt="" width="20" height="20" className="relative h-5 w-5" />
         </span>
