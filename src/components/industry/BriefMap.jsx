@@ -169,9 +169,9 @@ function useCover(ref) {
 function Tag({ at, box, tone = 'ink', children, show }) {
   const tones = { ink: 'bg-ink text-white', amber: 'bg-[#FFF1E6] text-[#9A3A12] shadow-[0_0_0_1px_rgba(242,92,42,0.35)]', green: 'bg-[#E4F4E8] text-[#1F7A4C] shadow-[0_0_0_1px_rgba(20,163,107,0.3)]', white: 'bg-white text-ink' };
   // near an edge the tag opens inward, so it is never cut off (the position sits on a plain span; the motion is inside)
-  const x = at[0] * box.s + box.ox;
+  const x = Math.min(box.w - 10, Math.max(10, at[0] * box.s + box.ox));
   const y = at[1] * box.s + box.oy;
-  const shift = x > box.w * 0.62 ? '-translate-x-[88%]' : x < box.w * 0.34 ? '-translate-x-[12%]' : '-translate-x-1/2';
+  const shift = x > box.w * 0.62 ? '-translate-x-full' : x < box.w * 0.38 ? 'translate-x-0' : '-translate-x-1/2';
   return (
     <span className={cn('pointer-events-none absolute z-[2] -translate-y-[calc(100%+12px)]', shift)} style={{ left: x, top: y }}>
       <AnimatePresence>
@@ -243,7 +243,7 @@ export default function BriefMap({ d }) {
 
         <div ref={ref} className="relative mt-5 sm:mt-8 md:mt-12">
           {/* the map: it keeps its proportions and covers the frame; the tags follow it */}
-          <div ref={frame} className="canvas relative aspect-square overflow-hidden bg-[#F1EEE8] shadow-[0_0_0_1px_rgba(10,15,14,0.08),0_30px_60px_-40px_rgba(60,50,30,0.45)] sm:aspect-[16/9] lg:aspect-[16/8]">
+          <div ref={frame} className="canvas relative aspect-[4/3] overflow-hidden bg-[#F1EEE8] shadow-[0_0_0_1px_rgba(10,15,14,0.08),0_30px_60px_-40px_rgba(60,50,30,0.45)] sm:aspect-[16/9] lg:aspect-[16/8]">
             <div className="absolute" style={{ left: box.ox, top: box.oy, width: W * box.s, height: H * box.s }}>
               <Town m={m} beat={beat} reduce={reduce} />
             </div>
