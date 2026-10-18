@@ -192,11 +192,6 @@
   },
   {
    "kind": "audio",
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_111259_3c305386-08bf-417d-bcbb-746ccc36ef58.mp3",
-   "out": "public/media/home-services/call-customer"
-  },
-  {
-   "kind": "audio",
    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_111308_595c2b2d-6075-4404-887f-06a9dcbd67ac.mp3",
    "out": "public/media/home-services/call-brief"
   },
