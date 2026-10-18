@@ -11,6 +11,7 @@ import { Reveal } from './primitives/MotionReveal';
 import { useInViewport, usePageVisible } from './hooks';
 
 const ADVANCE_MS = 5000;
+const SIDE_MS = 3200; // each card's chip switches between a customer moment and a team moment
 const GAP = 12;
 
 /**
@@ -26,6 +27,12 @@ export default function IndustryCards() {
   const inView = useInViewport(track, { threshold: 0.4 });
   const visible = usePageVisible();
   const n = industries.length;
+  const [inside, setInside] = useState(false);
+  useEffect(() => {
+    if (reduce || !inView || !visible) return undefined;
+    const id = window.setInterval(() => setInside((v) => !v), SIDE_MS);
+    return () => window.clearInterval(id);
+  }, [reduce, inView, visible]);
 
   useEffect(() => {
     const el = track.current;
@@ -69,7 +76,6 @@ export default function IndustryCards() {
           id="industries-title"
           eyebrow={industriesSection.eyebrow}
           titleA={industriesSection.titleA}
-          titleB={industriesSection.titleB}
           text={industriesSection.text}
           layout="split"
         />
@@ -77,7 +83,7 @@ export default function IndustryCards() {
         <div
           ref={track}
           aria-roledescription="carousel"
-          className="no-scrollbar mx-[calc(-1*var(--gutter))] mt-10 flex snap-x snap-mandatory gap-3 overflow-x-auto overflow-y-hidden overscroll-x-contain scroll-px-[var(--gutter)] px-[var(--gutter)] md:mt-16 lg:mx-0 lg:grid lg:grid-cols-3 lg:gap-5 lg:overflow-visible lg:px-0"
+          className="no-scrollbar mx-[calc(-1*var(--gutter))] mt-8 flex snap-x snap-mandatory gap-3 overflow-x-auto overflow-y-hidden overscroll-x-contain scroll-px-[var(--gutter)] px-[var(--gutter)] md:mt-12 lg:mx-0 lg:grid lg:grid-cols-3 lg:gap-5 lg:overflow-visible lg:px-0"
         >
           {industries.map((it, i) => (
             <Reveal key={it.slug} delay={i * 0.08} className="w-[84%] shrink-0 snap-start sm:w-[60%] md:w-[46%] lg:w-auto" aria-roledescription="slide" aria-label={`${i + 1} of ${n}: ${it.label}`}>
@@ -85,7 +91,7 @@ export default function IndustryCards() {
                 href={industryPath(it.slug)}
                 className="group flex h-full flex-col overflow-hidden rounded-[28px] bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_20px_40px_-28px_rgba(10,15,14,0.35)] transition-shadow duration-500 hover:shadow-[0_0_0_1px_rgba(10,15,14,0.1),0_30px_60px_-30px_rgba(10,15,14,0.45)]"
               >
-                <div className="relative aspect-[4/3] overflow-hidden bg-paper-2">
+                <div className="relative aspect-[4/3] overflow-hidden bg-paper-2 lg:aspect-[16/11]">
                   <img
                     src={it.how.photo.src}
                     srcSet={it.how.photo.srcSet}
@@ -95,22 +101,40 @@ export default function IndustryCards() {
                     decoding="async"
                     className="h-full w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.03]"
                   />
+                  {it.how.video && !reduce ? (
+                    <video src={it.how.video} poster={it.how.photo.src} muted loop autoPlay playsInline preload="none" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover" />
+                  ) : null}
+                  {/* one moment out front, then one behind the scenes, in turn */}
                   <div className="absolute inset-x-4 bottom-4">
-                    <span className="flex w-fit max-w-full items-center gap-2.5 rounded-[14px] bg-white/90 px-3 py-2.5 text-ink shadow-sm backdrop-blur">
-                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[9px] bg-paper-2">
-                        {React.createElement(EVENT_ICONS[it.card.icon] || Check, { className: 'h-3.5 w-3.5', strokeWidth: 1.8, 'aria-hidden': 'true' })}
-                      </span>
-                      <span className="min-w-0">
-                        <span className="block truncate text-[12.5px] font-medium">{it.card.title}</span>
-                        <span className="block truncate text-[11px] text-graphite">{it.card.detail}</span>
-                      </span>
-                    </span>
+                    {[false, true].map((side) => {
+                      const c = side ? it.cardInside || it.card : it.card;
+                      const on = side === inside;
+                      return (
+                        <span
+                          key={String(side)}
+                          aria-hidden={on ? undefined : true}
+                          className={cn('flex w-fit max-w-full items-center gap-2.5 rounded-[14px] bg-white/90 px-3 py-2.5 text-ink shadow-sm backdrop-blur transition-all duration-500', on ? 'opacity-100' : 'pointer-events-none absolute bottom-0 left-0 translate-y-1 opacity-0')}
+                        >
+                          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[9px] bg-paper-2">
+                            {React.createElement(EVENT_ICONS[c.icon] || Check, { className: 'h-3.5 w-3.5', strokeWidth: 1.8, 'aria-hidden': 'true' })}
+                          </span>
+                          <span className="min-w-0">
+                            <span className="mb-0.5 flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.08em] text-graphite">
+                              <span className={cn('h-1.5 w-1.5 rounded-full', side ? 'bg-[#14A36B]' : 'bg-[#F25C2A]')} />
+                              {side ? industriesSection.sides.team : industriesSection.sides.customers}
+                            </span>
+                            <span className="block truncate text-[12.5px] font-medium">{c.title}</span>
+                            <span className="block truncate text-[11px] text-graphite">{c.detail}</span>
+                          </span>
+                        </span>
+                      );
+                    })}
                   </div>
                 </div>
-                <div className="flex flex-1 flex-col p-6 md:p-7">
+                <div className="flex flex-1 flex-col p-5 md:p-6">
                   <h3 className="t-h4">{it.label}</h3>
                   <p className="mt-2 flex-1 text-[14px] leading-relaxed text-graphite">{it.short}</p>
-                  <span className="mt-6 flex items-center gap-1.5 text-[13.5px] font-medium text-ink">
+                  <span className="mt-4 flex items-center gap-1.5 text-[13.5px] font-medium text-ink">
                     Explore
                     <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" strokeWidth={1.8} aria-hidden="true" />
                   </span>
@@ -120,8 +144,8 @@ export default function IndustryCards() {
           ))}
         </div>
 
-        {/* pager on phones and tablets: the active bar fills while it waits to move on */}
-        <div className="mt-6 flex gap-2 lg:hidden">
+        {/* pager on phones and tablets: one dot per card, the current one wider (no filling bar) */}
+        <div className="mt-5 flex justify-center gap-2 lg:hidden">
           {industries.map((it, i) => (
             <button
               key={it.slug}
@@ -132,13 +156,9 @@ export default function IndustryCards() {
               }}
               aria-label={`Show ${it.label}`}
               aria-current={i === active ? 'true' : undefined}
-              className="relative h-1 flex-1 overflow-hidden rounded-full bg-ink/10"
+              className="flex h-6 items-center"
             >
-              <span
-                key={`${active}-${touched}`}
-                className={cn('absolute inset-y-0 left-0 rounded-full bg-ink', i <= active ? 'w-full' : 'w-0')}
-                style={i === active && !touched && !reduce ? { animation: `outcomes-fill ${ADVANCE_MS}ms linear forwards` } : undefined}
-              />
+              <span className={cn('block h-1.5 rounded-full transition-all duration-500', i === active ? 'w-6 bg-ink' : 'w-1.5 bg-ink/25')} />
             </button>
           ))}
         </div>

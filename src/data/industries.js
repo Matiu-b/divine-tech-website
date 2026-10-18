@@ -477,6 +477,8 @@ export const industries = [
     },
     caption: 'Your brokers are out showing homes. Aurora answers every new lead.',
     card: { icon: 'calendar', title: 'Viewing booked', detail: 'Sat 11:00, right broker, confirmation sent' },
+    // the same industry, behind the scenes: work Aurora does for the team (home page cards)
+    cardInside: { icon: 'report', title: 'Agents’ week planned', detail: '14 showings, grouped by area' },
     events: [
       { icon: 'message', title: 'New lead answered', detail: 'Text message, 2BR inquiry' },
       { icon: 'mail', title: 'Listing email written and sent', detail: '12 matching buyers, personal intro' },
@@ -561,6 +563,7 @@ export const industries = [
     },
     caption: 'The front desk is with a client. Aurora answers the phone.',
     card: { icon: 'invoice', title: 'Invoice issued and sent', detail: 'Payment link included, record updated' },
+    cardInside: { icon: 'approval', title: 'Shift swap approved', detail: 'Front desk covered on Friday' },
     events: [
       { icon: 'service', title: 'Call answered', detail: 'First ring, after hours' },
       { icon: 'invoice', title: 'Invoice issued and sent', detail: 'Visit 4821, payment link included' },
@@ -634,6 +637,7 @@ export const industries = [
     },
     caption: 'Your technician is on a job. Aurora books the next one.',
     card: { icon: 'mail', title: 'Follow-up email written and sent', detail: 'Quote, photos and next steps' },
+    cardInside: { icon: 'approval', title: 'Freelancer invoice checked', detail: 'Hours matched to time on site' },
     events: [
       { icon: 'service', title: 'Call answered', detail: 'Water heater, urgent' },
       { icon: 'send', title: 'Quote sent', detail: 'From your price book' },
