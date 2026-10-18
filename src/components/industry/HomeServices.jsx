@@ -118,14 +118,18 @@ function HeroCall({ c, reduce, active }) {
       </div>
 
       {/* what lands in the team's systems while she talks */}
-      <div className="mt-3 flex h-[42px] items-center gap-2.5 rounded-[14px] bg-white/75 px-3 shadow-[0_1px_2px_rgba(10,15,14,0.05)]" aria-live="polite">
-        <Database className="h-4 w-4 shrink-0 text-[#14A36B]" strokeWidth={2} aria-hidden="true" />
-        <span className="shrink-0 text-[10.5px] font-medium uppercase tracking-[0.07em] text-[#14A36B]">{c.team}</span>
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.span key={note ? note.at : 'wait'} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.3, ease: EASE }} className={cn('min-w-0 truncate text-[12.5px]', note ? 'font-medium text-ink' : 'text-slate')}>
-            {note ? note.text : c.waiting}
-          </motion.span>
-        </AnimatePresence>
+      <div className="mt-3 flex items-center gap-3 rounded-[14px] bg-white/75 px-3 py-2 shadow-[0_1px_2px_rgba(10,15,14,0.05)]" aria-live="polite">
+        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] bg-[#E4F4E8] text-[#14A36B]">
+          <Database className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-[10.5px] font-medium uppercase tracking-[0.07em] text-[#14A36B]">{c.team}</span>
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.span key={note ? note.at : 'wait'} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.3, ease: EASE }} className={cn('block truncate text-[13px] leading-snug', note ? 'font-medium text-ink' : 'text-slate')}>
+              {note ? note.text : c.waiting}
+            </motion.span>
+          </AnimatePresence>
+        </span>
       </div>
       <audio ref={audioRef} src={c.audio} preload="none" onEnded={cc.ended} />
       <p className="sr-only">{c.captions.map((q) => (q.who === 'aurora' ? 'Aurora: ' : c.caller + ': ') + q.text).join(' ')}</p>
