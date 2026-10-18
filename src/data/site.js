@@ -578,10 +578,11 @@ export const homeDay = {
       key: 'routes', time: '9:00', lane: 'team', kind: 'routes',
       title: 'Plans the day for 14 technicians',
       text: 'Jobs grouped by area and skill, so nobody crosses town twice.',
+      // routes run along the streets of a small map (viewBox 320 x 180); stops are the jobs
       routes: [
-        { who: 'Jake · HVAC', jobs: 4, color: '#F25C2A', d: 'M30 150 L80 120 L120 132 L170 86 L210 70' },
-        { who: 'Ana · Plumbing', jobs: 3, color: '#0A0F0E', d: 'M40 40 L90 60 L140 44 L190 52' },
-        { who: 'Rivera · Freelance electrician', jobs: 2, color: '#14A36B', d: 'M250 160 L270 120 L300 104' },
+        { who: 'Jake · HVAC', jobs: 4, color: '#F25C2A', d: 'M15 145 H135 V95 H205 V45 H300', stops: [[15, 145], [135, 120], [205, 70], [300, 45]] },
+        { who: 'Ana · Plumbing', jobs: 3, color: '#0A0F0E', d: 'M15 20 V45 H65 V95 H110', stops: [[15, 20], [65, 70], [110, 95]] },
+        { who: 'Rivera · Freelance electrician', jobs: 2, color: '#14A36B', d: 'M240 175 V145 H310 V95', stops: [[240, 175], [310, 95]] },
       ],
     },
     {

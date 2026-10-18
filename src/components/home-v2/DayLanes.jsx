@@ -38,49 +38,39 @@ function Card({ children, className = undefined }) {
 function Routes({ e, reduce }) {
   return (
     <Card>
-      <svg viewBox="0 0 320 190" className="block h-auto w-full" aria-hidden="true">
-        <rect x="0" y="0" width="320" height="190" rx="14" fill="#F4F1EA" />
-        {[30, 70, 110, 150].map((y) => (
-          <line key={'h' + y} x1="0" x2="320" y1={y} y2={y} stroke="#fff" strokeWidth="5" />
+      <svg viewBox="0 0 320 180" className="block h-auto w-full" aria-hidden="true">
+        <rect x="0" y="0" width="320" height="180" rx="12" fill="#FBF9F4" />
+        {/* city blocks between the streets, one of them a park */}
+        {[0, 70, 140, 210, 280].map((x) =>
+          [0, 50, 100, 150].map((y) => (
+            <rect key={`${x}-${y}`} x={x + 5} y={y + 5} width={x === 280 ? 35 : 55} height={y === 150 ? 25 : 35} rx="4" fill={x === 140 && y === 100 ? '#DCEBDD' : '#EFEAE0'} />
+          ))
+        )}
+        {e.routes.map((r, i) => (
+          <g key={r.who}>
+            <motion.path
+              d={r.d}
+              fill="none"
+              stroke={r.color}
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              initial={reduce ? false : { pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ duration: 1.1, ease: EASE, delay: 0.2 + i * 0.45 }}
+            />
+            {r.stops.map(([x, y], j) => (
+              <motion.g key={j} initial={reduce ? false : { scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.3, delay: 0.6 + i * 0.45 + j * 0.12 }} style={{ transformOrigin: `${x}px ${y}px` }}>
+                <circle cx={x} cy={y} r="7" fill={j === 0 ? r.color : '#fff'} stroke={r.color} strokeWidth="2" />
+                {j > 0 ? (
+                  <text x={x} y={y + 3} textAnchor="middle" fontSize="8" fontWeight="600" fill={r.color}>
+                    {j}
+                  </text>
+                ) : null}
+              </motion.g>
+            ))}
+          </g>
         ))}
-        {[50, 120, 190, 260].map((x) => (
-          <line key={'v' + x} y1="0" y2="190" x1={x} x2={x} stroke="#fff" strokeWidth="5" />
-        ))}
-        <path d="M0 175 C 80 160 140 185 320 168" stroke="#DCE9E1" strokeWidth="12" fill="none" />
-        {e.routes.map((r, i) => {
-          const pts = r.d.replace(/M|L/g, ' ').trim().split(/\s+/).map(Number);
-          const stops = [];
-          for (let j = 0; j < pts.length; j += 2) stops.push([pts[j], pts[j + 1]]);
-          return (
-            <g key={r.who}>
-              <motion.path
-                d={r.d}
-                fill="none"
-                stroke={r.color}
-                strokeWidth="3.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                initial={reduce ? false : { pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 1.1, ease: EASE, delay: 0.2 + i * 0.45 }}
-              />
-              {stops.map(([x, y], j) => (
-                <motion.circle
-                  key={j}
-                  cx={x}
-                  cy={y}
-                  r={j === 0 ? 5 : 4}
-                  fill={j === 0 ? r.color : '#fff'}
-                  stroke={r.color}
-                  strokeWidth="2.5"
-                  initial={reduce ? false : { scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ duration: 0.3, delay: 0.5 + i * 0.45 + j * 0.12 }}
-                />
-              ))}
-            </g>
-          );
-        })}
       </svg>
       <ul className="mt-3 grid gap-1.5">
         {e.routes.map((r, i) => (
@@ -279,11 +269,11 @@ export default function DayLanes() {
 
           {/* the day: hours across, the two lanes under them, a marker for every moment */}
           <div className="relative">
-            <div className="relative ml-0 h-5 sm:ml-[120px]">
+            <div className="relative ml-0 h-5 sm:ml-[132px]">
               {HOURS.map((h) => (
                 <span
                   key={h}
-                  className={cn('absolute -translate-x-1/2 text-[11px] tabular-nums text-ink/40', h % 2 === 0 && 'max-sm:hidden')}
+                  className={cn('absolute whitespace-nowrap text-[11px] tabular-nums text-ink/40', h === 9 ? '' : h === 17 ? '-translate-x-full' : '-translate-x-1/2', h % 2 === 0 && 'max-sm:hidden')}
                   style={{ left: `${((h - 9) / 8) * 100}%` }}
                 >
                   {hourLabel(h)}
@@ -292,7 +282,7 @@ export default function DayLanes() {
             </div>
             {['customers', 'team'].map((lane) => (
               <div key={lane} className="relative mt-2 flex items-center sm:mt-3">
-                <span className="flex w-[120px] shrink-0 items-center gap-2 text-[12.5px] font-medium text-ink max-sm:hidden">
+                <span className="flex w-[132px] shrink-0 items-center gap-2 whitespace-nowrap text-[12.5px] font-medium text-ink max-sm:hidden">
                   <span className="h-2 w-2 rounded-full" style={{ background: LANE_TONE[lane] }} />
                   {D.lanes[lane]}
                 </span>
@@ -336,7 +326,7 @@ export default function DayLanes() {
                 <div key={ev.key} className={cn('[grid-area:1/1] grid gap-5 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] md:items-center md:gap-10', on ? '' : 'invisible')} aria-hidden={on ? undefined : true}>
                   <motion.div key={on ? 'on' : 'off'} initial={reduce || !on ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, ease: EASE }}>
                     <p className="flex items-baseline gap-2">
-                      <span className="text-[44px] font-medium leading-none tracking-[-0.03em] text-ink tabular-nums md:text-[56px]">{clockLabel(ev.time)}</span>
+                      <span className="text-[40px] font-medium leading-none tracking-[-0.03em] text-ink tabular-nums md:text-[48px]">{clockLabel(ev.time)}</span>
                       <span className="text-[15px] font-medium text-ink/45">{ampm(ev.time)}</span>
                     </p>
                     <p className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-white/70 px-2.5 py-1 text-[12px] font-medium text-ink">
@@ -354,7 +344,7 @@ export default function DayLanes() {
                       </button>
                     </div>
                   </motion.div>
-                  <div className="min-w-0">{on ? <Art key={`a-${k}-${nonce}`} e={ev} reduce={reduce} /> : <Art e={ev} reduce />}</div>
+                  <div className="mx-auto w-full min-w-0 max-w-[440px]">{on ? <Art key={`a-${k}-${nonce}`} e={ev} reduce={reduce} /> : <Art e={ev} reduce />}</div>
                 </div>
               );
             })}
