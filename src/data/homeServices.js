@@ -24,17 +24,17 @@ export const hsHero = {
   moments: [
     {
       time: '9:00 am',
-      customers: { icon: 'service', title: 'Call answered', detail: 'AC not cooling, booked for 1 pm' },
+      customers: { icon: 'service', title: 'Call answered', detail: 'AC repair booked for 1 pm' },
       team: { icon: 'report', title: 'Routes set for 14 techs', detail: 'Grouped by area and skill' },
     },
     {
       time: '10:15 am',
-      customers: { icon: 'send', title: 'Quote sent', detail: 'Water heater, from your price book' },
+      customers: { icon: 'send', title: 'Quote sent', detail: 'Water heater, price book' },
       team: { icon: 'invoice', title: 'Invoice held for Dana', detail: '6 h billed, 4.5 h on site' },
     },
     {
       time: '12:40 pm',
-      customers: { icon: 'message', title: 'On-the-way text sent', detail: 'Jake arrives in 12 minutes' },
+      customers: { icon: 'message', title: 'On-the-way text sent', detail: 'Jake, 12 minutes away' },
       team: { icon: 'crm', title: 'Part found for Mike', detail: 'Van 7, six minutes away' },
     },
     {
