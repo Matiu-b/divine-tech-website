@@ -55,11 +55,11 @@ export const hsHero = {
       { who: "lead", at: 52480, end: 54400, text: "Great. Thank you so much.", words: [0, 820, 1000, 1180, 1560], cue: "grateful" },
     ],
     notes: [
-      { at: 0, text: 'Phone · After hours · New call' },
-      { at: 5680, text: 'CRM · New customer · AC not cooling' },
-      { at: 25820, text: 'Troubleshooting · Breaker checked' },
-      { at: 39020, text: 'Quote · After-hours fee $120' },
-      { at: 45900, text: 'Dispatch · Jake · 9:15 pm · ETA texted' },
+      { at: 0, text: 'New call · After hours' },
+      { at: 5680, text: 'CRM · New customer · AC out' },
+      { at: 25820, text: 'Breaker checked with her' },
+      { at: 39020, text: 'Quote · After-hours $120' },
+      { at: 45900, text: 'Jake · 9:15 pm · ETA texted' },
     ],
   },
 };
