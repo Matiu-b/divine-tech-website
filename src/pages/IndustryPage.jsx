@@ -17,10 +17,9 @@ import { Reveal, RevealGroup, RevealItem, RevealLines } from '@/components/home-
 import { useLead } from '@/components/home-v2/LeadDrawer';
 import { onAnchorClick } from '@/components/home-v2/hooks';
 import BriefMap from '@/components/industry/BriefMap';
-import DayLanes from '@/components/home-v2/DayLanes';
 import LiveSteps from '@/components/home-v2/LiveSteps';
 import { HsClosing, HsHero } from '@/components/industry/HomeServices';
-import { hsDay, hsHear, hsLive } from '@/data/homeServices';
+import { hsHear, hsLive } from '@/data/homeServices';
 import { RxAfter, RxClosing, RxHero, RxKpi, RxRace, RxRules, RxStack, RxFaqMore } from '@/components/industry/RealEstateV3';
 
 /** @param {any} props */
@@ -267,12 +266,11 @@ export default function IndustryPage() {
   const it = industryBySlug[slug];
   if (!it) return <Navigate to="/" replace />;
   if (it.five) {
-    // five scenes, each one screen: the promise, two calls, one working day, going live under your rules, then the form
+    // each scene one screen: the promise with the customer call, the morning brief on the map, going live under your rules, then the form
     return (
       <SiteLayout key={it.slug} industry={it.leadIndustry} meta={it.meta}>
         <HsHero />
         <BriefMap d={hsHear} />
-        <DayLanes d={hsDay} />
         <LiveSteps d={hsLive} id="how" />
         <Faq id="ind-faq-title" items={it.faq} className="pt-0" />
         <OtherIndustries it={it} />

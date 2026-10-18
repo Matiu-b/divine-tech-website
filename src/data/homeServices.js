@@ -7,9 +7,9 @@ export const hsHero = {
   titleB: 'Aurora runs the rest.',
   text: 'Out front, Aurora answers every call, quotes from your price book and books the technician. Behind the scenes, it plans the routes, checks freelancer invoices and briefs the owner.',
   textShort: 'Aurora answers every call and books the job. Behind the scenes, it runs the office.',
-  secondary: 'See a working day',
-  secondaryShort: 'See a day',
-  secondaryHref: '#day',
+  secondary: 'Hear the morning brief',
+  secondaryShort: 'The brief',
+  secondaryHref: '#hear',
   // the scene: a technician walking up to a customer's door at dusk, the van behind him; takes a looping clip later
   media: {
     poster: '/media/home-services/hero-b-2000.webp',
@@ -66,24 +66,24 @@ export const hsHero = {
 
 export const hsHear = {
   titleA: 'Every morning, a one-minute brief.',
-  text: 'At 8 am Aurora tells the owner what happened overnight and the one thing that needs her. The map shows it as she speaks.',
-  textShort: 'At 8 am Aurora briefs the owner. The map follows along.',
-  // the town the brief talks about (viewBox 640 x 360; streets every 90 across and 72 down)
+  text: 'Overnight, Aurora books the requests and plans every technician’s route. At 8 am she briefs the owner, and the map follows along.',
+  textShort: 'Aurora plans the routes overnight and briefs the owner at 8. The map follows along.',
+  // the town the brief talks about, drawn like a maps app (viewBox 640 x 360): side streets at x 70 / 330 / 455 / 575
+  // and y 48 / 132 / 282, Oak Ave at x 200, Main St at y 196, Lakeview Rd from (455,132) to (640,20)
   map: {
-    yard: [90, 288],
-    van: [360, 288],
-    job: [450, 216],
-    friday: [180, 100],
+    yard: [70, 282],
+    van: [330, 282],
+    job: [455, 240],
+    friday: [140, 132],
     routes: [
-      { key: 'jake', who: 'Jake · HVAC', color: '#FF9F45', d: 'M90 288 H270 V144 H450 V72 H540', stops: [[180, 288], [270, 200], [380, 144], [540, 72]] },
-      { key: 'ana', who: 'Ana · Plumbing', color: '#0A0F0E', d: 'M90 288 V144 H180 V72 H300', stops: [[90, 216], [140, 144], [180, 100], [300, 72]] },
-      { key: 'rivera', who: 'Rivera · Freelancer', color: '#14A36B', d: 'M540 360 V288 H450 V216', stops: [[450, 216]] },
+      { key: 'jake', who: 'Jake', color: '#F25C2A', d: 'M70 282 H200 V196 H455 V132 L575 59.4', stops: [[200, 240], [330, 196], [455, 160], [575, 59.4]] },
+      { key: 'ana', who: 'Ana', color: '#0A0F0E', d: 'M70 282 V132 H200 V48 H330', stops: [[70, 205], [140, 132], [200, 90], [330, 48]] },
+      { key: 'rivera', who: 'Rivera', color: '#14A36B', d: 'M575 360 V282 H455 V240', stops: [[455, 240]] },
     ],
-    handover: 'M270 200 V144 H180 V100',
-    pins: [[135, 72], [225, 144], [315, 216], [405, 288], [495, 144], [225, 288], [135, 216], [405, 72], [495, 216], [315, 144], [585, 216], [270, 36]],
+    handover: 'M200 196 V132 H140',
+    pins: [[130, 48], [265, 132], [390, 196], [515, 282], [575, 160], [265, 282], [130, 196], [390, 48], [515, 196], [330, 240], [610, 282], [255, 48]],
     labels: {
-      title: 'Northline · Today',
-      pins: 'Booked overnight',
+      title: 'Northline · today',
       van: 'Van 7 · Mike’s part',
       held: 'Job 405 · 6.0 h billed, 4.5 h on site',
       paid: 'Job 405 · paid for 4.5 h',
@@ -138,96 +138,6 @@ export const hsHear = {
       team: 'Invoice held · Time off approved · Routes set',
     },
   ],
-};
-
-export const hsDay = {
-  titleA: 'One AI teammate, from 9 to 5.',
-  text: 'A day at a company with 14 technicians in the field and a bench of freelancers. Some of the work faces customers. Most of it runs the company.',
-  textShort: 'A day with 14 technicians and a bench of freelancers. Most of the work runs the company.',
-  lanes: { team: 'Your team', customers: 'Your customers' },
-  labels: { prev: 'Earlier', next: 'Later' },
-  company: 'Northline Home Services',
-  events: [
-    {
-      key: 'routes', time: '9:00', lane: 'team', kind: 'routes',
-      title: 'Plans the day for 14 technicians',
-      text: 'Jobs grouped by area and skill, so nobody crosses town twice.',
-      // routes run along the streets of a small map (viewBox 320 x 180); stops are the jobs
-      routes: [
-        { who: 'Jake · HVAC', jobs: 4, color: '#F25C2A', d: 'M15 145 H135 V95 H205 V45 H300', stops: [[15, 145], [135, 120], [205, 70], [300, 45]] },
-        { who: 'Ana · Plumbing', jobs: 3, color: '#0A0F0E', d: 'M15 20 V45 H65 V95 H110', stops: [[15, 20], [65, 70], [110, 95]] },
-        { who: 'Rivera · Freelance electrician', jobs: 2, color: '#14A36B', d: 'M240 175 V145 H310 V95', stops: [[240, 175], [310, 95]] },
-      ],
-    },
-    {
-      key: 'booking', time: '9:20', lane: 'customers', kind: 'thread',
-      title: 'Books a same-day visit',
-      text: 'An AC stopped working. A visit is on Jake’s route before anyone in the office reads the text.',
-      thread: [
-        { who: 'them', name: 'Customer', text: 'Our AC just died and it’s 90 degrees in here. Can someone come today?' },
-        { who: 'aurora', text: 'Yes. Jake can be there between 1 and 3 pm. Shall I book it?' },
-        { who: 'them', name: 'Customer', text: 'Please!' },
-      ],
-      result: 'Booked · 1–3 pm · Jake',
-    },
-    {
-      key: 'invoice', time: '10:15', lane: 'team', kind: 'invoice',
-      title: 'Checks a freelancer’s invoice',
-      text: 'Hours billed against time on site. One line didn’t match, so it went to Dana before payment.',
-      invoice: {
-        from: 'Rivera Electric · freelancer', number: 'Invoice #2291', total: '$1,840',
-        checks: [
-          { ok: true, text: 'Rate matches the contract' },
-          { ok: true, text: 'Job 405 closed by the customer' },
-          { ok: false, text: '6.0 h billed, 4.5 h on site' },
-        ],
-        status: 'Sent to Dana for approval',
-      },
-    },
-    {
-      key: 'quote', time: '11:30', lane: 'customers', kind: 'quote',
-      title: 'Follows up on a quote',
-      text: 'A furnace replacement quoted last week. One reminder, and the deposit came in.',
-      quote: { item: 'Furnace replacement', amount: '$4,200', status: 'Accepted · deposit paid' },
-    },
-    {
-      key: 'part', time: '12:40', lane: 'team', kind: 'thread',
-      title: 'Finds a part for a tech in the field',
-      text: 'Mike needed a capacitor. Aurora checked every van and sent him to the nearest one.',
-      thread: [
-        { who: 'them', name: 'Mike · Tech', text: 'Do we have a 45/5 capacitor anywhere? Job 412.' },
-        { who: 'aurora', text: 'Van 7 has two, parked 6 minutes from you. I’ve let Sam know you’re coming.' },
-      ],
-      result: 'Stock updated · Van 7',
-    },
-    {
-      key: 'reroute', time: '14:10', lane: 'team', kind: 'reroute',
-      title: 'Reshuffles a route that ran long',
-      text: 'A job took an extra hour. Two visits moved, and both customers agreed by text.',
-      moves: [
-        { job: '3:00 pm · Oak St', to: 'Ana · 3:30 pm', ok: 'Customer confirmed' },
-        { job: '4:00 pm · Pine Ave', to: 'Jake · 4:45 pm', ok: 'Customer confirmed' },
-      ],
-    },
-    {
-      key: 'compliance', time: '15:30', lane: 'team', kind: 'compliance',
-      title: 'Keeps freelancers compliant',
-      text: 'Rivera’s insurance certificate expires Friday. Aurora asked for the new one and filed it.',
-      doc: { name: 'Certificate of insurance · Rivera Electric', was: 'Expires Fri, Oct 24', now: 'Renewed to Oct 2027' },
-    },
-    {
-      key: 'summary', time: '16:55', lane: 'team', kind: 'summary',
-      title: 'Wraps up the day for the owner',
-      text: 'What got done, what needs a decision, and who gets paid on Friday.',
-      summary: [
-        ['Jobs completed', '39'],
-        ['Freelancer invoices approved', '6'],
-        ['Payouts scheduled', 'Fri'],
-        ['Needs your OK', '1'],
-      ],
-    },
-  ],
-  note: 'An example day. The company, people and figures are illustrative.',
 };
 
 export const hsLive = {
