@@ -213,7 +213,7 @@
   {
    "kind": "image",
    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_161309_5b9ff72e-ce5d-4090-8b1e-9ae124df5ccb.png",
-   "out": "design/review/jake-ref",
+   "out": "public/media/home-services/review-jake-ref",
    "widths": [
     900
    ]
@@ -221,7 +221,7 @@
   {
    "kind": "image",
    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_161358_735679ad-860d-4bc7-bef3-a6c92f6710c8.png",
-   "out": "design/review/job-ac-frame",
+   "out": "public/media/home-services/review-job-ac-frame",
    "widths": [
     900
    ]
@@ -229,7 +229,7 @@
   {
    "kind": "image",
    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_161357_f09b33dd-97a9-498f-9d04-2c3ff9d25e37.png",
-   "out": "design/review/job-roof-frame",
+   "out": "public/media/home-services/review-job-roof-frame",
    "widths": [
     900
    ]
@@ -237,7 +237,7 @@
   {
    "kind": "image",
    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_161357_f8bd874d-63b6-406b-9c33-7dd613ea33c1.png",
-   "out": "design/review/job-heater-frame",
+   "out": "public/media/home-services/review-job-heater-frame",
    "widths": [
     900
    ]
