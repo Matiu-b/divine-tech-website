@@ -92,7 +92,7 @@ function Moments({ running, still }) {
         })}
       </div>
       {/* where in the day: a dot per moment */}
-      <div className="mt-2 flex justify-center gap-1.5">
+      <div className="mt-2 flex justify-center gap-1.5 max-sm:hidden">
         {list.map((x, i) => (
           <span key={x.time} className={cn('h-1.5 rounded-full transition-all duration-300', i === k ? 'w-4 bg-ink/70' : 'w-1.5 bg-ink/20')} />
         ))}
