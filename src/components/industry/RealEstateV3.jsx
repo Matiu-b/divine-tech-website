@@ -1678,7 +1678,7 @@ function JourneyStep({ step, n, a, reduce, cc }) {
   const n2 = c ? 4 : step.thread.length;
   return (
     <motion.div initial={reduce ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: EASE }} className="flex h-full flex-col">
-      <div className="grid gap-4 md:mb-5 md:gap-5 xl:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] xl:gap-8">
+      <div className="grid gap-4 md:mb-5 md:gap-5 xl:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] xl:gap-7">
         <div>
           <p className="t-data text-[11px] uppercase tracking-[0.08em] text-[#C2410C]">
             {String(n + 1).padStart(2, '0')} · {step.date}
@@ -1764,10 +1764,10 @@ export function RxAfter({ it }) {
   return (
     <section data-nav-theme="light" aria-labelledby="rx-after-title" className="section relative pt-0">
       <div className="shell">
-        <div ref={ref} className="canvas canvas-grain relative overflow-hidden bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] p-4 xs:p-5 md:p-8 lg:px-10 lg:py-9 xl:px-14">
+        <div ref={ref} className="canvas canvas-grain relative overflow-hidden bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] p-4 xs:p-5 md:p-8 lg:px-10 lg:py-8 xl:px-14">
           <div aria-hidden="true" className="pointer-events-none absolute right-[4%] top-[-14%] h-[55%] w-[40%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.4),rgba(255,200,87,0))] blur-2xl" />
 
-          <div className="relative grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,460px)] lg:items-end lg:gap-12">
+          <div className="relative grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,520px)] lg:items-end lg:gap-12">
             <h2 id="rx-after-title" className="text-[clamp(28px,2.4vw,36px)] font-medium leading-[1.08] tracking-[-0.022em] text-ink">
               {a.titleA} <span className="sm:block">{a.titleB}</span>
             </h2>
@@ -1775,7 +1775,7 @@ export function RxAfter({ it }) {
           </div>
 
           {/* who this is, then the three steps (a marker for each step and a check once it's done; no fill bar) */}
-          <div className="relative mt-7 grid gap-4 xl:grid-cols-[minmax(0,280px)_minmax(0,1fr)_auto] xl:items-center xl:gap-8">
+          <div className="relative mt-6 grid gap-4 xl:grid-cols-[minmax(0,280px)_minmax(0,1fr)_auto] xl:items-center xl:gap-8">
             <p className="flex items-center gap-3">
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-ink text-[13px] font-medium text-white">{a.lead.initials}</span>
               <span className="min-w-0">
@@ -1817,7 +1817,7 @@ export function RxAfter({ it }) {
           </div>
 
           {/* the stage: Emma in this step's scene, then what happened, the call or the texts, and what the team sees */}
-          <div className="relative mt-5 grid overflow-hidden rounded-[24px] bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_30px_60px_-40px_rgba(90,50,20,0.45)] md:grid-cols-[minmax(0,240px)_minmax(0,1fr)] xl:grid-cols-[minmax(0,300px)_minmax(0,1fr)]">
+          <div className="relative mt-4 grid overflow-hidden rounded-[24px] bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_30px_60px_-40px_rgba(90,50,20,0.45)] md:grid-cols-[minmax(0,240px)_minmax(0,1fr)] xl:grid-cols-[minmax(0,280px)_minmax(0,1fr)]">
             <div className="relative aspect-[16/9] bg-[#E9E1D4] sm:aspect-[2/1] md:aspect-auto md:min-h-[360px]">
               {a.steps.map((x, i) =>
                 reduce ? (
