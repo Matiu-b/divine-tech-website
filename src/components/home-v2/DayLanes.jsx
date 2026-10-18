@@ -266,7 +266,7 @@ export default function DayLanes({ d: D, id = 'day' }) {
         <div ref={ref} className="canvas canvas-grain relative mt-5 sm:mt-8 overflow-hidden bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] p-4 xs:p-5 md:mt-12 md:p-8 lg:px-10 lg:py-8">
           <div aria-hidden="true" className="pointer-events-none absolute right-[6%] top-[-18%] h-[60%] w-[40%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.4),rgba(255,200,87,0))] blur-2xl" />
 
-          {/* phones: the whole day on one line, each moment a dot in its side's colour; the ends and the key under it */}
+          {/* phones: the whole day on one line, the moments evenly spaced in order, each a dot in its side's colour; the ends and the key under it */}
           <div className="relative sm:hidden">
             <div className="relative mx-1.5 h-7">
               <span aria-hidden="true" className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-ink/12" />
@@ -278,7 +278,7 @@ export default function DayLanes({ d: D, id = 'day' }) {
                   aria-label={`${ev.time} · ${ev.title}`}
                   aria-current={i === k ? 'step' : undefined}
                   className="absolute top-1/2 flex h-7 w-7 -translate-x-1/2 -translate-y-1/2 items-center justify-center"
-                  style={{ left: `${xOf(ev.time)}%` }}
+                  style={{ left: `${(i / (D.events.length - 1)) * 100}%` }}
                 >
                   <span
                     className={cn('block rounded-full transition-all duration-300', i === k ? 'h-3.5 w-3.5' : 'h-2 w-2', i > k && 'opacity-35')}
