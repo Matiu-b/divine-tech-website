@@ -273,7 +273,7 @@ export const industries = [
               resume: 'Resume the call',
               caller: 'Emma',
               // without sound the step shows these moments of the call; with sound, every line as it is spoken
-              moments: [8, 10, 15, 16],
+              moments: [8, 10, 16],
               captions: [
               {who: "aurora", at: 0, end: 4380, text: "Hi, Emma. It's Aurora, the AI assistant at Harbor Lane Realty.", words: [0, 720, 1340, 1580, 2360, 2440, 2800, 3160, 3520, 3760, 3980]},
               {who: "aurora", at: 4960, end: 6240, text: "Is now an okay time?", words: [0, 220, 600, 740, 960]},

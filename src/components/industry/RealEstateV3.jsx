@@ -1625,9 +1625,16 @@ function CallPanel({ c, a, clock: cc, reduce }) {
         </span>
         <span className="min-w-0 flex-1">
           <span className="block text-[14px] font-medium leading-tight text-ink">{c.title}</span>
-          <span className="block truncate text-[12px] text-slate">
-            {c.meta} · <span className="tabular-nums">{clock(live ? Math.min(t, c.duration) : c.duration)}</span>
-          </span>
+          {live ? (
+            <span className="block truncate text-[12px] text-slate">
+              {c.meta} · <span className="tabular-nums">{clock(Math.min(t, c.duration))}</span>
+            </span>
+          ) : (
+            <span className="flex items-center gap-1 truncate text-[12px] font-medium text-[#B4471A]">
+              <Volume2 className="h-3.5 w-3.5 shrink-0" strokeWidth={2.2} aria-hidden="true" />
+              {status === 'done' ? c.again : c.listen} · {c.sound} · <span className="tabular-nums">{clock(c.duration)}</span>
+            </span>
+          )}
         </span>
         {live ? <Wave who={reduce ? null : speaking} /> : null}
         <button
@@ -1645,22 +1652,16 @@ function CallPanel({ c, a, clock: cc, reduce }) {
       </div>
 
       {heard && status !== 'done' ? (
-        <div className="grid h-[200px] content-end gap-3 overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,#000_25%)] md:h-[188px]">
+        <div className="grid h-[190px] content-end gap-3 overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,#000_25%)] md:h-[176px]">
           {prev ? <CallLine key={k - 1} cap={prev} t={t} dim c={c} /> : null}
           <CallLine key={k} cap={cap} t={t} c={c} />
         </div>
       ) : (
-        <div className="flex min-h-[200px] flex-col gap-2.5 md:min-h-[188px]">
+        <div className="flex min-h-[190px] flex-col gap-2.5 md:min-h-[176px]">
           {c.moments.map((m, i) => {
             const x = c.captions[m];
             return <JourneyBubble key={m} m={x} i={i} lead={a.lead} labels={a.labels} reduce={reduce} label={i === 0 || c.captions[c.moments[i - 1]].who !== x.who} />;
           })}
-          {status !== 'done' ? (
-            <button type="button" onClick={play} className="mt-auto inline-flex w-fit items-center gap-1.5 self-center rounded-full bg-white px-3.5 py-2 text-[13px] font-medium text-[#B4471A] shadow-[0_0_0_1px_rgba(242,92,42,0.25)] hover:shadow-[0_0_0_1px_rgba(242,92,42,0.6)]">
-              <Volume2 className="h-3.5 w-3.5" strokeWidth={2.2} aria-hidden="true" />
-              {c.listen} · {c.sound} · <span className="tabular-nums">{clock(c.duration)}</span>
-            </button>
-          ) : null}
         </div>
       )}
     </div>
