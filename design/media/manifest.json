@@ -166,6 +166,38 @@
    "widths": [
     96
    ]
+  },
+  {
+   "kind": "image",
+   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_065230_1b4bd93f-8ec4-480c-8b8f-d8f0616023fe.png",
+   "out": "design/media/review/emma-walk-1",
+   "widths": [
+    600
+   ]
+  },
+  {
+   "kind": "image",
+   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_065231_bf1e2076-5521-4f67-a4e8-701a5f86fe85.png",
+   "out": "design/media/review/emma-walk-2",
+   "widths": [
+    600
+   ]
+  },
+  {
+   "kind": "image",
+   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_065235_0e90163c-1274-4cf0-bbf0-178ce2b4d1c8.png",
+   "out": "design/media/review/emma-cafe-1",
+   "widths": [
+    600
+   ]
+  },
+  {
+   "kind": "image",
+   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_065234_d7f5c63d-2e68-443a-9e2e-01e7f9e96d4b.png",
+   "out": "design/media/review/emma-cafe-2",
+   "widths": [
+    600
+   ]
   }
  ]
 }
