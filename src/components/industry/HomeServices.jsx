@@ -1,110 +1,142 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { AnimatePresence, m as motion, useReducedMotion } from 'framer-motion';
-import { CalendarCheck } from 'lucide-react';
+import { Database, Pause, Play, Volume2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { hsClosing, hsHero as H } from '@/data/homeServices';
 import LiquidGlass from '@/components/home-v2/primitives/LiquidGlass';
 import CTAButton from '@/components/home-v2/primitives/CTAButton';
 import { RevealLines } from '@/components/home-v2/primitives/MotionReveal';
-import { EVENT_ICONS } from '@/components/home-v2/eventIcons';
+import { clock, lastIndex, subtitle, useCallClock } from '@/components/home-v2/CallBox';
 import { useLead } from '@/components/home-v2/LeadDrawer';
 import { onAnchorClick, useInViewport, usePageVisible } from '@/components/home-v2/hooks';
 import Closing from '@/components/home-v2/Closing';
 
 const EASE = [0.22, 1, 0.36, 1];
-const LANE = { customers: '#F25C2A', team: '#14A36B' };
 
 /**
- * Over the photo: one moment of the day, and what Aurora did in it on both sides, for a customer and for the team.
- * Each side first shows Aurora at work, then what got done, with a check; then the next moment.
+ * The hero card: the after-hours call that sent the technician in the photo. Before it plays, one large play button;
+ * then live subtitles word by word, the recording's waveform coloured by speaker, and under it what lands in the
+ * team's systems as the call goes. It pauses when the hero leaves the screen.
  */
-function Moments({ running, still }) {
-  const list = H.moments;
-  const [k, setK] = useState(0);
-  const [phase, setPhase] = useState(still ? 2 : 0);
+function HeroCall({ c, reduce, active }) {
+  const audioRef = useRef(null);
+  const cc = useCallClock(c, { audioRef });
+  const { t, status, play } = cc;
+  const live = status === 'playing' || status === 'paused';
   useEffect(() => {
-    if (still) {
-      setPhase(2);
-      return undefined;
-    }
-    if (!running) return undefined;
-    setPhase(0);
-    const ids = [setTimeout(() => setPhase(1), 800), setTimeout(() => setPhase(2), 1600), setTimeout(() => setK((x) => (x + 1) % list.length), 4600)];
-    return () => ids.forEach(clearTimeout);
-  }, [k, running, still, list.length]);
-  const mo = list[k];
+    if (!active && status === 'playing') play();
+  }, [active]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const k = lastIndex(c.captions, t);
+  const cap = c.captions[k];
+  const sub = subtitle(cap, t);
+  const speaking = status === 'playing' && t >= cap.at && t <= cap.end + 150 ? cap.who : null;
+  const note = status === 'idle' ? null : c.notes[lastIndex(c.notes, t)];
+  const bars = c.wave.filter((_, i) => i % 2 === 0);
+  const n = bars.length;
+  const whoAt = (ms) => {
+    const x = c.captions.find((q) => ms >= q.at - 150 && ms <= q.end + 150);
+    return x ? x.who : null;
+  };
+  const played = live || status === 'done' ? t : -1;
+
   return (
-    <LiquidGlass className="rounded-[22px] p-2.5 sm:p-3" style={{ '--lg-tint-a': 'rgba(255,252,247,0.86)', '--lg-tint-b': 'rgba(255,249,241,0.78)' }} aria-hidden="true">
-      <div className="flex items-center gap-2 px-1.5 pt-0.5">
-        <img src="/brand/aurora-symbol-color.svg" alt="" width="14" height="14" className="h-3.5 w-3.5" />
-        <span className="text-[12.5px] font-medium text-ink">{H.panel.title}</span>
-        <span className="ml-auto flex items-center gap-1.5 text-[12.5px] font-medium tabular-nums text-ink/60">
-          <span className="relative flex h-2 w-2">
-            {still ? null : <span className="absolute inset-0 animate-ping rounded-full bg-[#3DDC97] opacity-60" />}
-            <span className="relative h-2 w-2 rounded-full bg-[#14A36B]" />
-          </span>
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.span key={mo.time} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }} transition={{ duration: 0.3 }}>
-              {mo.time}
-            </motion.span>
-          </AnimatePresence>
+    <LiquidGlass className="rounded-[22px] p-3.5 sm:p-4" style={{ '--lg-tint-a': 'rgba(255,252,247,0.9)', '--lg-tint-b': 'rgba(255,249,241,0.82)' }}>
+      <div className="flex items-center gap-2.5">
+        <span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.06)]">
+          {speaking === 'aurora' && !reduce ? <span className="ring-ping absolute inset-0 rounded-full bg-[#F25C2A]/25" /> : null}
+          <img src="/brand/aurora-symbol-color.svg" alt="" width="18" height="18" className="relative h-[18px] w-[18px]" />
         </span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-[14px] font-medium leading-tight text-ink">{c.title}</span>
+          <span className="block truncate text-[12px] text-slate">{c.sub}</span>
+        </span>
+        <span className="shrink-0 text-[12.5px] font-medium tabular-nums text-ink/55">{clock(live ? Math.min(t, c.duration) : c.duration)}</span>
       </div>
-      <div className="mt-2 grid gap-1.5">
-        {['customers', 'team'].map((side, i) => {
-          const e = mo[side];
-          const Icon = EVENT_ICONS[e.icon] || CalendarCheck;
-          const done = phase > i;
-          return (
-            <div key={side} className="flex items-center gap-3 rounded-[16px] bg-white/75 px-2.5 py-2 shadow-[0_1px_2px_rgba(10,15,14,0.05)]">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[11px] text-white transition-colors duration-500" style={{ background: done ? LANE[side] : 'rgba(10,15,14,0.12)' }}>
-                <Icon className="h-[17px] w-[17px]" strokeWidth={1.8} />
-              </span>
-              <span className="min-w-0 flex-1">
-                <span className="block text-[10.5px] font-medium uppercase tracking-[0.07em]" style={{ color: LANE[side] }}>
-                  {H.sides[side]}
-                </span>
-                <AnimatePresence mode="wait" initial={false}>
-                  {done ? (
-                    <motion.span key={k + side} className="block" initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.35, ease: EASE }}>
-                      <span className="block truncate text-[13.5px] font-medium leading-tight text-ink">{e.title}</span>
-                      <span className="mt-0.5 block truncate text-[11.5px] leading-tight text-graphite">{e.detail}</span>
-                    </motion.span>
-                  ) : (
-                    <motion.span key={'w' + side} className="flex h-[32px] items-center gap-1.5 text-[12.5px] text-ink/50" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
-                      {H.panel.working}
-                      <span className="flex gap-0.5">
-                        {[0, 1, 2].map((d) => (
-                          <span key={d} className="h-1 w-1 animate-pulse rounded-full bg-ink/40" style={{ animationDelay: d * 0.18 + 's' }} />
-                        ))}
+
+      {/* the call: a play button until it starts, then the line being spoken */}
+      <div className="mt-3 flex h-[64px] items-center gap-3">
+        <button
+          type="button"
+          onClick={play}
+          aria-label={status === 'playing' ? c.pause : status === 'paused' ? c.resume : status === 'done' ? c.again : c.listen}
+          className={cn(
+            'relative flex shrink-0 items-center justify-center rounded-full text-white transition-all duration-300 hover:scale-105',
+            live ? 'h-11 w-11 bg-ink' : 'h-14 w-14 bg-[linear-gradient(140deg,#FF8A3D,#F25C2A)] shadow-[0_12px_28px_-10px_rgba(242,92,42,0.75)]'
+          )}
+        >
+          {status === 'idle' && !reduce ? <span className="ring-ping absolute inset-0 rounded-full bg-[#F25C2A]/30" /> : null}
+          {status === 'playing' ? <Pause className="relative h-4 w-4 fill-current" strokeWidth={2.2} aria-hidden="true" /> : <Play className={cn('relative ml-0.5 fill-current', live ? 'h-4 w-4' : 'h-5 w-5')} strokeWidth={2.2} aria-hidden="true" />}
+        </button>
+        <div className="min-w-0 flex-1">
+          {live ? (
+            <>
+              <p className={cn('flex items-center gap-1.5 text-[10.5px] font-medium uppercase tracking-[0.07em]', cap.who === 'aurora' ? 'text-[#B4471A]' : 'text-slate')}>
+                {cap.who === 'aurora' ? 'Aurora' : c.caller}
+                {cap.cue ? <span className="font-normal normal-case italic tracking-normal text-ink/40">[{cap.cue}]</span> : null}
+              </p>
+              <p className="mt-0.5 h-[40px] overflow-hidden text-[14.5px] leading-[1.35] text-ink" aria-live="off">
+                <span className="sr-only">{cap.text}</span>
+                <span aria-hidden="true">
+                  {sub.words.slice(sub.start, sub.end).map((w, j) => {
+                    const i = sub.start + j;
+                    return (
+                      <span key={i} className={cn('transition-opacity duration-200', t >= cap.at + (cap.words[i] || 0) ? 'opacity-100' : 'opacity-[0.18]')}>
+                        {w}
+                        {i < sub.end - 1 ? ' ' : ''}
                       </span>
-                    </motion.span>
-                  )}
-                </AnimatePresence>
-              </span>
-              <span className={cn('flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-white transition-all duration-300', done ? 'scale-100 opacity-100' : 'scale-50 opacity-0')} style={{ background: LANE[side] }}>
-                <svg viewBox="0 0 12 12" className="h-2.5 w-2.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M2.5 6.2 5 8.5 9.5 3.5" />
-                </svg>
-              </span>
-            </div>
+                    );
+                  })}
+                </span>
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="text-[16px] font-medium leading-tight tracking-[-0.01em] text-ink">{status === 'done' ? c.again : c.listen}</p>
+              <p className="mt-1 flex items-center gap-1.5 truncate text-[12.5px] text-slate">
+                <Volume2 className="h-3.5 w-3.5 shrink-0 text-[#B4471A]" strokeWidth={2.2} aria-hidden="true" />
+                {c.prompt} · {c.meta}
+              </p>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* the recording: one bar per slice, coloured by who is talking, brighter once played */}
+      <div className="mt-2.5 flex h-6 items-center gap-[2px]" aria-hidden="true">
+        {bars.map((v, i) => {
+          const ms = ((i + 0.5) / n) * c.duration;
+          const who = whoAt(ms);
+          return (
+            <span
+              key={i}
+              className={cn('min-w-0 flex-1 rounded-full transition-opacity duration-200', who === 'aurora' ? 'bg-[#F25C2A]' : who ? 'bg-ink' : 'bg-ink/30', played < 0 ? 'opacity-45' : played >= ms ? 'opacity-100' : 'opacity-20')}
+              style={{ height: Math.max(14, v * 100) + '%' }}
+            />
           );
         })}
       </div>
-      {/* where in the day: a dot per moment */}
-      <div className="mt-2 flex justify-center gap-1.5 max-sm:hidden">
-        {list.map((x, i) => (
-          <span key={x.time} className={cn('h-1.5 rounded-full transition-all duration-300', i === k ? 'w-4 bg-ink/70' : 'w-1.5 bg-ink/20')} />
-        ))}
+
+      {/* what lands in the team's systems while she talks */}
+      <div className="mt-3 flex h-[42px] items-center gap-2.5 rounded-[14px] bg-white/75 px-3 shadow-[0_1px_2px_rgba(10,15,14,0.05)]" aria-live="polite">
+        <Database className="h-4 w-4 shrink-0 text-[#14A36B]" strokeWidth={2} aria-hidden="true" />
+        <span className="shrink-0 text-[10.5px] font-medium uppercase tracking-[0.07em] text-[#14A36B]">{c.team}</span>
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.span key={note ? note.at : 'wait'} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.3, ease: EASE }} className={cn('min-w-0 truncate text-[12.5px]', note ? 'font-medium text-ink' : 'text-slate')}>
+            {note ? note.text : c.waiting}
+          </motion.span>
+        </AnimatePresence>
       </div>
+      <audio ref={audioRef} src={c.audio} preload="none" onEnded={cc.ended} />
+      <p className="sr-only">{c.captions.map((q) => (q.who === 'aurora' ? 'Aurora: ' : c.caller + ': ') + q.text).join(' ')}</p>
     </LiquidGlass>
   );
 }
 
 /**
- * Hero: one cinematic frame, a technician walking up to a customer's door at dusk. The promise sits in the sky; the
- * panel shows one moment of the day and what Aurora did in it for a customer and for the team. Phones: the promise,
- * then the photo with the panel under its bottom edge. The photo takes a looping clip when there is one.
+ * Hero: one cinematic frame, a technician walking up to a customer's door at dusk. The promise sits in the sky; the card
+ * plays the after-hours call that booked him, with what the team sees as it goes. Phones: the promise, then the photo
+ * with the card under its bottom edge. The photo takes a looping clip when there is one.
  * The photo takes a looping clip when there is one.
  */
 export function HsHero() {
@@ -130,7 +162,7 @@ export function HsHero() {
       <div className="shell relative">
         {/*
           One cinematic frame, as tall as the screen allows on laptops: the promise in the dusk sky at the top left, the
-          moment panel at the bottom right over the lawn. Phones: the promise above, the photo, the panel under its edge.
+          call card at the bottom right over the lawn. Phones: the promise above, the photo, the panel under its edge.
         */}
         <div ref={ref} className="relative">
           <div className="relative min-[560px]:aspect-[4/5] min-[560px]:overflow-hidden min-[560px]:rounded-[28px] min-[560px]:shadow-[0_40px_80px_-48px_rgba(30,30,60,0.55)] md:aspect-square lg:aspect-auto lg:h-[clamp(600px,calc(100svh_-_var(--nav-h)_-_40px),860px)]">
@@ -173,16 +205,9 @@ export function HsHero() {
             </figure>
 
             <div className="relative z-[3] mx-3 -mt-6 min-[560px]:absolute min-[560px]:bottom-5 min-[560px]:right-5 min-[560px]:mx-0 min-[560px]:mt-0 min-[560px]:w-[330px] lg:bottom-8 lg:right-8 lg:w-[400px] xl:w-[420px]">
-              <Moments running={inView && visible} still={reduce} />
+              <HeroCall c={H.call} reduce={reduce} active={inView && visible} />
             </div>
           </div>
-          <ul className="sr-only">
-            {H.moments.map((x) => (
-              <li key={x.time}>
-                {x.time}. {H.sides.customers}: {x.customers.title}, {x.customers.detail}. {H.sides.team}: {x.team.title}, {x.team.detail}.
-              </li>
-            ))}
-          </ul>
         </div>
       </div>
     </section>

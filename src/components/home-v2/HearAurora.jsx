@@ -54,8 +54,8 @@ export default function HearAurora({ d: H, id = 'hear' }) {
         <div ref={ref} className="canvas canvas-grain relative mt-5 sm:mt-8 overflow-hidden bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] p-4 xs:p-5 md:mt-12 md:p-8 lg:px-10 lg:py-8">
           <div aria-hidden="true" className="pointer-events-none absolute left-[8%] top-[-20%] h-[60%] w-[40%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.4),rgba(255,200,87,0))] blur-2xl" />
 
-          {/* which call: one with a customer, one with the team */}
-          <div className="relative flex gap-2" role="tablist" aria-label="Choose a call">
+          {/* which call, when there is more than one: one with a customer, one with the team */}
+          <div className={cn('relative flex gap-2', H.calls.length < 2 && 'hidden')} role="tablist" aria-label="Choose a call">
             {H.calls.map((x, i) => {
               const Icon = TAB_ICON[x.key];
               const on = i === k;
@@ -77,7 +77,7 @@ export default function HearAurora({ d: H, id = 'hear' }) {
           </div>
 
           {/* the stage: the scene with the call over it, and beside it what happens */}
-          <div className="relative mt-4 grid overflow-hidden rounded-[24px] bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_30px_60px_-40px_rgba(90,50,20,0.45)] lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]">
+          <div className={cn('relative grid overflow-hidden rounded-[24px] bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_30px_60px_-40px_rgba(90,50,20,0.45)] lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]', H.calls.length > 1 && 'mt-4')}>
             <div className="relative aspect-[4/3] overflow-hidden bg-[#E9E1D4] sm:aspect-[16/9] lg:aspect-auto lg:min-h-[400px]">
               {H.calls.map((x, i) => (
                 <React.Fragment key={x.key}>
