@@ -1738,7 +1738,7 @@ function JourneyStep({ step, n, a, reduce, cc }) {
           </li>
         ))}
       </ul>
-      <p className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-0.5 rounded-[14px] bg-[#FBF8F3] px-3.5 py-2.5 md:flex-col md:items-start xl:flex-row xl:items-center shadow-[inset_0_0_0_1px_rgba(10,15,14,0.06)] md:mt-auto md:px-4 md:py-3">
+      <p className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-0.5 rounded-[14px] bg-[#FBF8F3] px-3.5 py-2.5 shadow-[inset_0_0_0_1px_rgba(10,15,14,0.06)] md:mt-auto md:px-4 md:py-3">
         <span className="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.08em] text-ink/45">
           <TeamIcon className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
           {a.labels.team}
