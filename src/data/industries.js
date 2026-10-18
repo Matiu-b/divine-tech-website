@@ -264,8 +264,8 @@ export const industries = [
             call: {
               audio: '/media/real-estate/emma-call-2.mp3',
               duration: 72910,
-              title: 'Aurora called Emma',
-              meta: 'Tue 5:40 pm · AI voice agent',
+              title: 'Aurora calls Emma',
+              meta: 'Outgoing call · Tue 5:40 pm',
               listen: 'Hear the call',
               again: 'Hear it again',
               sound: 'Sound on',
@@ -274,6 +274,10 @@ export const industries = [
               caller: 'Emma',
               // without sound the step shows these moments of the call; with sound, every line as it is spoken
               moments: [8, 10, 16],
+              momentLabels: ['Objection', 'Answer', 'Booked'],
+              prompt: 'Three moments from the call. Press play to hear all of it.',
+              // the recording's loudness in 96 slices, for the waveform
+              wave: [0.63,  0.49,  0.76,  0.77,  0.59,  0.68,  0.45,  0.93,  0.19,  0.34,  0.51,  0.29,  0.14,  0.22,  0.47,  0.3,  0.23,  0.61,  0.23,  0.83,  0.71,  0.83,  0.41,  0.91,  0.54,  0.79,  0.64,  0.75,  0.17,  0.69,  1.0,  0.6,  0.25,  0.73,  0.45,  0.61,  0.72,  0.14,  0.65,  0.78,  0.48,  0.64,  0.46,  0.51,  0.6,  0.73,  0.21,  0.75,  0.63,  0.54,  0.69,  0.67,  0.61,  0.53,  0.31,  0.86,  0.73,  0.15,  0.51,  0.63,  0.62,  0.71,  0.36,  0.43,  0.66,  0.65,  0.28,  0.63,  0.62,  0.61,  0.72,  0.81,  0.31,  0.68,  0.67,  0.31,  0.5,  0.23,  0.76,  0.68,  0.15,  0.63,  0.37,  0.4,  0.69,  0.59,  0.75,  0.42,  0.81,  0.59,  0.67,  0.56,  0.81,  0.64,  0.44,  0.7],
               captions: [
               {who: "aurora", at: 0, end: 4240, text: "Hi, Emma. It's Aurora, the AI assistant at Harbor Lane Realty.", words: [0, 720, 1300, 1500, 2320, 2360, 2680, 3040, 3380, 3620, 3880]},
               {who: "aurora", at: 4840, end: 6100, text: "Is now an okay time?", words: [0, 220, 560, 700, 900]},

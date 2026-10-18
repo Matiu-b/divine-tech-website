@@ -89,6 +89,20 @@ function useCallClock(c, { audioRef }) {
     setT(c.duration);
     setStatus('done');
   };
+  // play from a given moment (the journey's call jumps to a line when it is clicked)
+  const seek = (ms) => {
+    const a = audioRef.current;
+    now.current = ms;
+    setT(ms);
+    silent.current = !a;
+    if (a) {
+      a.currentTime = ms / 1000;
+      a.play().catch(() => {
+        silent.current = true;
+      });
+    }
+    setStatus('playing');
+  };
   // back to the start, without playing (the journey uses it when its call step is left)
   const reset = () => {
     const a = audioRef.current;
@@ -97,7 +111,7 @@ function useCallClock(c, { audioRef }) {
     setT(0);
     setStatus('idle');
   };
-  return { t, status, play, ended, reset };
+  return { t, status, play, ended, reset, seek };
 }
 
 const lastIndex = (list, t) => {
@@ -1605,68 +1619,113 @@ function CallLine({ cap, t, dim, c }) {
 }
 
 /**
- * The call, the peak of the story. Before anyone presses play it shows the call's turning points (the objection,
- * Aurora's answer, the booking); once it plays, every line lights up as it is spoken.
+ * The call, the peak of the story, shown as a call rather than a chat: who is calling, the recording's own waveform
+ * (Aurora's turns in orange, Emma's in ink) with the call's three turning points marked on it, and the words as
+ * subtitles. Before it plays, those three moments are listed with their times; each one plays the call from there.
+ * While it plays, every line lights up as it is spoken.
  */
-function CallPanel({ c, a, clock: cc, reduce }) {
-  const { t, status, play } = cc;
+function CallPanel({ c, clock: cc, reduce }) {
+  const { t, status, play, seek } = cc;
   const live = status === 'playing' || status === 'paused';
-  const heard = live || status === 'done';
   const k = lastIndex(c.captions, t);
   const cap = c.captions[k];
   const prev = k > 0 ? c.captions[k - 1] : null;
   const speaking = status === 'playing' && t >= cap.at && t <= cap.end + 150 ? cap.who : null;
+  const n = c.wave.length;
+  // who is speaking in each slice of the waveform
+  const whoAt = (ms) => {
+    const x = c.captions.find((q) => ms >= q.at - 150 && ms <= q.end + 150);
+    return x ? x.who : null;
+  };
+  const played = live || status === 'done' ? t : -1;
+  const timeOf = (ms) => clock(ms);
   return (
     <div className="flex flex-col gap-3 rounded-[18px] bg-[#F6F1E8] p-2.5 xs:p-3.5 md:p-4">
-      <div className="flex items-center gap-2.5 rounded-[16px] bg-white px-3 py-2.5 shadow-[0_1px_2px_rgba(10,15,14,0.08)] sm:gap-3">
-        <span className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#FFF1E6] max-sm:hidden">
-          {speaking === 'aurora' ? <span className="ring-ping absolute inset-0 rounded-full bg-[#F25C2A]/25" /> : null}
-          <img src="/brand/aurora-symbol-color.svg" alt="" width="20" height="20" className="relative h-5 w-5" />
-        </span>
-        <span className="min-w-0 flex-1">
-          <span className="block truncate text-[14px] font-medium leading-tight text-ink">{c.title}</span>
-          {live ? (
-            <span className="block truncate text-[12px] text-slate">
-              {c.meta} · <span className="tabular-nums">{clock(Math.min(t, c.duration))}</span>
-            </span>
-          ) : (
-            <span className="flex items-center gap-1 truncate text-[12px] font-medium text-[#B4471A]">
-              <Volume2 className="h-3.5 w-3.5 shrink-0" strokeWidth={2.2} aria-hidden="true" />
-              {status === 'done' ? c.again : c.listen}
-              <span className="max-xs:hidden"> · {c.sound}</span> · <span className="tabular-nums">{clock(c.duration)}</span>
-            </span>
-          )}
-        </span>
-        {live ? (
-          <span className="max-sm:hidden">
-            <Wave who={reduce ? null : speaking} />
+      <div className="rounded-[16px] bg-white p-3 shadow-[0_1px_2px_rgba(10,15,14,0.08)] md:p-3.5">
+        <div className="flex items-center gap-2.5 sm:gap-3">
+          <span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#FFF1E6]">
+            {speaking === 'aurora' ? <span className="ring-ping absolute inset-0 rounded-full bg-[#F25C2A]/25" /> : null}
+            <img src="/brand/aurora-symbol-color.svg" alt="" width="18" height="18" className="relative h-[18px] w-[18px]" />
           </span>
-        ) : null}
-        <button
-          type="button"
-          onClick={play}
-          aria-label={status === 'playing' ? c.pause : status === 'paused' ? c.resume : status === 'done' ? c.again : c.listen}
-          className={cn(
-            'relative flex shrink-0 items-center justify-center rounded-full text-white transition-transform hover:scale-105',
-            live ? 'h-9 w-9 bg-ink' : 'h-11 w-11 bg-[linear-gradient(140deg,#FF8A3D,#F25C2A)] shadow-[0_10px_24px_-10px_rgba(242,92,42,0.8)]'
-          )}
-        >
-          {!live && !reduce ? <span className="ring-ping absolute inset-0 rounded-full bg-[#F25C2A]/30" /> : null}
-          {status === 'playing' ? <Pause className="relative h-3.5 w-3.5 fill-current" strokeWidth={2.2} aria-hidden="true" /> : <Play className="relative ml-0.5 h-4 w-4 fill-current" strokeWidth={2.2} aria-hidden="true" />}
-        </button>
+          <span className="min-w-0 flex-1">
+            <span className="block truncate text-[14px] font-medium leading-tight text-ink">{c.title}</span>
+            <span className="block truncate text-[12px] text-slate">{c.meta}</span>
+          </span>
+          <span className="shrink-0 text-[12.5px] font-medium tabular-nums text-ink/60">
+            {live ? clock(Math.min(t, c.duration)) + ' / ' : ''}
+            {clock(c.duration)}
+          </span>
+        </div>
+
+        <div className="mt-3 flex items-center gap-3">
+          <button
+            type="button"
+            onClick={play}
+            aria-label={status === 'playing' ? c.pause : status === 'paused' ? c.resume : status === 'done' ? c.again : c.listen}
+            className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[linear-gradient(140deg,#FF8A3D,#F25C2A)] text-white shadow-[0_10px_24px_-10px_rgba(242,92,42,0.8)] transition-transform hover:scale-105"
+          >
+            {status === 'idle' && !reduce ? <span className="ring-ping absolute inset-0 rounded-full bg-[#F25C2A]/30" /> : null}
+            {status === 'playing' ? <Pause className="relative h-4 w-4 fill-current" strokeWidth={2.2} aria-hidden="true" /> : <Play className="relative ml-0.5 h-4 w-4 fill-current" strokeWidth={2.2} aria-hidden="true" />}
+          </button>
+          {/* the recording itself: one bar per slice, coloured by who is talking, brighter once it has played */}
+          <div className="relative flex h-10 min-w-0 flex-1 items-center gap-[2px]" aria-hidden="true">
+            {c.wave.map((v, i) => {
+              const ms = ((i + 0.5) / n) * c.duration;
+              const who = whoAt(ms);
+              const done = played >= ms;
+              return (
+                <span
+                  key={i}
+                  className={cn('min-w-0 flex-1 rounded-full transition-opacity duration-200', who === 'aurora' ? 'bg-[#F25C2A]' : who ? 'bg-ink' : 'bg-ink/30', i % 2 === 1 && 'max-sm:hidden', played < 0 ? 'opacity-60' : done ? 'opacity-100' : 'opacity-25')}
+                  style={{ height: Math.max(10, v * 100) + '%' }}
+                />
+              );
+            })}
+            {c.moments.map((m, j) => (
+              <span
+                key={m}
+                className="absolute top-[-9px] flex h-[18px] w-[18px] -translate-x-1/2 items-center justify-center rounded-full bg-ink text-[10px] font-medium text-white ring-2 ring-white"
+                style={{ left: (c.captions[m].at / c.duration) * 100 + '%' }}
+              >
+                {j + 1}
+              </span>
+            ))}
+          </div>
+        </div>
       </div>
 
-      {heard && status !== 'done' ? (
-        <div className="grid h-[190px] content-end gap-3 overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,#000_25%)] md:h-[176px]">
+      {live ? (
+        <div className="grid h-[190px] content-end gap-3 overflow-hidden px-1 [mask-image:linear-gradient(to_bottom,transparent,#000_25%)] md:h-[176px]">
           {prev ? <CallLine key={k - 1} cap={prev} t={t} dim c={c} /> : null}
           <CallLine key={k} cap={cap} t={t} c={c} />
         </div>
       ) : (
-        <div className="flex min-h-[190px] flex-col gap-2.5 md:min-h-[176px]">
-          {c.moments.map((m, i) => {
-            const x = c.captions[m];
-            return <JourneyBubble key={m} m={x} i={i} lead={a.lead} labels={a.labels} reduce={reduce} label={i === 0 || c.captions[c.moments[i - 1]].who !== x.who} />;
-          })}
+        <div className="flex min-h-[190px] flex-col md:min-h-[176px]">
+          <p className="px-1 text-[12px] text-slate">{c.prompt}</p>
+          <ol className="mt-2 grid gap-1">
+            {c.moments.map((m, j) => {
+              const x = c.captions[m];
+              return (
+                <li key={m}>
+                  <button type="button" onClick={() => seek(x.at)} className="group flex w-full gap-2.5 rounded-[12px] px-1 py-1.5 text-left transition-colors hover:bg-white/70">
+                    <span className="mt-0.5 flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full bg-ink text-[10px] font-medium text-white">{j + 1}</span>
+                    <span className="min-w-0">
+                      <span className="flex items-center gap-1.5 text-[10.5px] font-medium uppercase tracking-[0.07em]">
+                        <span className="tabular-nums text-ink/45">{timeOf(x.at)}</span>
+                        <span className={x.who === 'aurora' ? 'text-[#B4471A]' : 'text-slate'}>{x.who === 'aurora' ? 'Aurora' : c.caller}</span>
+                        <span className="text-ink/35">· {c.momentLabels[j]}</span>
+                      </span>
+                      <span className="mt-0.5 block text-[14px] leading-snug text-ink group-hover:text-ink md:text-[14.5px]">
+                        <span className="text-ink/40">“</span>
+                        {x.text}
+                        <span className="text-ink/40">”</span>
+                      </span>
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
+          </ol>
         </div>
       )}
     </div>
@@ -1693,7 +1752,7 @@ function JourneyStep({ step, n, a, reduce, cc }) {
           <p className="pretty mt-1.5 text-[14.5px] leading-[1.55] text-graphite md:text-[15px] md:leading-[1.6]">{step.happened}</p>
         </div>
         {c ? (
-          <CallPanel c={c} a={a} clock={cc} reduce={reduce} />
+          <CallPanel c={c} clock={cc} reduce={reduce} />
         ) : (
           <div className="flex flex-col gap-2.5 rounded-[18px] bg-[#F6F1E8] p-3.5 md:p-4">
             {step.thread.map((m, i) => (
