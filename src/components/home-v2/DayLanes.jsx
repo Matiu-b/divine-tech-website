@@ -29,7 +29,7 @@ const rise = (reduce, i, base = 0.15) =>
   reduce ? {} : { initial: { opacity: 0, y: 8 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.4, ease: EASE, delay: base + i * 0.35 } };
 
 function Card({ children, className = undefined }) {
-  return <div className={cn('rounded-[20px] bg-white p-4 shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_24px_48px_-32px_rgba(60,40,20,0.35)] md:p-5', className)}>{children}</div>;
+  return <div className={cn('rounded-[20px] bg-white p-3.5 sm:p-4 shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_24px_48px_-32px_rgba(60,40,20,0.35)] md:p-5', className)}>{children}</div>;
 }
 
 /** The day's routes on a small street map: each technician's route draws itself, then the stops. */
@@ -86,7 +86,7 @@ function Routes({ e, reduce }) {
 /** A short text thread, then what it led to. */
 function Thread({ e, reduce }) {
   return (
-    <Card className="flex flex-col gap-2.5 bg-[#FBF8F3]">
+    <Card className="flex flex-col gap-2 bg-[#FBF8F3] sm:gap-2.5">
       {e.thread.map((m, i) => {
         const mine = m.who === 'aurora';
         return (
@@ -95,7 +95,7 @@ function Thread({ e, reduce }) {
               {mine ? <img src="/brand/aurora-symbol-color.svg" alt="" width="11" height="11" className="h-[11px] w-[11px]" /> : null}
               {mine ? 'Aurora' : m.name}
             </span>
-            <p className={cn('rounded-[18px] px-3.5 py-2.5 text-[14px] leading-snug', mine ? 'rounded-br-[6px] bg-ink text-white' : 'rounded-bl-[6px] bg-white text-ink shadow-[0_1px_2px_rgba(10,15,14,0.08)]')}>{m.text}</p>
+            <p className={cn('rounded-[18px] px-3 py-2 text-[13.5px] leading-snug sm:px-3.5 sm:py-2.5 sm:text-[14px]', mine ? 'rounded-br-[6px] bg-ink text-white' : 'rounded-bl-[6px] bg-white text-ink shadow-[0_1px_2px_rgba(10,15,14,0.08)]')}>{m.text}</p>
           </motion.div>
         );
       })}
@@ -119,15 +119,15 @@ function Invoice({ e, reduce }) {
         </span>
         <span className="text-[22px] font-medium tabular-nums tracking-[-0.02em] text-ink">{v.total}</span>
       </div>
-      <ul className="mt-4 grid gap-2">
+      <ul className="mt-3 grid gap-1.5 sm:mt-4 sm:gap-2">
         {v.checks.map((c, i) => (
-          <motion.li key={c.text} {...rise(reduce, i, 0.3)} className={cn('flex items-center gap-2.5 rounded-[12px] px-3 py-2 text-[13.5px]', c.ok ? 'bg-[#F4F8F5] text-ink' : 'bg-[#FFF3E6] font-medium text-[#9A3A12]')}>
+          <motion.li key={c.text} {...rise(reduce, i, 0.3)} className={cn('flex items-center gap-2.5 rounded-[12px] px-3 py-1.5 text-[13px] leading-snug sm:py-2 sm:text-[13.5px]', c.ok ? 'bg-[#F4F8F5] text-ink' : 'bg-[#FFF3E6] font-medium text-[#9A3A12]')}>
             {c.ok ? <Check className="h-4 w-4 shrink-0 text-[#14A36B]" strokeWidth={2.6} aria-hidden="true" /> : <AlertTriangle className="h-4 w-4 shrink-0 text-[#F25C2A]" strokeWidth={2.2} aria-hidden="true" />}
             {c.text}
           </motion.li>
         ))}
       </ul>
-      <motion.p {...rise(reduce, v.checks.length, 0.4)} className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-ink px-3 py-1.5 text-[12.5px] font-medium text-white">
+      <motion.p {...rise(reduce, v.checks.length, 0.4)} className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-ink px-3 sm:mt-4 py-1.5 text-[12.5px] font-medium text-white">
         <ArrowRight className="h-3.5 w-3.5" strokeWidth={2.2} aria-hidden="true" />
         {v.status}
       </motion.p>
