@@ -149,7 +149,7 @@ function useCover(ref) {
 }
 
 const DRIVE_MS = 2200;
-const STOP_MS = 3200;
+const STOP_MS = 6500; // long enough to watch the job's clip
 
 /**
  * The van's day: leg i drives to stop i, then it waits at the stop. Returns the leg, whether it is driving, and how far
@@ -182,6 +182,16 @@ function useDrive(n, running, still) {
     };
   }, [running, still, n]); // eslint-disable-line react-hooks/exhaustive-deps
   return state;
+}
+
+/** Jake on the job: the clip plays muted on a loop while the van is there; the still stands in when it can't play. */
+function JobClip({ s, play }) {
+  return (
+    <span className="relative block aspect-video w-full overflow-hidden rounded-[9px] sm:rounded-[10px]">
+      <img src={s.poster} alt="" className="absolute inset-0 h-full w-full object-cover" />
+      {play ? <video src={s.video} poster={s.poster} className="absolute inset-0 h-full w-full object-cover" autoPlay muted loop playsInline preload="auto" aria-hidden="true" /> : null}
+    </span>
+  );
 }
 
 /** One job in the plan: closed it is a single line; the job the van is at (or driving to) opens with its details. */
@@ -245,6 +255,15 @@ export default function FieldMap({ d }) {
 
   const here = !driving;
   const toFrame = ([x, y]) => ({ left: x * box.s + box.ox, top: y * box.s + box.oy });
+  const wide = box.w >= 600;
+  // the clip card sits beside its stop, on the side with more room, and inside the map
+  const card = (at) => {
+    const { left: x, top: y } = toFrame(at);
+    const cw = box.w >= 1000 ? 270 : 250;
+    const ch = cw * 0.5625 + 40;
+    const lx = x < box.w / 2 ? x + 22 : x - 22 - cw;
+    return { left: Math.max(12, Math.min(box.w - cw - 12, lx)), top: Math.max(12, Math.min(box.h - ch - 12, y - ch / 2)) };
+  };
   const total = d.stops.reduce((a, s) => a + s.drive, 0);
 
   const plan = (
@@ -351,12 +370,24 @@ export default function FieldMap({ d }) {
               </span>
             ))}
 
-            {/* the job the van is at: a card on the map, like a place card */}
+            {/* the job the van is at: a place card beside the stop with a clip of Jake on the job (on phones, in the corner) */}
             <AnimatePresence>
               {here ? (
-                <motion.div key={leg} initial={reduce ? false : { opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.25, ease: EASE }} className="pointer-events-none absolute z-[2] -translate-x-1/2 -translate-y-[calc(100%+18px)] whitespace-nowrap rounded-[12px] bg-white px-3 py-1.5 text-[12px] shadow-[0_4px_14px_rgba(10,15,14,0.18)]" style={toFrame(d.stops[leg].at)}>
-                  <span className="font-medium text-ink">{d.stops[leg].job}</span>
-                  <span className="text-slate"> · {d.stops[leg].time}</span>
+                <motion.div
+                  key={leg}
+                  initial={reduce ? false : { opacity: 0, scale: 0.96 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3, ease: EASE }}
+                  className="pointer-events-none absolute bottom-2 right-2 z-[3] w-[56%] overflow-hidden rounded-[12px] bg-white p-1 shadow-[0_10px_30px_-8px_rgba(10,15,14,0.35)] sm:bottom-auto sm:right-auto sm:w-[250px] sm:rounded-[14px] sm:p-1.5 lg:w-[270px]"
+                  style={wide ? card(d.stops[leg].at) : undefined}
+                >
+                  <JobClip s={d.stops[leg]} play={inView && visible && !reduce} />
+                  <span className="block truncate px-1 pb-0.5 pt-1 text-[11px] sm:px-1.5 sm:pt-1.5 sm:text-[12px]">
+                    <span className="mr-1.5 inline-flex h-4 w-4 sm:h-[18px] sm:w-[18px] items-center justify-center rounded-full bg-[#F25C2A] align-[-3px] text-[10.5px] font-semibold text-white">{leg + 1}</span>
+                    <span className="font-medium text-ink">{d.stops[leg].job}</span>
+                    <span className="text-slate max-sm:hidden"> · {d.stops[leg].time}</span>
+                  </span>
                 </motion.div>
               ) : null}
             </AnimatePresence>
