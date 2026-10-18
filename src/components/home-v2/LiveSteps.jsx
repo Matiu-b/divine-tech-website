@@ -133,7 +133,7 @@ export default function LiveSteps() {
             {L.steps.map((x, i) => {
               const on = i === k;
               return (
-                <div key={x.key} className={cn('[grid-area:1/1] grid content-start gap-5 md:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] md:items-center md:gap-10', on ? '' : 'invisible')} aria-hidden={on ? undefined : true}>
+                <div key={x.key} className={cn('[grid-area:1/1] grid content-start gap-5 md:content-center md:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] md:items-center md:gap-10', on ? '' : 'invisible')} aria-hidden={on ? undefined : true}>
                   <motion.div key={on ? 'on' : 'off'} initial={reduce || !on ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, ease: EASE }}>
                     <p className="text-[12px] font-medium uppercase tracking-[0.08em] text-[#14A36B]">
                       {String(i + 1).padStart(2, '0')} · {x.who}
