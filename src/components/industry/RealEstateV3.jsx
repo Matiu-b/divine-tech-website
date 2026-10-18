@@ -1731,10 +1731,10 @@ function JourneyStep({ step, n, a, reduce, cc }) {
       </p>
       <p className="pretty mt-2 text-[15px] leading-snug text-graphite md:mt-3 md:text-[16px]">{step.happened}</p>
       {/* phones and tablets: the steps as one short flowing line; laptops: two neat columns */}
-      <p className="mt-3 text-[13.5px] leading-[1.6] text-ink md:mt-4 md:text-[14px] xl:hidden">
-        {step.points.map((x, i) => (
-          <span key={x}>
-            {i > 0 ? <span aria-hidden="true" className="mx-1.5 inline-block h-1.5 w-1.5 rounded-full bg-[#F25C2A] align-middle" /> : null}
+      <p className="mt-3 flex flex-wrap gap-x-2.5 gap-y-1 text-[12.5px] leading-snug text-ink xs:text-[13px] md:mt-4 md:text-[13.5px] xl:hidden">
+        {step.points.map((x) => (
+          <span key={x} className="inline-flex items-center gap-1.5 whitespace-nowrap">
+            <span aria-hidden="true" className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#F25C2A]" />
             {x}
           </span>
         ))}
