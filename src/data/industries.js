@@ -260,7 +260,8 @@ export const industries = [
           {
             key: 'call', name: 'Reactivation call', date: 'Jun 2', icon: 'phone',
             media: { video: '/media/real-estate/emma-desk.mp4', poster: '/media/real-estate/emma-desk-poster.webp' },
-            happened: 'Emma hadn’t answered a text in two months, so Aurora called her about a new listing near the house she first asked about. She had a good reason to wait. Aurora had an answer for it, and a time on Marcus’s calendar.',
+            happened: 'Two months of silence, turned into a booked showing with one phone call.',
+            points: ['Stopped replying to texts after Willow Court', 'Aurora’s AI voice agent calls her', 'Handles both objections: the condo and the timing', 'Pushes for a meeting and books it with Marcus'],
             call: {
               audio: '/media/real-estate/emma-call-2.mp3',
               duration: 72910,
@@ -312,7 +313,8 @@ export const industries = [
           {
             key: 'showing', name: 'The showing', date: 'Jun 6', icon: 'calendar',
             media: { video: '/media/real-estate/emma-showing.mp4', poster: '/media/real-estate/emma-showing-poster.webp' },
-            happened: 'Marcus walked in already knowing everything from the call, so the tour picked up right where it left off. Emma fell for the yard, and that afternoon Marcus valued her condo too.',
+            happened: 'Marcus walks in already knowing everything from the call.',
+            points: ['Reminder text the morning of the showing', 'Call notes in the CRM before the tour', 'Condo valued the same afternoon', 'Offer requested that day'],
             thread: [
               { who: 'aurora', text: 'Morning, Emma! Marcus will meet you at 12 Aspen Court at 11, then head over to your condo.' },
               { who: 'aurora', text: 'How did the house feel?' },
@@ -323,7 +325,8 @@ export const industries = [
           {
             key: 'closing', name: 'Closing day', date: 'Jul 24', icon: 'crm',
             media: { video: '/media/real-estate/emma-closing.mp4', poster: '/media/real-estate/emma-closing-poster.webp' },
-            happened: 'Seven weeks after that call, Emma signed for 12 Aspen Court and left with the keys. Her condo sold with Marcus the same month. A lead who had gone quiet became two closed deals.',
+            happened: 'A lead who had gone quiet, now two closed deals.',
+            points: ['Closing reminder with what to bring', 'She buys 12 Aspen Court', 'Her condo sells with Marcus the same month'],
             thread: [
               { who: 'aurora', text: 'Big day, Emma! Closing is at 2 at the title office. Bring your ID, and Marcus will have the keys.' },
               { who: 'lead', text: 'Signed! We have the keys!' },

@@ -1755,7 +1755,17 @@ function JourneyStep({ step, n, a, reduce, cc }) {
           </p>
           <p className="mt-1.5 text-[20px] font-medium leading-tight tracking-[-0.015em] text-ink md:text-[22px]">{step.name}</p>
           <p className="mt-3 text-[11px] font-medium uppercase tracking-[0.08em] text-ink/40 md:mt-4">{a.labels.happened}</p>
-          <p className="pretty mt-1.5 text-[14.5px] leading-[1.55] text-graphite md:text-[15px] md:leading-[1.6]">{step.happened}</p>
+          <p className="pretty mt-1.5 text-[15px] font-medium leading-snug text-ink md:text-[16px]">{step.happened}</p>
+          {step.points ? (
+            <ul className="mt-3 grid gap-2">
+              {step.points.map((x) => (
+                <li key={x} className="flex gap-2.5 text-[14px] leading-snug text-graphite md:text-[14.5px]">
+                  <span aria-hidden="true" className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#F25C2A]" />
+                  {x}
+                </li>
+              ))}
+            </ul>
+          ) : null}
         </div>
         {c ? (
           <CallPanel c={c} clock={cc} reduce={reduce} />
@@ -1937,7 +1947,7 @@ export function RxAfter({ it }) {
           <ol className="sr-only">
             {a.steps.map((x) => (
               <li key={x.key}>
-                {x.name} ({x.date}). {x.happened}{' '}
+                {x.name} ({x.date}). {x.happened} {(x.points || []).join('. ')}{' '}
                 {(x.call ? x.call.captions : x.thread).map((m) => (m.who === 'aurora' ? 'Aurora: ' : a.lead.name.split(' ')[0] + ': ') + m.text).join(' ')} {x.team}
               </li>
             ))}
