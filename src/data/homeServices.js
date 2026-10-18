@@ -73,15 +73,15 @@ export const hsField = {
   textShort: 'Aurora texts each job to the right tech, with the address, the problem and the way there.',
   title: 'Northline · live',
   techs: [
-    { key: 'jake', name: 'Jake', role: 'HVAC technician', color: '#F25C2A', at: [330, 196] },
-    { key: 'mike', name: 'Mike', role: 'Technician', color: '#0A0F0E', at: [575, 232] },
-    { key: 'rivera', name: 'Rivera', role: 'Freelance electrician', color: '#14A36B', at: [70, 100] },
+    { key: 'jake', name: 'Jake', role: 'HVAC technician', color: '#F25C2A', at: [330, 236] },
+    { key: 'mike', name: 'Mike', role: 'Technician', color: '#0A0F0E', at: [110, 282] },
+    { key: 'rivera', name: 'Rivera', role: 'Freelance electrician', color: '#14A36B', at: [540, 282] },
   ],
   beats: [
     {
       tech: 'jake',
-      route: 'M330 196 H455 V90',
-      pin: [455, 90],
+      route: 'M330 236 V196 H200 V90',
+      pin: [200, 90],
       tag: 'New job · 2:30 pm',
       thread: [
         { who: 'aurora', text: 'New job at 2:30 · 14 Maple Ct · AC not cooling. It’s next on your route, 6 minutes away.' },
@@ -91,22 +91,22 @@ export const hsField = {
     },
     {
       tech: 'mike',
-      route: 'M575 232 V282 H455',
-      pin: [455, 282],
+      route: 'M110 282 H200 V240',
+      pin: [200, 240],
       tag: 'Van 7 · two capacitors',
       thread: [
         { who: 'tech', text: 'Do we have a 45/5 capacitor anywhere? Job 412.' },
-        { who: 'aurora', text: 'Van 7 has two, parked on Birch St, 6 minutes from you. Sam knows you’re coming.' },
+        { who: 'aurora', text: 'Van 7 has two, parked on Oak Ave, 4 minutes from you. Sam knows you’re coming.' },
       ],
       result: 'Stock updated · van 7',
     },
     {
       tech: 'rivera',
-      route: 'M70 100 V196 H200 V320',
-      pin: [200, 320],
+      route: 'M540 282 H455 V310',
+      pin: [455, 310],
       tag: 'Tomorrow · 8 am',
       thread: [
-        { who: 'aurora', text: 'Tomorrow 8 am · panel upgrade at 22 Oak Ave · $480 at your rate. Can you take it?' },
+        { who: 'aurora', text: 'Tomorrow 8 am · panel upgrade at 22 Park Ln · $480 at your rate. Can you take it?' },
         { who: 'tech', text: 'Accepted.' },
       ],
       result: 'Booked · work order sent',

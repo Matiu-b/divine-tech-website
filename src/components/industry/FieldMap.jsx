@@ -115,7 +115,7 @@ export default function FieldMap({ d }) {
         />
 
         <div ref={ref} className="relative mt-5 sm:mt-8 md:mt-12">
-          <div ref={frame} className="canvas relative aspect-[4/3] overflow-hidden bg-[#F1EEE8] shadow-[0_0_0_1px_rgba(10,15,14,0.08),0_30px_60px_-40px_rgba(60,50,30,0.45)] sm:aspect-[16/9] lg:aspect-[16/8]">
+          <div ref={frame} className="canvas relative aspect-[4/3] overflow-hidden bg-[#F1EEE8] shadow-[0_0_0_1px_rgba(10,15,14,0.08),0_30px_60px_-40px_rgba(60,50,30,0.45)] sm:aspect-[16/9] lg:aspect-[16/7]">
             <div className="absolute" style={{ left: box.ox, top: box.oy, width: W * box.s, height: H * box.s }}>
               <svg viewBox={`0 0 ${W} ${H}`} className="block h-full w-full" aria-hidden="true">
                 <MapBase />
