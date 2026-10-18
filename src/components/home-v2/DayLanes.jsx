@@ -74,9 +74,9 @@ function Routes({ e, reduce }) {
       </svg>
       <ul className="mt-3 grid gap-1.5">
         {e.routes.map((r, i) => (
-          <motion.li key={r.who} {...rise(reduce, i, 0.4)} className="flex items-center gap-2.5 text-[13px] text-ink">
+          <motion.li key={r.who} {...rise(reduce, i, 0.4)} className="flex items-center gap-2.5 text-[12.5px] leading-snug text-ink sm:text-[13px]">
             <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: r.color }} />
-            <span className="min-w-0 flex-1 truncate">{r.who}</span>
+            <span className="min-w-0 flex-1">{r.who}</span>
             <span className="shrink-0 tabular-nums text-slate">{r.jobs} jobs</span>
           </motion.li>
         ))}

@@ -27,27 +27,27 @@ function RulesVisual({ active, reduce }) {
   }, [active, reduce, n]);
   const live = t >= n + 2;
   return (
-    <div className="canvas relative bg-[linear-gradient(160deg,#E4EFEA_0%,#D3E6DC_100%)] p-3 xs:p-4 md:p-5">
-      <div className="ui-card p-3.5 md:p-4">
+    <div className="canvas relative bg-[linear-gradient(160deg,#E4EFEA_0%,#D3E6DC_100%)] p-2 xs:p-3 md:p-5">
+      <div className="ui-card p-3 md:p-4">
         <p className="text-[13px] font-medium text-ink">Your rules</p>
-        <ul className="mt-3 grid gap-2">
+        <ul className="mt-2.5 grid gap-1.5 sm:mt-3 sm:gap-2">
           {L.rules.map((r, i) => (
             <li
               key={r.text}
-              className={cn('flex items-center justify-between gap-3 rounded-[12px] bg-[#F6F3EC] px-3 py-2 text-[13px] transition-all duration-500', t > i ? 'opacity-100' : 'translate-y-1 opacity-0')}
+              className={cn('flex items-center justify-between gap-2 rounded-[12px] bg-[#F6F3EC] px-2.5 py-1.5 text-[12.5px] leading-snug transition-all duration-500 sm:gap-3 sm:px-3 sm:py-2 sm:text-[13px]', t > i ? 'opacity-100' : 'translate-y-1 opacity-0')}
             >
               <span className="min-w-0 text-ink">{r.text}</span>
-              <span className={cn('shrink-0 rounded-full px-2.5 py-0.5 text-[11.5px] font-medium', r.who === 'Aurora approves' ? 'bg-[#E4F4E8] text-[#1F7A4C]' : r.who === 'Always a person' ? 'bg-[#FFF1E6] text-[#B4471A]' : 'bg-white text-ink shadow-[0_0_0_1px_rgba(10,15,14,0.08)]')}>
+              <span className={cn('shrink-0 whitespace-nowrap rounded-full px-2 py-0.5 text-[11px] font-medium sm:px-2.5 sm:text-[11.5px]', r.who === 'Aurora approves' ? 'bg-[#E4F4E8] text-[#1F7A4C]' : r.who === 'Always a person' ? 'bg-[#FFF1E6] text-[#B4471A]' : 'bg-white text-ink shadow-[0_0_0_1px_rgba(10,15,14,0.08)]')}>
                 {r.who}
               </span>
             </li>
           ))}
         </ul>
-        <p className={cn('mt-3 flex items-center gap-2 text-[12px] text-slate transition-opacity duration-500', t > n ? 'opacity-100' : 'opacity-0')}>
+        <p className={cn('mt-2.5 flex items-center gap-2 text-[12px] leading-snug sm:mt-3 text-slate transition-opacity duration-500', t > n ? 'opacity-100' : 'opacity-0')}>
           <ScrollText className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
           {L.log}
         </p>
-        <div className="mt-3 flex items-center justify-end">
+        <div className="mt-2.5 flex items-center justify-end sm:mt-3">
           <span className={cn('flex h-8 items-center gap-2 rounded-full px-3.5 text-[12.5px] font-medium transition-colors duration-500', live ? 'bg-ink text-white' : 'bg-white text-ink/50 shadow-[0_0_0_1px_rgba(10,15,14,0.08)]')}>
             <span className={cn('relative h-4 w-7 rounded-full transition-colors duration-500', live ? 'bg-[#3DDC97]' : 'bg-ink/15')}>
               <span className={cn('absolute top-0.5 h-3 w-3 rounded-full bg-white shadow transition-all duration-500', live ? 'left-[14px]' : 'left-0.5')} />
@@ -133,7 +133,7 @@ export default function LiveSteps() {
             {L.steps.map((x, i) => {
               const on = i === k;
               return (
-                <div key={x.key} className={cn('[grid-area:1/1] grid gap-5 md:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] md:items-center md:gap-10', on ? '' : 'invisible')} aria-hidden={on ? undefined : true}>
+                <div key={x.key} className={cn('[grid-area:1/1] grid content-start gap-5 md:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] md:items-center md:gap-10', on ? '' : 'invisible')} aria-hidden={on ? undefined : true}>
                   <motion.div key={on ? 'on' : 'off'} initial={reduce || !on ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, ease: EASE }}>
                     <p className="text-[12px] font-medium uppercase tracking-[0.08em] text-[#14A36B]">
                       {String(i + 1).padStart(2, '0')} · {x.who}
