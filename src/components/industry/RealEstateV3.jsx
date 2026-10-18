@@ -1919,7 +1919,6 @@ export function RxAfter({ it }) {
                   />
                 )
               )}
-              <span className="absolute bottom-3 left-3 rounded-full bg-white/90 px-2.5 py-1 text-[12px] font-medium text-ink">{a.lead.name}</span>
               {call ? <audio ref={audioRef} src={call.audio} preload="none" onEnded={cc.ended} /> : null}
             </div>
 
