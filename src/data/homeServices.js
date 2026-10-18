@@ -64,52 +64,72 @@ export const hsHero = {
   },
 };
 
-// Jobs to the field: Aurora texts each job to the technician who should take it, staff or freelancer, and the map shows
-// the route. Coordinates are on the street map (viewBox 640 x 360): side streets at x 70 / 330 / 455 / 575 and
-// y 48 / 132 / 282, Oak Ave at x 200, Main St at y 196.
+// A technician's day on the street map (viewBox 900 x 500): side streets at x 80 / 170 / 420 / 520 / 640 / 760 / 850 and
+// y 70 / 160 / 340, Oak Ave at x 300, Main St at y 250, Willow Ln curving from (520,250) to (640,340). Each stop's leg is
+// the drive to it; `mid` is where its drive time sits on the map. The company, people and jobs are illustrative.
 export const hsField = {
-  titleA: 'Every job reaches the right tech.',
-  text: 'Aurora picks the technician by area and skill and texts the job straight to them: the address, the problem and the way there. Staff and freelancers alike.',
-  textShort: 'Aurora texts each job to the right tech, with the address, the problem and the way there.',
-  title: 'Northline · live',
-  techs: [
-    { key: 'jake', name: 'Jake', role: 'HVAC technician', color: '#F25C2A', at: [330, 236] },
-    { key: 'mike', name: 'Mike', role: 'Technician', color: '#0A0F0E', at: [110, 282] },
-    { key: 'rivera', name: 'Rivera', role: 'Freelance electrician', color: '#14A36B', at: [540, 282] },
-  ],
-  beats: [
+  titleA: 'Every tech’s day, planned to the street.',
+  text: 'Aurora routes each technician by area, skill and traffic, and texts them the day: the order, the drive between jobs, what each customer called about and the parts to bring. Staff and freelancers alike.',
+  textShort: 'Aurora routes each tech and texts them the day: the order, the drive, the job and the parts to bring.',
+  title: 'Northline · Jake today',
+  tech: { name: 'Jake', title: 'Jake’s route · Tuesday', sent: 'texted 7:40 am' },
+  labels: { jobs: 'jobs', min: 'min', fromYard: 'from the yard', here: 'On site', next: 'Next' },
+  yard: [80, 340],
+  stops: [
     {
-      tech: 'jake',
-      route: 'M330 236 V196 H200 V90',
-      pin: [200, 90],
-      tag: 'New job · 2:30 pm',
-      thread: [
-        { who: 'aurora', text: 'New job at 2:30 · 14 Maple Ct · AC not cooling. It’s next on your route, 6 minutes away.' },
-        { who: 'tech', text: 'On it.' },
-      ],
-      result: 'Route updated · customer has his ETA',
+      time: '8:30',
+      job: 'AC not cooling',
+      address: '12 Birch St',
+      detail: 'Called last night: outdoor unit silent, breaker fine. Likely the capacitor.',
+      bring: ['45/5 µF capacitor', 'Contactor', 'R-410A'],
+      at: [170, 250],
+      leg: 'M80 340 H170 V250',
+      mid: [125, 340],
+      drive: 6,
     },
     {
-      tech: 'mike',
-      route: 'M110 282 H200 V240',
-      pin: [200, 240],
-      tag: 'Van 7 · two capacitors',
-      thread: [
-        { who: 'tech', text: 'Do we have a 45/5 capacitor anywhere? Job 412.' },
-        { who: 'aurora', text: 'Van 7 has two, parked on Oak Ave, 4 minutes from you. Sam knows you’re coming.' },
-      ],
-      result: 'Stock updated · van 7',
+      time: '10:00',
+      job: 'Furnace tune-up',
+      address: '48 Elm St',
+      detail: 'Yearly plan visit. Last filter change was 11 months ago.',
+      bring: ['16×25 filter', 'Flame sensor', 'Igniter'],
+      at: [420, 160],
+      leg: 'M170 250 H300 V160 H420',
+      mid: [300, 205],
+      drive: 9,
     },
     {
-      tech: 'rivera',
-      route: 'M540 282 H455 V310',
-      pin: [455, 310],
-      tag: 'Tomorrow · 8 am',
-      thread: [
-        { who: 'aurora', text: 'Tomorrow 8 am · panel upgrade at 22 Park Ln · $480 at your rate. Can you take it?' },
-        { who: 'tech', text: 'Accepted.' },
-      ],
-      result: 'Booked · work order sent',
+      time: '11:15',
+      job: 'Thermostat won’t turn on',
+      address: '205 Main St',
+      detail: 'Blank screen since yesterday. No C-wire on file.',
+      bring: ['C-wire adapter', 'AA batteries', 'Smart thermostat'],
+      at: [520, 250],
+      leg: 'M420 160 H520 V250',
+      mid: [520, 205],
+      drive: 5,
+    },
+    {
+      time: '1:00 pm',
+      job: 'Water heater leak',
+      address: '31 Willow Ln',
+      detail: 'Water pooling under a 9-year-old tank. Quote a replacement too.',
+      bring: ['T&P valve', 'Drain pan', 'Shut-off valve'],
+      at: [640, 340],
+      leg: 'M520 250 C540 300 600 310 640 340',
+      mid: [578, 304],
+      drive: 4,
+    },
+    {
+      time: '2:30 pm',
+      job: 'Duct inspection',
+      address: '9 Ridge Rd',
+      detail: 'New owners, dusty vents upstairs. Photos to the customer after.',
+      bring: ['Inspection camera', 'Foil tape'],
+      at: [760, 160],
+      leg: 'M640 340 H760 V160',
+      mid: [700, 340],
+      drive: 8,
     },
   ],
 };
