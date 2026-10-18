@@ -256,9 +256,11 @@ export default function FieldMap({ d }) {
   const here = !driving;
   const toFrame = ([x, y]) => ({ left: x * box.s + box.ox, top: y * box.s + box.oy });
   const wide = box.w >= 600;
-  // on a wide map the clip sits low in the middle, over the empty south of the county and clear of the route
-  const cw = box.w >= 900 ? 340 : box.w >= 700 ? 250 : 220;
-  const clipAt = { width: cw, left: Math.round(Math.min(box.w - cw - 64, Math.max(220, (box.w - cw) / 2 + 30))), bottom: 16 };
+  // on a big map the clip sits low in the middle, over the empty south of the county; on a smaller one, top right.
+  // Either way it stays clear of the route.
+  const big = box.w >= 900;
+  const cw = big ? 340 : 220;
+  const clipAt = big ? { width: cw, left: Math.round(Math.min(box.w - cw - 64, Math.max(220, (box.w - cw) / 2 + 30))), bottom: 16 } : { width: cw, right: 14, top: 14 };
   const total = d.stops.reduce((a, s) => a + s.drive, 0);
 
   const plan = (
