@@ -211,12 +211,10 @@
    "out": "public/media/real-estate/emma-call-2"
   },
   {
-   "kind": "image",
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_080458_c261e499-afda-48a6-9a5c-03ddcc7778be.png",
-   "out": "design/media/review/emma-desk",
-   "widths": [
-    600
-   ]
+   "kind": "video",
+   "width": 900,
+   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_080720_18a0ad2e-977c-41f1-9c85-b611df0cb3ff.mp4",
+   "out": "public/media/real-estate/emma-desk"
   }
  ]
 }

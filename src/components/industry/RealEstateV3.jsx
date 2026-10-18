@@ -1637,7 +1637,11 @@ function CallPanel({ c, a, clock: cc, reduce }) {
             </span>
           )}
         </span>
-        {live ? <Wave who={reduce ? null : speaking} /> : null}
+        {live ? (
+          <span className="max-sm:hidden">
+            <Wave who={reduce ? null : speaking} />
+          </span>
+        ) : null}
         <button
           type="button"
           onClick={play}
