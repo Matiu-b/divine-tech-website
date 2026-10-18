@@ -16,6 +16,11 @@ import SmartLink from '@/components/home-v2/primitives/SmartLink';
 import { Reveal, RevealGroup, RevealItem, RevealLines } from '@/components/home-v2/primitives/MotionReveal';
 import { useLead } from '@/components/home-v2/LeadDrawer';
 import { onAnchorClick } from '@/components/home-v2/hooks';
+import HearAurora from '@/components/home-v2/HearAurora';
+import DayLanes from '@/components/home-v2/DayLanes';
+import LiveSteps from '@/components/home-v2/LiveSteps';
+import { HsClosing, HsHero } from '@/components/industry/HomeServices';
+import { hsDay, hsHear, hsLive } from '@/data/homeServices';
 import { RxAfter, RxClosing, RxHero, RxKpi, RxRace, RxRules, RxStack, RxFaqMore } from '@/components/industry/RealEstateV3';
 
 /** @param {any} props */
@@ -261,6 +266,20 @@ export default function IndustryPage() {
   const { slug } = useParams();
   const it = industryBySlug[slug];
   if (!it) return <Navigate to="/" replace />;
+  if (it.five) {
+    // five scenes, each one screen: the promise, two calls, one working day, going live under your rules, then the form
+    return (
+      <SiteLayout key={it.slug} industry={it.leadIndustry} meta={it.meta}>
+        <HsHero />
+        <HearAurora d={hsHear} />
+        <DayLanes d={hsDay} />
+        <LiveSteps d={hsLive} id="how" />
+        <Faq id="ind-faq-title" items={it.faq} className="pt-0" />
+        <OtherIndustries it={it} />
+        <HsClosing it={it} />
+      </SiteLayout>
+    );
+  }
   if (it.v3) {
     return (
       <SiteLayout key={it.slug} industry={it.leadIndustry} meta={it.meta}>

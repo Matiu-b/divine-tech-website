@@ -189,6 +189,36 @@
    "width": 900,
    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_080720_18a0ad2e-977c-41f1-9c85-b611df0cb3ff.mp4",
    "out": "public/media/real-estate/emma-desk"
+  },
+  {
+   "kind": "audio",
+   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_111259_3c305386-08bf-417d-bcbb-746ccc36ef58.mp3",
+   "out": "public/media/home-services/call-customer"
+  },
+  {
+   "kind": "audio",
+   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_111308_595c2b2d-6075-4404-887f-06a9dcbd67ac.mp3",
+   "out": "public/media/home-services/call-brief"
+  },
+  {
+   "kind": "image",
+   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_111312_7f68c44f-d41e-4643-b937-a1d66c0656d3.png",
+   "out": "public/media/home-services/hear-customer",
+   "widths": [
+    600,
+    900,
+    1400
+   ]
+  },
+  {
+   "kind": "image",
+   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_111312_de1473b4-6149-4638-bfe4-4258b5c30499.png",
+   "out": "public/media/home-services/hear-brief",
+   "widths": [
+    600,
+    900,
+    1400
+   ]
   }
  ]
 }

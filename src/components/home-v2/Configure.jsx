@@ -66,14 +66,14 @@ function Stage({ tone, children }) {
 /* ------------------------------------------------------------------ */
 /* 1. The action plan: a work plan written row by row, then approved   */
 /* ------------------------------------------------------------------ */
-function PlanVisual() {
+export function PlanVisual({ board = undefined }) {
   const ref = useRef(null);
   // 0-5: the map is drawn on the board step by step; then a pause before it starts again.
   const t = useLoop(ref, { steps: 11, final: 7, ms: 850 });
   return (
     <div ref={ref}>
       <Stage tone="sage">
-        <ProcessBoard t={t} />
+        <ProcessBoard t={t} {...(board || {})} />
       </Stage>
     </div>
   );
@@ -98,7 +98,7 @@ const MARKS = {
   payments: [<StripeMark key="st" className="h-[18px] w-11" />, <PayPalMark key="pp" className="h-6 w-5" />],
 };
 
-function ConnectVisual() {
+export function ConnectVisual() {
   const ref = useRef(null);
   const n = hiw.connect.length;
   const t = useLoop(ref, { steps: n + 5, final: n + 1, ms: 650 });
@@ -112,9 +112,6 @@ function ConnectVisual() {
             <span className="t-data text-[11.5px] text-slate">
               {done}/{n}
             </span>
-          </div>
-          <div className="mt-2.5 h-1 overflow-hidden rounded-full bg-ink/[0.08]">
-            <div className="h-full rounded-full bg-brand transition-[width] duration-700 ease-out" style={{ width: (done / n) * 100 + '%' }} />
           </div>
           <ul className="mt-3 grid grid-cols-3 gap-2">
             {hiw.connect.map((c, i) => {
@@ -162,7 +159,7 @@ function Typing({ dark }) {
   );
 }
 
-function GoLiveVisual() {
+export function GoLiveVisual() {
   const ref = useRef(null);
   const T = hiw.test;
   const reduce = useReducedMotion();

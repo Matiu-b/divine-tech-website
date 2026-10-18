@@ -606,6 +606,7 @@ export const industries = [
   },
   {
     slug: 'home-services',
+    five: true, // the page in five scenes (components/industry/HomeServices.jsx, data/homeServices.js)
     article: 'ai-answering-service-for-contractors', // the industry guide on the blog
     key: 'hs',
     label: 'Home services',
@@ -673,6 +674,7 @@ export const industries = [
     faq: [
       ['Can Aurora give a price on the call?', 'Yes, from your own price book and rules. Anything outside them, like a discount or an unusual job, goes to your team before the customer hears a number.'],
       ['What about emergencies?', 'Aurora recognises urgent jobs, shares the safety steps you approve, and puts the job in front of dispatch right away.'],
+      ['Does Aurora work for our own team, not only for customers?', 'Yes. It plans the day’s routes, finds parts for techs in the field, checks freelancer invoices against time on site, keeps certificates current and briefs the owner. The same rules and approvals apply.'],
       FAQ_CHANNELS,
       FAQ_LIVE,
     ],

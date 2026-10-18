@@ -67,8 +67,13 @@ function Wander({ points, dur, still }) {
   return <animateTransform attributeName="transform" type="translate" values={values} dur={dur} repeatCount="indefinite" calcMode="spline" keySplines={splines} />;
 }
 
-/** @param {{ t: number, className?: string }} props */
-export default function ProcessBoard({ t, className = undefined }) {
+/**
+ * Another business can bring its own title, source labels (four) and step labels (five, in the same places).
+ * @param {{ t: number, className?: string, title?: string, sourceLabels?: string[], nodeLabels?: string[] }} props
+ */
+export default function ProcessBoard({ t, className = undefined, title = 'How Maple Realty works', sourceLabels = undefined, nodeLabels = undefined }) {
+  const sources = SOURCES.map((x, i) => ({ ...x, label: (sourceLabels && sourceLabels[i]) || x.label }));
+  const nodes = NODES.map((x, i) => ({ ...x, label: (nodeLabels && nodeLabels[i]) || x.label }));
   const still = !!useReducedMotion();
   const shown = (i) => still || t > i;
   const [ax, ay] = still ? AI_AT[7] : AI_AT[Math.max(0, Math.min(AI_AT.length - 1, t))];
@@ -88,7 +93,7 @@ export default function ProcessBoard({ t, className = undefined }) {
       <path d="M4 56 H356 V216 a16 16 0 0 1 -16 16 H20 a16 16 0 0 1 -16 -16 Z" fill="url(#pb-grid)" />
       <path d="M4 56 H356" stroke={INK} strokeOpacity="0.06" />
 
-      <text x="18" y="28" fontSize="12" fill={INK} fontFamily="inherit">How Maple Realty works</text>
+      <text x="18" y="28" fontSize="12" fill={INK} fontFamily="inherit">{title}</text>
       <text x="18" y="44" fontSize="9.5" fill="#6B716F" fontFamily="inherit">Mapped together with our expert</text>
       {[
         ['E', '#1F3B4D'],
@@ -102,7 +107,7 @@ export default function ProcessBoard({ t, className = undefined }) {
       ))}
 
       {/* sources the agent reads, flowing into the first step */}
-      {SOURCES.map((s) => (
+      {sources.map((s) => (
         <g key={s.label}>
           <path
             d={`M${s.x + s.w / 2} 88 C${s.x + s.w / 2} 106 61 100 61 118`}
@@ -137,7 +142,7 @@ export default function ProcessBoard({ t, className = undefined }) {
           className="transition-[stroke-dashoffset] duration-700 ease-out"
         />
       ))}
-      {NODES.map((n, i) => (
+      {nodes.map((n, i) => (
         <g key={n.id} className="transition-opacity duration-500" opacity={shown(i) ? 1 : 0}>
           <rect
             x={n.x}
