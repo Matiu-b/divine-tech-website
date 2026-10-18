@@ -1,8 +1,6 @@
 // Home services page: five scenes, each one screen. Aurora out front with customers and behind the scenes with the team
 // (field technicians, freelancers, the office). The company, people and figures are illustrative.
 
-const PHOTOS = '/img/photos/';
-
 export const hsHero = {
   eyebrow: 'Aurora for home services',
   titleA: 'Your team is on a job.',
@@ -12,12 +10,13 @@ export const hsHero = {
   secondary: 'Hear Aurora',
   secondaryHref: '#hear',
   lanes: { customers: 'Customer', team: 'Team' },
+  // the scene: a technician walking up to a customer's door at dusk, the van behind him; takes a looping clip later
   media: {
-    poster: PHOTOS + 'tech-hvac-1440.webp',
-    srcSet: PHOTOS + 'tech-hvac-640.webp 640w, ' + PHOTOS + 'tech-hvac-960.webp 960w, ' + PHOTOS + 'tech-hvac-1440.webp 1440w',
+    poster: '/media/home-services/hero-b-2000.webp',
+    srcSet: '/media/home-services/hero-b-900.webp 900w, /media/home-services/hero-b-1400.webp 1400w, /media/home-services/hero-b-2000.webp 2000w',
     video: null,
-    focus: '34% 50%',
-    alt: 'A home-services technician checking readings on a tablet beside an outdoor AC unit, his van behind him',
+    focus: '50% 62%',
+    alt: 'At dusk, a home-services technician with a tool bag walks up the path to a family home, his white van parked in the driveway',
   },
   // over the photo: the same moment, out front and behind the scenes (the moments of the day further down the page)
   panel: { title: 'Aurora at Northline', working: 'Working on it' },

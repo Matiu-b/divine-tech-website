@@ -102,9 +102,9 @@ function Moments({ running, still }) {
 }
 
 /**
- * Hero: the promise on the left; on the right a technician on a job, and over the photo one moment of the day with
- * what Aurora did in it for a customer and for the team. Phones: the text, the photo, the panel under its bottom edge.
- * Laptops: both side by side, one screen tall.
+ * Hero: one cinematic frame, a technician walking up to a customer's door at dusk. The promise sits in the sky; the
+ * panel shows one moment of the day and what Aurora did in it for a customer and for the team. Phones: the promise,
+ * then the photo with the panel under its bottom edge. The photo takes a looping clip when there is one.
  * The photo takes a looping clip when there is one.
  */
 export function HsHero() {
@@ -125,47 +125,56 @@ export function HsHero() {
 
   const btn = 'max-sm:h-12 max-sm:px-4 max-sm:text-[14.5px] lg:h-12 lg:px-5 lg:text-[15px]';
   return (
-    <section id="top" data-nav-theme="light" aria-labelledby="hs-hero-title" className="relative overflow-hidden pb-[clamp(56px,6vw,88px)] pt-[calc(var(--nav-h)+12px)] sm:pt-[calc(var(--nav-h)+24px)] lg:pt-[calc(var(--nav-h)+16px)]">
+    <section id="top" data-nav-theme="light" aria-labelledby="hs-hero-title" className="relative overflow-hidden pb-[clamp(56px,6vw,88px)] pt-[calc(var(--nav-h)+12px)] min-[560px]:pt-[calc(var(--nav-h)+16px)]">
       <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[760px] bg-[radial-gradient(55%_55%_at_82%_0%,rgba(255,214,170,0.75),rgba(246,245,241,0)_70%),radial-gradient(40%_50%_at_10%_10%,rgba(240,232,218,0.7),rgba(246,245,241,0)_70%)]" />
-      <div className="shell relative grid gap-6 md:gap-9 lg:h-[clamp(560px,calc(100svh_-_var(--nav-h)_-_40px),820px)] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:items-center lg:gap-12">
-        <div>
-          <p className="intro-rise eyebrow">{H.eyebrow}</p>
-          <h1 id="hs-hero-title" className="t-display balance mt-3 max-sm:text-[2.35rem] max-sm:leading-[1.04] sm:mt-4 lg:text-[clamp(2.1rem,0.3rem+2.5vw,3.3rem)]">
-            <RevealLines lines={[H.titleA, H.titleB]} lineClassNames={['', '']} immediate delay={0.08} stagger={0.14} />
-          </h1>
-          <p className="intro-slide t-lead pretty mt-4 max-w-[34em] sm:mt-5 lg:text-[16px] lg:leading-[1.55]" style={{ animationDelay: '0.3s' }}>
-            <span className="sm:hidden">{H.textShort}</span>
-            <span className="max-sm:hidden">{H.text}</span>
-          </p>
-          <div className="intro-slide mt-5 flex flex-wrap sm:mt-6 items-center gap-2.5 sm:gap-3 lg:mt-8" style={{ animationDelay: '0.42s' }}>
-            <CTAButton size="lg" onClick={open} className={btn}>
-              Book a demo
-            </CTAButton>
-            <CTAButton size="lg" variant="glass" href={H.secondaryHref} arrow={false} onClick={(e) => onAnchorClick(e, H.secondaryHref)} className={btn}>
-              {H.secondary}
-            </CTAButton>
-          </div>
-        </div>
+      <div className="shell relative">
+        {/*
+          One cinematic frame, as tall as the screen allows on laptops: the promise in the dusk sky at the top left, the
+          moment panel at the bottom right over the lawn. Phones: the promise above, the photo, the panel under its edge.
+        */}
+        <div ref={ref} className="relative">
+          <div className="relative min-[560px]:aspect-[5/4] min-[560px]:overflow-hidden min-[560px]:rounded-[28px] min-[560px]:shadow-[0_40px_80px_-48px_rgba(30,30,60,0.55)] md:aspect-[4/3] lg:aspect-auto lg:h-[clamp(600px,calc(100svh_-_var(--nav-h)_-_40px),860px)]">
+            <div className="relative z-[2] min-[560px]:absolute min-[560px]:inset-x-0 min-[560px]:top-0 min-[560px]:p-8 lg:p-10 lg:pr-[46%] xl:p-12 xl:pr-[48%]">
+              <p className="intro-rise eyebrow min-[560px]:text-white/75">{H.eyebrow}</p>
+              <h1 id="hs-hero-title" className="t-display balance mt-3 max-[559px]:text-[2.35rem] max-[559px]:leading-[1.04] min-[560px]:text-white min-[560px]:[text-shadow:0_2px_24px_rgba(10,16,40,0.35)] lg:text-[clamp(2.3rem,0.4rem+2.8vw,3.6rem)]">
+                <RevealLines lines={[H.titleA, H.titleB]} lineClassNames={['', '']} immediate delay={0.08} stagger={0.14} />
+              </h1>
+              <p className="intro-slide t-lead pretty mt-4 max-w-[34em] min-[560px]:!text-white/[0.88] lg:text-[16px] lg:leading-[1.55]" style={{ animationDelay: '0.3s' }}>
+                <span className="sm:hidden">{H.textShort}</span>
+                <span className="max-sm:hidden">{H.text}</span>
+              </p>
+              <div className="intro-slide mt-5 flex flex-wrap items-center gap-2.5 sm:gap-3 lg:mt-7" style={{ animationDelay: '0.42s' }}>
+                <CTAButton size="lg" onClick={open} className={btn}>
+                  Book a demo
+                </CTAButton>
+                <CTAButton size="lg" variant="glass" href={H.secondaryHref} arrow={false} onClick={(e) => onAnchorClick(e, H.secondaryHref)} className={btn}>
+                  {H.secondary}
+                </CTAButton>
+              </div>
+            </div>
 
-        <div ref={ref} className="intro-rise relative lg:h-full" style={{ animationDelay: '0.3s' }}>
-          <figure className="relative m-0 aspect-[16/10] overflow-hidden rounded-[24px] bg-[#D9D2C4] shadow-[0_40px_80px_-48px_rgba(60,40,20,0.55)] lg:aspect-auto lg:h-full lg:rounded-[28px]">
-            <img
-              src={m.poster}
-              srcSet={m.srcSet}
-              sizes="(min-width: 1024px) 760px, calc(100vw - 32px)"
-              alt={m.alt}
-              fetchPriority="high"
-              decoding="async"
-              className="absolute inset-0 h-full w-full object-cover"
-              style={{ objectPosition: m.focus }}
-            />
-            {m.video && !reduce ? (
-              <video ref={videoRef} src={m.video} poster={m.poster} muted loop playsInline preload="none" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: m.focus }} />
-            ) : null}
-            <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-[linear-gradient(to_top,rgba(20,16,12,0.35),rgba(20,16,12,0))]" />
-          </figure>
-          <div className="relative z-[2] mx-3 -mt-14 sm:absolute sm:bottom-4 sm:right-4 sm:mx-0 sm:mt-0 sm:w-[380px] lg:bottom-6 lg:right-6 lg:w-[390px]">
-            <Moments running={inView && visible} still={reduce} />
+            <figure className="intro-rise relative m-0 mt-6 aspect-[3/2] overflow-hidden rounded-[24px] bg-[#2B3550] max-[559px]:shadow-[0_30px_60px_-40px_rgba(30,30,60,0.55)] min-[560px]:absolute min-[560px]:inset-0 min-[560px]:mt-0 min-[560px]:aspect-auto min-[560px]:rounded-none" style={{ animationDelay: '0.2s' }}>
+              <img
+                src={m.poster}
+                srcSet={m.srcSet}
+                sizes="(min-width: 1440px) 1376px, calc(100vw - 32px)"
+                alt={m.alt}
+                fetchPriority="high"
+                decoding="async"
+                className="absolute inset-0 h-full w-full object-cover"
+                style={{ objectPosition: m.focus }}
+              />
+              {m.video && !reduce ? (
+                <video ref={videoRef} src={m.video} poster={m.poster} muted loop playsInline preload="none" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: m.focus }} />
+              ) : null}
+              {/* dusk shade: deeper behind the headline, a little along the bottom */}
+              <div aria-hidden="true" className="pointer-events-none absolute inset-0 hidden bg-[linear-gradient(180deg,rgba(14,20,44,0.55)_0%,rgba(14,20,44,0.18)_38%,rgba(14,20,44,0)_58%,rgba(14,20,44,0.28)_100%)] min-[560px]:block" />
+              <div aria-hidden="true" className="pointer-events-none absolute inset-0 hidden bg-[radial-gradient(60%_55%_at_0%_0%,rgba(14,20,44,0.45),rgba(14,20,44,0))] lg:block" />
+            </figure>
+
+            <div className="relative z-[3] mx-3 -mt-14 min-[560px]:absolute min-[560px]:bottom-5 min-[560px]:right-5 min-[560px]:mx-0 min-[560px]:mt-0 min-[560px]:w-[370px] lg:bottom-8 lg:right-8 lg:w-[400px] xl:w-[420px]">
+              <Moments running={inView && visible} still={reduce} />
+            </div>
           </div>
           <ul className="sr-only">
             {H.moments.map((x) => (
