@@ -16,7 +16,7 @@ import SmartLink from '@/components/home-v2/primitives/SmartLink';
 import { Reveal, RevealGroup, RevealItem, RevealLines } from '@/components/home-v2/primitives/MotionReveal';
 import { useLead } from '@/components/home-v2/LeadDrawer';
 import { onAnchorClick } from '@/components/home-v2/hooks';
-import HearAurora from '@/components/home-v2/HearAurora';
+import BriefMap from '@/components/industry/BriefMap';
 import DayLanes from '@/components/home-v2/DayLanes';
 import LiveSteps from '@/components/home-v2/LiveSteps';
 import { HsClosing, HsHero } from '@/components/industry/HomeServices';
@@ -271,7 +271,7 @@ export default function IndustryPage() {
     return (
       <SiteLayout key={it.slug} industry={it.leadIndustry} meta={it.meta}>
         <HsHero />
-        <HearAurora d={hsHear} />
+        <BriefMap d={hsHear} />
         <DayLanes d={hsDay} />
         <LiveSteps d={hsLive} id="how" />
         <Faq id="ind-faq-title" items={it.faq} className="pt-0" />

@@ -66,8 +66,30 @@ export const hsHero = {
 
 export const hsHear = {
   titleA: 'Every morning, a one-minute brief.',
-  text: 'The same voice that answers your customers briefs the owner at 8 am: what got booked overnight, which invoice was held, and who’s off Friday.',
-  textShort: 'At 8 am the owner hears the night: what got booked, what was held, who’s off.',
+  text: 'At 8 am Aurora tells the owner what happened overnight and the one thing that needs her. The map shows it as she speaks.',
+  textShort: 'At 8 am Aurora briefs the owner. The map follows along.',
+  // the town the brief talks about (viewBox 640 x 360; streets every 90 across and 72 down)
+  map: {
+    yard: [90, 288],
+    van: [360, 288],
+    job: [450, 216],
+    friday: [180, 100],
+    routes: [
+      { key: 'jake', who: 'Jake · HVAC', color: '#FF9F45', d: 'M90 288 H270 V144 H450 V72 H540', stops: [[180, 288], [270, 200], [380, 144], [540, 72]] },
+      { key: 'ana', who: 'Ana · Plumbing', color: '#0A0F0E', d: 'M90 288 V144 H180 V72 H300', stops: [[90, 216], [140, 144], [180, 100], [300, 72]] },
+      { key: 'rivera', who: 'Rivera · Freelancer', color: '#14A36B', d: 'M540 360 V288 H450 V216', stops: [[450, 216]] },
+    ],
+    handover: 'M270 200 V144 H180 V100',
+    pins: [[135, 72], [225, 144], [315, 216], [405, 288], [495, 144], [225, 288], [135, 216], [405, 72], [495, 216], [315, 144], [585, 216], [270, 36]],
+    labels: {
+      title: 'Northline · Today',
+      pins: 'Booked overnight',
+      van: 'Van 7 · Mike’s part',
+      held: 'Job 405 · 6.0 h billed, 4.5 h on site',
+      paid: 'Job 405 · paid for 4.5 h',
+      friday: 'Fri · Ana’s jobs → Jake',
+    },
+  },
   note: 'Recorded examples with an AI voice. The company and people are illustrative.',
   team: 'What your team sees',
   calls: [
@@ -77,13 +99,13 @@ export const hsHear = {
       tabShort: 'Your team',
       name: 'The morning brief',
       sentence: 'One thing needs Dana today: an invoice that doesn’t match the hours on site. She decides in one sentence, and Aurora does the rest.',
-      media: { poster: '/media/home-services/hear-brief-1400.webp', srcSet: '/media/home-services/hear-brief-900.webp 900w, /media/home-services/hear-brief-1400.webp 1400w', video: null, focus: '50% 40%' },
       call: {
         audio: '/media/home-services/call-brief-7.mp3',
         duration: 44200,
         title: 'Morning brief',
         meta: 'Sound on',
-        listen: 'Hear the brief',
+        listen: 'Hear the 8 am brief',
+        prompt: 'Aurora to Dana, the owner',
         again: 'Hear it again',
         pause: 'Pause the brief',
         resume: 'Resume the brief',

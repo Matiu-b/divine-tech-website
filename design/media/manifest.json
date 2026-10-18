@@ -192,16 +192,6 @@
   },
   {
    "kind": "image",
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_111312_de1473b4-6149-4638-bfe4-4258b5c30499.png",
-   "out": "public/media/home-services/hear-brief",
-   "widths": [
-    600,
-    900,
-    1400
-   ]
-  },
-  {
-   "kind": "image",
    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_125545_a5b34753-dc2c-450a-affb-eadb4222baff.png",
    "out": "public/media/home-services/hero-b",
    "widths": [
