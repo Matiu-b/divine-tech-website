@@ -1730,9 +1730,18 @@ function JourneyStep({ step, n, a, reduce, cc }) {
         </span>
       </p>
       <p className="pretty mt-2 text-[15px] leading-snug text-graphite md:mt-3 md:text-[16px]">{step.happened}</p>
-      <ul className="mt-3 grid grid-cols-2 gap-x-3 gap-y-1.5 md:mt-4 md:gap-y-2">
+      {/* phones and tablets: the steps as one short flowing line; laptops: two neat columns */}
+      <p className="mt-3 text-[13.5px] leading-[1.6] text-ink md:mt-4 md:text-[14px] xl:hidden">
+        {step.points.map((x, i) => (
+          <span key={x}>
+            {i > 0 ? <span aria-hidden="true" className="mx-1.5 inline-block h-1.5 w-1.5 rounded-full bg-[#F25C2A] align-middle" /> : null}
+            {x}
+          </span>
+        ))}
+      </p>
+      <ul className="mt-4 grid grid-cols-2 gap-x-3 gap-y-2 max-xl:hidden">
         {step.points.map((x) => (
-          <li key={x} className="flex items-center gap-2 whitespace-nowrap text-[13px] leading-snug text-ink xs:text-[13.5px] md:text-[14px] xl:text-[15px]">
+          <li key={x} className="flex items-center gap-2 text-[15px] leading-snug text-ink">
             <span aria-hidden="true" className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#F25C2A]" />
             {x}
           </li>
