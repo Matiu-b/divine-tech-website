@@ -261,7 +261,7 @@ export const industries = [
             key: 'call', name: 'Reactivation call', date: 'Jun 2', icon: 'phone',
             media: { video: '/media/real-estate/emma-desk.mp4', poster: '/media/real-estate/emma-desk-poster.webp', focus: '50% 22%' },
             happened: 'Two months of silence, turned into a booked showing with one call.',
-            points: ['No reply for 2 months', 'AI voice agent calls', 'Objections handled', 'Showing booked'],
+            points: ['Silent 2 months', 'AI agent calls', 'Objections handled', 'Showing booked'],
             call: {
               audio: '/media/real-estate/emma-call-2.mp3',
               duration: 72910,
@@ -314,7 +314,7 @@ export const industries = [
             key: 'showing', name: 'The showing', date: 'Jun 6', icon: 'calendar',
             media: { video: '/media/real-estate/emma-showing.mp4', poster: '/media/real-estate/emma-showing-poster.webp', focus: '50% 38%' },
             happened: 'Marcus walks in already knowing everything from the call.',
-            points: ['Reminder sent', 'Call notes to Marcus', 'Condo valued', 'Offer requested'],
+            points: ['Reminder sent', 'Notes to Marcus', 'Condo valued', 'Offer requested'],
             thread: [
               { who: 'aurora', text: 'Morning, Emma! Marcus will meet you at 12 Aspen Court at 11, then head over to your condo.' },
               { who: 'aurora', text: 'How did the house feel?' },
