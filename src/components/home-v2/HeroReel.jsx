@@ -18,7 +18,7 @@ import { useHydrated, useMediaQuery, usePageLoaded, usePageVisible } from './hoo
  * once the page is hydrated, and the picture covers the first paint until then.
  * A small glass card says what Aurora did in each scene, and thin bars show the progress.
  */
-export default function HeroReel({ className = undefined }) {
+export default function HeroReel({ className = undefined, sides = { customers: 'Customers', team: 'Team' } }) {
   const clips = heroStage.clips;
   const reduce = useReducedMotion();
   const visible = usePageVisible();
@@ -63,7 +63,9 @@ export default function HeroReel({ className = undefined }) {
     setActive((a) => (a + 1) % clips.length);
   };
 
-  const card = clips[active];
+  // each scene says two things: what Aurora did for a customer, then (halfway through) for the team
+  const inside = progress >= 0.5 && !!clips[active].inside;
+  const card = inside ? clips[active].inside : clips[active];
   const Icon = EVENT_ICONS[card.icon] || CalendarCheck;
 
   return (
@@ -114,7 +116,7 @@ export default function HeroReel({ className = undefined }) {
         <div className="shell flex items-end justify-between gap-6 pb-6 md:pb-8">
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
-              key={card.key}
+              key={clips[active].key + (inside ? '-in' : '-out')}
               initial={reduce ? false : { opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -6 }}
@@ -125,6 +127,10 @@ export default function HeroReel({ className = undefined }) {
                   <Icon className="h-4 w-4" strokeWidth={1.7} />
                 </span>
                 <span>
+                  <span className="mb-0.5 flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.08em] text-white/55">
+                    <span className={cn('h-1.5 w-1.5 rounded-full', inside ? 'bg-[#3DDC97]' : 'bg-[#FF9F45]')} />
+                    {inside ? sides.team : sides.customers}
+                  </span>
                   <span className="block text-[12.5px] font-medium leading-tight text-white">{card.title}</span>
                   <span className="mt-0.5 block text-[11px] text-white/60">{card.detail}</span>
                 </span>
@@ -136,14 +142,10 @@ export default function HeroReel({ className = undefined }) {
               </LiquidGlass>
             </motion.div>
           </AnimatePresence>
-          <div className="hidden items-center gap-1.5 sm:flex">
+          {/* one marker per scene: the current one is wider (no filling bar) */}
+          <div className="hidden items-center gap-2 sm:flex">
             {clips.map((c, i) => (
-              <span key={c.key} className="h-[3px] w-10 overflow-hidden rounded-full bg-white/25">
-                <span
-                  className="block h-full rounded-full bg-white"
-                  style={{ width: i < active ? '100%' : i === active ? progress * 100 + '%' : '0%', transition: i === active ? 'width 250ms linear' : 'none' }}
-                />
-              </span>
+              <span key={c.key} className={cn('h-1.5 rounded-full transition-all duration-500', i === active ? 'w-6 bg-white' : 'w-1.5 bg-white/35')} />
             ))}
           </div>
         </div>

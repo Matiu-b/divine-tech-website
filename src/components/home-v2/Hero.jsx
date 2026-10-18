@@ -1,16 +1,15 @@
 import React from 'react';
 import { Play } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import { hero } from '@/data/site';
 import CTAButton from './primitives/CTAButton';
 import Logo from './primitives/Logo';
 import { RevealLines } from './primitives/MotionReveal';
 import HeroReel from './HeroReel';
 import { useLead } from './LeadDrawer';
+import { onAnchorClick } from './hooks';
 
 export default function Hero() {
   const { open } = useLead();
-  const navigate = useNavigate();
   // Entrances are CSS animations (.intro-* in index.css), so the prerendered hero animates in on
   // its first paint, before any JavaScript. The CTA row holds a glass button: the row only moves,
   // each button fades itself.
@@ -22,7 +21,7 @@ export default function Hero() {
       aria-labelledby="hero-title"
       className="on-dark relative flex min-h-[100svh] items-center overflow-hidden text-white md:min-h-[min(100svh,960px)]"
     >
-      <HeroReel />
+      <HeroReel sides={hero.sides} />
 
       <div className="shell relative pb-28 pt-[calc(var(--nav-h)+40px)] md:pb-32">
         {/* brand lockup, headline, one line and the two actions, all centred over the reel */}
@@ -43,13 +42,9 @@ export default function Hero() {
           <CTAButton
             size="lg"
             variant="glass-dark"
-            href="/platform"
+            href={hero.secondaryHref}
             arrow={false}
-            onClick={(e) => {
-              if (e.metaKey || e.ctrlKey || e.shiftKey) return;
-              e.preventDefault();
-              navigate('/platform');
-            }}
+            onClick={(e) => onAnchorClick(e, hero.secondaryHref)}
             style={{ animationDelay: '0.48s' }}
             icon={
               <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-ink">

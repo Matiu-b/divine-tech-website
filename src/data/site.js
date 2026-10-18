@@ -67,11 +67,13 @@ export const media = {
 export const hero = {
   // Category headline under a small "Aurora AI OS" lockup (centered, in the spirit of wonderful.ai).
   lockup: 'AI OS',
-  titleA: 'The AI operating system for modern business',
-  titleB: undefined,
-  text: 'AI agents that do the work and cut the cost of running it, inside the tools you already use.',
+  titleA: 'AI agents for your customers',
+  titleB: 'and your team.',
+  text: 'Out front they answer, book and follow up. Behind the scenes they plan, check and report. All inside the tools you already use.',
   primary: 'Book a demo',
-  secondary: 'See it in action',
+  secondary: 'Hear Aurora',
+  secondaryHref: '#hear',
+  sides: { customers: 'Customers', team: 'Team' },
 };
 
 // Hero film: the same request flow on four channels (illustrative scenarios,
@@ -240,10 +242,10 @@ export const heroStage = {
   // Background clips for the home hero (generated footage, fictional people). Each has a wide version
   // for desktop and a vertical one for phones, a still poster, and one line saying what Aurora did there.
   clips: [
-    { key: 'realty', wide: '/video/hero-1.mp4', tall: '/video/hero-1-v.mp4', poster: PHOTOS + 'hero-1-1600.webp', posterTall: PHOTOS + 'hero-1-v-720.webp', icon: 'calendar', title: 'Viewing booked', detail: 'Real estate · Sat 11:00' },
-    { key: 'clinic', wide: '/video/hero-2.mp4', tall: '/video/hero-2-v.mp4', poster: PHOTOS + 'hero-2-1600.webp', posterTall: PHOTOS + 'hero-2-v-720.webp', icon: 'service', title: 'Appointment moved', detail: 'Clinic · Thu 2:10 pm' },
-    { key: 'service', wide: '/video/hero-3.mp4', tall: '/video/hero-3-v.mp4', poster: PHOTOS + 'hero-3-1600.webp', posterTall: PHOTOS + 'hero-3-v-720.webp', icon: 'invoice', title: 'Invoice sent', detail: 'Home services · paid by link' },
-    { key: 'ops', wide: '/video/hero-4.mp4', tall: '/video/hero-4-v.mp4', poster: PHOTOS + 'hero-4-1600.webp', posterTall: PHOTOS + 'hero-4-v-720.webp', icon: 'report', title: 'Weekly report ready', detail: 'Operations · sent to the team' },
+    { key: 'realty', wide: '/video/hero-1.mp4', tall: '/video/hero-1-v.mp4', poster: PHOTOS + 'hero-1-1600.webp', posterTall: PHOTOS + 'hero-1-v-720.webp', icon: 'calendar', title: 'Viewing booked', detail: 'Real estate · Sat 11:00', inside: { icon: 'report', title: 'Agents’ week planned', detail: 'Real estate · 14 showings' } },
+    { key: 'clinic', wide: '/video/hero-2.mp4', tall: '/video/hero-2-v.mp4', poster: PHOTOS + 'hero-2-1600.webp', posterTall: PHOTOS + 'hero-2-v-720.webp', icon: 'service', title: 'Appointment moved', detail: 'Clinic · Thu 2:10 pm', inside: { icon: 'approval', title: 'Shift swap approved', detail: 'Clinic · Fri front desk' } },
+    { key: 'service', wide: '/video/hero-3.mp4', tall: '/video/hero-3-v.mp4', poster: PHOTOS + 'hero-3-1600.webp', posterTall: PHOTOS + 'hero-3-v-720.webp', icon: 'invoice', title: 'Invoice sent', detail: 'Home services · paid by link', inside: { icon: 'approval', title: 'Freelancer invoice checked', detail: 'Home services · held for approval' } },
+    { key: 'ops', wide: '/video/hero-4.mp4', tall: '/video/hero-4-v.mp4', poster: PHOTOS + 'hero-4-1600.webp', posterTall: PHOTOS + 'hero-4-v-720.webp', icon: 'message', title: 'Order question answered', detail: 'Operations · tracking sent', inside: { icon: 'report', title: 'Weekly report ready', detail: 'Operations · sent to the team' } },
   ],
   // Illustrative live activity shown over the photo (examples, not customer data).
   events: [
