@@ -7,7 +7,7 @@ import LiquidGlass from '@/components/home-v2/primitives/LiquidGlass';
 import { useInViewport, usePageVisible } from '@/components/home-v2/hooks';
 import { EASE, H, MapBase, MapChrome, Pin, RouteLine, Tag, useCover, W } from './StreetMap';
 
-const BEAT_MS = 6500;
+const BEAT_MS = 5200;
 
 /** A technician on the map: their initial in their colour, a ring while Aurora is talking to them. */
 function Tech({ t, active, reduce }) {
@@ -19,6 +19,14 @@ function Tech({ t, active, reduce }) {
           <animate attributeName="r" values="11;19;11" dur="1.8s" repeatCount="indefinite" />
           <animate attributeName="fill-opacity" values="0.3;0;0.3" dur="1.8s" repeatCount="indefinite" />
         </circle>
+      ) : null}
+      {active ? (
+        <g>
+          <rect x={x + 14} y={y - 9} width={t.name.length * 6.2 + 14} height={18} rx={9} fill={t.color} />
+          <text x={x + 21} y={y + 0.5} dominantBaseline="central" fontSize="9" fontWeight="600" fill="#fff" fontFamily="inherit">
+            {t.name}
+          </text>
+        </g>
       ) : null}
       <circle cx={x} cy={y} r={11} fill={t.color} stroke="#fff" strokeWidth={2.5} />
       <text x={x} y={y + 0.5} textAnchor="middle" dominantBaseline="central" fontSize="9" fontWeight="700" fill="#fff" fontFamily="inherit">
@@ -33,7 +41,7 @@ function Thread({ beat, tech, k, reduce }) {
   return (
     <LiquidGlass className="rounded-[22px] p-3.5 sm:p-4" style={{ '--lg-tint-a': 'rgba(255,252,247,0.94)', '--lg-tint-b': 'rgba(255,249,241,0.88)' }}>
       <AnimatePresence mode="wait" initial={false}>
-        <motion.div key={k} initial={reduce ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.35, ease: EASE }}>
+        <motion.div key={k} initial={reduce ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.25, ease: EASE }}>
           <div className="flex items-center gap-2.5">
             <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[13px] font-semibold text-white" style={{ background: tech.color }}>
               {tech.name[0]}
@@ -43,7 +51,8 @@ function Thread({ beat, tech, k, reduce }) {
               <span className="block truncate text-[12px] text-slate">{tech.role}</span>
             </span>
           </div>
-          <div className="mt-3 flex flex-col gap-2">
+          <p className="mt-3 text-[10.5px] font-medium uppercase tracking-[0.08em] text-ink/40">{tech.channel || 'Text message · now'}</p>
+          <div className="mt-1.5 flex flex-col gap-2">
             {beat.thread.map((msg, i) => {
               const mine = msg.who === 'aurora';
               return (
@@ -51,7 +60,7 @@ function Thread({ beat, tech, k, reduce }) {
                   key={i}
                   initial={reduce ? false : { opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.35, ease: EASE, delay: reduce ? 0 : 0.3 + i * 0.9 }}
+                  transition={{ duration: 0.3, ease: EASE, delay: reduce ? 0 : 0.1 + i * 0.7 }}
                   className={cn('max-w-[88%] rounded-[18px] px-3.5 py-2 text-[13.5px] leading-snug', mine ? 'self-end rounded-br-[6px] bg-ink text-white' : 'self-start rounded-bl-[6px] bg-white text-ink shadow-[0_1px_2px_rgba(10,15,14,0.08)]')}
                 >
                   {msg.text}
@@ -62,7 +71,7 @@ function Thread({ beat, tech, k, reduce }) {
           <motion.p
             initial={reduce ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.35, delay: reduce ? 0 : 0.3 + beat.thread.length * 0.9 }}
+            transition={{ duration: 0.3, delay: reduce ? 0 : 0.2 + beat.thread.length * 0.7 }}
             className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-[#E4F4E8] px-3 py-1 text-[12px] font-medium text-[#1F7A4C]"
           >
             <Check className="h-3.5 w-3.5" strokeWidth={2.6} aria-hidden="true" />
@@ -120,10 +129,10 @@ export default function FieldMap({ d }) {
               <svg viewBox={`0 0 ${W} ${H}`} className="block h-full w-full" aria-hidden="true">
                 <MapBase />
                 {d.beats.map((b, i) => (
-                  <RouteLine key={b.tech} d={b.route} color={d.techs.find((t) => t.key === b.tech).color} show={i === k} reduce={reduce} delay={0.4} />
+                  <RouteLine key={b.tech} d={b.route} color={d.techs.find((t) => t.key === b.tech).color} show={i === k} reduce={reduce} delay={0.15} duration={0.7} />
                 ))}
                 {d.beats.map((b, i) => (
-                  <Pin key={b.tech} x={b.pin[0]} y={b.pin[1]} color={d.techs.find((t) => t.key === b.tech).color} show={i === k} delay={0.2} reduce={reduce} />
+                  <Pin key={b.tech} x={b.pin[0]} y={b.pin[1]} color={d.techs.find((t) => t.key === b.tech).color} show={i === k} delay={0.1} reduce={reduce} />
                 ))}
                 {d.techs.map((t) => (
                   <Tech key={t.key} t={t} active={t.key === beat.tech} reduce={reduce} />

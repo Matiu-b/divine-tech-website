@@ -137,8 +137,8 @@ export function Tag({ at, box, tone = 'ink', children, show }) {
 
 
 /** A route along the streets, with a white edge like a maps app; it draws itself when `show` turns on. */
-export function RouteLine({ d, color, show, delay = 0, dashed = false, reduce = false, width = 4.5 }) {
-  const t = { duration: reduce ? 0 : 1.2, ease: EASE, delay: reduce || !show ? 0 : delay };
+export function RouteLine({ d, color, show, delay = 0, dashed = false, reduce = false, width = 4.5, duration = 1.2 }) {
+  const t = { duration: reduce ? 0 : show ? duration : 0.2, ease: EASE, delay: reduce || !show ? 0 : delay };
   return (
     <g>
       <motion.path d={d} fill="none" stroke="#fff" strokeWidth={width + 3.5} strokeLinecap="round" strokeLinejoin="round" initial={false} animate={{ pathLength: show ? 1 : 0, opacity: show ? 1 : 0 }} transition={t} />
