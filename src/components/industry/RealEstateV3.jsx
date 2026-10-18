@@ -1729,24 +1729,7 @@ function JourneyStep({ step, n, a, reduce, cc }) {
           {String(n + 1).padStart(2, '0')} · {step.date}
         </span>
       </p>
-      <p className="pretty mt-2 text-[15px] leading-snug text-graphite md:mt-3 md:text-[16px]">{step.happened}</p>
-      {/* phones and tablets: the steps as one short flowing line; laptops: two neat columns */}
-      <p className="mt-3 flex flex-wrap gap-x-2.5 gap-y-1 text-[12.5px] leading-snug text-ink xs:text-[13px] md:mt-4 md:text-[13.5px] lg:text-[13px] xl:hidden">
-        {step.points.map((x) => (
-          <span key={x} className="inline-flex items-center gap-1.5 whitespace-nowrap">
-            <span aria-hidden="true" className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#F25C2A]" />
-            {x}
-          </span>
-        ))}
-      </p>
-      <ul className="mt-4 grid grid-cols-2 gap-x-3 gap-y-2 max-xl:hidden">
-        {step.points.map((x) => (
-          <li key={x} className="flex items-center gap-2 text-[15px] leading-snug text-ink">
-            <span aria-hidden="true" className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#F25C2A]" />
-            {x}
-          </li>
-        ))}
-      </ul>
+      <p className="pretty mt-2 text-[15px] leading-snug text-ink md:mt-3 md:text-[17px] md:leading-[1.45]">{step.happened}</p>
       <p className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-0.5 rounded-[14px] bg-[#FBF8F3] px-3.5 py-2.5 shadow-[inset_0_0_0_1px_rgba(10,15,14,0.06)] md:mt-auto md:px-4 md:py-3">
         <span className="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.08em] text-ink/45">
           <TeamIcon className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
@@ -1940,7 +1923,7 @@ export function RxAfter({ it }) {
           <ol className="sr-only">
             {a.steps.map((x) => (
               <li key={x.key}>
-                {x.name} ({x.date}). {x.happened} {x.points.join('. ')}.{' '}
+                {x.name} ({x.date}). {x.happened}{' '}
                 {(x.call ? x.call.captions : x.thread).map((m) => (m.who === 'aurora' ? 'Aurora: ' : a.lead.name.split(' ')[0] + ': ') + m.text).join(' ')} {x.team}
               </li>
             ))}

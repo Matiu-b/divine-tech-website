@@ -260,8 +260,7 @@ export const industries = [
           {
             key: 'call', name: 'Reactivation call', date: 'Jun 2', icon: 'phone',
             media: { video: '/media/real-estate/emma-desk.mp4', poster: '/media/real-estate/emma-desk-poster.webp', focus: '50% 22%' },
-            happened: 'Two months of silence, turned into a booked showing with one call.',
-            points: ['Went quiet', 'AI agent calls', 'Objections handled', 'Tour booked'],
+            happened: 'Two months silent. One AI call, two objections handled, a tour booked.',
             call: {
               audio: '/media/real-estate/emma-call-2.mp3',
               duration: 72910,
@@ -313,8 +312,7 @@ export const industries = [
           {
             key: 'showing', name: 'The showing', date: 'Jun 6', icon: 'calendar',
             media: { video: '/media/real-estate/emma-showing.mp4', poster: '/media/real-estate/emma-showing-poster.webp', focus: '50% 38%' },
-            happened: 'Marcus walks in already knowing everything from the call.',
-            points: ['Reminder sent', 'Notes to Marcus', 'Condo valued', 'Offer requested'],
+            happened: 'Marcus walks in with the full call notes. The condo is valued the same day, and an offer goes in.',
             thread: [
               { who: 'aurora', text: 'Morning, Emma! Marcus will meet you at 12 Aspen Court at 11, then head over to your condo.' },
               { who: 'aurora', text: 'How did the house feel?' },
@@ -325,8 +323,7 @@ export const industries = [
           {
             key: 'closing', name: 'Closing day', date: 'Jul 24', icon: 'crm',
             media: { video: '/media/real-estate/emma-closing.mp4', poster: '/media/real-estate/emma-closing-poster.webp', focus: '50% 42%' },
-            happened: 'A lead who had gone quiet, now two closed deals.',
-            points: ['Closing set', 'Home bought', 'Condo sold', '2 deals closed'],
+            happened: 'A reminder on what to bring, keys in hand, and her condo sold the same month. Two deals from one quiet lead.',
             thread: [
               { who: 'aurora', text: 'Big day, Emma! Closing is at 2 at the title office. Bring your ID, and Marcus will have the keys.' },
               { who: 'lead', text: 'Signed! We have the keys!' },
