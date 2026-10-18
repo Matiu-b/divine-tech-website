@@ -266,16 +266,43 @@ export default function DayLanes({ d: D, id = 'day' }) {
         <div ref={ref} className="canvas canvas-grain relative mt-5 sm:mt-8 overflow-hidden bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] p-4 xs:p-5 md:mt-12 md:p-8 lg:px-10 lg:py-8">
           <div aria-hidden="true" className="pointer-events-none absolute right-[6%] top-[-18%] h-[60%] w-[40%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.4),rgba(255,200,87,0))] blur-2xl" />
 
-          {/* the day: hours across, the two lanes under them, a marker for every moment */}
-          <div className="relative">
-            <p className="mb-2 flex gap-4 text-[12px] font-medium text-ink sm:hidden">
-              {['customers', 'team'].map((lane) => (
-                <span key={lane} className="flex items-center gap-1.5">
-                  <span className="h-2 w-2 rounded-full" style={{ background: LANE_TONE[lane] }} />
-                  {D.lanes[lane]}
-                </span>
+          {/* phones: the whole day on one line, each moment a dot in its side's colour; the ends and the key under it */}
+          <div className="relative sm:hidden">
+            <div className="relative mx-1.5 h-7">
+              <span aria-hidden="true" className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-ink/12" />
+              {D.events.map((ev, i) => (
+                <button
+                  key={ev.key}
+                  type="button"
+                  onClick={() => go(i)}
+                  aria-label={`${ev.time} · ${ev.title}`}
+                  aria-current={i === k ? 'step' : undefined}
+                  className="absolute top-1/2 flex h-7 w-7 -translate-x-1/2 -translate-y-1/2 items-center justify-center"
+                  style={{ left: `${xOf(ev.time)}%` }}
+                >
+                  <span
+                    className={cn('block rounded-full transition-all duration-300', i === k ? 'h-3.5 w-3.5' : 'h-2 w-2', i > k && 'opacity-35')}
+                    style={{ background: LANE_TONE[ev.lane], boxShadow: i === k ? `0 0 0 4px ${LANE_TONE[ev.lane]}29` : undefined }}
+                  />
+                </button>
               ))}
+            </div>
+            <p className="mt-0.5 flex items-center justify-between text-[11px] text-ink/45">
+              <span className="tabular-nums">{hourLabel(9)}</span>
+              <span className="flex gap-3 font-medium text-ink/70">
+                {['customers', 'team'].map((lane) => (
+                  <span key={lane} className="flex items-center gap-1">
+                    <span className="h-1.5 w-1.5 rounded-full" style={{ background: LANE_TONE[lane] }} />
+                    {D.lanes[lane]}
+                  </span>
+                ))}
+              </span>
+              <span className="tabular-nums">{hourLabel(17)}</span>
             </p>
+          </div>
+
+          {/* wider: hours across, the two lanes under them, a marker for every moment */}
+          <div className="relative max-sm:hidden">
             <div className="relative ml-0 h-5 sm:ml-[132px]">
               {HOURS.map((h) => (
                 <span
@@ -322,16 +349,16 @@ export default function DayLanes({ d: D, id = 'day' }) {
           </div>
 
           {/* the moment that is on: every moment sits in the same cell, so the stage never changes height */}
-          <div className="relative mt-4 grid md:mt-6" aria-live="polite">
+          <div className="relative mt-3 grid sm:mt-4 md:mt-6" aria-live="polite">
             {D.events.map((ev, i) => {
               const Art = ARTIFACT[ev.kind];
               const on = i === k;
               return (
-                <div key={ev.key} className={cn('[grid-area:1/1] grid content-start gap-5 md:content-center md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] md:items-center md:gap-10', on ? '' : 'invisible')} aria-hidden={on ? undefined : true}>
+                <div key={ev.key} className={cn('[grid-area:1/1] grid content-start gap-4 sm:gap-5 md:content-center md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] md:items-center md:gap-10', on ? '' : 'invisible')} aria-hidden={on ? undefined : true}>
                   <motion.div key={on ? 'on' : 'off'} initial={reduce || !on ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, ease: EASE }}>
                     <div className="flex flex-wrap items-center gap-x-3 gap-y-2 md:block">
                       <p className="flex items-baseline gap-1.5">
-                        <span className="text-[32px] font-medium leading-none tracking-[-0.03em] text-ink tabular-nums md:text-[48px]">{clockLabel(ev.time)}</span>
+                        <span className="text-[26px] font-medium leading-none tracking-[-0.03em] text-ink tabular-nums sm:text-[32px] md:text-[48px]">{clockLabel(ev.time)}</span>
                         <span className="text-[14px] font-medium text-ink/45 md:text-[15px]">{ampm(ev.time)}</span>
                       </p>
                       <p className="inline-flex items-center gap-1.5 rounded-full bg-white/70 px-2.5 py-1 text-[12px] font-medium text-ink md:mt-3">
@@ -339,8 +366,8 @@ export default function DayLanes({ d: D, id = 'day' }) {
                         {D.lanes[ev.lane]}
                       </p>
                     </div>
-                    <h3 className="mt-3 text-[18px] font-medium leading-tight tracking-[-0.015em] text-ink md:text-[24px]">{ev.title}</h3>
-                    <p className="pretty mt-1.5 max-w-[30em] text-[14.5px] leading-[1.5] text-graphite md:mt-2 md:text-[15px] md:leading-[1.55]">{ev.text}</p>
+                    <h3 className="mt-2.5 text-[17px] font-medium sm:mt-3 sm:text-[18px] leading-tight tracking-[-0.015em] text-ink md:text-[24px]">{ev.title}</h3>
+                    <p className="pretty mt-1 max-w-[30em] text-[14px] leading-[1.45] text-graphite sm:mt-1.5 sm:text-[14.5px] sm:leading-[1.5] md:mt-2 md:text-[15px] md:leading-[1.55]">{ev.text}</p>
                     <div className="mt-5 flex gap-2 max-md:hidden">
                       <button type="button" onClick={() => go(k - 1)} aria-label={D.labels.prev} className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-ink shadow-[0_0_0_1px_rgba(10,15,14,0.1)] hover:shadow-[0_0_0_1px_rgba(10,15,14,0.3)]">
                         <ChevronLeft className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
