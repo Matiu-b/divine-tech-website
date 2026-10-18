@@ -204,6 +204,19 @@
    "width": 900,
    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_073515_b1e97096-ab89-479c-88ff-cbf24621fcc9.mp4",
    "out": "public/media/real-estate/emma-closing"
+  },
+  {
+   "kind": "audio",
+   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_080507_823b0f74-e519-4271-807a-971dfcbb27c6.mp3",
+   "out": "public/media/real-estate/emma-call-2"
+  },
+  {
+   "kind": "image",
+   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_080458_c261e499-afda-48a6-9a5c-03ddcc7778be.png",
+   "out": "design/media/review/emma-desk",
+   "widths": [
+    600
+   ]
   }
  ]
 }
