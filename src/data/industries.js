@@ -251,7 +251,7 @@ export const industries = [
         eyebrow: 'After the first reply',
         titleA: 'The first reply is day one.',
         titleB: 'Aurora keeps every lead moving.',
-        text: 'Most buyers aren’t ready the week they first reach out. Emma, the buyer from earlier on this page, passed on Willow Court and went quiet. Here’s how Aurora brought her back, from one phone call to the closing table.',
+        text: 'Most buyers aren’t ready on day one. Here’s how Aurora brought one back, from a single call to the closing table.',
         // One lead's journey in three steps: the call that brought her back, the showing, the closing.
         // Emma is the buyer from the speed-to-lead section; Marcus is the broker there too. Illustrative.
         lead: { name: 'Emma Clarke', initials: 'EC', intro: 'Asked about 18 Willow Court in March, then went quiet' },
