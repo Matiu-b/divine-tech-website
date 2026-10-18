@@ -149,7 +149,7 @@ function useCover(ref) {
 }
 
 const DRIVE_MS = 2200;
-const STOP_MS = 6500; // long enough to watch the job's clip
+const STOP_MS = 7000; // long enough to watch the job's clip
 
 /**
  * The van's day: leg i drives to stop i, then it waits at the stop. Returns the leg, whether it is driving, and how far
@@ -184,12 +184,12 @@ function useDrive(n, running, still) {
   return state;
 }
 
-/** Jake on the job: the clip plays muted on a loop while the van is there; the still stands in when it can't play. */
+/** Jake on the job: the clip plays once, muted, while the van is there; the still stands in when it can't play. */
 function JobClip({ s, play }) {
   return (
     <span className="relative block aspect-video w-full overflow-hidden rounded-[9px] sm:rounded-[10px]">
       <img src={s.poster} alt="" className="absolute inset-0 h-full w-full object-cover" />
-      {play ? <video src={s.video} poster={s.poster} className="absolute inset-0 h-full w-full object-cover" autoPlay muted loop playsInline preload="auto" aria-hidden="true" /> : null}
+      {play ? <video src={s.video} poster={s.poster} className="absolute inset-0 h-full w-full object-cover" autoPlay muted playsInline preload="auto" aria-hidden="true" /> : null}
     </span>
   );
 }
@@ -262,7 +262,7 @@ export default function FieldMap({ d }) {
     const cw = box.w >= 1000 ? 270 : 250;
     const ch = cw * 0.5625 + 40;
     const lx = x < box.w / 2 ? x + 22 : x - 22 - cw;
-    return { left: Math.max(12, Math.min(box.w - cw - 12, lx)), top: Math.max(12, Math.min(box.h - ch - 12, y - ch / 2)) };
+    return { width: cw, left: Math.max(12, Math.min(box.w - cw - 12, lx)), top: Math.max(12, Math.min(box.h - ch - 12, y - ch / 2)) };
   };
   const total = d.stops.reduce((a, s) => a + s.drive, 0);
 
@@ -379,7 +379,7 @@ export default function FieldMap({ d }) {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.3, ease: EASE }}
-                  className="pointer-events-none absolute bottom-2 right-2 z-[3] w-[56%] overflow-hidden rounded-[12px] bg-white p-1 shadow-[0_10px_30px_-8px_rgba(10,15,14,0.35)] sm:bottom-auto sm:right-auto sm:w-[250px] sm:rounded-[14px] sm:p-1.5 lg:w-[270px]"
+                  className={cn('pointer-events-none absolute z-[3] overflow-hidden rounded-[12px] bg-white p-1 shadow-[0_10px_30px_-8px_rgba(10,15,14,0.35)] sm:rounded-[14px] sm:p-1.5', wide ? '' : 'bottom-2 right-2 w-[56%] sm:w-[250px]')}
                   style={wide ? card(d.stops[leg].at) : undefined}
                 >
                   <JobClip s={d.stops[leg]} play={inView && visible && !reduce} />
