@@ -103,7 +103,7 @@ function HeroCall({ c, reduce, active }) {
       </div>
 
       {/* the recording: one bar per slice, coloured by who is talking, brighter once played */}
-      <div className="mt-2.5 flex h-6 items-center gap-[2px]" aria-hidden="true">
+      <div className="mt-2.5 flex h-6 items-center gap-[2px] max-[559px]:hidden" aria-hidden="true">
         {bars.map((v, i) => {
           const ms = ((i + 0.5) / n) * c.duration;
           const who = whoAt(ms);
@@ -172,7 +172,7 @@ export function HsHero() {
           <div className="relative min-[560px]:aspect-[4/5] min-[560px]:overflow-hidden min-[560px]:rounded-[28px] min-[560px]:shadow-[0_40px_80px_-48px_rgba(30,30,60,0.55)] md:aspect-square lg:aspect-auto lg:h-[clamp(600px,calc(100svh_-_var(--nav-h)_-_40px),860px)]">
             <div className="relative z-[2] min-[560px]:absolute min-[560px]:inset-x-0 min-[560px]:top-0 min-[560px]:p-8 lg:p-10 lg:pr-[46%] xl:p-12 xl:pr-[48%]">
               <p className="intro-rise eyebrow min-[560px]:text-white/75">{H.eyebrow}</p>
-              <h1 id="hs-hero-title" className="t-display balance mt-3 max-[559px]:text-[2.35rem] max-[559px]:leading-[1.04] min-[560px]:text-white min-[560px]:[text-shadow:0_2px_24px_rgba(10,16,40,0.35)] lg:text-[clamp(2.3rem,0.4rem+2.8vw,3.6rem)]">
+              <h1 id="hs-hero-title" className="t-display balance mt-3 max-[559px]:text-[2.2rem] max-[559px]:leading-[1.04] min-[560px]:text-white min-[560px]:[text-shadow:0_2px_24px_rgba(10,16,40,0.35)] lg:text-[clamp(2.3rem,0.4rem+2.8vw,3.6rem)]">
                 <RevealLines lines={[H.titleA, H.titleB]} lineClassNames={['', '']} immediate delay={0.08} stagger={0.14} />
               </h1>
               <p className="intro-slide t-lead pretty mt-4 max-w-[34em] min-[560px]:!text-white/[0.88] lg:text-[16px] lg:leading-[1.55]" style={{ animationDelay: '0.3s' }}>
@@ -184,7 +184,8 @@ export function HsHero() {
                   Book a demo
                 </CTAButton>
                 <CTAButton size="lg" variant="glass" href={H.secondaryHref} arrow={false} onClick={(e) => onAnchorClick(e, H.secondaryHref)} className={btn}>
-                  {H.secondary}
+                  <span className="sm:hidden">{H.secondaryShort}</span>
+                  <span className="max-sm:hidden">{H.secondary}</span>
                 </CTAButton>
               </div>
             </div>
@@ -208,7 +209,7 @@ export function HsHero() {
               <div aria-hidden="true" className="pointer-events-none absolute inset-0 hidden bg-[radial-gradient(60%_55%_at_0%_0%,rgba(14,20,44,0.45),rgba(14,20,44,0))] lg:block" />
             </figure>
 
-            <div className="relative z-[3] mx-3 -mt-6 min-[560px]:absolute min-[560px]:bottom-5 min-[560px]:right-5 min-[560px]:mx-0 min-[560px]:mt-0 min-[560px]:w-[330px] lg:bottom-8 lg:right-8 lg:w-[400px] xl:w-[420px]">
+            <div className="relative z-[3] mx-3 -mt-10 min-[560px]:absolute min-[560px]:bottom-5 min-[560px]:right-5 min-[560px]:mx-0 min-[560px]:mt-0 min-[560px]:w-[330px] lg:bottom-8 lg:right-8 lg:w-[400px] xl:w-[420px]">
               <HeroCall c={H.call} reduce={reduce} active={inView && visible} />
             </div>
           </div>

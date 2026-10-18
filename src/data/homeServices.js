@@ -8,6 +8,7 @@ export const hsHero = {
   text: 'Out front, Aurora answers every call, quotes from your price book and books the technician. Behind the scenes, it plans the routes, checks freelancer invoices and briefs the owner.',
   textShort: 'Aurora answers every call and books the job. Behind the scenes, it runs the office.',
   secondary: 'See a working day',
+  secondaryShort: 'See a day',
   secondaryHref: '#day',
   // the scene: a technician walking up to a customer's door at dusk, the van behind him; takes a looping clip later
   media: {
@@ -22,7 +23,7 @@ export const hsHero = {
     audio: '/media/home-services/call-customer-2.mp3',
     duration: 55040,
     title: 'After-hours call',
-    sub: 'Northline Home Services · 8:40 pm',
+    sub: 'Northline · 8:40 pm',
     meta: 'Sound on',
     team: 'Your team sees',
     waiting: 'Fills in as she talks',
