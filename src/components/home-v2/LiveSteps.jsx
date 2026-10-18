@@ -101,9 +101,9 @@ export default function LiveSteps({ d: L, id = 'how-it-works' }) {
   return (
     <section id={id} data-nav-theme="light" aria-labelledby="live-title" className="section relative">
       <div className="shell">
-        <SectionHeader id="live-title" titleA={L.titleA} text={L.text} layout="split" />
+        <SectionHeader id="live-title" titleA={L.titleA} text={L.textShort ? <><span className="sm:hidden">{L.textShort}</span><span className="max-sm:hidden">{L.text}</span></> : L.text} layout="split" />
 
-        <div ref={ref} className="canvas canvas-grain relative mt-8 overflow-hidden bg-[linear-gradient(160deg,#F2F3EE_0%,#E4E8E1_100%)] p-4 xs:p-5 md:mt-12 md:p-8 lg:px-10 lg:py-8">
+        <div ref={ref} className="canvas canvas-grain relative mt-5 sm:mt-8 overflow-hidden bg-[linear-gradient(160deg,#F2F3EE_0%,#E4E8E1_100%)] p-4 xs:p-5 md:mt-12 md:p-8 lg:px-10 lg:py-8">
           {/* the three steps: a marker for each, a check once it's done (no fill bar) */}
           <ol className="relative grid grid-cols-3" aria-label="How Aurora goes live">
             <span aria-hidden="true" className="absolute left-[16.66%] right-[16.66%] top-[13px] h-px bg-ink/15" />

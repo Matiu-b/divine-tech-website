@@ -49,9 +49,9 @@ export default function HearAurora({ d: H, id = 'hear' }) {
   return (
     <section id={id} data-nav-theme="light" aria-labelledby="hear-title" className="section relative">
       <div className="shell">
-        <SectionHeader id="hear-title" titleA={H.titleA} text={H.text} layout="split" />
+        <SectionHeader id="hear-title" titleA={H.titleA} text={H.textShort ? <><span className="sm:hidden">{H.textShort}</span><span className="max-sm:hidden">{H.text}</span></> : H.text} layout="split" />
 
-        <div ref={ref} className="canvas canvas-grain relative mt-8 overflow-hidden bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] p-4 xs:p-5 md:mt-12 md:p-8 lg:px-10 lg:py-8">
+        <div ref={ref} className="canvas canvas-grain relative mt-5 sm:mt-8 overflow-hidden bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] p-4 xs:p-5 md:mt-12 md:p-8 lg:px-10 lg:py-8">
           <div aria-hidden="true" className="pointer-events-none absolute left-[8%] top-[-20%] h-[60%] w-[40%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.4),rgba(255,200,87,0))] blur-2xl" />
 
           {/* which call: one with a customer, one with the team */}

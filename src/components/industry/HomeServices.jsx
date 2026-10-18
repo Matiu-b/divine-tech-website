@@ -51,10 +51,15 @@ function Feed({ events, slots, running, still }) {
                 <Icon className="h-[17px] w-[17px]" strokeWidth={1.7} />
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block truncate text-[12.5px] font-medium leading-tight text-ink">{e.title}</span>
-                <span className="mt-0.5 block truncate text-[11px] text-graphite">{e.detail}</span>
+                {/* phones: which side it was for, then what was done; wider: what was done and the detail, the side in a tag */}
+                <span className="flex items-center gap-1.5 text-[10.5px] font-medium uppercase tracking-[0.06em] text-ink/60 sm:hidden">
+                  <span className="h-1.5 w-1.5 rounded-full" style={{ background: LANE[e.lane] }} />
+                  {H.lanes[e.lane]}
+                </span>
+                <span className="mt-0.5 block truncate text-[13px] font-medium leading-tight text-ink sm:mt-0 sm:text-[12.5px]">{e.title}</span>
+                <span className="mt-0.5 hidden truncate text-[11px] text-graphite sm:block">{e.detail}</span>
               </span>
-              <span className="flex shrink-0 items-center gap-1.5 rounded-full bg-white/80 px-2 py-0.5 text-[10.5px] font-medium text-ink">
+              <span className="flex shrink-0 items-center gap-1.5 rounded-full bg-white/80 px-2 py-0.5 text-[10.5px] font-medium text-ink max-sm:hidden">
                 <span className="h-1.5 w-1.5 rounded-full" style={{ background: LANE[e.lane] }} />
                 {H.lanes[e.lane]}
               </span>
@@ -79,6 +84,7 @@ export function HsHero() {
   const inView = useInViewport(ref, { threshold: 0.2 });
   const visible = usePageVisible();
   const wide = useMediaQuery('(min-width: 1024px)');
+  const phone = useMediaQuery('(max-width: 639px)');
   const m = H.media;
 
   useEffect(() => {
@@ -128,7 +134,7 @@ export function HsHero() {
           ) : null}
           <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-[linear-gradient(to_top,rgba(20,16,12,0.35),rgba(20,16,12,0))]" />
           <div className="absolute inset-x-3 bottom-3 sm:bottom-4 sm:left-auto sm:right-4 sm:w-[350px] lg:bottom-6 lg:right-6 lg:w-[360px]">
-            <Feed events={H.events} slots={wide ? 3 : 2} running={inView && visible} still={reduce} />
+            <Feed events={H.events} slots={wide ? 3 : phone ? 1 : 2} running={inView && visible} still={reduce} />
           </div>
           <ul className="sr-only">
             {H.events.map((e) => (

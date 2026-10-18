@@ -35,6 +35,7 @@ export const hsHero = {
 export const hsHear = {
   titleA: 'Hear Aurora at work.',
   text: 'The same voice on the phone with your customers at night and with the owner every morning. Press play on either.',
+  textShort: 'With a customer at night, with the owner every morning. Press play.',
   note: 'Recorded examples with an AI voice. The company and people are illustrative.',
   team: 'What your team sees',
   calls: [
@@ -136,6 +137,7 @@ export const hsHear = {
 export const hsDay = {
   titleA: 'One AI teammate, from 9 to 5.',
   text: 'A day at a company with 14 technicians in the field and a bench of freelancers. Some of the work faces customers. Most of it runs the company.',
+  textShort: 'A day with 14 technicians and a bench of freelancers. Most of the work runs the company.',
   lanes: { team: 'Your team', customers: 'Your customers' },
   labels: { prev: 'Earlier', next: 'Later' },
   company: 'Northline Home Services',
@@ -225,6 +227,7 @@ export const hsDay = {
 export const hsLive = {
   titleA: 'Live in hours, under your rules.',
   text: 'No technical project on your side. Aurora works inside your phone, calendar and field service software, and nothing goes live until you approve it.',
+  textShort: 'No technical project on your side, and nothing goes live until you approve it.',
   more: { label: 'See the platform', href: '/platform' },
   labels: { prev: 'Previous step', next: 'Next step' },
   steps: [

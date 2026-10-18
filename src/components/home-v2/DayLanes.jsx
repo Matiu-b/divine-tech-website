@@ -261,9 +261,9 @@ export default function DayLanes({ d: D, id = 'day' }) {
   return (
     <section id={id} data-nav-theme="light" aria-labelledby="day-title" className="section relative">
       <div className="shell">
-        <SectionHeader id="day-title" titleA={D.titleA} text={D.text} layout="split" />
+        <SectionHeader id="day-title" titleA={D.titleA} text={D.textShort ? <><span className="sm:hidden">{D.textShort}</span><span className="max-sm:hidden">{D.text}</span></> : D.text} layout="split" />
 
-        <div ref={ref} className="canvas canvas-grain relative mt-8 overflow-hidden bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] p-4 xs:p-5 md:mt-12 md:p-8 lg:px-10 lg:py-8">
+        <div ref={ref} className="canvas canvas-grain relative mt-5 sm:mt-8 overflow-hidden bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] p-4 xs:p-5 md:mt-12 md:p-8 lg:px-10 lg:py-8">
           <div aria-hidden="true" className="pointer-events-none absolute right-[6%] top-[-18%] h-[60%] w-[40%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.4),rgba(255,200,87,0))] blur-2xl" />
 
           {/* the day: hours across, the two lanes under them, a marker for every moment */}
