@@ -23,6 +23,7 @@ const ROADS = [
   [[[0, 160], [110, 160], [270, 150], [640, 150], [1000, 170]], 'county'],
   [[[268, 400], [520, 450], [800, 472], [1000, 480]], 'county'],
   [[[180, 440], [268, 400]], 'county'],
+  [[[180, 440], [120, 330]], 'county'],
   [[[520, 322], [520, 450]], 'county'],
   [[[760, 300], [830, 330], [800, 472]], 'county'],
   [[[268, 400], [120, 330], [110, 160]], 'county'],
@@ -62,8 +63,8 @@ function Region() {
     <g>
       <rect width={W} height={H} fill="#EEEBE4" />
       <defs>
-        <pattern id="fm-grid" width="11" height="11" patternUnits="userSpaceOnUse">
-          <path d="M0 0.5 H11 M0.5 0 V11" stroke="#FFFFFF" strokeWidth="1.3" />
+        <pattern id="fm-grid" width="7" height="7" patternUnits="userSpaceOnUse">
+          <path d="M0 0.4 H7 M0.4 0 V7" stroke="#FFFFFF" strokeWidth="0.8" />
         </pattern>
       </defs>
       {WOODS.map((d) => (
@@ -74,8 +75,8 @@ function Region() {
         const [x0, y0, x1, y1] = t.box;
         return (
           <g key={t.name}>
-            <rect x={x0} y={y0} width={x1 - x0} height={y1 - y0} rx={22} fill="#E4DFD5" />
-            <rect x={x0} y={y0} width={x1 - x0} height={y1 - y0} rx={22} fill="url(#fm-grid)" opacity="0.9" />
+            <rect x={x0} y={y0} width={x1 - x0} height={y1 - y0} rx={26} fill="#E6E1D8" />
+            <rect x={x0} y={y0} width={x1 - x0} height={y1 - y0} rx={26} fill="url(#fm-grid)" opacity="0.75" />
           </g>
         );
       })}
@@ -235,7 +236,7 @@ export default function FieldMap({ d }) {
         <span className="min-w-0 flex-1">
           <span className="block text-[15px] font-medium leading-tight text-ink">{d.tech.title}</span>
           <span className="block truncate text-[12px] text-slate">
-            {n} {d.labels.jobs} · {hm(total)} {d.labels.driving} · {d.tech.sent}
+            {n} {d.labels.jobs} · {hm(total)} · {d.tech.sent}
           </span>
         </span>
       </div>
@@ -281,7 +282,7 @@ export default function FieldMap({ d }) {
               <svg viewBox={`0 0 ${W} ${H}`} className="block h-full w-full" aria-hidden="true">
                 <Region />
                 {/* the order the jobs were booked in: a zigzag across the county */}
-                <path d={pts([d.yard, ...d.booked.order.map((k) => d.stops[k].at)])} fill="none" stroke="#0A0F0E" strokeOpacity="0.35" strokeWidth={2} strokeDasharray="5 6" strokeLinecap="round" strokeLinejoin="round" />
+                <path d={pts([d.yard, ...d.booked.order.map((k) => d.stops[k].at)])} fill="none" stroke="#0A0F0E" strokeOpacity="0.28" strokeWidth={1.8} strokeDasharray="4 6" strokeLinecap="round" strokeLinejoin="round" />
                 {/* the route, leg by leg, with a white edge like a maps app */}
                 {d.stops.map((s, i) => (
                   <path key={'e' + i} d={s.leg} fill="none" stroke="#fff" strokeWidth={9} strokeLinecap="round" strokeLinejoin="round" />
@@ -384,7 +385,7 @@ export default function FieldMap({ d }) {
                 <span className="min-w-0 flex-1">
                   <span className="block text-[14px] font-medium leading-tight text-ink">{d.tech.title}</span>
                   <span className="block truncate text-[11.5px] text-slate">
-                    {n} {d.labels.jobs} · {hm(total)} {d.labels.driving} · {d.tech.sent}
+                    {n} {d.labels.jobs} · {hm(total)} · {d.tech.sent}
                   </span>
                 </span>
               </div>
