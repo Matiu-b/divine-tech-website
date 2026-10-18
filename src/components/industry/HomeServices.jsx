@@ -92,10 +92,10 @@ export function HsHero() {
   return (
     <section id="top" data-nav-theme="light" aria-labelledby="hs-hero-title" className="relative overflow-hidden pb-[clamp(56px,6vw,88px)] pt-[calc(var(--nav-h)+24px)] lg:pt-[calc(var(--nav-h)+16px)]">
       <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[760px] bg-[radial-gradient(55%_55%_at_82%_0%,rgba(255,214,170,0.75),rgba(246,245,241,0)_70%),radial-gradient(40%_50%_at_10%_10%,rgba(240,232,218,0.7),rgba(246,245,241,0)_70%)]" />
-      <div className="shell relative grid gap-7 md:gap-9 lg:h-[clamp(560px,calc(100svh_-_var(--nav-h)_-_40px),820px)] lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-center lg:gap-12">
+      <div className="shell relative grid gap-7 md:gap-9 lg:h-[clamp(560px,calc(100svh_-_var(--nav-h)_-_40px),820px)] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:items-center lg:gap-12">
         <div>
           <p className="intro-rise eyebrow">{H.eyebrow}</p>
-          <h1 id="hs-hero-title" className="t-display balance mt-4 lg:text-[clamp(2.3rem,0.5rem+2.8vw,3.6rem)]">
+          <h1 id="hs-hero-title" className="t-display balance mt-4 lg:text-[clamp(2.1rem,0.3rem+2.5vw,3.3rem)]">
             <RevealLines lines={[H.titleA, H.titleB]} lineClassNames={['', '']} immediate delay={0.08} stagger={0.14} />
           </h1>
           <p className="intro-slide t-lead pretty mt-5 max-w-[34em] lg:text-[16px] lg:leading-[1.55]" style={{ animationDelay: '0.3s' }}>
@@ -127,7 +127,7 @@ export function HsHero() {
             <video ref={videoRef} src={m.video} poster={m.poster} muted loop playsInline preload="none" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: m.focus }} />
           ) : null}
           <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-[linear-gradient(to_top,rgba(20,16,12,0.35),rgba(20,16,12,0))]" />
-          <div className="absolute inset-x-3 bottom-3 xs:left-auto xs:w-[300px] sm:bottom-4 sm:right-4 lg:bottom-6 lg:right-6 lg:w-[320px]">
+          <div className="absolute inset-x-3 bottom-3 sm:bottom-4 sm:left-auto sm:right-4 sm:w-[350px] lg:bottom-6 lg:right-6 lg:w-[360px]">
             <Feed events={H.events} slots={wide ? 3 : 2} running={inView && visible} still={reduce} />
           </div>
           <ul className="sr-only">
