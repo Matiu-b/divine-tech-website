@@ -379,7 +379,36 @@ export default function FieldMap({ d }) {
           </div>
 
           {/* the plan Aurora texted to the tech */}
-          <div className="relative border-t border-ink/[0.06] p-3 xs:p-4 lg:overflow-hidden lg:border-l lg:border-t-0 lg:p-5">{plan}</div>
+          <div className="relative border-t border-ink/[0.06] p-3 xs:p-4 lg:overflow-hidden lg:border-l lg:border-t-0 lg:p-5">
+            <div className="max-lg:hidden">{plan}</div>
+            {/* phones and tablets: the day as a row of stops, and the job the van is at or driving to */}
+            <div className="lg:hidden">
+              <div className="flex items-center gap-2.5">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#F25C2A] text-[13px] font-semibold text-white">{d.tech.name[0]}</span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-[14px] font-medium leading-tight text-ink">{d.tech.title}</span>
+                  <span className="block truncate text-[11.5px] text-slate">
+                    {n} {d.labels.jobs} · {total} {d.labels.min} · {d.tech.sent}
+                  </span>
+                </span>
+              </div>
+              <ol className="mt-3 flex items-center" aria-hidden="true">
+                {d.stops.map((s, i) => (
+                  <li key={s.job} className="flex flex-1 items-center last:flex-none">
+                    <span className={cn('flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold transition-colors duration-300', i === leg ? 'bg-[#F25C2A] text-white' : i < leg ? 'bg-ink/15 text-ink/60' : 'bg-white text-ink/60 shadow-[inset_0_0_0_1px_rgba(10,15,14,0.15)]')}>{i + 1}</span>
+                    {i < n - 1 ? (
+                      <span className="flex flex-1 items-center justify-center gap-0.5 text-[10.5px] text-ink/40">
+                        {d.stops[i + 1].drive}′
+                      </span>
+                    ) : null}
+                  </li>
+                ))}
+              </ol>
+              <ul className="mt-2">
+                <Stop s={d.stops[leg]} i={leg} open here={here} reduce={reduce} labels={d.labels} />
+              </ul>
+            </div>
+          </div>
         </div>
 
         <ol className="sr-only">
