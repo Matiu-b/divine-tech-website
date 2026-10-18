@@ -181,7 +181,12 @@ export default function BriefMap({ d }) {
             </>
           }
           layout="split"
-        />
+        >
+          {/* laptops: the player sits under the intro, so the map stays clear */}
+          <div className="mt-5 max-lg:hidden">
+            <Player c={c} cc={cc} live={live} cap={cap} sub={sub} reduce={reduce} />
+          </div>
+        </SectionHeader>
 
         <div ref={ref} className="relative mt-5 sm:mt-8 md:mt-12">
           {/* the map */}
@@ -217,13 +222,9 @@ export default function BriefMap({ d }) {
               </ul>
             </div>
 
-            {/* the player: over the map's bottom edge from tablets up */}
-            <div className="absolute inset-x-3 bottom-3 max-sm:hidden sm:left-4 sm:right-auto sm:bottom-4 sm:w-[420px] lg:bottom-6 lg:left-6 lg:w-[460px]">
-              <Player c={c} cc={cc} live={live} cap={cap} sub={sub} reduce={reduce} />
-            </div>
           </div>
-          {/* phones: the player under the map */}
-          <div className="relative z-[2] mx-3 -mt-8 sm:hidden">
+          {/* phones and tablets: the player just under the map's bottom edge */}
+          <div className="relative z-[2] mx-3 -mt-8 sm:mx-auto sm:w-[460px] lg:hidden">
             <Player c={c} cc={cc} live={live} cap={cap} sub={sub} reduce={reduce} />
           </div>
           <audio ref={audioRef} src={c.audio} preload="none" onEnded={cc.ended} />
