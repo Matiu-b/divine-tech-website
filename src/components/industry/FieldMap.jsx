@@ -256,6 +256,9 @@ export default function FieldMap({ d }) {
   const here = !driving;
   const toFrame = ([x, y]) => ({ left: x * box.s + box.ox, top: y * box.s + box.oy });
   const wide = box.w >= 600;
+  // on a wide map the clip sits low in the middle, over the empty south of the county and clear of the route
+  const cw = box.w >= 900 ? 340 : box.w >= 700 ? 250 : 220;
+  const clipAt = { width: cw, left: Math.round(Math.min(box.w - cw - 64, Math.max(220, (box.w - cw) / 2 + 30))), bottom: 16 };
   const total = d.stops.reduce((a, s) => a + s.drive, 0);
 
   const plan = (
@@ -362,7 +365,7 @@ export default function FieldMap({ d }) {
               </span>
             ))}
 
-            {/* the job the van is at: a card in the corner with a clip of Jake on the job, like a maps app's street view */}
+            {/* the job the van is at: a card with a clip of Jake on the job, like a maps app's street view */}
             <AnimatePresence>
               {here ? (
                 <motion.div
@@ -371,8 +374,8 @@ export default function FieldMap({ d }) {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.3, ease: EASE }}
-                  className={cn('pointer-events-none absolute z-[3] overflow-hidden rounded-[12px] bg-white p-1 shadow-[0_10px_30px_-8px_rgba(10,15,14,0.35)] sm:rounded-[14px] sm:p-1.5', wide ? 'right-4 top-4' : 'bottom-2 right-2 w-[56%] sm:w-[250px]')}
-                  style={wide ? { width: box.w >= 1000 ? 280 : 250 } : undefined}
+                  className={cn('pointer-events-none absolute z-[3] overflow-hidden rounded-[12px] bg-white p-1 shadow-[0_10px_30px_-8px_rgba(10,15,14,0.35)] sm:rounded-[14px] sm:p-1.5', wide ? '' : 'bottom-2 right-2 w-[56%] sm:w-[250px]')}
+                  style={wide ? clipAt : undefined}
                 >
                   <JobClip s={d.stops[leg]} play={inView && visible && !reduce} />
                   <span className="block truncate px-1 pb-0.5 pt-1 text-[11px] sm:px-1.5 sm:pt-1.5 sm:text-[12px]">
