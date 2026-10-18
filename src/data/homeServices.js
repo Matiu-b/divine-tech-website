@@ -25,7 +25,7 @@ export const hsHero = {
     sub: 'Northline Home Services · 8:40 pm',
     meta: 'Sound on',
     team: 'Your team sees',
-    waiting: 'Each step lands in your systems as she talks.',
+    waiting: 'Fills in as she talks',
     listen: 'Hear Aurora take the call',
     prompt: 'A customer’s AC stopped tonight.',
     again: 'Hear it again',
