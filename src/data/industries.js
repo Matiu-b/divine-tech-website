@@ -261,7 +261,7 @@ export const industries = [
             key: 'call', name: 'Reactivation call', date: 'Jun 2', icon: 'phone',
             media: { video: '/media/real-estate/emma-desk.mp4', poster: '/media/real-estate/emma-desk-poster.webp', focus: '50% 22%' },
             happened: 'Two months of silence, turned into a booked showing with one call.',
-            points: ['Silent 2 months', 'AI agent calls', 'Objections handled', 'Showing booked'],
+            points: ['Quiet 2 months', 'AI agent calls', 'Objections handled', 'Showing booked'],
             call: {
               audio: '/media/real-estate/emma-call-2.mp3',
               duration: 72910,
@@ -326,7 +326,7 @@ export const industries = [
             key: 'closing', name: 'Closing day', date: 'Jul 24', icon: 'crm',
             media: { video: '/media/real-estate/emma-closing.mp4', poster: '/media/real-estate/emma-closing-poster.webp', focus: '50% 42%' },
             happened: 'A lead who had gone quiet, now two closed deals.',
-            points: ['Closing reminder', 'Home bought', 'Condo sold', 'Two deals closed'],
+            points: ['Closing set', 'Home bought', 'Condo sold', '2 deals closed'],
             thread: [
               { who: 'aurora', text: 'Big day, Emma! Closing is at 2 at the title office. Bring your ID, and Marcus will have the keys.' },
               { who: 'lead', text: 'Signed! We have the keys!' },
