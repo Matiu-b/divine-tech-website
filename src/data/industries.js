@@ -255,7 +255,7 @@ export const industries = [
         // One lead's journey in three steps: the call that brought her back, the showing, the closing.
         // Emma is the buyer from the speed-to-lead section; Marcus is the broker there too. Illustrative.
         lead: { name: 'Emma Clarke', initials: 'EC', intro: 'Asked about 18 Willow Court in March, then went quiet' },
-        labels: { team: 'What your team sees', prev: 'Previous step', next: 'Next step', you: 'Aurora', text: 'Text' },
+        labels: { team: 'What your team sees', prev: 'Previous step', next: 'Next step', you: 'Aurora', text: 'Text', locked: 'Hear the call first' },
         steps: [
           {
             key: 'call', name: 'Reactivation call', date: 'Jun 2', icon: 'phone',
@@ -302,13 +302,13 @@ export const industries = [
               ],
               // what the brokerage sees as the call goes
               notes: [
-                { at: 0, text: 'CRM · Emma Clarke · Cold · Calling about a new listing' },
-                { at: 27940, text: 'CRM · Objection: has a condo to sell first' },
-                { at: 38300, text: 'CRM · Seller lead · Condo valuation offered' },
-                { at: 61620, text: 'Calendar · Sat 11:00 showing + condo valuation · Marcus' },
+                { at: 0, text: 'CRM · Cold lead · Calling now' },
+                { at: 27940, text: 'CRM · Objection: condo to sell' },
+                { at: 38300, text: 'CRM · Seller lead · Valuation offered' },
+                { at: 61620, text: 'Calendar · Sat 11:00 · Showing + valuation' },
               ],
             },
-            team: 'CRM · Cold → Active · Buyer and seller · Showing Sat 11:00 · Marcus',
+            team: 'CRM · Cold → Active · Showing Sat 11:00',
           },
           {
             key: 'showing', name: 'The showing', date: 'Jun 6', icon: 'calendar',
@@ -320,7 +320,7 @@ export const industries = [
               { who: 'aurora', text: 'How did the house feel?' },
               { who: 'lead', text: 'We love it. Can Marcus write an offer today?' },
             ],
-            team: 'CRM · Offer requested · 12 Aspen Court · Condo valued · Marcus',
+            team: 'CRM · Offer requested · Condo valued',
           },
           {
             key: 'closing', name: 'Closing day', date: 'Jul 24', icon: 'crm',
@@ -332,7 +332,7 @@ export const industries = [
               { who: 'lead', text: 'Signed! We have the keys!' },
               { who: 'aurora', text: 'Welcome home, Emma.' },
             ],
-            team: 'CRM · Closed · Bought 12 Aspen Court · Sold her condo · Marcus',
+            team: 'CRM · 2 deals closed · Bought + sold',
           },
         ],
         kpi: {

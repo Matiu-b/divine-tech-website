@@ -1738,7 +1738,7 @@ function JourneyStep({ step, n, a, reduce, cc }) {
           </li>
         ))}
       </ul>
-      <p className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-0.5 rounded-[14px] bg-[#FBF8F3] px-3.5 py-2.5 shadow-[inset_0_0_0_1px_rgba(10,15,14,0.06)] md:mt-auto md:px-4 md:py-3">
+      <p className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-0.5 rounded-[14px] bg-[#FBF8F3] px-3.5 py-2.5 md:flex-col md:items-start xl:flex-row xl:items-center shadow-[inset_0_0_0_1px_rgba(10,15,14,0.06)] md:mt-auto md:px-4 md:py-3">
         <span className="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.08em] text-ink/45">
           <TeamIcon className="h-3.5 w-3.5" strokeWidth={2} aria-hidden="true" />
           {a.labels.team}
@@ -1771,13 +1771,19 @@ export function RxAfter({ it }) {
   const [nonce, setNonce] = useState(0);
   const callBusy = k === ci && (cc.status === 'playing' || cc.status === 'paused');
   const running = !reduce && inView && visible;
+  // the later steps open once the call has been played (it is the point of the story)
+  const [heard, setHeard] = useState(ci < 0);
+  useEffect(() => {
+    if (cc.status === 'playing') setHeard(true);
+  }, [cc.status]);
+  const locked = (i) => !heard && i > ci;
 
   useEffect(() => {
-    if (!running || callBusy) return undefined;
+    if (!running || callBusy || (k === ci && !heard)) return undefined;
     const ms = k === ci ? (cc.status === 'done' ? AFTER_CALL_MS : CALL_IDLE_MS) : STEP_MS;
     const id = setTimeout(() => setK((x) => (x + 1) % n), ms);
     return () => clearTimeout(id);
-  }, [k, nonce, running, callBusy, cc.status, ci, n]);
+  }, [k, nonce, running, callBusy, heard, cc.status, ci, n]);
 
   // leaving the call step stops the call; coming back to it starts fresh
   useEffect(() => {
@@ -1794,7 +1800,9 @@ export function RxAfter({ it }) {
   }, [k, running]);
 
   const go = (x) => {
-    setK((x + n) % n);
+    const to = (x + n) % n;
+    if (locked(to)) return;
+    setK(to);
     setNonce((v) => v + 1);
   };
   const arrows = (size) => (
@@ -1802,7 +1810,14 @@ export function RxAfter({ it }) {
       <button type="button" onClick={() => go(k - 1)} aria-label={a.labels.prev} className={cn('flex items-center justify-center rounded-full bg-white text-ink shadow-[0_0_0_1px_rgba(10,15,14,0.1)] hover:shadow-[0_0_0_1px_rgba(10,15,14,0.3)]', size)}>
         <ChevronLeft className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
       </button>
-      <button type="button" onClick={() => go(k + 1)} aria-label={a.labels.next} className={cn('flex items-center justify-center rounded-full bg-white text-ink shadow-[0_0_0_1px_rgba(10,15,14,0.1)] hover:shadow-[0_0_0_1px_rgba(10,15,14,0.3)]', size)}>
+      <button
+        type="button"
+        onClick={() => go(k + 1)}
+        disabled={locked((k + 1) % n)}
+        aria-label={locked((k + 1) % n) ? a.labels.locked : a.labels.next}
+        title={locked((k + 1) % n) ? a.labels.locked : undefined}
+        className={cn('flex items-center justify-center rounded-full bg-white text-ink shadow-[0_0_0_1px_rgba(10,15,14,0.1)] hover:shadow-[0_0_0_1px_rgba(10,15,14,0.3)] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:shadow-[0_0_0_1px_rgba(10,15,14,0.1)]', size)}
+      >
         <ChevronRight className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
       </button>
     </>
@@ -1837,7 +1852,14 @@ export function RxAfter({ it }) {
                 const done = i < k;
                 return (
                   <li key={x.key} className="relative flex justify-center">
-                    <button type="button" onClick={() => go(i)} aria-current={cur ? 'step' : undefined} className="group flex flex-col items-center gap-1.5 px-1 text-center">
+                    <button
+                      type="button"
+                      onClick={() => go(i)}
+                      disabled={locked(i)}
+                      title={locked(i) ? a.labels.locked : undefined}
+                      aria-current={cur ? 'step' : undefined}
+                      className="group flex flex-col items-center gap-1.5 px-1 text-center transition-opacity disabled:cursor-not-allowed disabled:opacity-45"
+                    >
                       <span
                         className={cn(
                           'relative z-[1] flex h-[27px] w-[27px] items-center justify-center rounded-full text-[12px] font-medium transition-colors duration-300',
