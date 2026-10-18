@@ -212,19 +212,19 @@
   },
   {
    "kind": "video",
-   "width": 640,
+   "width": 1280,
    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_162718_09fd5e09-1104-46e6-a5dd-5e2a4f72a482.mp4",
    "out": "public/media/home-services/job-ac"
   },
   {
    "kind": "video",
-   "width": 640,
+   "width": 1280,
    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_162718_ef668e94-02f4-4d00-b1f5-9b0fb23c0da1.mp4",
    "out": "public/media/home-services/job-roof"
   },
   {
    "kind": "video",
-   "width": 640,
+   "width": 1280,
    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_162718_88c234c8-fb87-41aa-94cf-963fe6917752.mp4",
    "out": "public/media/home-services/job-heater"
   }
