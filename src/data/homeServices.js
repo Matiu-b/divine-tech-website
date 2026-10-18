@@ -7,9 +7,9 @@ export const hsHero = {
   titleB: 'Aurora runs the rest.',
   text: 'Out front, Aurora answers every call, quotes from your price book and books the technician. Behind the scenes, it plans the routes, checks freelancer invoices and briefs the owner.',
   textShort: 'Aurora answers every call and books the job. Behind the scenes, it runs the office.',
-  secondary: 'Hear the morning brief',
-  secondaryShort: 'The brief',
-  secondaryHref: '#hear',
+  secondary: 'See the field',
+  secondaryShort: 'The field',
+  secondaryHref: '#field',
   // the scene: a technician walking up to a customer's door at dusk, the van behind him; takes a looping clip later
   media: {
     poster: '/media/home-services/hero-b-2000.webp',
@@ -64,34 +64,62 @@ export const hsHero = {
   },
 };
 
+// Jobs to the field: Aurora texts each job to the technician who should take it, staff or freelancer, and the map shows
+// the route. Coordinates are on the street map (viewBox 640 x 360): side streets at x 70 / 330 / 455 / 575 and
+// y 48 / 132 / 282, Oak Ave at x 200, Main St at y 196.
+export const hsField = {
+  titleA: 'Every job reaches the right tech.',
+  text: 'Aurora picks the technician by area and skill and texts the job straight to them: the address, the problem and the way there. Staff and freelancers alike.',
+  textShort: 'Aurora texts each job to the right tech, with the address, the problem and the way there.',
+  title: 'Northline · live',
+  techs: [
+    { key: 'jake', name: 'Jake', role: 'HVAC technician', color: '#F25C2A', at: [330, 196] },
+    { key: 'mike', name: 'Mike', role: 'Technician', color: '#0A0F0E', at: [575, 232] },
+    { key: 'rivera', name: 'Rivera', role: 'Freelance electrician', color: '#14A36B', at: [70, 100] },
+  ],
+  beats: [
+    {
+      tech: 'jake',
+      route: 'M330 196 H455 V90',
+      pin: [455, 90],
+      tag: 'New job · 2:30 pm',
+      thread: [
+        { who: 'aurora', text: 'New job at 2:30 · 14 Maple Ct · AC not cooling. It’s next on your route, 6 minutes away.' },
+        { who: 'tech', text: 'On it.' },
+      ],
+      result: 'Route updated · customer has his ETA',
+    },
+    {
+      tech: 'mike',
+      route: 'M575 232 V282 H455',
+      pin: [455, 282],
+      tag: 'Van 7 · two capacitors',
+      thread: [
+        { who: 'tech', text: 'Do we have a 45/5 capacitor anywhere? Job 412.' },
+        { who: 'aurora', text: 'Van 7 has two, parked on Birch St, 6 minutes from you. Sam knows you’re coming.' },
+      ],
+      result: 'Stock updated · van 7',
+    },
+    {
+      tech: 'rivera',
+      route: 'M70 100 V196 H200 V320',
+      pin: [200, 320],
+      tag: 'Tomorrow · 8 am',
+      thread: [
+        { who: 'aurora', text: 'Tomorrow 8 am · panel upgrade at 22 Oak Ave · $480 at your rate. Can you take it?' },
+        { who: 'tech', text: 'Accepted.' },
+      ],
+      result: 'Booked · work order sent',
+    },
+  ],
+};
+
 export const hsHear = {
   titleA: 'Every morning, a one-minute brief.',
-  text: 'Overnight, Aurora books the requests and plans every technician’s route. At 8 am she briefs the owner, and the map follows along.',
-  textShort: 'Aurora plans the routes overnight and briefs the owner at 8. The map follows along.',
-  // the town the brief talks about, drawn like a maps app (viewBox 640 x 360): side streets at x 70 / 330 / 455 / 575
-  // and y 48 / 132 / 282, Oak Ave at x 200, Main St at y 196, Lakeview Rd from (455,132) to (640,20)
-  map: {
-    yard: [70, 282],
-    van: [330, 282],
-    job: [455, 240],
-    friday: [140, 132],
-    routes: [
-      { key: 'jake', who: 'Jake', color: '#F25C2A', d: 'M70 282 H200 V196 H455 V132 L575 59.4', stops: [[200, 240], [330, 196], [455, 160], [575, 59.4]] },
-      { key: 'ana', who: 'Ana', color: '#0A0F0E', d: 'M70 282 V132 H200 V48 H330', stops: [[70, 205], [140, 132], [200, 90], [330, 48]] },
-      { key: 'rivera', who: 'Rivera', color: '#14A36B', d: 'M575 360 V282 H455 V240', stops: [[455, 240]] },
-    ],
-    handover: 'M200 196 V132 H140',
-    pins: [[130, 48], [265, 132], [390, 196], [515, 282], [575, 160], [265, 282], [130, 196], [390, 48], [515, 196], [330, 240], [610, 282], [255, 48]],
-    labels: {
-      title: 'Northline · today',
-      van: 'Van 7 · Mike’s part',
-      held: 'Job 405 · 6.0 h billed, 4.5 h on site',
-      paid: 'Job 405 · paid for 4.5 h',
-      friday: 'Fri · Ana’s jobs → Jake',
-    },
-  },
+  text: 'At 8 am Aurora tells the owner what happened overnight, and asks about the one thing that needs her.',
+  textShort: 'At 8 am Aurora tells the owner what happened, and asks about the one thing that needs her.',
   note: 'Recorded examples with an AI voice. The company and people are illustrative.',
-  team: 'What your team sees',
+  team: 'What Aurora reported and did',
   calls: [
     {
       key: 'team',
