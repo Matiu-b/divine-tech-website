@@ -153,7 +153,7 @@ export function HsHero() {
               </div>
             </div>
 
-            <figure className="intro-rise relative m-0 mt-6 aspect-[3/2] overflow-hidden rounded-[24px] bg-[#2B3550] max-[559px]:shadow-[0_30px_60px_-40px_rgba(30,30,60,0.55)] min-[560px]:absolute min-[560px]:inset-0 min-[560px]:mt-0 min-[560px]:aspect-auto min-[560px]:rounded-none" style={{ animationDelay: '0.2s' }}>
+            <figure className="intro-rise relative m-0 mt-6 aspect-[16/9] overflow-hidden rounded-[24px] bg-[#2B3550] max-[559px]:shadow-[0_30px_60px_-40px_rgba(30,30,60,0.55)] min-[560px]:absolute min-[560px]:inset-0 min-[560px]:mt-0 min-[560px]:aspect-auto min-[560px]:rounded-none" style={{ animationDelay: '0.2s' }}>
               <img
                 src={m.poster}
                 srcSet={m.srcSet}
@@ -161,7 +161,7 @@ export function HsHero() {
                 alt={m.alt}
                 fetchPriority="high"
                 decoding="async"
-                className="absolute inset-0 h-full w-full object-cover"
+                className="absolute inset-0 h-full w-full origin-[50%_74%] scale-[1.45] object-cover min-[560px]:scale-100"
                 style={{ objectPosition: m.focus }}
               />
               {m.video && !reduce ? (
@@ -172,7 +172,7 @@ export function HsHero() {
               <div aria-hidden="true" className="pointer-events-none absolute inset-0 hidden bg-[radial-gradient(60%_55%_at_0%_0%,rgba(14,20,44,0.45),rgba(14,20,44,0))] lg:block" />
             </figure>
 
-            <div className="relative z-[3] mx-3 -mt-14 min-[560px]:absolute min-[560px]:bottom-5 min-[560px]:right-5 min-[560px]:mx-0 min-[560px]:mt-0 min-[560px]:w-[370px] lg:bottom-8 lg:right-8 lg:w-[400px] xl:w-[420px]">
+            <div className="relative z-[3] mx-3 -mt-6 min-[560px]:absolute min-[560px]:bottom-5 min-[560px]:right-5 min-[560px]:mx-0 min-[560px]:mt-0 min-[560px]:w-[370px] lg:bottom-8 lg:right-8 lg:w-[400px] xl:w-[420px]">
               <Moments running={inView && visible} still={reduce} />
             </div>
           </div>
