@@ -64,7 +64,7 @@ export const hsHear = {
       tabShort: 'Customer',
       name: 'An after-hours call',
       sentence: 'An AC dies at 8:40 pm. Aurora checks the easy fix, quotes the after-hours fee and books a tech for tonight.',
-      media: { poster: '/media/home-services/hear-customer-1400.webp', srcSet: '/media/home-services/hear-customer-900.webp 900w, /media/home-services/hear-customer-1400.webp 1400w', video: null, focus: '50% 40%' },
+      media: { poster: '/media/home-services/hear-customer-2-1400.webp', srcSet: '/media/home-services/hear-customer-2-900.webp 900w, /media/home-services/hear-customer-2-1400.webp 1400w', video: null, focus: '50% 40%' },
       call: {
         audio: '/media/home-services/call-customer-2.mp3',
         duration: 55040,
