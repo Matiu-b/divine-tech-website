@@ -172,7 +172,7 @@ export function HsHero() {
               <div aria-hidden="true" className="pointer-events-none absolute inset-0 hidden bg-[radial-gradient(60%_55%_at_0%_0%,rgba(14,20,44,0.45),rgba(14,20,44,0))] lg:block" />
             </figure>
 
-            <div className="relative z-[3] mx-3 -mt-6 min-[560px]:absolute min-[560px]:bottom-5 min-[560px]:right-5 min-[560px]:mx-0 min-[560px]:mt-0 min-[560px]:w-[370px] lg:bottom-8 lg:right-8 lg:w-[400px] xl:w-[420px]">
+            <div className="relative z-[3] mx-3 -mt-6 min-[560px]:absolute min-[560px]:bottom-5 min-[560px]:right-5 min-[560px]:mx-0 min-[560px]:mt-0 min-[560px]:w-[330px] lg:bottom-8 lg:right-8 lg:w-[400px] xl:w-[420px]">
               <Moments running={inView && visible} still={reduce} />
             </div>
           </div>
