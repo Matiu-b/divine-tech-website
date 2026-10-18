@@ -133,7 +133,7 @@ export function HsHero() {
           moment panel at the bottom right over the lawn. Phones: the promise above, the photo, the panel under its edge.
         */}
         <div ref={ref} className="relative">
-          <div className="relative min-[560px]:aspect-[5/4] min-[560px]:overflow-hidden min-[560px]:rounded-[28px] min-[560px]:shadow-[0_40px_80px_-48px_rgba(30,30,60,0.55)] md:aspect-[4/3] lg:aspect-auto lg:h-[clamp(600px,calc(100svh_-_var(--nav-h)_-_40px),860px)]">
+          <div className="relative min-[560px]:aspect-[4/5] min-[560px]:overflow-hidden min-[560px]:rounded-[28px] min-[560px]:shadow-[0_40px_80px_-48px_rgba(30,30,60,0.55)] md:aspect-square lg:aspect-auto lg:h-[clamp(600px,calc(100svh_-_var(--nav-h)_-_40px),860px)]">
             <div className="relative z-[2] min-[560px]:absolute min-[560px]:inset-x-0 min-[560px]:top-0 min-[560px]:p-8 lg:p-10 lg:pr-[46%] xl:p-12 xl:pr-[48%]">
               <p className="intro-rise eyebrow min-[560px]:text-white/75">{H.eyebrow}</p>
               <h1 id="hs-hero-title" className="t-display balance mt-3 max-[559px]:text-[2.35rem] max-[559px]:leading-[1.04] min-[560px]:text-white min-[560px]:[text-shadow:0_2px_24px_rgba(10,16,40,0.35)] lg:text-[clamp(2.3rem,0.4rem+2.8vw,3.6rem)]">
