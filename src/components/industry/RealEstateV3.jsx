@@ -1643,7 +1643,7 @@ function CallPanel({ c, clock: cc, reduce }) {
     <div className="flex flex-col gap-3 rounded-[18px] bg-[#F6F1E8] p-2.5 xs:p-3.5 md:p-4">
       <div className="rounded-[16px] bg-white p-3 shadow-[0_1px_2px_rgba(10,15,14,0.08)] md:p-3.5">
         <div className="flex items-center gap-2.5 sm:gap-3">
-          <span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#FFF1E6]">
+          <span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#FFF1E6] max-sm:hidden">
             {speaking === 'aurora' ? <span className="ring-ping absolute inset-0 rounded-full bg-[#F25C2A]/25" /> : null}
             <img src="/brand/aurora-symbol-color.svg" alt="" width="18" height="18" className="relative h-[18px] w-[18px]" />
           </span>
@@ -1652,8 +1652,14 @@ function CallPanel({ c, clock: cc, reduce }) {
             <span className="block truncate text-[12px] text-slate">{c.meta}</span>
           </span>
           <span className="shrink-0 text-[12.5px] font-medium tabular-nums text-ink/60">
-            {live ? clock(Math.min(t, c.duration)) + ' / ' : ''}
-            {clock(c.duration)}
+            {live ? (
+              <>
+                {clock(Math.min(t, c.duration))}
+                <span className="max-sm:hidden"> / {clock(c.duration)}</span>
+              </>
+            ) : (
+              clock(c.duration)
+            )}
           </span>
         </div>
 
@@ -1701,13 +1707,13 @@ function CallPanel({ c, clock: cc, reduce }) {
         </div>
       ) : (
         <div className="flex min-h-[190px] flex-col md:min-h-[176px]">
-          <p className="px-1 text-[12px] text-slate">{c.prompt}</p>
-          <ol className="mt-2 grid gap-1">
+          <p className="sr-only">{c.prompt}</p>
+          <ol className="grid gap-0.5">
             {c.moments.map((m, j) => {
               const x = c.captions[m];
               return (
                 <li key={m}>
-                  <button type="button" onClick={() => seek(x.at)} className="group flex w-full gap-2.5 rounded-[12px] px-1 py-1.5 text-left transition-colors hover:bg-white/70">
+                  <button type="button" onClick={() => seek(x.at)} className="group flex w-full gap-2.5 rounded-[12px] px-1 py-1 text-left transition-colors hover:bg-white/70">
                     <span className="mt-0.5 flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full bg-ink text-[10px] font-medium text-white">{j + 1}</span>
                     <span className="min-w-0">
                       <span className="flex items-center gap-1.5 text-[10.5px] font-medium uppercase tracking-[0.07em]">
