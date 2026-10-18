@@ -6,125 +6,103 @@ import SectionHeader from '@/components/home-v2/primitives/SectionHeader';
 import { useInViewport, usePageVisible } from '@/components/home-v2/hooks';
 
 /*
- * A technician's day on a street map drawn like a maps app: a whole part of town (avenues, side streets, a highway, parks,
- * a golf course, buildings, neighbourhood and street names), and his route through it. The van drives the route stop by
- * stop; at each stop the plan beside the map opens that job: the time, the address, what the customer called about and
- * the parts to bring, and the drive to the next one.
+ * A technician's day across the whole service area, drawn like a maps app zoomed out: towns with their street grids,
+ * an interstate and state routes with their shields, county roads, woods. Two routes: the order the jobs were booked
+ * in (dashed, a zigzag across the county) and the order Aurora set (the van drives it). Beside the map, the plan she
+ * texted to the tech, open at the job he is at or driving to: the call, the address and the parts to bring.
  */
-const W = 900;
-const H = 500;
+const W = 1000;
+const H = 560;
 const EASE = [0.22, 1, 0.36, 1];
 
-// streets: [d, kind] where kind is 'side' | 'avenue' | 'highway'
-const STREETS = [
-  ['M80 0 V500', 'side'],
-  ['M170 0 V500', 'side'],
-  ['M420 0 V500', 'side'],
-  ['M520 0 V250', 'side'],
-  ['M640 0 V500', 'side'],
-  ['M760 0 V500', 'side'],
-  ['M850 0 V500', 'side'],
-  ['M0 70 H900', 'side'],
-  ['M0 160 H900', 'side'],
-  ['M0 340 H900', 'side'],
-  ['M420 340 C470 296 560 296 640 340', 'side'],
-  ['M520 250 C540 300 600 310 640 340', 'side'],
-  ['M0 250 H900', 'avenue'],
-  ['M300 0 V500', 'avenue'],
-  ['M0 438 C200 418 420 478 620 448 S860 388 900 372', 'highway'],
+// roads: [points, kind]; kind is 'interstate' | 'route' | 'county'
+const ROADS = [
+  [[[0, 340], [275, 330], [520, 322], [760, 300], [1000, 292]], 'interstate'],
+  [[[262, 0], [270, 150], [275, 330], [268, 400], [255, 560]], 'route'],
+  [[[520, 322], [640, 150], [720, 40], [760, 0]], 'route'],
+  [[[0, 160], [110, 160], [270, 150], [640, 150], [1000, 170]], 'county'],
+  [[[268, 400], [520, 450], [800, 472], [1000, 480]], 'county'],
+  [[[180, 440], [268, 400]], 'county'],
+  [[[520, 322], [520, 450]], 'county'],
+  [[[760, 300], [830, 330], [800, 472]], 'county'],
+  [[[268, 400], [120, 330], [110, 160]], 'county'],
 ];
-const LABELS = [
-  ['Main St', 60, 250, 0],
-  ['Main St', 590, 250, 0],
-  ['Oak Ave', 300, 40, -90],
-  ['Oak Ave', 300, 300, -90],
-  ['Elm St', 230, 160, 0],
-  ['Elm St', 700, 160, 0],
-  ['Birch St', 230, 340, 0],
-  ['Birch St', 820, 340, 0],
-  ['Pine St', 600, 70, 0],
-  ['Cedar Ave', 420, 210, -90],
-  ['Willow Ln', 530, 309, -8],
-  ['Ridge Rd', 760, 110, -90],
-  ['Lake St', 170, 110, -90],
-  ['Park Ave', 640, 110, -90],
+const TOWNS = [
+  { name: 'Elmwood', box: [100, 400, 260, 488], label: [180, 512] },
+  { name: 'Oakridge', box: [200, 95, 345, 205], label: [215, 82] },
+  { name: 'Maple Heights', box: [565, 95, 720, 205], label: [642, 82] },
+  { name: 'Cedar Falls', box: [770, 280, 905, 392], label: [880, 410] },
+  { name: 'Brookside', box: [455, 405, 590, 500], label: [522, 518] },
+  { name: 'Lakeview', box: [40, 110, 180, 215], label: [80, 97] },
 ];
-const NEIGHBOURHOODS = [
-  ['OLD TOWN', 230, 210],
-  ['MAPLE HEIGHTS', 700, 210],
-  ['RIVERSIDE', 90, 400],
+const WOODS = [
+  'M380 210 C420 190 480 200 490 240 C500 280 450 300 410 290 C370 280 350 240 380 210 Z',
+  'M880 60 C930 50 990 70 995 120 C1000 170 940 190 900 175 C860 160 850 90 880 60 Z',
+  'M600 522 C650 505 720 515 730 545 C735 565 600 565 590 548 C585 535 590 527 600 522 Z',
+  'M20 255 C60 240 105 255 108 290 C110 320 60 330 30 315 C5 302 0 268 20 255 Z',
+  'M360 40 C400 20 470 30 480 70 C488 100 430 115 395 105 C360 95 340 60 360 40 Z',
 ];
-const PARKS = [
-  { d: 'M426 76 H514 V154 H426 Z', name: 'Riverside Park', at: [470, 116] },
-  { d: 'M766 166 H844 V244 H766 Z', name: 'Maple Golf Club', at: [805, 206] },
-  { d: 'M176 346 H294 V420 C250 426 200 418 176 420 Z', name: 'Birch Commons', at: [235, 385] },
-];
-const POIS = [
-  { at: [228, 115], name: 'Lincoln Elementary', icon: 'school' },
-  { at: [580, 200], name: 'Corner Café', icon: 'cafe' },
-  { at: [700, 295], name: 'Parts depot', icon: 'shop' },
+const SHIELDS = [
+  { at: [395, 326], text: '90', kind: 'interstate' },
+  { at: [271, 245], text: '9', kind: 'route' },
+  { at: [600, 210], text: '32', kind: 'route' },
 ];
 
-// a small deterministic jitter, so buildings don't sit in a perfect grid
-const jit = (a, b) => ((Math.sin(a * 12.9898 + b * 78.233) * 43758.5453) % 1 + 1) % 1;
+const hm = (m) => (m >= 60 ? `${Math.floor(m / 60)} h ${m % 60} min` : `${m} min`);
+const pts = (p) => 'M' + p.map(([x, y]) => `${x} ${y}`).join(' L');
 
-function Buildings() {
-  const out = [];
-  for (let x = 6; x < W; x += 24)
-    for (let y = 6; y < H; y += 19) {
-      const w = 13 + jit(x, y) * 7;
-      const h = 9 + jit(y, x) * 5;
-      out.push(<rect key={`${x}-${y}`} x={x + jit(x + 1, y) * 4} y={y + jit(x, y + 1) * 3} width={w} height={h} rx={1.5} />);
-    }
-  return (
-    <g fill="#E8E5DE" stroke="#DCD8CF" strokeWidth="0.6">
-      {out}
-    </g>
-  );
-}
-
-function Town() {
-  const road = (d, kind) => {
-    const w = kind === 'highway' ? 12 : kind === 'avenue' ? 10 : 6.5;
-    const edge = kind === 'highway' ? '#E9A23B' : kind === 'avenue' ? '#EDC66A' : '#D9D4C9';
-    const fill = kind === 'highway' ? '#FFC96B' : kind === 'avenue' ? '#FFE7A3' : '#FFFFFF';
-    return (
-      <g key={d}>
-        <path d={d} fill="none" stroke={edge} strokeWidth={w + 2} strokeLinecap="round" strokeLinejoin="round" />
-        <path d={d} fill="none" stroke={fill} strokeWidth={w} strokeLinecap="round" strokeLinejoin="round" />
-      </g>
-    );
+function Region() {
+  const style = {
+    interstate: { w: 7.5, edge: '#E9A23B', fill: '#FFC96B' },
+    route: { w: 5.5, edge: '#EDC66A', fill: '#FFE3A0' },
+    county: { w: 3.6, edge: '#D6D0C4', fill: '#FFFFFF' },
   };
-  const text = (t, x, y, rot, opts = {}) => (
-    <text key={t + x} x={x} y={y} transform={rot ? `rotate(${rot} ${x} ${y})` : undefined} textAnchor="middle" dominantBaseline="central" fontSize={opts.size || 7.2} fontWeight={opts.weight || 500} letterSpacing={opts.spacing || 0.2} fill={opts.fill || '#7C766B'} stroke="#fff" strokeWidth="2.4" paintOrder="stroke" fontFamily="inherit">
-      {t}
-    </text>
-  );
+  const order = ['county', 'route', 'interstate'];
   return (
     <g>
-      <rect width={W} height={H} fill="#F2EFE9" />
-      <Buildings />
-      {PARKS.map((p) => (
-        <path key={p.name} d={p.d} fill="#CFE8C6" stroke="#BFDDB3" strokeWidth="0.8" />
+      <rect width={W} height={H} fill="#EEEBE4" />
+      <defs>
+        <pattern id="fm-grid" width="11" height="11" patternUnits="userSpaceOnUse">
+          <path d="M0 0.5 H11 M0.5 0 V11" stroke="#FFFFFF" strokeWidth="1.3" />
+        </pattern>
+      </defs>
+      {WOODS.map((d) => (
+        <path key={d} d={d} fill="#D3E8C9" />
       ))}
-      {STREETS.filter(([, k]) => k === 'side').map(([d, k]) => road(d, k))}
-      {STREETS.filter(([, k]) => k === 'avenue').map(([d, k]) => road(d, k))}
-      {STREETS.filter(([, k]) => k === 'highway').map(([d, k]) => road(d, k))}
-      {/* the highway's shield */}
-      <g transform="translate(468 452)">
-        <rect x="-11" y="-8" width="22" height="16" rx="4" fill="#fff" stroke="#E9A23B" strokeWidth="1.2" />
-        <text x="0" y="0.5" textAnchor="middle" dominantBaseline="central" fontSize="8" fontWeight="700" fill="#7C5A1A" fontFamily="inherit">
-          9
-        </text>
-      </g>
-      {LABELS.map(([t, x, y, r]) => text(t, x, y, r))}
-      {NEIGHBOURHOODS.map(([t, x, y]) => text(t, x, y, 0, { size: 8.5, weight: 600, spacing: 2.2, fill: '#A39C8F' }))}
-      {PARKS.map((p) => text(p.name, p.at[0], p.at[1], 0, { fill: '#3E7D4A', size: 7 }))}
-      {POIS.map((p) => (
-        <g key={p.name}>
-          <circle cx={p.at[0]} cy={p.at[1]} r={5.5} fill={p.icon === 'shop' ? '#F25C2A' : p.icon === 'cafe' ? '#C98A1B' : '#7C766B'} stroke="#fff" strokeWidth="1.4" />
-          {text(p.name, p.at[0] + 8, p.at[1], 0, { size: 6.8 })}
+      {/* towns: built-up land with their street grids */}
+      {TOWNS.map((t) => {
+        const [x0, y0, x1, y1] = t.box;
+        return (
+          <g key={t.name}>
+            <rect x={x0} y={y0} width={x1 - x0} height={y1 - y0} rx={22} fill="#E4DFD5" />
+            <rect x={x0} y={y0} width={x1 - x0} height={y1 - y0} rx={22} fill="url(#fm-grid)" opacity="0.9" />
+          </g>
+        );
+      })}
+      {order.map((k) =>
+        ROADS.filter(([, kind]) => kind === k).map(([p]) => (
+          <g key={k + p[0].join()}>
+            <path d={pts(p)} fill="none" stroke={style[k].edge} strokeWidth={style[k].w + 2} strokeLinecap="round" strokeLinejoin="round" />
+            <path d={pts(p)} fill="none" stroke={style[k].fill} strokeWidth={style[k].w} strokeLinecap="round" strokeLinejoin="round" />
+          </g>
+        ))
+      )}
+      {SHIELDS.map((s) => (
+        <g key={s.text} transform={`translate(${s.at[0]} ${s.at[1]})`}>
+          {s.kind === 'interstate' ? (
+            <path d="M-10 -9 H10 V2 C10 8 4 11 0 12 C-4 11 -10 8 -10 2 Z" fill="#0A0F0E" stroke="#fff" strokeWidth="1.4" />
+          ) : (
+            <rect x="-9" y="-8" width="18" height="16" rx="4" fill="#fff" stroke="#E9A23B" strokeWidth="1.3" />
+          )}
+          <text x="0" y={s.kind === 'interstate' ? 0 : 0.5} textAnchor="middle" dominantBaseline="central" fontSize="8" fontWeight="700" fill={s.kind === 'interstate' ? '#fff' : '#7C5A1A'} fontFamily="inherit">
+            {s.text}
+          </text>
         </g>
+      ))}
+      {TOWNS.map((t) => (
+        <text key={'l' + t.name} x={t.label[0]} y={t.label[1]} textAnchor="middle" dominantBaseline="central" fontSize="11" fontWeight="600" fill="#5F594E" stroke="#EEEBE4" strokeWidth="3" paintOrder="stroke" fontFamily="inherit">
+          {t.name}
+        </text>
       ))}
     </g>
   );
@@ -257,11 +235,15 @@ export default function FieldMap({ d }) {
         <span className="min-w-0 flex-1">
           <span className="block text-[15px] font-medium leading-tight text-ink">{d.tech.title}</span>
           <span className="block truncate text-[12px] text-slate">
-            {n} {d.labels.jobs} · {total} {d.labels.min} · {d.tech.sent}
+            {n} {d.labels.jobs} · {hm(total)} {d.labels.driving} · {d.tech.sent}
           </span>
         </span>
       </div>
-      <ol className="mt-3 grid gap-1">
+      <p className="mt-3 flex items-center gap-2 rounded-[12px] bg-[#E4F4E8] px-3 py-2 text-[12.5px] font-medium text-[#1F7A4C]">
+        <Car className="h-3.5 w-3.5 shrink-0" strokeWidth={2.2} aria-hidden="true" />
+        {d.labels.saved} {hm(d.booked.drive - total)} · {d.labels.vsBooked}
+      </p>
+      <ol className="mt-2 grid gap-0.5">
         {d.stops.map((s, i) => (
           <React.Fragment key={s.job}>
             <li className="flex items-center gap-2 pl-[22px] text-[11.5px] text-ink/45" aria-hidden="true">
@@ -297,7 +279,9 @@ export default function FieldMap({ d }) {
           <div ref={frame} className="relative aspect-[4/3] overflow-hidden bg-[#F2EFE9] sm:aspect-[16/9] lg:aspect-auto lg:h-full">
             <div className="absolute" style={{ left: box.ox, top: box.oy, width: W * box.s, height: H * box.s }}>
               <svg viewBox={`0 0 ${W} ${H}`} className="block h-full w-full" aria-hidden="true">
-                <Town />
+                <Region />
+                {/* the order the jobs were booked in: a zigzag across the county */}
+                <path d={pts([d.yard, ...d.booked.order.map((k) => d.stops[k].at)])} fill="none" stroke="#0A0F0E" strokeOpacity="0.35" strokeWidth={2} strokeDasharray="5 6" strokeLinecap="round" strokeLinejoin="round" />
                 {/* the route, leg by leg, with a white edge like a maps app */}
                 {d.stops.map((s, i) => (
                   <path key={'e' + i} d={s.leg} fill="none" stroke="#fff" strokeWidth={9} strokeLinecap="round" strokeLinejoin="round" />
@@ -358,6 +342,18 @@ export default function FieldMap({ d }) {
               ) : null}
             </AnimatePresence>
 
+            {/* the two routes, like a maps app's route options */}
+            <div className="absolute bottom-3 left-3 flex flex-col gap-1 rounded-[14px] bg-white px-3 py-2 text-[11.5px] shadow-[0_2px_6px_rgba(10,15,14,0.14)] max-sm:hidden sm:bottom-4 sm:left-4">
+              <span className="flex items-center gap-2 font-medium text-ink">
+                <span className="h-[3px] w-5 rounded-full bg-[#F25C2A]" />
+                {d.labels.aurora} · {hm(total)}
+              </span>
+              <span className="flex items-center gap-2 text-ink/55">
+                <span className="w-5 border-t-2 border-dashed border-ink/35" />
+                {d.labels.asBooked} · {hm(d.booked.drive)}
+              </span>
+            </div>
+
             {/* the search bar and the map controls */}
             <div className="absolute left-3 top-3 flex items-center gap-2 rounded-full bg-white py-1.5 pl-2 pr-3.5 shadow-[0_2px_6px_rgba(10,15,14,0.14)] sm:left-4 sm:top-4">
               <img src="/brand/aurora-symbol-color.svg" alt="" width="18" height="18" className="h-[18px] w-[18px]" />
@@ -388,7 +384,7 @@ export default function FieldMap({ d }) {
                 <span className="min-w-0 flex-1">
                   <span className="block text-[14px] font-medium leading-tight text-ink">{d.tech.title}</span>
                   <span className="block truncate text-[11.5px] text-slate">
-                    {n} {d.labels.jobs} · {total} {d.labels.min} · {d.tech.sent}
+                    {n} {d.labels.jobs} · {hm(total)} {d.labels.driving} · {d.tech.sent}
                   </span>
                 </span>
               </div>
@@ -410,6 +406,8 @@ export default function FieldMap({ d }) {
             </div>
           </div>
         </div>
+
+        {d.note ? <p className="mt-4 text-[12px] text-slate">{d.note}</p> : null}
 
         <ol className="sr-only">
           {d.stops.map((s, i) => (
