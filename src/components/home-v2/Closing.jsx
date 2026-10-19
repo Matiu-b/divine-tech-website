@@ -28,13 +28,13 @@ export default function Closing({ c, industry = undefined, art = undefined, comp
         <div className="absolute inset-x-0 bottom-0 h-[22%] bg-gradient-to-b from-ink/0 to-ink" />
       </div>
 
-      <div className="shell relative grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,500px)] lg:items-end lg:gap-14 xl:grid-cols-[minmax(0,1fr)_minmax(0,540px)]">
+      <div className="shell relative grid gap-7 sm:gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,500px)] lg:items-end lg:gap-14 xl:grid-cols-[minmax(0,1fr)_minmax(0,540px)]">
         <div className="min-w-0">
           <h2 id="contact-title" className="t-display balance lg:text-[clamp(2.4rem,0.6rem+3vw,3.9rem)]">
             <RevealLines lines={c.titleB ? [c.titleA, c.titleB] : [c.titleA]} lineClassNames={['', '']} />
           </h2>
           {c.text ? <p className="t-lead pretty mt-5 max-w-[32em] !text-white/70">{c.text}</p> : null}
-          {art ? <div className="mt-8 max-w-[560px] lg:mt-12">{art(grow, reduce)}</div> : null}
+          {art ? <div className="mt-6 max-w-[560px] sm:mt-8 lg:mt-12">{art(grow, reduce)}</div> : null}
         </div>
         <LiquidGlass tone="dark" className="rounded-[clamp(20px,2.2vw,28px)] p-5 xs:p-6 md:p-7">
           <p className="mb-5 text-[15px] leading-snug text-white/75">{c.form || 'Leave your details and Aurora, our AI agent, will call you right away.'}</p>
