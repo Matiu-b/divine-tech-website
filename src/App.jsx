@@ -33,6 +33,7 @@ export function AppRoutes() {
           <Route path="/industries/:slug" element={<Page name="industry" />} />
           <Route path="/blog" element={<Page name="blog" />} />
           <Route path="/blog/:slug" element={<Page name="post" />} />
+          <Route path="/guides/:slug" element={<Page name="guide" />} />
           <Route path="/privacy" element={<Page name="privacy" />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>

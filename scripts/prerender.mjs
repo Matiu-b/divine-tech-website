@@ -9,6 +9,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { SITE_URL, blog, posts, postPath } from '../src/data/blog.js';
 import { industries, industryPath } from '../src/data/industries.js';
+import { guides, guidePath } from '../src/data/guides.js';
 import * as site from '../src/data/site.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -118,7 +119,7 @@ rmSync(join(dist, '.vite'), { recursive: true, force: true }); // build metadata
 const entryChunks = new Set((template.match(/\/assets\/[^"]+\.js/g) || []).map((s) => s.slice(1)));
 const pageSource = (path) =>
   path === '/' ? 'Home' : path === '/platform' ? 'PlatformPage' : path === '/privacy' ? 'PrivacyPolicy' : path === '/blog' ? 'Blog'
-    : path.startsWith('/blog/') ? 'BlogPost' : path.startsWith('/industries/') ? 'IndustryPage' : null;
+    : path.startsWith('/blog/') ? 'BlogPost' : path.startsWith('/industries/') ? 'IndustryPage' : path.startsWith('/guides/') ? 'GuidePage' : null;
 function preloads(path) {
   const name = pageSource(path);
   if (!name) return '';
@@ -168,6 +169,11 @@ await render('/blog', {
 
 for (const p of posts) {
   await render(postPath(p.slug), { title: p.titleTag, description: p.description, image: SITE_URL + p.image.og, imageHeight: 675, type: 'article', jsonld: p.schema });
+}
+
+// Guide landing pages for social traffic: prerendered, but kept out of search and the sitemap.
+for (const g of guides) {
+  await render(guidePath(g.slug), { ...g.meta, image: og('home'), noindex: true });
 }
 
 // 404: Netlify serves this for any path without a file, with status 404. React then shows the not-found page.
