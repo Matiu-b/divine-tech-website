@@ -202,11 +202,6 @@
   },
   {
    "kind": "audio",
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_140103_288ec0d8-6471-42df-8d73-837819558956.mp3",
-   "out": "public/media/home-services/call-brief-7"
-  },
-  {
-   "kind": "audio",
    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_140337_1a045c5b-d1a7-45bf-a989-2050bac0a422.mp3",
    "out": "public/media/home-services/call-customer-3"
   },
@@ -243,11 +238,6 @@
    "width": 1280,
    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261019_071329_05b6a0df-c127-4277-9c7e-7d2a0c891d8f.mp4",
    "out": "public/media/home-services/brief-dana-loop"
-  },
-  {
-   "kind": "audio",
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261019_073615_a6765da2-73b3-4215-938f-92cf7b874c40.mp3",
-   "out": "public/media/home-services/call-brief-8"
   },
   {
    "kind": "audio",
