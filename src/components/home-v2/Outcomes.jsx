@@ -4,27 +4,33 @@ import { cn } from '@/lib/utils';
 import { outcomes } from '@/data/site';
 import SectionHeader from './primitives/SectionHeader';
 import { Reveal } from './primitives/MotionReveal';
-import OutcomeScene from './OutcomeScenes';
 import { useInViewport, usePageVisible } from './hooks';
+import AuroraScreen from './AuroraScreen';
 
-const BG = [
-  'bg-[linear-gradient(160deg,#EEF0EA_0%,#E3E7DF_100%)]',
-  'bg-[linear-gradient(160deg,#F1EDE6_0%,#E7E1D6_100%)]',
-  'bg-[linear-gradient(160deg,#E9F1EC_0%,#DCE9E1_100%)]',
-];
-const ADVANCE_MS = 5000;
+const CLIP_MAX_MS = 10500; // if a clip can't play, the turn still moves on
 
-// Savings, efficiency, profitability, each with a small drawn scene (no figures until there
-// is pilot data behind them). Three columns on desktop; on phones a swipeable carousel that
-// moves on by itself until the visitor swipes.
 export default function Outcomes() {
   const items = outcomes.items;
   const track = useRef(null);
-  const [active, setActive] = useState(0);
+  const videos = useRef([]);
+  const [active, setActive] = useState(0); // the card in view on phones
+  const [playing, setPlaying] = useState(0); // the film whose turn it is
   const [touched, setTouched] = useState(false);
-  const reduce = useReducedMotion();
+  const [phone, setPhone] = useState(false);
+  const [clipT, setClipT] = useState(0); // where the playing film is, in ms
+  const reduce = !!useReducedMotion();
   const inView = useInViewport(track, { threshold: 0.4 });
   const visible = usePageVisible();
+  const running = inView && visible && !reduce;
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+    const mq = window.matchMedia('(max-width: 767px)');
+    const on = () => setPhone(mq.matches);
+    on();
+    mq.addEventListener('change', on);
+    return () => mq.removeEventListener('change', on);
+  }, []);
 
   // Which card is showing (phones only; on desktop the track does not scroll).
   useEffect(() => {
@@ -55,13 +61,58 @@ export default function Outcomes() {
     if (card) el.scrollTo({ left: i * (card.getBoundingClientRect().width + 12), behavior: reduce ? 'auto' : 'smooth' });
   };
 
-  // Auto-advance on phones while in view, until the visitor takes over.
+  // on phones the film in view is the one that plays
   useEffect(() => {
-    if (reduce || touched || !inView || !visible) return undefined;
-    if (typeof window === 'undefined' || !window.matchMedia('(max-width: 767px)').matches) return undefined;
-    const id = window.setTimeout(() => go((active + 1) % items.length), ADVANCE_MS);
+    if (phone) setPlaying(active);
+  }, [phone, active]);
+
+  // the film whose turn it is plays from the start; the others rest on their first frame
+  useEffect(() => {
+    setClipT(0);
+    videos.current.forEach((v, i) => {
+      if (!v) return;
+      if (running && i === playing) {
+        v.play().catch(() => {});
+      } else {
+        v.pause();
+        if (i !== playing) v.currentTime = 0;
+      }
+    });
+    if (!running) return undefined;
+    const id = window.setTimeout(() => next(), CLIP_MAX_MS);
     return () => window.clearTimeout(id);
-  }, [active, touched, inView, visible, reduce, items.length]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [running, playing, phone, touched]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // follow the playing film frame by frame, so what is drawn on its monitor moves smoothly with it
+  useEffect(() => {
+    if (!running || !items[playing].screen) return undefined;
+    let raf = 0;
+    const tick = () => {
+      const v = videos.current[playing];
+      if (v) setClipT(v.currentTime * 1000);
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [running, playing, items]);
+
+  function next() {
+    const n = (playing + 1) % items.length;
+    if (phone) {
+      if (touched) {
+        // the visitor chose this card: play it again rather than move them on
+        const v = videos.current[playing];
+        if (v) {
+          v.currentTime = 0;
+          v.play().catch(() => {});
+        }
+        return;
+      }
+      go(n);
+    } else {
+      setPlaying(n);
+    }
+  }
 
   return (
     <section id="outcomes" data-nav-theme="light" aria-labelledby="outcomes-title" className="section relative !pt-0">
@@ -83,11 +134,30 @@ export default function Outcomes() {
               className="w-[86%] shrink-0 snap-start xs:w-[78%] md:w-auto"
             >
               <Reveal delay={i * 0.08} className="flex flex-col">
-                <div className={cn('overflow-hidden rounded-[22px] px-4 pb-2 pt-5', BG[i])}>
-                  <OutcomeScene kind={o.key} />
+                <div className="relative aspect-[16/10] overflow-hidden rounded-[22px] bg-[#E7E1D6]">
+                  <img src={o.poster} alt={o.alt} loading="lazy" className="absolute inset-0 h-full w-full object-cover" style={o.mirror ? { transform: 'scaleX(-1)' } : undefined} />
+                  {!reduce ? (
+                    <video
+                      ref={(el) => {
+                        videos.current[i] = el;
+                      }}
+                      src={o.video}
+                      poster={o.poster}
+                      className="absolute inset-0 h-full w-full object-cover"
+                      style={o.mirror ? { transform: 'scaleX(-1)' } : undefined}
+                      muted
+                      playsInline
+                      preload={i === 0 ? 'auto' : 'metadata'}
+                      onEnded={() => {
+                        if (i === playing) next();
+                      }}
+                      aria-hidden="true"
+                    />
+                  ) : null}
+                  {o.screen ? <AuroraScreen kind={o.screen.kind} quad={o.screen.quad} aspect={o.screen.aspect} p={reduce || !running || i !== playing ? 1 : Math.max(0, Math.min(1, (clipT - o.screen.from) / o.screen.span))} /> : null}
                 </div>
                 <div className="px-1 pt-5 md:pt-6">
-                  <p className="text-[12.5px] font-medium uppercase tracking-[0.08em] text-brand-ink">{o.label}</p>
+                  <p className={cn('text-[12.5px] font-medium uppercase tracking-[0.08em] transition-colors duration-500', !phone && running && i !== playing ? 'text-brand-ink/50' : 'text-brand-ink')}>{o.label}</p>
                   <h3 className="mt-2 text-[21px] font-normal leading-[1.2] tracking-[-0.02em] text-ink md:text-[23px]">{o.title}</h3>
                   <p className="mt-2.5 max-w-[32.15em] text-[15px] leading-relaxed text-graphite">{o.text}</p>
                 </div>
@@ -96,8 +166,8 @@ export default function Outcomes() {
           ))}
         </div>
 
-        {/* phone pager: one bar per card, the active one fills while it waits to move on */}
-        <div className="mt-6 flex gap-2 md:hidden">
+        {/* phone pager: one dot per card */}
+        <div className="mt-6 flex justify-center gap-2 md:hidden">
           {items.map((o, i) => (
             <button
               key={o.key}
@@ -108,13 +178,9 @@ export default function Outcomes() {
               }}
               aria-label={`Show ${o.label}`}
               aria-current={i === active ? 'true' : undefined}
-              className="relative h-1 flex-1 overflow-hidden rounded-full bg-ink/10"
+              className="flex h-6 w-6 items-center justify-center"
             >
-              <span
-                key={`${active}-${touched}`}
-                className={cn('absolute inset-y-0 left-0 rounded-full bg-ink', i <= active ? 'w-full' : 'w-0')}
-                style={i === active && !touched && !reduce ? { animation: `outcomes-fill ${ADVANCE_MS}ms linear forwards` } : undefined}
-              />
+              <span className={cn('block h-2 rounded-full transition-all duration-300', i === active ? 'w-5 bg-ink' : 'w-2 bg-ink/20')} />
             </button>
           ))}
         </div>

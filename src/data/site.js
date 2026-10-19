@@ -408,12 +408,22 @@ export const outcomes = {
   items: [
     {
       key: 'cost',
+      video: '/media/outcomes/savings-van.mp4',
+      poster: '/media/outcomes/savings-van-poster.webp',
+      alt: 'An owner waits at a red light in his van while Aurora handles his calls on the phone on the dash.',
+      // shown mirrored so the van is left-hand drive; the phone's corners are given for the mirrored picture.
+      // The Aurora app is fitted onto the phone and fills in as the film plays.
+      mirror: true,
+      screen: { kind: 'phone', quad: [[0.6664, 0.4963], [0.7301, 0.4994], [0.6895, 0.7914], [0.6291, 0.7575]], aspect: 960 / 536, from: 1200, span: 5200 },
       label: 'Savings',
-      title: 'Lower cost per task',
-      text: 'Calls, follow-ups, scheduling and data entry run on Aurora around the clock, without adding headcount.',
+      title: 'Keep up without a new hire',
+      text: 'Calls, bookings, quotes and follow-ups get handled while you are out on a job, around the clock, without adding a receptionist or a dispatcher.',
     },
     {
       key: 'speed',
+      video: '/media/outcomes/efficiency-2.mp4',
+      poster: '/media/outcomes/efficiency-2-poster.webp',
+      alt: 'Sales closes a call, service solves a question and operations sends a van out.',
       label: 'Efficiency',
       title: 'Every department moves faster',
       text: 'Sales answers in seconds, service resolves on first contact and operations closes the loop without chasing.',
@@ -421,6 +431,12 @@ export const outcomes = {
     },
     {
       key: 'margin',
+      video: '/media/outcomes/profit-2.mp4',
+      poster: '/media/outcomes/profit-2-poster.webp',
+      alt: 'A business owner looks at her Aurora dashboard, where revenue climbs above costs, and smiles.',
+      // where the monitor is in the film (fractions of the frame: top-left, top-right, bottom-right,
+      // bottom-left); the Aurora dashboard is fitted onto it and its chart draws as the film plays
+      screen: { kind: 'margin', quad: [[0.1245, 0.2006], [0.3672, 0.2379], [0.3755, 0.5513], [0.1359, 0.598]], aspect: 960 / 536, from: 600, span: 4200 },
       label: 'Profitability',
       title: 'Revenue grows faster than costs',
       text: 'More leads converted and fewer hours spent on routine work. The difference shows up in your margins.',
