@@ -112,9 +112,9 @@ specific question, completely, and stops. This overrides the skill's competitor-
 2. Re-open every external source. Update or remove numbers that changed, and add newer
    authoritative data if it exists.
 3. Improve the article:
-   - answer a real follow-up question, but keep the post within the 600-word rule. Posts written
-     before the rule: do not make them longer. Tighten them where you can, and move a section that
-     deserves its own page into the queue as a new question;
+   - answer a real follow-up question, but keep the post within the 600-word rule: swap in the
+     new material and cut something weaker, and move a section that deserves its own page into
+     the queue as a new question;
    - add links to newer posts on the site.
 4. Set `updated` and the schema `dateModified` to today. Keep the slug and URL.
 5. Do not regenerate the cover unless the title changed. If you do, give the entry a new `"file"` in
