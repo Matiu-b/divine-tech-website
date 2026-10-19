@@ -16,6 +16,11 @@ import SmartLink from '@/components/home-v2/primitives/SmartLink';
 import { Reveal, RevealGroup, RevealItem, RevealLines } from '@/components/home-v2/primitives/MotionReveal';
 import { useLead } from '@/components/home-v2/LeadDrawer';
 import { onAnchorClick } from '@/components/home-v2/hooks';
+import FieldMap from '@/components/industry/FieldMap';
+import MorningBrief from '@/components/industry/MorningBrief';
+import LiveSteps from '@/components/home-v2/LiveSteps';
+import { HsClosing, HsHero } from '@/components/industry/HomeServices';
+import { hsField, hsHear, hsLive } from '@/data/homeServices';
 import { RxAfter, RxClosing, RxHero, RxKpi, RxRace, RxRules, RxStack, RxFaqMore } from '@/components/industry/RealEstateV3';
 
 /** @param {any} props */
@@ -261,6 +266,20 @@ export default function IndustryPage() {
   const { slug } = useParams();
   const it = industryBySlug[slug];
   if (!it) return <Navigate to="/" replace />;
+  if (it.five) {
+    // each scene one screen: the promise with the customer call, jobs to the field on the map, the morning brief, going live under your rules, then the form
+    return (
+      <SiteLayout key={it.slug} industry={it.leadIndustry} meta={it.meta}>
+        <HsHero />
+        <FieldMap d={hsField} />
+        <MorningBrief d={hsHear} />
+        <LiveSteps d={hsLive} id="how" />
+        <Faq id="ind-faq-title" items={it.faq} className="pt-0" />
+        <OtherIndustries it={it} />
+        <HsClosing it={it} />
+      </SiteLayout>
+    );
+  }
   if (it.v3) {
     return (
       <SiteLayout key={it.slug} industry={it.leadIndustry} meta={it.meta}>

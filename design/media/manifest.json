@@ -189,6 +189,60 @@
    "width": 900,
    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_080720_18a0ad2e-977c-41f1-9c85-b611df0cb3ff.mp4",
    "out": "public/media/real-estate/emma-desk"
+  },
+  {
+   "kind": "image",
+   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_125545_a5b34753-dc2c-450a-affb-eadb4222baff.png",
+   "out": "public/media/home-services/hero-b",
+   "widths": [
+    900,
+    1400,
+    2000
+   ]
+  },
+  {
+   "kind": "audio",
+   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_140337_1a045c5b-d1a7-45bf-a989-2050bac0a422.mp3",
+   "out": "public/media/home-services/call-customer-3"
+  },
+  {
+   "kind": "video",
+   "width": 1280,
+   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_162718_09fd5e09-1104-46e6-a5dd-5e2a4f72a482.mp4",
+   "out": "public/media/home-services/job-ac"
+  },
+  {
+   "kind": "video",
+   "width": 1280,
+   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_162718_ef668e94-02f4-4d00-b1f5-9b0fb23c0da1.mp4",
+   "out": "public/media/home-services/job-roof"
+  },
+  {
+   "kind": "video",
+   "width": 1280,
+   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_162718_88c234c8-fb87-41aa-94cf-963fe6917752.mp4",
+   "out": "public/media/home-services/job-heater"
+  },
+  {
+   "kind": "image",
+   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261019_071219_7c7fb58c-88fa-4d51-96ce-47b8c3cde6cb.png",
+   "out": "public/media/home-services/brief-dana",
+   "widths": [
+    900,
+    1400,
+    2000
+   ]
+  },
+  {
+   "kind": "video",
+   "width": 1280,
+   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261019_071329_05b6a0df-c127-4277-9c7e-7d2a0c891d8f.mp4",
+   "out": "public/media/home-services/brief-dana-loop"
+  },
+  {
+   "kind": "audio",
+   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261019_073615_043120ec-0b7d-4ebd-8e74-14aa2d93d37b.mp3",
+   "out": "public/media/home-services/call-brief-9"
   }
  ]
 }
