@@ -16,52 +16,72 @@ import { useHydrated, useMediaQuery, usePageLoaded, usePageVisible } from './hoo
  * The first still is also a <picture> under the clips, which picks the phone or wide version with a
  * media query: the prerendered HTML can't know the screen, so the clips only get their posters
  * once the page is hydrated, and the picture covers the first paint until then.
- * A small glass card says what Aurora did in each scene, and thin bars show the progress.
+ * A small glass card says what Aurora did in each scene, and a dot per scene shows where the reel is.
+ * Hand-offs are soft: the next clip starts a moment before the current one ends and fades in over it,
+ * while the outgoing clip keeps playing to its last frame; it is only rewound once it is fully hidden.
  */
+const FADE_MS = 1400;
+const LEAD_S = 1.1; // start the next clip this long before the current one ends
 export default function HeroReel({ className = undefined }) {
   const clips = heroStage.clips;
   const reduce = useReducedMotion();
   const visible = usePageVisible();
   const tall = useMediaQuery('(max-aspect-ratio: 4/5)', false);
   const [active, setActive] = useState(0);
-  const [progress, setProgress] = useState(0);
   const pageLoaded = usePageLoaded();
   const hydrated = useHydrated();
   const [playing, setPlaying] = useState(-1);
   const refs = useRef([]);
+  const handedOff = useRef(-1); // the clip that has already handed off to the next one
   const next = (active + 1) % clips.length;
 
-  // Play only the active clip; rewind it first so every scene starts from its beginning.
+  const advance = (i) => {
+    if (i !== active || handedOff.current === i) return;
+    handedOff.current = i;
+    setActive((a) => (a + 1) % clips.length);
+  };
+
+  // The active clip plays from its beginning. The one that just handed off keeps playing under the
+  // fade and is rewound only once it is fully hidden, so nothing jumps while it is still on screen.
   useEffect(() => {
-    if (reduce) return;
+    if (reduce) return undefined;
+    const prev = (active - 1 + clips.length) % clips.length;
     refs.current.forEach((v, i) => {
       if (!v) return;
-      if (i === active && visible) {
-        if (v.currentTime > 0 && v.ended) v.currentTime = 0;
+      if (i === active) {
+        if (!visible) {
+          v.pause();
+          return;
+        }
+        if (v.ended || (handedOff.current !== i && v.currentTime > 0 && v.paused)) v.currentTime = 0;
         const p = v.play();
         if (p && p.catch) p.catch(() => {});
-      } else if (i !== active) {
+      } else if (i !== prev) {
         v.pause();
-        v.currentTime = 0;
-      } else {
+        if (v.currentTime) v.currentTime = 0;
+      } else if (!visible) {
         v.pause();
       }
     });
-  }, [active, visible, reduce, tall, pageLoaded]);
+    if (handedOff.current === active) handedOff.current = -1;
+    const t = window.setTimeout(() => {
+      const v = refs.current[prev];
+      if (v && prev !== active) {
+        v.pause();
+        v.currentTime = 0;
+      }
+    }, FADE_MS + 150);
+    return () => window.clearTimeout(t);
+  }, [active, visible, reduce, tall, pageLoaded]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const onTime = (i) => (e) => {
-    if (i !== active) return;
     const v = e.currentTarget;
-    if (v.duration) setProgress(v.currentTime / v.duration);
+    if (i === active && v.duration && v.duration - v.currentTime <= LEAD_S) advance(i);
   };
   const onPlaying = (i) => () => {
     if (i === active) setPlaying(i);
   };
-  const onEnded = (i) => () => {
-    if (i !== active) return;
-    setProgress(0);
-    setActive((a) => (a + 1) % clips.length);
-  };
+  const onEnded = (i) => () => advance(i);
 
   const card = clips[active];
   const Icon = EVENT_ICONS[card.icon] || CalendarCheck;
@@ -136,14 +156,9 @@ export default function HeroReel({ className = undefined }) {
               </LiquidGlass>
             </motion.div>
           </AnimatePresence>
-          <div className="hidden items-center gap-1.5 sm:flex">
+          <div className="hidden items-center gap-2 sm:flex">
             {clips.map((c, i) => (
-              <span key={c.key} className="h-[3px] w-10 overflow-hidden rounded-full bg-white/25">
-                <span
-                  className="block h-full rounded-full bg-white"
-                  style={{ width: i < active ? '100%' : i === active ? progress * 100 + '%' : '0%', transition: i === active ? 'width 250ms linear' : 'none' }}
-                />
-              </span>
+              <span key={c.key} className={cn('block h-1.5 rounded-full transition-all duration-500 ease-out', i === active ? 'w-5 bg-white' : 'w-1.5 bg-white/35')} />
             ))}
           </div>
         </div>
