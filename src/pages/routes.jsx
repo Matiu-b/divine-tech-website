@@ -10,6 +10,7 @@ const loaders = {
   blog: () => import('./Blog'),
   post: () => import('./BlogPost'),
   privacy: () => import('./PrivacyPolicy'),
+  guide: () => import('./GuidePage'),
 };
 
 const ready = {};
@@ -29,6 +30,7 @@ export function pageForPath(pathname) {
   if (p === '/blog') return 'blog';
   if (/^\/blog\/[^/]+$/.test(p)) return 'post';
   if (/^\/industries\/[^/]+$/.test(p)) return 'industry';
+  if (/^\/guides\/[^/]+$/.test(p)) return 'guide';
   return null;
 }
 

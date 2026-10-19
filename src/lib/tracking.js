@@ -5,7 +5,7 @@
 // marketing consent itself.
 
 import { marketingNotRefused } from '@/lib/consent';
-import { trackMetaContact, trackMetaLead } from '@/lib/metaPixel';
+import { trackMetaContact, trackMetaGuideDownload, trackMetaLead } from '@/lib/metaPixel';
 
 function push(data) {
   window.dataLayer = window.dataLayer || [];
@@ -45,6 +45,12 @@ export function trackDemoRequest(lead) {
   }
   push(event);
   trackMetaLead({ email: lead.email, phone: toE164(lead.phone || '') });
+}
+
+/** Report a click on a guide's PDF download button (pages at /guides/<slug>). @param {string} guide  slug */
+export function trackGuideDownload(guide) {
+  push({ event: 'guide_download', guide });
+  trackMetaGuideDownload(guide);
 }
 
 let clicksBound = false;

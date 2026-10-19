@@ -113,6 +113,11 @@ export function trackMetaLead(lead) {
   fbq('track', 'Lead', { content_name: 'book_a_demo' });
 }
 
+/** Report a guide PDF download as the custom event GuideDownload. @param {string} guide  slug */
+export function trackMetaGuideDownload(guide) {
+  if (metaPixelAllowed()) fbq('trackCustom', 'GuideDownload', { content_name: guide });
+}
+
 /** Report a click on a phone or email link as a Meta Contact. @param {'phone' | 'email'} method */
 export function trackMetaContact(method) {
   if (metaPixelAllowed()) fbq('track', 'Contact', { content_category: method });
