@@ -222,7 +222,8 @@ export const hsClosing = {
   text: 'Aurora answers your customers and runs the office behind them, so the team you have handles more jobs. Bring one real process and watch it work.',
   next: [
     { time: 'Now', text: 'Leave your details' },
-    { time: 'Minutes later', text: 'Aurora calls you, so you hear it first-hand' },
-    { time: 'Within days', text: 'We map one of your processes together' },
+    { time: 'Minutes later', text: 'Aurora calls to book your meeting with our consultant' },
+    { time: 'At the meeting', text: 'Our consultant maps one of your processes with you' },
   ],
+  form: 'Leave your details and Aurora, our AI agent, will call you right away to book a meeting with our consultant.',
 };
