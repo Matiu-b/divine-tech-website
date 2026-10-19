@@ -141,7 +141,7 @@ export const hsHear = {
   media: {
     poster: '/media/home-services/brief-dana-1400.webp',
     srcSet: '/media/home-services/brief-dana-900.webp 900w, /media/home-services/brief-dana-1400.webp 1400w, /media/home-services/brief-dana-2000.webp 2000w',
-    video: null,
+    video: '/media/home-services/brief-dana-loop.mp4',
     focus: '38% 50%',
     alt: 'Dana, the owner, at her kitchen counter at 8 am with a coffee, listening to the brief on her phone.',
   },
