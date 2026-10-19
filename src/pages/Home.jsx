@@ -1,6 +1,7 @@
 import React from 'react';
 import SiteLayout from '@/components/home-v2/SiteLayout';
 import Hero from '@/components/home-v2/Hero';
+import LaunchFilm from '@/components/home-v2/LaunchFilm';
 import Platform from '@/components/home-v2/Platform';
 import Outcomes from '@/components/home-v2/Outcomes';
 import Configure from '@/components/home-v2/Configure';
@@ -9,7 +10,7 @@ import FinalCTA from '@/components/home-v2/FinalCTA';
 import Faq from '@/components/home-v2/Faq';
 import { homeFaq, homeMeta } from '@/data/site';
 
-// Home: one story, no repeats. What Aurora does (hero), how it sits between
+// Home: one story, no repeats. What Aurora does (hero), the 90 s launch film, how it sits between
 // channels and systems (links to /platform, where the product film, capabilities,
 // teams and control live), how it goes live, who it is for (each industry has
 // its own page), and the demo form.
@@ -17,6 +18,7 @@ export default function Home() {
   return (
     <SiteLayout meta={homeMeta}>
       <Hero />
+      <LaunchFilm />
       <Platform />
       <Outcomes />
       <Configure />

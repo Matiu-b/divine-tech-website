@@ -1,16 +1,15 @@
 import React from 'react';
 import { Play } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import { hero } from '@/data/site';
 import CTAButton from './primitives/CTAButton';
 import Logo from './primitives/Logo';
 import { RevealLines } from './primitives/MotionReveal';
 import HeroReel from './HeroReel';
 import { useLead } from './LeadDrawer';
+import { PLAY_FILM_EVENT } from './LaunchFilm';
 
 export default function Hero() {
   const { open } = useLead();
-  const navigate = useNavigate();
   // Entrances are CSS animations (.intro-* in index.css), so the prerendered hero animates in on
   // its first paint, before any JavaScript. The CTA row holds a glass button: the row only moves,
   // each button fades itself.
@@ -43,12 +42,14 @@ export default function Hero() {
           <CTAButton
             size="lg"
             variant="glass-dark"
-            href="/platform"
+            href="#film"
             arrow={false}
             onClick={(e) => {
-              if (e.metaKey || e.ctrlKey || e.shiftKey) return;
+              // "See it in action" plays the launch film right under the hero, with sound, in this click
               e.preventDefault();
-              navigate('/platform');
+              const film = document.getElementById('film');
+              if (film) film.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              window.dispatchEvent(new Event(PLAY_FILM_EVENT));
             }}
             style={{ animationDelay: '0.48s' }}
             icon={
