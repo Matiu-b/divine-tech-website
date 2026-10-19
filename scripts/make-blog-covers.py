@@ -66,8 +66,9 @@ def draw_background(cover, path):
         g = np.exp(-(((xx - cx) / rx) ** 2 + ((yy - cy) / ry) ** 2))[..., None] * rng.uniform(0.85, 1.0)
         img = img * (1 - g) + col * g
     # lift saturation a little so the glows read as light, not mud
+    # (an entry can set "saturation": 1.0 for natural, unboosted colour)
     grey = img.mean(axis=2, keepdims=True)
-    img = grey + (img - grey) * 1.25
+    img = grey + (img - grey) * float(cover.get('saturation', 1.25))
     img += rng.normal(0, 7, (H, W, 1)).astype(np.float32)  # film grain
     Image.fromarray(np.clip(img, 0, 255).astype(np.uint8)).save(path, quality=90)
     print('drew background', cover['slug'])

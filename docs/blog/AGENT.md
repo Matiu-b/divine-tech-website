@@ -119,22 +119,46 @@ palette, so titles stay editable and nothing is downloaded.
    Write it the way a person would say it or search for it, as a plain sentence or question
    (for example "How an AI agent solves a request"). Avoid slogan patterns such as
    "From X to Y" or "X, without the Y" (Yuri's note: people do not talk like that).
-2. Choose a **new palette** of 4 colours, darkest first, clearly different from the covers already
-   in `design/blog-covers/covers.json`. A hint of the brand kit is welcome (Divine green `#14A36B` /
-   `#3DDC97`, Aurora `#FFC857` / `#FF9F45` / `#F25C2A`) but not required. Keep the middle of the
-   frame calm enough for the headline. Use saturated, lively colours: no greyed-out, dusty or tired
-   mixes (Yuri's note). Recent examples: violet-blue + yellow + pink, crimson + violet + tangerine.
+2. Choose a **new palette** of 4 colours, base colour first (the darkest for a dark cover, the
+   palest for a light one). Yuri's rule: **never get stuck on one palette.** The blog index should
+   look varied, like a shelf of different books, never like one template in different shades.
+   - Look at the `mood` of the last four entries in `covers.json` and pick a mood from the list
+     below that none of them used. Record it in the entry as `"mood"`.
+   - Alternate light and dark covers where you can. If the last two were dark, make a light one.
+   - Moods to rotate through (vivid and quiet, warm and cool, light and dark):
+     | Mood | Feel | Example colours |
+     |---|---|---|
+     | morning-mist | pale, airy | sage, lavender, cream |
+     | campfire | dark, warm | forest, amber, rust, charcoal |
+     | harbor-dusk | dark, cool with a warm light | deep teal, lamp gold, cream |
+     | orchard | light, fresh | cream, sage, apricot, slate blue |
+     | lilac-evening | dark, muted | charcoal green, moss, lilac, sand |
+     | citrus-noon | light, bright | lemon, lime, white, sky blue |
+     | deep-ocean | dark, vivid | navy, cobalt, aqua |
+     | desert-clay | light, warm | sand, terracotta, dusty pink |
+     | berry | dark, rich | plum, raspberry, blush |
+     | ink-and-paper | almost mono | off-white, graphite, one ink colour |
+     | night-city | dark, vivid | indigo, magenta, amber (use rarely) |
+     | spring-pastel | light, soft | mint, peach, butter, baby blue |
+     New moods are welcome. Add them to this table so later runs can rotate through them too.
+   - Every cover needs at least one clear glow: no mud and no flat grey. The middle of the frame
+     stays calm enough for the headline.
+   - A hint of the brand kit is welcome (Divine green `#14A36B`, Aurora `#FFC857` / `#FF9F45`) but
+     not required.
 3. Add the entry to `design/blog-covers/covers.json`:
    ```json
-   { "slug": "<slug>", "title": "<headline>", "tone": "dark", "seed": "<any word>", "palette": ["#0B3B40", "#127A78", "#F27BA0", "#FFC9A8"] }
+   { "slug": "<slug>", "title": "<headline>", "mood": "<mood>", "tone": "dark", "seed": "<any word>", "saturation": 1.0, "palette": ["#12262C", "#2E5E63", "#D7A443", "#E9DFC8"] }
    ```
    - `"tone": "dark"` gives white text; use `"light"` (dark text) for pale palettes.
+   - `"saturation"` sets the colour boost: about 1.0 for quiet moods, up to 1.25 for vivid ones.
+     Without the key the script boosts by 25%, which made three covers in a row look the same.
    - Change `seed` to move the glows around if the first draw puts a bright glow behind the text.
 4. Render it: `python3 scripts/make-blog-covers.py <slug>` (Playwright with Chromium; in cloud
    sessions set `CHROMIUM_PATH=/opt/pw-browsers/chromium-1194/chrome-linux/chrome`). If it cannot
    run, push `covers.json` alone and the **Blog covers** GitHub Action renders and commits the images.
 5. Open `public/img/blog/<slug>-800.webp` with Read and check that the headline is spelled
-   correctly and readable, and that the colours look like soft light, not mud.
+   correctly and readable, that no bright glow sits behind white text, and that the cover looks
+   different from the last four on the blog page.
 6. Set `image.alt` to describe the cover: colours, headline, logo.
 
 ## 4. Validate
