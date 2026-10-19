@@ -245,28 +245,22 @@
    "out": "public/media/home-services/call-brief-9"
   },
   {
-   "kind": "image",
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261019_093855_3fde363e-3616-41d1-aacc-f675bd79fc4d.png",
-   "out": "public/media/outcomes/review-savings",
-   "widths": [
-    900
-   ]
+   "kind": "video",
+   "width": 960,
+   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261019_094139_a3f45639-cb45-4b5d-a640-8829cb467aa1.mp4",
+   "out": "public/media/outcomes/savings"
   },
   {
-   "kind": "image",
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261019_093855_d15cb5bd-6e63-4d30-82ac-d7eb637f0fd7.png",
-   "out": "public/media/outcomes/review-efficiency",
-   "widths": [
-    900
-   ]
+   "kind": "video",
+   "width": 960,
+   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261019_094139_4dc3db45-3e25-44ec-8f0b-eabd901066de.mp4",
+   "out": "public/media/outcomes/efficiency"
   },
   {
-   "kind": "image",
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261019_093856_181e8119-5135-499c-bcc8-450ba8ef39dd.png",
-   "out": "public/media/outcomes/review-profit",
-   "widths": [
-    900
-   ]
+   "kind": "video",
+   "width": 960,
+   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261019_094139_34759c49-39f7-4eb2-9a16-aef4d0e95012.mp4",
+   "out": "public/media/outcomes/profit"
   }
  ]
 }
