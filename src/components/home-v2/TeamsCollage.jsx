@@ -13,8 +13,45 @@ const ADVANCE_MS = 12000;
 const BEATS = [0, 500, 1800, 3100, 4400, 5700, 7000]; // tiles, five messages, the result
 const EASE = [0.22, 1, 0.36, 1];
 
-// The tile colours behind the media while it loads, one per team.
-const TILE = { sales: '#F2672E', service: '#FFC857', internal: '#2B1A12' };
+// A quiet neutral behind the media in case a still is not there yet (the stills are fetched ahead, so it rarely shows).
+const TILE = '#E9E3DA';
+
+/** The clip: its still is shown at once, and the moving picture fades in over it once it is actually playing. */
+function Clip({ src, poster }) {
+  const [on, setOn] = useState(false);
+  return (
+    <>
+      {poster ? <img src={poster} alt="" decoding="async" className="absolute inset-0 h-full w-full object-cover" /> : null}
+      <video
+        src={src}
+        poster={poster}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        onPlaying={() => setOn(true)}
+        className={cn('absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ease-out', on ? 'opacity-100' : 'opacity-0')}
+        aria-hidden="true"
+      />
+    </>
+  );
+}
+
+/** Fetches every tab's stills ahead of time (once the section is close), so switching tabs never shows an empty tile. */
+function usePreload(items, near) {
+  useEffect(() => {
+    if (!near) return;
+    items.forEach((t) => {
+      const c = t.collage;
+      [c.poster, c.object && c.object.src, c.image && c.image.src].filter(Boolean).forEach((u) => {
+        const im = new Image();
+        im.decoding = 'async';
+        im.src = u;
+      });
+    });
+  }, [near, items]);
+}
 
 /** The latest beat reached for `key`. A new key starts from beat 0 on its very first render, so nothing flashes. */
 export function useBeats(key, still) {
@@ -120,7 +157,7 @@ export function ResultRow({ r, className = undefined }) {
  */
 export function Collage({ t, beat, reduce, still }) {
   const c = t.collage;
-  const tile = c.tile || TILE[t.key] || '#EDE3D4';
+  const tile = c.tile || TILE;
   const msgs = c.messages;
   const shownMsgs = msgs.slice(0, Math.max(0, beat));
   const done = beat > msgs.length;
@@ -134,7 +171,7 @@ export function Collage({ t, beat, reduce, still }) {
           className="relative aspect-[4/5] w-[41%] shrink-0 overflow-hidden rounded-[20px] sm:absolute sm:bottom-0 sm:left-[8%] sm:aspect-auto sm:h-[46%] sm:w-[40%] sm:rounded-[24px]"
           style={{ background: tile }}
         >
-          {c.object.src ? <img key={c.object.src} src={c.object.src} srcSet={c.object.srcSet} sizes="(min-width: 1024px) 300px, (min-width: 640px) 40vw, 42vw" alt={c.object.alt} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" /> : null}
+          {c.object.src ? <img key={c.object.src} src={c.object.src} srcSet={c.object.srcSet} sizes="(min-width: 1024px) 300px, (min-width: 640px) 40vw, 42vw" alt={c.object.alt} decoding="async" className="absolute inset-0 h-full w-full object-cover" /> : null}
         </motion.div>
         {/* the clip */}
         <motion.div
@@ -143,7 +180,7 @@ export function Collage({ t, beat, reduce, still }) {
           style={{ background: tile }}
         >
           {c.video ? (
-            <video key={c.video} src={c.video} poster={c.poster} autoPlay muted loop playsInline preload="metadata" className="absolute inset-0 h-full w-full object-cover" aria-hidden="true" />
+            <Clip key={c.video} src={c.video} poster={c.poster} />
           ) : c.image ? (
             <img key={c.image.src} src={c.image.src} srcSet={c.image.srcSet} sizes="(min-width: 1024px) 340px, (min-width: 640px) 46vw, 58vw" alt={c.image.alt} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" />
           ) : null}
@@ -199,7 +236,9 @@ export function CollageTabs({ id, eyebrow = undefined, titleA, titleB = undefine
   const ref = useRef(null);
   const reduce = !!useReducedMotion();
   const inView = useInViewport(ref, { threshold: 0.35 });
+  const near = useInViewport(ref, { rootMargin: '800px 0px', once: true });
   const visible = usePageVisible();
+  usePreload(items, near);
   const [active, setActive] = useState(0);
   const [touched, setTouched] = useState(false);
   const n = items.length;
