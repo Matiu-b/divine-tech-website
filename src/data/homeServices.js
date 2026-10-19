@@ -225,5 +225,5 @@ export const hsClosing = {
     { time: 'Minutes later', text: 'Aurora calls to book your meeting with our consultant' },
     { time: 'At the meeting', text: 'Our consultant maps one of your processes with you' },
   ],
-  form: 'Leave your details and Aurora, our AI agent, will call you right away to book a meeting with our consultant.',
+  form: 'Leave your details. Aurora calls you within minutes.',
 };
