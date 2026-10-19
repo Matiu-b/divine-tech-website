@@ -1,48 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useReducedMotion } from 'framer-motion';
-import { Check, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { outcomes } from '@/data/site';
 import SectionHeader from './primitives/SectionHeader';
 import { Reveal } from './primitives/MotionReveal';
 import { useInViewport, usePageVisible } from './hooks';
-import ProfitScreen from './ProfitScreen';
+import AuroraScreen from './AuroraScreen';
 
 const CLIP_MAX_MS = 10500; // if a clip can't play, the turn still moves on
 
-/**
- * What the film is about, said on top of it: small cards that arrive in step with the picture (Aurora's
- * work, a person's work, or a result). The film behind them stays wordless.
- */
-function Beats({ beats, t, show, still }) {
-  if (!beats) return null;
-  return (
-    <div className="pointer-events-none absolute bottom-2.5 left-2.5 flex max-w-[86%] flex-col items-start gap-1.5 sm:bottom-3 sm:left-3" aria-hidden="true">
-      {beats.map((b) => {
-        const on = still || (show && t >= b.at);
-        return (
-          <span
-            key={b.text}
-            className={cn(
-              'flex max-w-full items-center gap-1.5 rounded-full bg-white/95 py-1 pl-1 pr-2.5 text-[11px] font-medium text-ink shadow-[0_2px_10px_rgba(10,15,14,0.22)] backdrop-blur-sm transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:text-[11.5px]',
-              on ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0'
-            )}
-          >
-            <span className={cn('flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full', b.who === 'aurora' ? 'bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.08)]' : b.who === 'done' ? 'bg-[#14A36B] text-white' : 'bg-ink/[0.07] text-ink/60')}>
-              {b.who === 'aurora' ? <img src="/brand/aurora-symbol-color.svg" alt="" width="11" height="11" className="h-[11px] w-[11px]" /> : b.who === 'done' ? <Check className="h-2.5 w-2.5" strokeWidth={3} /> : <User className="h-2.5 w-2.5" strokeWidth={2.4} />}
-            </span>
-            <span className="truncate">{b.text}</span>
-          </span>
-        );
-      })}
-    </div>
-  );
-}
-
-// Savings, efficiency, profitability, each with a short film (no figures until there is pilot data
-// behind them). The films take turns: one plays while the others hold their first frame, then the
-// next one starts. Three columns on desktop; on phones a swipeable carousel that moves on when the
-// film ends, until the visitor swipes.
 export default function Outcomes() {
   const items = outcomes.items;
   const track = useRef(null);
@@ -177,8 +143,7 @@ export default function Outcomes() {
                       aria-hidden="true"
                     />
                   ) : null}
-                  {o.screen ? <ProfitScreen quad={o.screen.quad} aspect={o.screen.aspect} p={reduce || !running || i !== playing ? 1 : Math.max(0, Math.min(1, (clipT - o.screen.from) / o.screen.span))} /> : null}
-                  <Beats beats={o.beats} t={i === playing ? clipT : 0} show={running && i === playing} still={reduce} />
+                  {o.screen ? <AuroraScreen kind={o.screen.kind} quad={o.screen.quad} aspect={o.screen.aspect} p={reduce || !running || i !== playing ? 1 : Math.max(0, Math.min(1, (clipT - o.screen.from) / o.screen.span))} /> : null}
                 </div>
                 <div className="px-1 pt-5 md:pt-6">
                   <p className={cn('text-[12.5px] font-medium uppercase tracking-[0.08em] transition-colors duration-500', !phone && running && i !== playing ? 'text-brand-ink/50' : 'text-brand-ink')}>{o.label}</p>

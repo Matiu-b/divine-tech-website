@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { User } from 'lucide-react';
 
 /*
- * The Aurora dashboard on the owner's monitor in the profitability film. It is drawn as real UI at a
+ * The Aurora dashboard on a monitor in the outcome films (the front desk's live calls, or the owner's margin). It is drawn as real UI at a
  * fixed size and fitted onto the screen in the footage (a perspective transform from the screen's four
  * corners), so it stays sharp and can animate with the film. Figures belong to a fictional business.
  */
@@ -57,7 +58,7 @@ function line(vals, w, h) {
   return vals.map((v, i) => `${i ? 'L' : 'M'}${((i / (vals.length - 1)) * w).toFixed(1)} ${(h - (v / 100) * h).toFixed(1)}`).join(' ');
 }
 
-function Dashboard({ p }) {
+function MarginBoard({ p }) {
   // drawn bold: on the monitor it is only a few hundred pixels wide, so it reads as shapes and big numbers
   const cw = 592;
   const ch = 150;
@@ -104,8 +105,63 @@ function Dashboard({ p }) {
   );
 }
 
+
+// The front desk: one person on one line, Aurora on the others. Figures belong to a fictional business.
+const CALL_KPIS = [
+  ['Calls today', '46'],
+  ['Handled by Aurora', '31'],
+  ['Missed', '0'],
+];
+const LINES = [
+  { who: 'Maya', line: 'Line 1', text: 'On a call', tag: 'Live', t: 'live' },
+  { who: 'Aurora', line: 'Line 2', text: 'Booked Tue 10:00 · Ben Carter', tag: 'Booked', t: 'ok' },
+  { who: 'Aurora', line: 'Line 3', text: 'Hours and parking answered', tag: 'Answered', t: 'ok' },
+  { who: 'Aurora', line: 'Line 4', text: 'Quote sent · Lena Ortiz', tag: 'Follow-up set', t: 'ok' },
+];
+const CALL_TAG = { live: 'bg-[#FFF0D9] text-[#A8640F]', ok: 'bg-[#E4F4E8] text-[#2E7A48]' };
+
+function CallsBoard({ p }) {
+  return (
+    <div className="h-full w-full bg-[#FBF9F5] px-6 pb-5 pt-5 text-ink" style={{ fontFamily: 'inherit' }}>
+      <div className="flex items-center justify-between">
+        <img src="/brand/aurora-logo-horizontal-color.svg" alt="" className="h-[24px] w-auto" />
+        <div className="flex items-center gap-3">
+          <span className="rounded-full bg-[#F1ECE4] px-3 py-1 text-[13px] font-medium text-ink/70">Front desk · Today</span>
+          <span className="flex h-[30px] w-[30px] items-center justify-center rounded-full bg-ink text-[11px] font-medium text-white">MA</span>
+        </div>
+      </div>
+      <div className="mt-4 grid grid-cols-3 gap-3">
+        {CALL_KPIS.map(([l, v]) => (
+          <div key={l} className="rounded-[14px] bg-white px-3.5 py-2.5 shadow-[0_0_0_1.5px_rgba(10,15,14,0.08)]">
+            <p className="truncate text-[12px] text-graphite">{l}</p>
+            <p className="mt-1 text-[28px] font-medium leading-none tracking-[-0.03em]">{v}</p>
+          </div>
+        ))}
+      </div>
+      <div className="mt-3 rounded-[14px] bg-white px-3 py-2 shadow-[0_0_0_1.5px_rgba(10,15,14,0.08)]">
+        {LINES.map((l, i) => {
+          const on = i === 0 || p >= i / LINES.length;
+          return (
+            <div key={l.line} className="flex items-center gap-3 border-b border-ink/[0.06] py-[7px] last:border-b-0" style={{ opacity: on ? 1 : 0.15, transform: on ? 'none' : 'translateY(6px)', transition: 'opacity 500ms, transform 500ms' }}>
+              <span className={l.who === 'Aurora' ? 'flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-full bg-white shadow-[0_0_0_1.5px_rgba(10,15,14,0.08)]' : 'flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-full bg-[#FBE7D3] text-[#7A4A22]'}>
+                {l.who === 'Aurora' ? <img src="/brand/aurora-symbol-color.svg" alt="" className="h-[16px] w-[16px]" /> : <User className="h-[15px] w-[15px]" strokeWidth={2.2} />}
+              </span>
+              <span className="w-[54px] shrink-0 text-[12px] text-slate">{l.line}</span>
+              <span className="min-w-0 flex-1 truncate text-[14px]">
+                <span className="font-medium">{l.who}</span>
+                <span className="text-graphite"> · {l.text}</span>
+              </span>
+              <span className={`shrink-0 rounded-full px-2.5 py-0.5 text-[11px] font-medium ${CALL_TAG[l.t]}`}>{l.tag}</span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 /** Fits the dashboard onto the monitor in the footage. `quad` is the screen's corners as fractions of the video frame. */
-export default function ProfitScreen({ quad, aspect = 16 / 9, p = 1 }) {
+export default function AuroraScreen({ kind = 'margin', quad, aspect = 16 / 9, p = 1 }) {
   const ref = useRef(null);
   const [box, setBox] = useState(null);
   useEffect(() => {
@@ -129,7 +185,7 @@ export default function ProfitScreen({ quad, aspect = 16 / 9, p = 1 }) {
   return (
     <div ref={ref} className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
       <div className="absolute left-0 top-0" style={style}>
-        <Dashboard p={p} />
+        {kind === 'calls' ? <CallsBoard p={p} /> : <MarginBoard p={p} />}
         {/* the screen's own light: a soft sheen so it sits in the room */}
         <div className="absolute inset-0 bg-[linear-gradient(115deg,rgba(255,255,255,0.18)_0%,rgba(255,255,255,0)_40%,rgba(255,226,180,0.08)_100%)]" />
       </div>

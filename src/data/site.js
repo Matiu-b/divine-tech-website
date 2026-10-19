@@ -408,15 +408,11 @@ export const outcomes = {
   items: [
     {
       key: 'cost',
-      video: '/media/outcomes/savings-2.mp4',
-      poster: '/media/outcomes/savings-2-poster.webp',
-      alt: 'A receptionist takes one call while the other lines are answered for her.',
-      beats: [
-        { at: 500, who: 'team', text: 'Line 1 · Maya takes a call' },
-        { at: 2000, who: 'aurora', text: 'Line 2 · Aurora books Tue 10:00' },
-        { at: 3400, who: 'aurora', text: 'Line 3 · Aurora answers a question' },
-        { at: 5200, who: 'done', text: 'Three calls, no extra hire' },
-      ],
+      video: '/media/outcomes/savings-3.mp4',
+      poster: '/media/outcomes/savings-3-poster.webp',
+      alt: 'A receptionist takes one call while Aurora answers the other lines on her screen.',
+      // her monitor in the film; the Aurora front-desk view is fitted onto it and fills in as the film plays
+      screen: { kind: 'calls', quad: [[0.2438, 0.3097], [0.4573, 0.3209], [0.4859, 0.6157], [0.2766, 0.6688]], aspect: 960 / 536, from: 400, span: 5600 },
       label: 'Savings',
       title: 'Lower cost per task',
       text: 'Calls, follow-ups, scheduling and data entry run on Aurora around the clock, without adding headcount.',
@@ -426,11 +422,6 @@ export const outcomes = {
       video: '/media/outcomes/efficiency-2.mp4',
       poster: '/media/outcomes/efficiency-2-poster.webp',
       alt: 'Sales closes a call, service solves a question and operations sends a van out.',
-      beats: [
-        { at: 400, who: 'done', text: 'Sales · lead answered in seconds' },
-        { at: 3300, who: 'done', text: 'Service · solved on first contact' },
-        { at: 6300, who: 'done', text: 'Operations · van on its way' },
-      ],
       label: 'Efficiency',
       title: 'Every department moves faster',
       text: 'Sales answers in seconds, service resolves on first contact and operations closes the loop without chasing.',
@@ -443,7 +434,7 @@ export const outcomes = {
       alt: 'A business owner looks at her Aurora dashboard, where revenue climbs above costs, and smiles.',
       // where the monitor is in the film (fractions of the frame: top-left, top-right, bottom-right,
       // bottom-left); the Aurora dashboard is fitted onto it and its chart draws as the film plays
-      screen: { quad: [[0.1245, 0.2006], [0.3672, 0.2379], [0.3755, 0.5513], [0.1359, 0.598]], aspect: 960 / 536, from: 600, span: 4200 },
+      screen: { kind: 'margin', quad: [[0.1245, 0.2006], [0.3672, 0.2379], [0.3755, 0.5513], [0.1359, 0.598]], aspect: 960 / 536, from: 600, span: 4200 },
       label: 'Profitability',
       title: 'Revenue grows faster than costs',
       text: 'More leads converted and fewer hours spent on routine work. The difference shows up in your margins.',
