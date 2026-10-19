@@ -408,12 +408,18 @@ export const outcomes = {
   items: [
     {
       key: 'cost',
+      video: '/media/outcomes/savings.mp4',
+      poster: '/media/outcomes/savings-poster.webp',
+      alt: 'An office manager heads home in the evening while Aurora keeps working at her desk.',
       label: 'Savings',
       title: 'Lower cost per task',
       text: 'Calls, follow-ups, scheduling and data entry run on Aurora around the clock, without adding headcount.',
     },
     {
       key: 'speed',
+      video: '/media/outcomes/efficiency.mp4',
+      poster: '/media/outcomes/efficiency-poster.webp',
+      alt: 'Sales, service and operations at one desk, each finishing their part quickly.',
       label: 'Efficiency',
       title: 'Every department moves faster',
       text: 'Sales answers in seconds, service resolves on first contact and operations closes the loop without chasing.',
@@ -421,6 +427,9 @@ export const outcomes = {
     },
     {
       key: 'margin',
+      video: '/media/outcomes/profit.mp4',
+      poster: '/media/outcomes/profit-poster.webp',
+      alt: 'A business owner looks at a rising chart with a quiet smile.',
       label: 'Profitability',
       title: 'Revenue grows faster than costs',
       text: 'More leads converted and fewer hours spent on routine work. The difference shows up in your margins.',
