@@ -138,6 +138,13 @@ export const hsHear = {
   textShort: 'At 8 am Aurora tells the owner what happened, and asks about the one thing that needs her.',
   note: 'Recorded examples with an AI voice. The company and people are illustrative.',
   team: 'What Aurora reported and did',
+  media: {
+    poster: '/media/home-services/brief-dana-1400.webp',
+    srcSet: '/media/home-services/brief-dana-900.webp 900w, /media/home-services/brief-dana-1400.webp 1400w, /media/home-services/brief-dana-2000.webp 2000w',
+    video: null,
+    focus: '38% 50%',
+    alt: 'Dana, the owner, at her kitchen counter at 8 am with a coffee, listening to the brief on her phone.',
+  },
   calls: [
     {
       key: 'team',

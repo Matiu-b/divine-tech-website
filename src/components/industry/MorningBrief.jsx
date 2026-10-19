@@ -1,22 +1,26 @@
 import React, { useEffect, useRef } from 'react';
-import { m as motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, m as motion, useReducedMotion } from 'framer-motion';
 import { Check, Pause, Play, Volume2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import SectionHeader from '@/components/home-v2/primitives/SectionHeader';
+import LiquidGlass from '@/components/home-v2/primitives/LiquidGlass';
 import { clock, lastIndex, subtitle, useCallClock } from '@/components/home-v2/CallBox';
 import { useInViewport, usePageVisible } from '@/components/home-v2/hooks';
 
 const EASE = [0.22, 1, 0.36, 1];
 
 /**
- * The morning brief, in one card: on the left the call itself (a play button, then the line being spoken, large, with
- * the recording's waveform); on the right what Aurora reported and did, ticked off as she says it.
+ * The morning brief, as one scene: Dana in her kitchen at 8 am, coffee in hand, listening. The call plays over her with
+ * large subtitles, and what Aurora reported and did is ticked off beside her as she says it (on phones, one line at a
+ * time above the subtitles).
  */
 export default function MorningBrief({ d }) {
   const call = d.calls[0];
   const c = call.call;
+  const m = d.media;
   const ref = useRef(null);
   const audioRef = useRef(null);
+  const videoRef = useRef(null);
   const reduce = !!useReducedMotion();
   const inView = useInViewport(ref, { threshold: 0.2 });
   const visible = usePageVisible();
@@ -28,16 +32,22 @@ export default function MorningBrief({ d }) {
     if ((!inView || !visible) && status === 'playing') play();
   }, [inView, visible]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // the scene moves only while it is on screen
+  useEffect(() => {
+    const el = videoRef.current;
+    if (!el || reduce) return;
+    if (inView && visible) el.play().catch(() => {});
+    else el.pause();
+  }, [inView, visible, reduce]);
+
   const k = lastIndex(c.captions, t);
   const cap = c.captions[k];
   const sub = subtitle(cap, t);
   const reached = status === 'idle' ? -1 : status === 'done' ? c.notes.length - 1 : lastIndex(c.notes, t);
-  const bars = c.wave.filter((_, i) => i % 2 === 0);
+  const items = c.notes.slice(1);
+  const current = reached >= 1 ? items[reached - 1] : null;
+  const bars = c.wave.filter((_, i) => i % 3 === 0);
   const nb = bars.length;
-  const whoAt = (ms) => {
-    const x = c.captions.find((q) => ms >= q.at - 150 && ms <= q.end + 150);
-    return x ? x.who : null;
-  };
   const played = live || status === 'done' ? t : -1;
 
   return (
@@ -48,53 +58,90 @@ export default function MorningBrief({ d }) {
           titleA={d.titleA}
           text={
             <>
-              <span className="sm:hidden">{d.textShort}</span>
-              <span className="max-sm:hidden">{d.text}</span>
+              <span className="lg:hidden">{d.textShort}</span>
+              <span className="max-lg:hidden">{d.text}</span>
             </>
           }
           layout="split"
         />
 
-        <div ref={ref} className="canvas canvas-grain relative mt-5 grid overflow-hidden bg-[linear-gradient(160deg,#F6F1E8_0%,#ECE4D7_100%)] sm:mt-8 md:mt-12 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)]">
-          <div aria-hidden="true" className="pointer-events-none absolute left-[6%] top-[-30%] h-[70%] w-[40%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.45),rgba(255,200,87,0))] blur-2xl" />
+        <div ref={ref} className="canvas relative mt-5 aspect-[4/5] overflow-hidden bg-ink min-[480px]:aspect-[4/3] sm:mt-8 md:mt-12 md:aspect-[16/9] lg:aspect-auto lg:h-[clamp(520px,calc(100svh_-_300px),640px)]">
+          {/* the scene */}
+          <img src={m.poster} srcSet={m.srcSet} sizes="(min-width: 1280px) 1240px, 100vw" alt={m.alt} className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: m.focus }} />
+          {m.video && !reduce ? <video ref={videoRef} src={m.video} poster={m.poster} className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: m.focus }} muted loop playsInline preload="metadata" aria-hidden="true" /> : null}
+          <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgba(10,15,14,0.82)_0%,rgba(10,15,14,0.45)_32%,rgba(10,15,14,0)_58%)]" />
+          <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,rgba(10,15,14,0.35)_0%,rgba(10,15,14,0)_22%)]" />
 
-          {/* the call */}
-          <div className="relative flex flex-col p-4 xs:p-5 sm:p-7 lg:p-9">
-            <div className="flex items-center gap-3">
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.06)]">
-                <img src="/brand/aurora-symbol-color.svg" alt="" width="20" height="20" className="h-5 w-5" />
-              </span>
-              <span className="min-w-0 flex-1">
-                <span className="block text-[15px] font-medium leading-tight text-ink">{call.name}</span>
-                <span className="block text-[12.5px] text-slate">{c.prompt}</span>
-              </span>
-              <span className="text-[13px] font-medium tabular-nums text-ink/55">{clock(live ? Math.min(t, c.duration) : c.duration)}</span>
+          {/* the call, top left */}
+          <div className="absolute left-3 top-3 flex items-center gap-2.5 rounded-full bg-white/90 py-1.5 pl-1.5 pr-3.5 shadow-[0_2px_10px_rgba(10,15,14,0.18)] backdrop-blur-md sm:left-5 sm:top-5">
+            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.06)]">
+              <img src="/brand/aurora-symbol-color.svg" alt="" width="16" height="16" className="h-4 w-4" />
+            </span>
+            <span className="text-[12.5px] font-medium text-ink">{call.name}</span>
+            <span className="text-[12.5px] tabular-nums text-ink/55">{clock(live ? Math.min(t, c.duration) : c.duration)}</span>
+          </div>
+
+          {/* what she reported and did, beside Dana */}
+          <div className="absolute bottom-6 right-6 top-6 hidden w-[330px] lg:block xl:w-[360px]">
+          <LiquidGlass className="flex h-full flex-col rounded-[22px] p-4" style={{ '--lg-tint-a': 'rgba(255,252,247,0.88)', '--lg-tint-b': 'rgba(255,249,241,0.8)' }}>
+            <p className="px-1 text-[11px] font-medium uppercase tracking-[0.08em] text-ink/50">{d.team}</p>
+            <ul className="mt-3 grid gap-2">
+              {items.map((note, i) => {
+                const done = reached >= i + 1;
+                return (
+                  <li key={note.at} className={cn('flex items-center gap-3 rounded-[14px] px-3 py-2.5 text-[13.5px] transition-all duration-500', done ? 'bg-white text-ink shadow-[0_1px_3px_rgba(10,15,14,0.08)]' : 'bg-white/35 text-ink/45')}>
+                    <motion.span initial={false} animate={{ scale: done ? 1 : 0.85 }} transition={{ duration: 0.3, ease: EASE }} className={cn('flex h-5 w-5 shrink-0 items-center justify-center rounded-full', done ? 'bg-[#14A36B] text-white' : 'bg-ink/10 text-transparent')}>
+                      <Check className="h-3 w-3" strokeWidth={3} aria-hidden="true" />
+                    </motion.span>
+                    <span className="min-w-0">{note.text}</span>
+                  </li>
+                );
+              })}
+            </ul>
+            <p className="mt-auto px-1 pt-3 text-[12px] leading-snug text-ink/55">{call.sentence}</p>
+          </LiquidGlass>
+          </div>
+
+          {/* the brief itself, bottom left: play, then the line being spoken, large */}
+          <div className="absolute inset-x-0 bottom-0 p-4 xs:p-5 sm:p-7 lg:right-[380px] lg:p-9 xl:right-[410px]">
+            {/* on phones and tablets, the latest thing she did, one line at a time */}
+            <div className="mb-3 h-8 lg:hidden" aria-hidden="true">
+              <AnimatePresence mode="wait">
+                {current ? (
+                  <motion.span key={current.at} initial={reduce ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.3, ease: EASE }} className="inline-flex max-w-full items-center gap-2 rounded-full bg-white py-1.5 pl-1.5 pr-3 text-[12.5px] text-ink shadow-[0_2px_10px_rgba(10,15,14,0.2)]">
+                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#14A36B] text-white">
+                      <Check className="h-3 w-3" strokeWidth={3} />
+                    </span>
+                    <span className="truncate">{current.text}</span>
+                  </motion.span>
+                ) : null}
+              </AnimatePresence>
             </div>
 
-            <div className="mt-4 flex min-h-[96px] items-start gap-4 sm:mt-6 sm:min-h-[124px] lg:mt-8">
+            <div className="flex items-end gap-4">
               <button
                 type="button"
                 onClick={play}
                 aria-label={status === 'playing' ? c.pause : status === 'paused' ? c.resume : status === 'done' ? c.again : c.listen}
                 className={cn(
                   'relative flex shrink-0 items-center justify-center rounded-full text-white transition-all duration-300 hover:scale-105',
-                  live ? 'h-12 w-12 bg-ink' : 'h-16 w-16 bg-[linear-gradient(140deg,#FF8A3D,#F25C2A)] shadow-[0_12px_28px_-10px_rgba(242,92,42,0.75)]'
+                  live ? 'h-12 w-12 bg-white/20 backdrop-blur-md' : 'h-14 w-14 bg-[linear-gradient(140deg,#FF8A3D,#F25C2A)] shadow-[0_12px_28px_-10px_rgba(242,92,42,0.85)] sm:h-16 sm:w-16'
                 )}
               >
-                {status === 'idle' && !reduce ? <span className="ring-ping absolute inset-0 rounded-full bg-[#F25C2A]/30" /> : null}
+                {status === 'idle' && !reduce ? <span className="ring-ping absolute inset-0 rounded-full bg-[#F25C2A]/40" /> : null}
                 {status === 'playing' ? <Pause className="relative h-5 w-5 fill-current" strokeWidth={2.2} aria-hidden="true" /> : <Play className="relative ml-1 h-5 w-5 fill-current" strokeWidth={2.2} aria-hidden="true" />}
               </button>
-              <div className="min-w-0 flex-1 pt-1">
+              <div className="min-h-[56px] min-w-0 flex-1 sm:min-h-[64px]">
                 {live ? (
                   <>
-                    <p className={cn('text-[11px] font-medium uppercase tracking-[0.08em]', cap.who === 'aurora' ? 'text-[#B4471A]' : 'text-slate')}>{cap.who === 'aurora' ? 'Aurora' : c.caller}</p>
-                    <p className="mt-1 text-[19px] font-medium leading-[1.3] tracking-[-0.01em] text-ink sm:text-[22px]" aria-live="off">
+                    <p className={cn('text-[11px] font-medium uppercase tracking-[0.08em]', cap.who === 'aurora' ? 'text-[#FFB27A]' : 'text-white/70')}>{cap.who === 'aurora' ? 'Aurora' : c.caller}</p>
+                    <p className="mt-1 text-[18px] font-medium leading-[1.3] tracking-[-0.01em] text-white [text-shadow:0_1px_12px_rgba(10,15,14,0.45)] sm:text-[22px] lg:text-[26px]" aria-live="off">
                       <span className="sr-only">{cap.text}</span>
                       <span aria-hidden="true">
                         {sub.words.slice(sub.start, sub.end).map((w, j) => {
                           const i = sub.start + j;
                           return (
-                            <span key={i} className={cn('transition-opacity duration-200', t >= cap.at + (cap.words[i] || 0) ? 'opacity-100' : 'opacity-[0.18]')}>
+                            <span key={i} className={cn('transition-opacity duration-200', t >= cap.at + (cap.words[i] || 0) ? 'opacity-100' : 'opacity-30')}>
                               {w}
                               {i < sub.end - 1 ? ' ' : ''}
                             </span>
@@ -105,11 +152,10 @@ export default function MorningBrief({ d }) {
                   </>
                 ) : (
                   <>
-                    <p className="text-[19px] font-medium leading-tight tracking-[-0.01em] text-ink sm:text-[22px]">{status === 'done' ? c.again : c.listen}</p>
-                    <p className="mt-2 text-[14px] leading-snug text-graphite max-sm:hidden sm:text-[15px]">{call.sentence}</p>
-                    <p className="mt-2 flex items-center gap-1.5 text-[12.5px] font-medium text-[#B4471A]">
+                    <p className="text-[18px] font-medium leading-tight tracking-[-0.01em] text-white sm:text-[22px] lg:text-[26px]">{status === 'done' ? c.again : c.listen}</p>
+                    <p className="mt-1.5 flex items-center gap-1.5 text-[12.5px] font-medium text-white/75">
                       <Volume2 className="h-3.5 w-3.5" strokeWidth={2.2} aria-hidden="true" />
-                      {c.meta}
+                      {c.prompt} · {c.meta}
                     </p>
                   </>
                 )}
@@ -117,14 +163,15 @@ export default function MorningBrief({ d }) {
             </div>
 
             {/* the recording, coloured by who is talking */}
-            <div className="mt-auto flex h-7 items-center gap-[2px] pt-4 sm:h-8 sm:pt-6" aria-hidden="true">
+            <div className="mt-4 flex h-6 items-center gap-[2px] max-[559px]:hidden sm:mt-5" aria-hidden="true">
               {bars.map((v, i) => {
                 const ms = ((i + 0.5) / nb) * c.duration;
-                const who = whoAt(ms);
+                const x = c.captions.find((q) => ms >= q.at - 150 && ms <= q.end + 150);
+                const who = x ? x.who : null;
                 return (
                   <span
                     key={i}
-                    className={cn('min-w-0 flex-1 rounded-full transition-opacity duration-200', who === 'aurora' ? 'bg-[#F25C2A]' : who ? 'bg-ink' : 'bg-ink/30', played < 0 ? 'opacity-45' : played >= ms ? 'opacity-100' : 'opacity-20')}
+                    className={cn('min-w-0 flex-1 rounded-full transition-opacity duration-200', who === 'aurora' ? 'bg-[#FF8A3D]' : 'bg-white', played < 0 ? 'opacity-40' : played >= ms ? 'opacity-100' : 'opacity-25')}
                     style={{ height: Math.max(14, v * 100) + '%' }}
                   />
                 );
@@ -132,26 +179,9 @@ export default function MorningBrief({ d }) {
             </div>
           </div>
 
-          {/* what she reported and did, ticked off as she says it */}
-          <div className="relative border-t border-ink/[0.06] p-4 xs:p-5 sm:p-7 lg:border-l lg:border-t-0 lg:p-9">
-            <p className="text-[11px] font-medium uppercase tracking-[0.08em] text-ink/45">{d.team}</p>
-            <ul className="mt-2.5 grid gap-1.5 sm:mt-3 sm:gap-2">
-              {c.notes.slice(1).map((note, i) => {
-                const done = reached >= i + 1;
-                return (
-                  <li key={note.at} className={cn('flex items-center gap-3 rounded-[12px] px-3 py-1.5 text-[13px] transition-colors duration-500 sm:rounded-[14px] sm:py-2.5 sm:text-[13.5px]', done ? 'bg-white text-ink shadow-[0_1px_2px_rgba(10,15,14,0.06)]' : 'bg-white/40 text-ink/45')}>
-                    <motion.span initial={false} animate={{ scale: done ? 1 : 0.85 }} transition={{ duration: 0.3, ease: EASE }} className={cn('flex h-5 w-5 shrink-0 items-center justify-center rounded-full', done ? 'bg-[#14A36B] text-white' : 'bg-ink/10 text-transparent')}>
-                      <Check className="h-3 w-3" strokeWidth={3} aria-hidden="true" />
-                    </motion.span>
-                    <span className="min-w-0">{note.text}</span>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
           <audio ref={audioRef} src={c.audio} preload="none" onEnded={cc.ended} />
         </div>
-        <p className="mt-4 text-[12px] text-slate">{d.note}</p>
+        <p className="mt-3 text-[12px] text-slate sm:mt-4">{d.note}</p>
 
         <p className="sr-only">{c.captions.map((q) => (q.who === 'aurora' ? 'Aurora: ' : c.caller + ': ') + q.text).join(' ')}</p>
       </div>
