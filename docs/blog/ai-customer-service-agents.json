@@ -1,0 +1,318 @@
+{
+  "language": "en-US",
+  "target_url": "https://divine-tech.ai/blog/ai-customer-service-agents",
+  "keywords": {
+    "primary": "AI customer service agents",
+    "secondary": [
+      "how AI customer service agents work",
+      "AI agent for customer service",
+      "agentic AI customer service",
+      "AI customer support agent"
+    ],
+    "long_tail_questions": [
+      "how does an AI customer service agent work",
+      "what is an AI customer service agent",
+      "how do AI agents avoid wrong answers",
+      "when should an AI agent hand off to a human",
+      "what should an AI agent log",
+      "is a business responsible for what its AI agent says",
+      "do customers mind talking to an AI agent"
+    ],
+    "entities": [
+      "intent",
+      "context",
+      "knowledge base",
+      "grounding",
+      "CRM",
+      "audit log",
+      "handoff",
+      "approval",
+      "resolution rate",
+      "containment",
+      "Gartner",
+      "Five9",
+      "Zendesk",
+      "Moffatt v. Air Canada",
+      "Civil Resolution Tribunal"
+    ],
+    "cluster": "customer-service",
+    "page_role": "pillar"
+  },
+  "competitor_analysis": [
+    {
+      "url": "https://www.asapp.com/blog/ai-customer-service-agent",
+      "word_count": 3000,
+      "strengths": "Exact question in H1, human-in-the-loop and measurement sections",
+      "gaps": "No sequenced data flow, retrieval and permissions not explained, handoff triggers undefined, no sources for claims, promotional"
+    },
+    {
+      "url": "https://clickup.com/blog/hub/ai/use-cases/customer-service/",
+      "word_count": 2000,
+      "strengths": "Ranks for 'how AI agents in customer service work', mentions audit logs and handoff",
+      "gaps": "No worked example, no failure handling, unsourced 40%/90% figures, no cross-channel memory"
+    },
+    {
+      "url": "https://www.lindy.ai/blog/ai-customer-service-agents",
+      "word_count": 3800,
+      "strengths": "Ranks for the head term with a tool listicle",
+      "gaps": "Product list, not an explanation; pipeline appears only as scattered features"
+    }
+  ],
+  "information_gain": "A six-stage pipeline table (what each stage needs and how it fails), one fictional request traced through every stage including an approval, a three-check action model (permission, limit, confirmation), concrete handoff triggers, a record spec, resolution vs containment, a 7-step vendor test, and the Moffatt v. Air Canada ruling as the grounding lesson. Competitors explain stages only at a high level.",
+  "brand_inputs_used": [
+    "src/data/site.js platformPage (Understand / Decide / Act layers, channels, audit log, handoff with full history)",
+    "src/data/site.js security (rules allowed / approval / never, approvals to the right person)",
+    "src/data/site.js faq (one conversation across channels)",
+    "docs/blog/trends.md"
+  ],
+  "engagement_elements": [
+    {
+      "type": "comparison_table",
+      "description": "Six stages: what the agent does, what it needs, what goes wrong",
+      "placement": "H2 step by step"
+    },
+    {
+      "type": "worked_example",
+      "description": "Fictional HVAC customer with two requests traced through all six stages",
+      "placement": "H3 worked example"
+    },
+    {
+      "type": "comparison_table",
+      "description": "Three checks before an action runs",
+      "placement": "H2 actions"
+    },
+    {
+      "type": "checklist",
+      "description": "Handoff triggers",
+      "placement": "H2 handoff"
+    },
+    {
+      "type": "checklist",
+      "description": "Seven tests for evaluating a vendor",
+      "placement": "H2 evaluate"
+    }
+  ],
+  "cta": {
+    "text": "Explore the Aurora platform / see how Aurora keeps you in control",
+    "offer": "Rules, approvals and audit log shown on /platform",
+    "placement": "end"
+  },
+  "target_word_count": 1900,
+  "title_tag": "AI Customer Service Agents: How They Work End to End",
+  "meta_description": "How AI customer service agents work, from first message to resolved ticket: intent, context, knowledge, actions, handoff and the audit record.",
+  "slug": "ai-customer-service-agents",
+  "h1": "AI customer service agents: how they work end to end",
+  "answer_first": "AI customer service agents work in six stages: they take in the message and identify the customer, work out what the customer wants, load the history and account context, look up the answer in your own policies, act inside your systems under your rules, and hand off to a person when needed. Every step is written to a record. If any stage is weak, the customer feels it.",
+  "body_html": "<p><strong>AI customer service agents work in six stages: they take in the message and identify the customer, work out what the customer wants, load the history and account context, look up the answer in your own policies, act inside your systems under your rules, and hand off to a person when needed.</strong> Every step is written to a record. If any stage is weak, the customer feels it.</p>\n\n<p>Most explanations stop at \"the AI understands the question and answers it.\" The harder parts are what the agent knows about this customer, what it may change, and when it should stop. This guide follows one request from the first message to a closed ticket.</p>\n\n<h2>What changed recently?</h2>\n\n<p>Service teams are starting to judge AI agents on resolution instead of deflection. At a contact center summit covered by SiliconANGLE in October 2026, Five9's CEO cited the company's own research: 99% of practitioners deploying AI believe their contact centers have improved, but only 66% of users agree, and more than half of the users who disagree say they could not reach a human (<a href=\"https://siliconangle.com/2026/10/07/ai-customer-service-in-contact-center-summitcontactcentersummit/\">SiliconANGLE, October 2026</a>).</p>\n\n<p>Volume is also about to change shape. Zendesk CEO Tom Eggemeier told Newsweek that a personal AI agent contacted his cable, streaming, internet and mobile providers 37 times over four days on his behalf (<a href=\"https://www.newsweek.com/zendesk-ceo-ai-agents-could-reshape-customer-service-12580590\">Newsweek, October 2026</a>). Some of the messages your agent answers will soon come from other agents.</p>\n\n<p>Gartner expects agentic AI to resolve 80% of common customer service issues without human intervention by 2029 (<a href=\"https://www.gartner.com/en/newsroom/press-releases/2025-03-05-gartner-predicts-agentic-ai-will-autonomously-resolve-80-percent-of-common-customer-service-issues-without-human-intervention-by-20290\">Gartner, March 2025</a>). The key word there is \"resolve,\" and answering is only part of it.</p>\n\n<h2>What is an AI customer service agent?</h2>\n\n<p><strong>An AI customer service agent is software that reads a customer's request, decides what to do under the company's rules, and completes the task in the company's systems, handing off to a person when the request is outside its limits.</strong> A chatbot answers. An agent also does the work: it moves the booking, issues the refund and updates the CRM.</p>\n\n<h2>How does an AI customer service agent work, step by step?</h2>\n\n<p>The six stages run on every request, on any channel. On a refund they may pause for a person's approval.</p>\n\n<table>\n<thead><tr><th>Stage</th><th>What the agent does</th><th>What it needs</th><th>What goes wrong when it is weak</th></tr></thead>\n<tbody>\n<tr><td>1. Intake</td><td>Receives the message, identifies the channel and the customer</td><td>Caller ID, email address or login, matched to one customer record</td><td>Duplicate records, the agent treats a known customer as a stranger</td></tr>\n<tr><td>2. Intent</td><td>Works out what the customer wants, including several requests in one message</td><td>The list of tasks the agent handles and the ones it does not</td><td>Answers the first question and ignores the second</td></tr>\n<tr><td>3. Context</td><td>Loads history across channels, open tickets, orders and appointments</td><td>One shared memory per customer</td><td>The customer repeats themselves, the agent contradicts yesterday's reply</td></tr>\n<tr><td>4. Knowledge</td><td>Finds the answer in your policies, price book and documents</td><td>One current source of truth, with owners</td><td>Confident answers from outdated or conflicting pages</td></tr>\n<tr><td>5. Action</td><td>Checks the rule, then writes to your systems and confirms the result</td><td>Permissions per action, limits, approvers</td><td>Changes that nobody allowed, or actions that silently fail</td></tr>\n<tr><td>6. Handoff and record</td><td>Brings in a person when needed, logs every step</td><td>Handoff triggers, a full history, an audit log</td><td>Customers stuck in a loop, no way to explain what happened</td></tr>\n</tbody>\n</table>\n\n<h3>A worked example</h3>\n\n<p>Maple Ridge Heating is a fictional HVAC company. A customer texts: \"Can I move my furnace tune-up to Friday? Also, why was I charged a $79 trip fee last time?\"</p>\n\n<ol>\n<li><strong>Intake.</strong> The phone number matches one customer record, so the agent knows who is writing before it replies.</li>\n<li><strong>Intent.</strong> Two requests: reschedule a visit, and explain a charge, which may become a refund request.</li>\n<li><strong>Context.</strong> The record shows the tune-up booked for Tuesday and last month's invoice with the trip fee. The notes show the technician arrived and nobody was home.</li>\n<li><strong>Knowledge.</strong> The fee policy says a trip fee applies when the customer misses a confirmed visit. The agent quotes the policy in plain words.</li>\n<li><strong>Action.</strong> Rescheduling is allowed on its own, so the agent books Friday 10 to 12 and sends a confirmation. The customer disputes the fee. Waiving it is above the agent's limit, so it asks the office manager.</li>\n<li><strong>Handoff and record.</strong> The manager approves the waiver in one tap. The agent tells the customer, notes the credit on the account and logs both actions, along with the rule that applied and who approved.</li>\n</ol>\n\n<p>The agent did not waive the fee because the customer sounded annoyed, and it did not make the customer wait for a person to move a booking.</p>\n\n<h2>How does the agent know what the customer wants?</h2>\n\n<p>Intent detection used to mean training a classifier on a fixed list of intents. Language models read the whole message, which handles messy, multi-part requests far better. The weak spot has moved: the model understands \"move my tune-up\" easily, but it also needs to know that rescheduling is something it may do here and negotiating a fee is not.</p>\n\n<p>Give the agent a written scope of the tasks it handles, the tasks it routes and the topics it declines. Outside that scope, the right reply is short, honest and followed by a handoff.</p>\n\n<h2>Where does the context come from?</h2>\n\n<p>Context is everything the agent should know before it replies: who the customer is, what they asked last week on another channel, what is booked and what is still open. Without it, every conversation starts from zero.</p>\n\n<p>The requirement is one memory per customer, shared across channels, so a request that starts in web chat and continues by phone stays one conversation. That depends less on the AI model than on identity matching and a single record the agent reads and writes.</p>\n\n<h2>How does an AI agent avoid giving wrong answers?</h2>\n\n<p>An AI customer service agent should answer policy and pricing questions from your documents, retrieved at the moment of the question, and not from what the model absorbed in training. This is usually called grounding. It only works if the documents agree with each other.</p>\n\n<p>In <em>Moffatt v. Air Canada</em> (February 2024), Air Canada's chatbot told a customer he could apply for a bereavement fare after traveling, while the airline's own bereavement page said the opposite. Air Canada argued the chatbot was responsible for its own actions. The tribunal called that \"a remarkable submission,\" held that \"it should be obvious to Air Canada that it is responsible for all the information on its website,\" and ordered the airline to pay (<a href=\"https://decisions.civilresolutionbc.ca/crt/crtd/en/525448/1/document.do\">Civil Resolution Tribunal decision, 2024 BCCRT 149</a>).</p>\n\n<p>Three habits prevent most of this:</p>\n\n<ul>\n<li>keep one current version of each policy, with a named owner;</li>\n<li>have the agent quote or link the policy it relied on;</li>\n<li>when sources conflict or say nothing, hand off instead of improvising.</li>\n</ul>\n\n<h2>How does the agent take action in your systems?</h2>\n\n<p>Actions are where most of the value and most of the risk sit. Each action should pass three checks.</p>\n\n<table>\n<thead><tr><th>Check</th><th>Question it answers</th><th>Example</th></tr></thead>\n<tbody>\n<tr><td>Permission</td><td>Is this action allowed at all, and for this customer?</td><td>Rescheduling is allowed; changing the price book is never allowed</td></tr>\n<tr><td>Limit</td><td>Is it within the amount or threshold the business set?</td><td>Refunds up to $50 alone; above that, a manager approves</td></tr>\n<tr><td>Confirmation</td><td>Did the system accept the change, and does the customer know?</td><td>The calendar returned the new slot before the agent says \"booked\"</td></tr>\n</tbody>\n</table>\n\n<p>The third check is the one teams forget. An agent that says \"done\" before the booking system confirms the change creates a new problem. A failed write should lead to a retry or a handoff, never to a cheerful confirmation.</p>\n\n<p>For the first two checks, sort every action into allowed, needs approval or never. Most businesses already have these rules for staff; the agent needs them written down.</p>\n\n<h2>When should a person take over?</h2>\n\n<p>A person should take over when the request needs judgment, crosses a limit, or when the customer asks for one. Gartner's survey of 5,728 customers found that 64% would prefer companies did not use AI for customer service, and named difficulty reaching a person as the top concern (<a href=\"https://www.gartner.com/en/newsroom/press-releases/2024-07-09-gartner-survey-finds-64-percent-of-customers-would-prefer-that-companies-didnt-use-ai-for-customer-service\">Gartner, July 2024</a>). Five9's 2026 research points the same way.</p>\n\n<p>Good handoff triggers are concrete:</p>\n\n<ul>\n<li>the customer asks for a person, in any wording;</li>\n<li>the action is above a limit or in the \"never\" column;</li>\n<li>the agent cannot find the answer in your sources;</li>\n<li>the customer repeats the same request, which suggests the agent missed it;</li>\n<li>the topic is sensitive, such as a complaint, a legal threat or a safety issue.</li>\n</ul>\n\n<p>The handoff should carry the full conversation, what the agent already did and why it stopped, so the person can reply without asking the customer to start over.</p>\n\n<h2>What should the agent record?</h2>\n\n<p>Every request should leave a record a manager can read: who asked, on which channel, what the agent understood, which sources it used, what it changed in which system, the rule that applied, who approved, and whether a person took over. That record settles disputes and shows which policy page keeps causing handoffs.</p>\n\n<p>The same record is how you measure. Track resolution rate (requests closed without reopening), handoff rate with reasons, time to resolution and how long approvals wait. Containment alone, the share of conversations that never reached a person, rewards an agent for keeping customers away from help.</p>\n\n<h2>How to evaluate AI customer service agents before you buy</h2>\n\n<ol>\n<li>Ask to see one request move through all six stages on your own data, including an action that needs approval.</li>\n<li>Check that a customer's history follows them across your channels.</li>\n<li>Ask where answers come from, and what the agent does when two sources disagree.</li>\n<li>See how rules are set: per action, with amounts and named approvers.</li>\n<li>Test a failed action, such as a fully booked slot, and watch what the agent tells the customer.</li>\n<li>Ask for a person mid-conversation and look at what the human receives.</li>\n<li>Open the audit log for the test and check that it explains every step.</li>\n</ol>\n\n<h2>Where an AI operating system fits</h2>\n\n<p>The six stages are easier to run well on one foundation. In an <a href=\"/blog/ai-operating-system-for-business\">AI operating system for business</a>, every request passes through the same layers: understand, decide under your rules, act inside your systems and record it.</p>\n\n<p>That is how we built Aurora. It works across phone, SMS, web chat, email, WhatsApp and Slack with one history per customer. You choose what Aurora does on its own, what needs approval and what it never does. Every action is logged with the rule that applied and who approved it, and your team can take over any conversation with the full history.</p>\n\n<h2>Frequently asked questions</h2>\n\n<h3>Do customers mind talking to an AI agent?</h3>\n<p>Many do when they cannot reach a person. Gartner found that 64% of customers would prefer companies did not use AI for service, with difficulty reaching a human as the top concern. A visible, fast route to a person addresses most of that.</p>\n\n<h3>Is a business responsible for what its AI agent says?</h3>\n<p>At least one tribunal has said so. In Moffatt v. Air Canada (2024), a Canadian tribunal held the airline responsible for its chatbot's wrong refund advice. This is not legal advice, but it is a good reason to ground answers in current policies and log them.</p>\n\n<h3>Can an AI customer service agent handle phone calls?</h3>\n<p>Yes. The same six stages apply on a call, with tighter timing: the agent has to reply about as fast as a person, cope with interruptions and transfer to a person within the same call.</p>\n\n<h2>Next steps</h2>\n\n<p>AI customer service agents are only as good as their weakest stage. Before choosing one, write down your scope, your source of policies and your allowed, needs approval and never rules.</p>\n\n<p>To see how those rules, approvals and the audit log work in Aurora, explore <a href=\"/platform\">the Aurora platform</a> or read <a href=\"/platform#security\">how Aurora keeps you in control</a>. For the next wave of requests, the ones sent by your customers' own AI agents, read <a href=\"/blog/prepare-your-business-for-ai-agents\">how to prepare your business for AI agents</a>. For an industry example, see how this works for <a href=\"/blog/ai-receptionist-for-clinics\">an AI receptionist at a clinic</a>.</p>",
+  "faq": [
+    {
+      "question": "Do customers mind talking to an AI agent?",
+      "answer": "Many do when they cannot reach a person. Gartner found that 64% of customers would prefer companies did not use AI for service, with difficulty reaching a human as the top concern. A visible, fast route to a person addresses most of that."
+    },
+    {
+      "question": "Is a business responsible for what its AI agent says?",
+      "answer": "At least one tribunal has said so. In Moffatt v. Air Canada (2024), a Canadian tribunal held the airline responsible for its chatbot's wrong refund advice. This is not legal advice, but it is a good reason to ground answers in current policies and log them."
+    },
+    {
+      "question": "Can an AI customer service agent handle phone calls?",
+      "answer": "Yes. The same six stages apply on a call, with tighter timing: the agent has to reply about as fast as a person, cope with interruptions and transfer to a person within the same call."
+    }
+  ],
+  "schema_jsonld": [
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "AI customer service agents: how they work end to end",
+      "description": "How AI customer service agents work, from first message to resolved ticket: intent, context, knowledge, actions, handoff and the audit record.",
+      "image": "https://divine-tech.ai/img/blog/ai-customer-service-agents-og.jpg",
+      "datePublished": "2026-10-19",
+      "dateModified": "2026-10-19",
+      "author": {
+        "@type": "Organization",
+        "name": "Divine Tech AI",
+        "url": "https://divine-tech.ai"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Divine Tech AI",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://divine-tech.ai/icon-512.png"
+        }
+      },
+      "mainEntityOfPage": "https://divine-tech.ai/blog/ai-customer-service-agents"
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://divine-tech.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Blog",
+          "item": "https://divine-tech.ai/blog"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "AI customer service agents: how they work end to end",
+          "item": "https://divine-tech.ai/blog/ai-customer-service-agents"
+        }
+      ]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Do customers mind talking to an AI agent?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Many do when they cannot reach a person. Gartner found that 64% of customers would prefer companies did not use AI for service, with difficulty reaching a human as the top concern. A visible, fast route to a person addresses most of that."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is a business responsible for what its AI agent says?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "At least one tribunal has said so. In Moffatt v. Air Canada (2024), a Canadian tribunal held the airline responsible for its chatbot's wrong refund advice. This is not legal advice, but it is a good reason to ground answers in current policies and log them."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can an AI customer service agent handle phone calls?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. The same six stages apply on a call, with tighter timing: the agent has to reply about as fast as a person, cope with interruptions and transfer to a person within the same call."
+          }
+        }
+      ]
+    }
+  ],
+  "internal_links": [
+    {
+      "anchor": "AI operating system for business",
+      "url": "/blog/ai-operating-system-for-business",
+      "direction": "outbound_from_this_page"
+    },
+    {
+      "anchor": "the Aurora platform",
+      "url": "/platform",
+      "direction": "outbound_from_this_page"
+    },
+    {
+      "anchor": "how Aurora keeps you in control",
+      "url": "/platform#security",
+      "direction": "outbound_from_this_page"
+    },
+    {
+      "anchor": "how to prepare your business for AI agents",
+      "url": "/blog/prepare-your-business-for-ai-agents",
+      "direction": "outbound_from_this_page"
+    },
+    {
+      "anchor": "an AI receptionist at a clinic",
+      "url": "/blog/ai-receptionist-for-clinics",
+      "direction": "outbound_from_this_page"
+    },
+    {
+      "anchor": "how AI customer service agents work",
+      "url": "/blog/ai-customer-service-agents",
+      "direction": "inbound_to_this_page",
+      "source_url": "/blog/ai-operating-system-for-business"
+    },
+    {
+      "anchor": "AI customer service agents",
+      "url": "/blog/ai-customer-service-agents",
+      "direction": "inbound_to_this_page",
+      "source_url": "/platform"
+    }
+  ],
+  "external_sources": [
+    {
+      "url": "https://siliconangle.com/2026/10/07/ai-customer-service-in-contact-center-summitcontactcentersummit/"
+    },
+    {
+      "url": "https://www.newsweek.com/zendesk-ceo-ai-agents-could-reshape-customer-service-12580590"
+    },
+    {
+      "url": "https://www.gartner.com/en/newsroom/press-releases/2025-03-05-gartner-predicts-agentic-ai-will-autonomously-resolve-80-percent-of-common-customer-service-issues-without-human-intervention-by-20290"
+    },
+    {
+      "url": "https://decisions.civilresolutionbc.ca/crt/crtd/en/525448/1/document.do"
+    },
+    {
+      "url": "https://www.gartner.com/en/newsroom/press-releases/2024-07-09-gartner-survey-finds-64-percent-of-customers-would-prefer-that-companies-didnt-use-ai-for-customer-service"
+    }
+  ],
+  "images": [
+    {
+      "role": "hero",
+      "file_name": "ai-customer-service-agents-1600.webp",
+      "alt": "Soft deep-blue light with hot pink and orange glows, the Divine Tech AI wordmark and the headline How an AI agent solves a request",
+      "placement": "top",
+      "generation_prompt": "scripts/make-blog-covers.py palette background (#08204F, #1F7AFF, #FF9F45, #FF5FA2, seed 'resolve') + headline 'How an AI agent solves a request'"
+    },
+    {
+      "role": "og",
+      "file_name": "ai-customer-service-agents-og.jpg",
+      "alt": "Soft deep-blue light with hot pink and orange glows, the Divine Tech AI wordmark and the headline How an AI agent solves a request",
+      "placement": "og"
+    }
+  ],
+  "open_graph": {
+    "og_title": "AI customer service agents: how they work end to end",
+    "og_description": "One request followed through all six stages, with the rules, handoffs and records that decide whether an AI agent resolves problems or just answers them.",
+    "og_image": "https://divine-tech.ai/img/blog/ai-customer-service-agents-og.jpg"
+  },
+  "author": {
+    "name": "Divine Tech AI",
+    "credentials": "",
+    "url": "https://divine-tech.ai"
+  },
+  "date_published": "2026-10-19",
+  "date_modified": "2026-10-19",
+  "publishing": {
+    "canonical": "https://divine-tech.ai/blog/ai-customer-service-agents",
+    "category": "Guides",
+    "tags": [
+      "AI agents",
+      "customer service",
+      "AI customer service agents",
+      "handoff",
+      "audit log"
+    ],
+    "indexnow": true,
+    "sitemap": true,
+    "gsc_request_indexing": true,
+    "distribution": [
+      "LinkedIn company page",
+      "founders' LinkedIn",
+      "newsletter"
+    ]
+  },
+  "quality_gate": {
+    "beats_top_result": true,
+    "information_gain_present": true,
+    "facts_verified": true,
+    "expert_would_sign": true,
+    "not_duplicate": true,
+    "unverified_claims": [],
+    "comments": "All facts from pages opened 2026-10-19: Gartner press releases (2025-03-05, 2024-07-09), Civil Resolution Tribunal decision 2024 BCCRT 149, SiliconANGLE (Oct 7, 2026; Five9 figures are company research relayed by its CEO, labeled as such), Newsweek (Oct 16, 2026). Maple Ridge Heating example is labeled fictional; $79 and $50 figures are illustrative. No Aurora claims beyond site copy (channels, one history, rules, approvals, audit log, takeover). Not legal advice note on the liability FAQ."
+  },
+  "review_status": "needs_human_review",
+  "notes": [
+    "Pillar article from plan.json queue (customer-service cluster). The queued 'AI agents vs chatbots vs RPA' item is already in review in PR #33, so this run took the next item.",
+    "Primary keyword chosen from SERP evidence (ASAPP and ClickUp rank with 'how AI customer service agents work' pages); no volume data.",
+    "No link to /blog/ai-agents-vs-chatbots-vs-rpa yet because it is not merged; add one at the next refresh.",
+    "Next articles: AI voice agents on the phone (links here), omnichannel AI, what an AI agent audit log should record."
+  ]
+}

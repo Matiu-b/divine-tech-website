@@ -20,23 +20,16 @@
       "slug": "ai-answering-service-for-contractors",
       "cluster": "industries",
       "type": "support"
+    },
+    {
+      "slug": "prepare-your-business-for-ai-agents",
+      "cluster": "trends",
+      "type": "trend"
     }
   ],
   "queue": [
     {
       "status": "in_review",
-      "slug": "prepare-your-business-for-ai-agents",
-      "cluster": "trends",
-      "type": "trend",
-      "topic": "When your customer's AI agent calls your business: getting ready for agent-to-agent service",
-      "angle": "Consumer-side personal agents (for example Sierra's Personal Agent Protocol draft, Oct 2026) will book, cancel and negotiate for people. What a business needs: identity checks, rules for agent callers, structured answers. Verify the current state of each protocol before writing.",
-      "link_to": [
-        "/platform",
-        "/blog/ai-operating-system-for-business"
-      ]
-    },
-    {
-      "status": "queued",
       "cluster": "ai-os",
       "type": "support",
       "topic": "AI agents vs chatbots vs RPA: what each one actually does in a business",
@@ -44,10 +37,11 @@
       "link_to": [
         "/blog/ai-operating-system-for-business",
         "/platform"
-      ]
+      ],
+      "slug": "ai-agents-vs-chatbots-vs-rpa"
     },
     {
-      "status": "queued",
+      "status": "in_review",
       "cluster": "customer-service",
       "type": "pillar",
       "topic": "AI customer service agents: how they work end to end",
@@ -55,7 +49,8 @@
       "link_to": [
         "/platform",
         "/blog/ai-operating-system-for-business"
-      ]
+      ],
+      "slug": "ai-customer-service-agents"
     },
     {
       "status": "queued",
