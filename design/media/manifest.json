@@ -227,6 +227,16 @@
    "width": 1280,
    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_162718_88c234c8-fb87-41aa-94cf-963fe6917752.mp4",
    "out": "public/media/home-services/job-heater"
+  },
+  {
+   "kind": "image",
+   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261019_071219_7c7fb58c-88fa-4d51-96ce-47b8c3cde6cb.png",
+   "out": "public/media/home-services/brief-dana",
+   "widths": [
+    900,
+    1400,
+    2000
+   ]
   }
  ]
 }
