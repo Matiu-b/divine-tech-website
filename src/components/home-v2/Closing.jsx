@@ -9,9 +9,10 @@ import { useInViewport } from './hooks';
  * The closing section shared across the site: ink with a low dawn glow (Sun, Amber, Gold) that settles back to plain
  * ink before the footer; the headline and one line on the left with the page's own drawing or content under them, and
  * the demo form in glass on the right. `art(grow, reduce)` draws what sits under the text once the section is seen.
- * @param {{ c: { titleA: string, titleB?: string, text?: string, form?: string }, industry?: string, art?: (grow: boolean, reduce: boolean) => any }} props
+ * `compact` keeps the form to name, email and phone.
+ * @param {{ c: { titleA: string, titleB?: string, text?: string, form?: string }, industry?: string, art?: (grow: boolean, reduce: boolean) => any, compact?: boolean }} props
  */
-export default function Closing({ c, industry = undefined, art = undefined }) {
+export default function Closing({ c, industry = undefined, art = undefined, compact = false }) {
   const reduce = !!useReducedMotion();
   const ref = useRef(null);
   const seen = useInViewport(ref, { threshold: 0.2, once: true });
@@ -37,7 +38,7 @@ export default function Closing({ c, industry = undefined, art = undefined }) {
         </div>
         <LiquidGlass tone="dark" className="rounded-[clamp(20px,2.2vw,28px)] p-5 xs:p-6 md:p-7">
           <p className="mb-5 text-[15px] leading-snug text-white/75">{c.form || 'Leave your details and Aurora, our AI agent, will call you right away.'}</p>
-          <LeadForm dark columns={2} industry={industry} />
+          <LeadForm dark columns={2} industry={industry} compact={compact} />
         </LiquidGlass>
       </div>
     </section>

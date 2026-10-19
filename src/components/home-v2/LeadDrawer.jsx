@@ -69,7 +69,8 @@ const LEAD_FORM_NAME = 'lead';
  * Netlify Forms (form "lead").
  * @param {any} props
  */
-export function LeadForm({ dark = false, columns = 1, wide = false, onDone = undefined, autoFocus = false, industry = '' }) {
+export function LeadForm({ dark = false, columns = 1, wide = false, onDone = undefined, autoFocus = false, industry = '', compact = false }) {
+  // compact: only what Aurora needs to call (name, email, phone); the page already knows the industry
   const uid = useId().replace(/:/g, '');
   const ids = {
     name: 'lf-name-' + uid,
@@ -305,6 +306,15 @@ export function LeadForm({ dark = false, columns = 1, wide = false, onDone = und
             <div className="lg:col-span-2">{messageField}</div>
             <div className="sm:col-span-2 lg:col-span-1">{submitButton}</div>
           </div>
+        </>
+      ) : compact ? (
+        <>
+          {nameField}
+          <div className={grid}>
+            {emailField}
+            {phoneField}
+          </div>
+          <input type="hidden" name="industry" value={leadIndustries.includes(industry) ? industry : 'Other'} />
         </>
       ) : (
         <>

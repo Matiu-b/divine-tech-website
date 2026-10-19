@@ -314,6 +314,7 @@ export function HsClosing({ it }) {
       c={hsClosing}
       industry={it.leadIndustry}
       art={(grow, reduce) => <HsArt grow={grow} reduce={reduce} />}
+      compact
     />
   );
 }
