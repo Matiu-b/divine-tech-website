@@ -74,15 +74,27 @@ The blog must track what is happening in AI right now, not repeat generic explai
 
 ## 2a. New article
 
+**Length rule (Yuri): no more than 600 words.** Count the prose only: paragraphs, lists and
+headings. One short table and the 2 or 3 FAQ answers do not count. One article answers one
+specific question, completely, and stops. This overrides the skill's competitor-based word count.
+
+- Pick a keyword you can answer well in 600 words: a narrow, long-tail question ("When should an
+  AI agent hand off to a human?"), not a broad head term ("AI customer service agents") where
+  every page-one result is a 3,000-word guide.
+- If a queue item needs more than 600 words, split it: write the first question now and add the
+  others to the queue as their own items. Each part links to the others.
+- Cut, do not compress: drop whole sections that do not answer the question, rather than
+  squeezing every section into shorter sentences.
+
 1. Take the first item in `plan.json` → `queue` with `status: "queued"`.
 2. Invoke the **`anthropic-skills:seo-geo-article-writer`** skill and follow it end to end:
    keyword research, outline, draft, GEO formatting, schema and quality gate.
    - Use the queue item's `topic` and `angle`.
-   - Target 1,400 to 2,000 words.
+   - At most 600 words of prose (see the length rule above).
    - Use American English for the US market.
    - Open with an answer-first bold paragraph.
-   - Use question H2s and tables where they help.
-   - End with FAQ H3s and a closing section with internal links.
+   - Use 2 to 4 question H2s, and at most one table.
+   - End with 2 or 3 FAQ H3s and a short closing paragraph with internal links.
    - Prefer a technical, systems-level angle: how agents, rules, memory and integrations work.
      Avoid generic "lead" talk.
 3. Run the draft through **`anthropic-skills:humanizer`**.
@@ -100,7 +112,9 @@ The blog must track what is happening in AI right now, not repeat generic explai
 2. Re-open every external source. Update or remove numbers that changed, and add newer
    authoritative data if it exists.
 3. Improve the article:
-   - add at least one new section, table or FAQ that answers a real follow-up question;
+   - answer a real follow-up question, but keep the post within the 600-word rule. Posts written
+     before the rule: do not make them longer. Tighten them where you can, and move a section that
+     deserves its own page into the queue as a new question;
    - add links to newer posts on the site.
 4. Set `updated` and the schema `dateModified` to today. Keep the slug and URL.
 5. Do not regenerate the cover unless the title changed. If you do, give the entry a new `"file"` in
@@ -169,6 +183,10 @@ npm run build   # vite build + SSR build + prerender (the prerender needs dist/.
 ```
 
 Then check:
+- prose word count is 600 or fewer:
+  ```bash
+  node -e "import('./src/data/blog.js').then(m=>{const h=m.posts[0].bodyHtml.replace(/<table[\s\S]*?<\/table>/g,'').split('<h2>Frequently asked questions</h2>')[0];console.log(h.replace(/<[^>]+>/g,' ').split(/\s+/).filter(Boolean).length)})"
+  ```
 - `titleTag` is 60 characters or fewer and `description` is 155 or fewer;
 - there are no em dashes in `bodyHtml`;
 - every FAQ in the schema matches an H3 in the body.
@@ -180,7 +198,7 @@ Then check:
    - Title: `Blog: <title>` or `Blog refresh: <title>`.
    - Body:
      - **Summary:** 3 lines.
-     - **SEO:** primary keyword, word count, sources used (linked).
+     - **SEO:** primary keyword, prose word count (must be 600 or fewer), sources used (linked).
      - **Preview link:** `https://deploy-preview-<PR number>--divine-tech-ai.netlify.app/blog/<slug>`.
        Post it as a comment once you know the number.
      - **Review checklist for Yuri (5 minutes):**
