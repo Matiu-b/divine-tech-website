@@ -115,7 +115,10 @@ found text over technical drawings hard to read. The cover script draws the back
 palette, so titles stay editable and nothing is downloaded.
 
 1. Choose a short headline of 2 to 6 words, not the article title. Examples:
-   "The brokerage, on autopilot", "Dispatch, without the dispatcher", "When the caller is an agent".
+   "When the caller is an agent", "How an AI agent solves a request".
+   Write it the way a person would say it or search for it, as a plain sentence or question
+   (for example "How an AI agent solves a request"). Avoid slogan patterns such as
+   "From X to Y" or "X, without the Y" (Yuri's note: people do not talk like that).
 2. Choose a **new palette** of 4 colours, darkest first, clearly different from the covers already
    in `design/blog-covers/covers.json`. A hint of the brand kit is welcome (Divine green `#14A36B` /
    `#3DDC97`, Aurora `#FFC857` / `#FF9F45` / `#F25C2A`) but not required. Keep the middle of the

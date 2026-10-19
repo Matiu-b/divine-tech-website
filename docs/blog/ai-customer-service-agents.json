@@ -257,14 +257,14 @@
     {
       "role": "hero",
       "file_name": "ai-customer-service-agents-1600.webp",
-      "alt": "Soft deep-blue light with hot pink and orange glows, the Divine Tech AI wordmark and the headline From message to resolved",
+      "alt": "Soft deep-blue light with hot pink and orange glows, the Divine Tech AI wordmark and the headline How an AI agent solves a request",
       "placement": "top",
-      "generation_prompt": "scripts/make-blog-covers.py palette background (#08204F, #1F7AFF, #FF9F45, #FF5FA2, seed 'resolve') + headline 'From message to resolved'"
+      "generation_prompt": "scripts/make-blog-covers.py palette background (#08204F, #1F7AFF, #FF9F45, #FF5FA2, seed 'resolve') + headline 'How an AI agent solves a request'"
     },
     {
       "role": "og",
       "file_name": "ai-customer-service-agents-og.jpg",
-      "alt": "Soft deep-blue light with hot pink and orange glows, the Divine Tech AI wordmark and the headline From message to resolved",
+      "alt": "Soft deep-blue light with hot pink and orange glows, the Divine Tech AI wordmark and the headline How an AI agent solves a request",
       "placement": "og"
     }
   ],
