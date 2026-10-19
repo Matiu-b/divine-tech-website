@@ -438,13 +438,12 @@ export const outcomes = {
     },
     {
       key: 'margin',
-      video: '/media/outcomes/profit.mp4',
-      poster: '/media/outcomes/profit-poster.webp',
-      alt: 'A business owner looks at a rising chart with a quiet smile.',
-      beats: [
-        { at: 1500, who: 'done', text: 'More leads converted' },
-        { at: 3600, who: 'done', text: 'Fewer hours on routine work' },
-      ],
+      video: '/media/outcomes/profit-2.mp4',
+      poster: '/media/outcomes/profit-2-poster.webp',
+      alt: 'A business owner looks at her Aurora dashboard, where revenue climbs above costs, and smiles.',
+      // where the monitor is in the film (fractions of the frame: top-left, top-right, bottom-right,
+      // bottom-left); the Aurora dashboard is fitted onto it and its chart draws as the film plays
+      screen: { quad: [[0.1245, 0.2006], [0.3672, 0.2379], [0.3755, 0.5513], [0.1359, 0.598]], aspect: 960 / 536, from: 600, span: 4200 },
       label: 'Profitability',
       title: 'Revenue grows faster than costs',
       text: 'More leads converted and fewer hours spent on routine work. The difference shows up in your margins.',

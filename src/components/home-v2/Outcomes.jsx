@@ -6,6 +6,7 @@ import { outcomes } from '@/data/site';
 import SectionHeader from './primitives/SectionHeader';
 import { Reveal } from './primitives/MotionReveal';
 import { useInViewport, usePageVisible } from './hooks';
+import ProfitScreen from './ProfitScreen';
 
 const CLIP_MAX_MS = 10500; // if a clip can't play, the turn still moves on
 
@@ -176,6 +177,7 @@ export default function Outcomes() {
                       aria-hidden="true"
                     />
                   ) : null}
+                  {o.screen ? <ProfitScreen quad={o.screen.quad} aspect={o.screen.aspect} p={reduce || !running || i !== playing ? 1 : Math.max(0, Math.min(1, (clipT - o.screen.from) / o.screen.span))} /> : null}
                   <Beats beats={o.beats} t={i === playing ? clipT : 0} show={running && i === playing} still={reduce} />
                 </div>
                 <div className="px-1 pt-5 md:pt-6">
