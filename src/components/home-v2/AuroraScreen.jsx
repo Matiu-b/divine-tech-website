@@ -6,11 +6,11 @@ import { User } from 'lucide-react';
  * fixed size and fitted onto the screen in the footage (a perspective transform from the screen's four
  * corners), so it stays sharp and can animate with the film. Figures belong to a fictional business.
  */
-const BW = 640;
-const BH = 360;
+// each screen is drawn at its own fixed size: a 16:9 monitor, or a phone held upright
+const SIZES = { margin: [640, 360], calls: [640, 360], phone: [360, 760] };
 
 // Solves the perspective transform that takes the BW×BH rectangle to the four corners (tl, tr, br, bl).
-function matrix3d(pts) {
+function matrix3d(pts, BW, BH) {
   const src = [
     [0, 0],
     [BW, 0],
@@ -160,6 +160,53 @@ function CallsBoard({ p }) {
   );
 }
 
+// The owner's phone in his van: what Aurora did while he drove. Figures belong to a fictional business.
+const DONE = [
+  { tag: 'Booked', t: 'ok', text: 'Tue 10:00 · Ben Carter', sub: 'AC not cooling' },
+  { tag: 'Answered', t: 'ok', text: 'Hours and parking', sub: 'Website chat' },
+  { tag: 'Quote sent', t: 'ok', text: 'Lena Ortiz · $420', sub: 'Follow-up Fri' },
+  { tag: 'Rescheduled', t: 'wait', text: 'Sam Lee · to Thu 2 pm', sub: 'Text message' },
+  { tag: 'Booked', t: 'ok', text: 'Wed 8:30 · Priya Shah', sub: 'Water heater' },
+];
+const PHONE_TAG = { ok: 'bg-[#E4F4E8] text-[#2E7A48]', wait: 'bg-[#FFF0D9] text-[#A8640F]' };
+
+function PhoneBoard({ p }) {
+  const n = DONE.length;
+  const shown = Math.max(1, Math.min(n, Math.floor(p * n) + 1));
+  return (
+    <div className="h-full w-full bg-[#FBF9F5] px-5 pb-6 pt-7 text-ink" style={{ fontFamily: 'inherit' }}>
+      <div className="flex items-center justify-between">
+        <img src="/brand/aurora-symbol-color.svg" alt="" className="h-[30px] w-[30px]" />
+        <span className="flex h-[34px] w-[34px] items-center justify-center rounded-full bg-ink text-[12px] font-medium text-white">RT</span>
+      </div>
+      <p className="mt-6 text-[15px] text-graphite">While you drove</p>
+      <p className="mt-1 text-[38px] font-medium leading-none tracking-[-0.03em]">
+        {shown} <span className="text-[20px] font-normal text-graphite">handled</span>
+      </p>
+      <div className="mt-2 flex items-center gap-2">
+        <span className="rounded-full bg-[#E4F4E8] px-3 py-1 text-[13px] font-medium text-[#2E7A48]">0 missed calls</span>
+      </div>
+      <div className="mt-5 grid gap-2.5">
+        {DONE.map((d, i) => {
+          const on = i < shown;
+          return (
+            <div key={d.text} className="flex items-center gap-3 rounded-[16px] bg-white px-3.5 py-3 shadow-[0_0_0_1.5px_rgba(10,15,14,0.08)]" style={{ opacity: on ? 1 : 0, transform: on ? 'none' : 'translateY(10px)', transition: 'opacity 450ms, transform 450ms' }}>
+              <span className="flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-full bg-white shadow-[0_0_0_1.5px_rgba(10,15,14,0.08)]">
+                <img src="/brand/aurora-symbol-color.svg" alt="" className="h-[18px] w-[18px]" />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block truncate text-[15px] font-medium">{d.text}</span>
+                <span className="block truncate text-[12.5px] text-slate">{d.sub}</span>
+              </span>
+              <span className={`shrink-0 rounded-full px-2.5 py-1 text-[11.5px] font-medium ${PHONE_TAG[d.t]}`}>{d.tag}</span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 /** Fits the dashboard onto the monitor in the footage. `quad` is the screen's corners as fractions of the video frame. */
 export default function AuroraScreen({ kind = 'margin', quad, aspect = 16 / 9, p = 1 }) {
   const ref = useRef(null);
@@ -180,12 +227,13 @@ export default function AuroraScreen({ kind = 'margin', quad, aspect = 16 / 9, p
     const ox = (box.w - vw) / 2;
     const oy = (box.h - vh) / 2;
     const pts = quad.map(([u, v]) => [ox + u * vw, oy + v * vh]);
-    style = { width: BW, height: BH, transform: matrix3d(pts), transformOrigin: '0 0' };
+    const [BW, BH] = SIZES[kind];
+    style = { width: BW, height: BH, transform: matrix3d(pts, BW, BH), transformOrigin: '0 0' };
   }
   return (
     <div ref={ref} className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
       <div className="absolute left-0 top-0" style={style}>
-        {kind === 'calls' ? <CallsBoard p={p} /> : <MarginBoard p={p} />}
+        {kind === 'phone' ? <PhoneBoard p={p} /> : kind === 'calls' ? <CallsBoard p={p} /> : <MarginBoard p={p} />}
         {/* the screen's own light: a soft sheen so it sits in the room */}
         <div className="absolute inset-0 bg-[linear-gradient(115deg,rgba(255,255,255,0.18)_0%,rgba(255,255,255,0)_40%,rgba(255,226,180,0.08)_100%)]" />
       </div>
