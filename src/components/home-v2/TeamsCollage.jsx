@@ -15,6 +15,8 @@ const EASE = [0.22, 1, 0.36, 1];
 
 // A quiet neutral behind the media in case a still is not there yet (the stills are fetched ahead, so it rarely shows).
 const TILE = '#E9E3DA';
+const OBJECT_SIZES = '(min-width: 1024px) 300px, (min-width: 640px) 40vw, 42vw';
+const IMAGE_SIZES = '(min-width: 1024px) 340px, (min-width: 640px) 46vw, 58vw';
 
 /** The clip: its still is shown at once, and the moving picture fades in over it once it is actually playing. */
 function Clip({ src, poster }) {
@@ -42,13 +44,22 @@ function Clip({ src, poster }) {
 function usePreload(items, near) {
   useEffect(() => {
     if (!near) return;
+    // the same candidates the page will pick (srcset and sizes as on the tiles), so the cache is hit
+    const get = (src, srcSet = undefined, sizes = undefined) => {
+      if (!src) return;
+      const im = new Image();
+      im.decoding = 'async';
+      if (srcSet) {
+        im.sizes = sizes;
+        im.srcset = srcSet;
+      }
+      im.src = src;
+    };
     items.forEach((t) => {
       const c = t.collage;
-      [c.poster, c.object && c.object.src, c.image && c.image.src].filter(Boolean).forEach((u) => {
-        const im = new Image();
-        im.decoding = 'async';
-        im.src = u;
-      });
+      get(c.poster);
+      if (c.object) get(c.object.src, c.object.srcSet, OBJECT_SIZES);
+      if (c.image) get(c.image.src, c.image.srcSet, IMAGE_SIZES);
     });
   }, [near, items]);
 }
@@ -171,7 +182,7 @@ export function Collage({ t, beat, reduce, still }) {
           className="relative aspect-[4/5] w-[41%] shrink-0 overflow-hidden rounded-[20px] sm:absolute sm:bottom-0 sm:left-[8%] sm:aspect-auto sm:h-[46%] sm:w-[40%] sm:rounded-[24px]"
           style={{ background: tile }}
         >
-          {c.object.src ? <img key={c.object.src} src={c.object.src} srcSet={c.object.srcSet} sizes="(min-width: 1024px) 300px, (min-width: 640px) 40vw, 42vw" alt={c.object.alt} decoding="async" className="absolute inset-0 h-full w-full object-cover" /> : null}
+          {c.object.src ? <img key={c.object.src} src={c.object.src} srcSet={c.object.srcSet} sizes={OBJECT_SIZES} alt={c.object.alt} decoding="async" className="absolute inset-0 h-full w-full object-cover" /> : null}
         </motion.div>
         {/* the clip */}
         <motion.div
@@ -182,7 +193,7 @@ export function Collage({ t, beat, reduce, still }) {
           {c.video ? (
             <Clip key={c.video} src={c.video} poster={c.poster} />
           ) : c.image ? (
-            <img key={c.image.src} src={c.image.src} srcSet={c.image.srcSet} sizes="(min-width: 1024px) 340px, (min-width: 640px) 46vw, 58vw" alt={c.image.alt} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" />
+            <img key={c.image.src} src={c.image.src} srcSet={c.image.srcSet} sizes={IMAGE_SIZES} alt={c.image.alt} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" />
           ) : null}
         </motion.div>
       </div>
