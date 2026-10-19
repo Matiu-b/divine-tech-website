@@ -219,6 +219,95 @@ export function HsHero() {
   );
 }
 
+/*
+ * The closing drawing for home services, in the same hand as the brokerage's house: a service van pulled up at a home,
+ * the AC unit by the wall and a ladder on the roof, drawn line by line once the section is seen; the windows and the
+ * van's headlight then glow.
+ */
+const HS_MAIN = [
+  'M10 270H630',
+  // the home
+  'M370 270V192M550 192V270',
+  'M350 198L460 128L570 198',
+  'M362 198L460 136L558 198',
+  'M512 160V136H530V171',
+  'M507 136H535',
+  'M386 214H428V252H386Z',
+  'M492 214H534V252H492Z',
+  'M444 270V220H476V270',
+  'M436 212H484',
+  'M450 154H470V174H450Z',
+  // the AC unit, piped into the wall
+  'M322 270V236H358V270',
+  'M358 246H370',
+  // the ladder on the roof
+  'M598 270L574 192M612 270L588 192',
+  // the van
+  'M46 246V176C46 170 50 166 56 166H214L246 198H284C290 198 294 202 294 208V246',
+  'M46 246H78M122 246H218M262 246H294',
+  'M78 246A22 22 0 0 1 122 246M218 246A22 22 0 0 1 262 246',
+  'M82 250A18 18 0 1 0 118 250A18 18 0 1 0 82 250',
+  'M222 250A18 18 0 1 0 258 250A18 18 0 1 0 222 250',
+  'M214 174H220L240 194H214Z',
+  'M206 166V246',
+  'M60 166V158H196V166',
+];
+const HS_DETAIL = [
+  'M407 214V252M386 233H428',
+  'M513 214V252M492 233H534',
+  'M460 154V174',
+  'M326 242H354M326 248H354M326 254H354M326 260H354',
+  'M340 236V232',
+  'M597.0 262H608.0M593.3 250H604.3M589.7 238H600.7M586.0 226H597.0M582.3 214H593.3M578.6 202H589.6',
+  'M80 158V166M110 158V166M140 158V166M170 158V166',
+  'M74 186H180V224H74Z',
+  'M88 198H150M88 210H128',
+  'M196 210H204',
+  'M100 250A4 4 0 1 0 100.01 250M240 250A4 4 0 1 0 240.01 250',
+  'M284 206H292V214H284',
+  'M380 270C380 258 394 254 400 262C404 254 416 258 414 270',
+  'M506 270C506 256 522 252 528 262C532 254 546 258 542 270',
+];
+const HS_LIT = [
+  [387, 215, 40, 36],
+  [493, 215, 40, 36],
+  [451, 155, 18, 18],
+  [284, 206, 8, 8],
+];
+
+function HsArt({ grow, reduce }) {
+  const draw = (delay, dur = 1.2) => ({
+    pathLength: 1,
+    strokeDasharray: 1,
+    style: { strokeDashoffset: grow ? 0 : 1, transition: reduce ? 'none' : `stroke-dashoffset ${dur}s cubic-bezier(0.65,0,0.35,1) ${delay}s` },
+  });
+  return (
+    <svg viewBox="0 112 640 166" className="block h-auto w-full" fill="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="hs-art-line" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="640" y2="0">
+          <stop offset="0" stopColor="#FF9F45" stopOpacity="0.55" />
+          <stop offset="1" stopColor="#FFC857" stopOpacity="0.95" />
+        </linearGradient>
+      </defs>
+      <g fill="#FFC857" style={{ fillOpacity: grow ? 0.16 : 0, transition: reduce ? 'none' : 'fill-opacity 1s ease 1.9s' }}>
+        {HS_LIT.map(([x, y, w, h]) => (
+          <rect key={x} x={x} y={y} width={w} height={h} />
+        ))}
+      </g>
+      <g stroke="url(#hs-art-line)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        {HS_MAIN.map((d, i) => (
+          <path key={i} d={d} {...draw(i * 0.06)} />
+        ))}
+      </g>
+      <g stroke="url(#hs-art-line)" strokeWidth="1" strokeOpacity="0.7" strokeLinecap="round" strokeLinejoin="round">
+        {HS_DETAIL.map((d, i) => (
+          <path key={i} d={d} {...draw(1 + i * 0.05, 0.9)} />
+        ))}
+      </g>
+    </svg>
+  );
+}
+
 /** What happens after the form, in three short beats (under the closing headline). */
 function NextSteps({ grow }) {
   return (
@@ -241,5 +330,18 @@ function NextSteps({ grow }) {
 }
 
 export function HsClosing({ it }) {
-  return <Closing c={hsClosing} industry={it.leadIndustry} art={(grow) => <NextSteps grow={grow} />} />;
+  return (
+    <Closing
+      c={hsClosing}
+      industry={it.leadIndustry}
+      art={(grow, reduce) => (
+        <>
+          <HsArt grow={grow} reduce={reduce} />
+          <div className="mt-6 lg:mt-8">
+            <NextSteps grow={grow} />
+          </div>
+        </>
+      )}
+    />
+  );
 }
