@@ -238,7 +238,13 @@ export function CollageTabs({ id, eyebrow = undefined, titleA, titleB = undefine
   const inView = useInViewport(ref, { threshold: 0.35 });
   const near = useInViewport(ref, { rootMargin: '800px 0px', once: true });
   const visible = usePageVisible();
-  usePreload(items, near);
+  // the stills are small, so they are also fetched a moment after the page settles, whatever the scroll position
+  const [settled, setSettled] = useState(false);
+  useEffect(() => {
+    const id = window.setTimeout(() => setSettled(true), 2500);
+    return () => window.clearTimeout(id);
+  }, []);
+  usePreload(items, near || inView || settled);
   const [active, setActive] = useState(0);
   const [touched, setTouched] = useState(false);
   const n = items.length;
