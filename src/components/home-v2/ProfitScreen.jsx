@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Bell, Search } from 'lucide-react';
 
 /*
  * The Aurora dashboard on the owner's monitor in the profitability film. It is drawn as real UI at a
@@ -47,7 +46,7 @@ function matrix3d(pts) {
 
 const KPIS = [
   ['Leads converted', '312', '+48 vs last quarter', 'up'],
-  ['Hours on routine work', '41 h', '−126 h vs last quarter', 'up'],
+  ['Routine hours', '41 h', '−126 h vs last quarter', 'up'],
   ['Handled by Aurora', '1,284', 'calls, chats, follow-ups', 'flat'],
 ];
 // Revenue climbs, costs hold: the gap is the margin. Points over twelve weeks (0 = bottom, 100 = top).
@@ -59,55 +58,46 @@ function line(vals, w, h) {
 }
 
 function Dashboard({ p }) {
-  const cw = 584;
-  const ch = 130;
+  // drawn bold: on the monitor it is only a few hundred pixels wide, so it reads as shapes and big numbers
+  const cw = 592;
+  const ch = 150;
   return (
-    <div className="h-full w-full bg-[#FBF9F5] p-6 text-ink" style={{ fontFamily: 'inherit' }}>
+    <div className="h-full w-full bg-[#FBF9F5] px-6 pb-5 pt-5 text-ink" style={{ fontFamily: 'inherit' }}>
       <div className="flex items-center justify-between">
-        <img src="/brand/aurora-logo-horizontal-color.svg" alt="" className="h-[18px] w-auto" />
-        <div className="flex items-center gap-3 text-ink/50">
-          <span className="flex h-[24px] items-center gap-1.5 rounded-full bg-[#F1ECE4] px-3 text-[10px]">
-            <Search className="h-3 w-3" strokeWidth={2} /> Search or jump to…
-          </span>
-          <Bell className="h-4 w-4" strokeWidth={1.8} />
-          <span className="flex h-[24px] w-[24px] items-center justify-center rounded-full bg-ink text-[9px] font-medium text-white">JR</span>
+        <img src="/brand/aurora-logo-horizontal-color.svg" alt="" className="h-[24px] w-auto" />
+        <div className="flex items-center gap-3">
+          <span className="rounded-full bg-[#E4F4E8] px-3 py-1 text-[13px] font-medium text-[#2E7A48]">Margin up</span>
+          <span className="flex h-[30px] w-[30px] items-center justify-center rounded-full bg-ink text-[11px] font-medium text-white">JR</span>
         </div>
       </div>
-      <div className="mt-4 flex items-end justify-between">
-        <div>
-          <p className="text-[19px] font-medium leading-none tracking-[-0.02em]">This quarter</p>
-          <p className="mt-1.5 text-[10.5px] text-graphite">Revenue is growing faster than costs.</p>
-        </div>
-        <span className="rounded-full bg-[#E4F4E8] px-2.5 py-1 text-[10px] font-medium text-[#2E7A48]">Margin up</span>
-      </div>
-      <div className="mt-3.5 grid grid-cols-3 gap-2.5">
+      <div className="mt-4 grid grid-cols-3 gap-3">
         {KPIS.map(([l, v, s, t], i) => (
-          <div key={l} className="rounded-[12px] bg-white p-3 shadow-[0_0_0_1px_rgba(10,15,14,0.07)]" style={{ opacity: p > 0.05 + i * 0.12 ? 1 : 0.35, transition: 'opacity 500ms' }}>
-            <p className="text-[9.5px] text-graphite">{l}</p>
-            <p className="mt-1.5 text-[20px] font-medium leading-none tracking-[-0.02em]">{v}</p>
-            <p className={t === 'up' ? 'mt-1.5 text-[9px] font-medium text-[#2E7A48]' : 'mt-1.5 text-[9px] text-slate'}>{s}</p>
+          <div key={l} className="rounded-[14px] bg-white px-3.5 py-3 shadow-[0_0_0_1.5px_rgba(10,15,14,0.08)]" style={{ opacity: p > 0.05 + i * 0.12 ? 1 : 0.3, transition: 'opacity 500ms' }}>
+            <p className="truncate text-[12px] text-graphite">{l}</p>
+            <p className="mt-1 text-[30px] font-medium leading-none tracking-[-0.03em]">{v}</p>
+            <p className={t === 'up' ? 'mt-1.5 truncate text-[11px] font-medium text-[#2E7A48]' : 'mt-1.5 truncate text-[11px] text-slate'}>{s}</p>
           </div>
         ))}
       </div>
-      <div className="mt-2.5 rounded-[12px] bg-white px-4 pb-2 pt-3 shadow-[0_0_0_1px_rgba(10,15,14,0.07)]">
+      <div className="mt-3 rounded-[14px] bg-white px-4 pb-3 pt-3 shadow-[0_0_0_1.5px_rgba(10,15,14,0.08)]">
         <div className="flex items-center justify-between">
-          <p className="text-[11px] font-medium">Revenue vs. costs</p>
-          <div className="flex items-center gap-3 text-[9px] text-slate">
+          <p className="text-[14px] font-medium">Revenue vs. costs</p>
+          <div className="flex items-center gap-4 text-[12px] text-graphite">
             <span className="flex items-center gap-1.5">
-              <span className="h-[3px] w-3.5 rounded-full bg-[#14A36B]" /> Revenue
+              <span className="h-[4px] w-4 rounded-full bg-[#14A36B]" /> Revenue
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="h-[3px] w-3.5 rounded-full bg-[#F25C2A]" /> Costs
+              <span className="h-[4px] w-4 rounded-full bg-[#F25C2A]" /> Costs
             </span>
           </div>
         </div>
-        <svg viewBox={`0 0 ${cw} ${ch}`} className="mt-1 block w-full" style={{ height: ch * 0.82 }}>
-          {[0.25, 0.5, 0.75].map((y) => (
-            <line key={y} x1="0" x2={cw} y1={ch * y} y2={ch * y} stroke="#0A0F0E" strokeOpacity="0.06" />
+        <svg viewBox={`-4 -6 ${cw + 8} ${ch + 10}`} className="mt-1.5 block w-full" style={{ height: 112 }} preserveAspectRatio="none">
+          {[0.33, 0.66].map((y) => (
+            <line key={y} x1="0" x2={cw} y1={ch * y} y2={ch * y} stroke="#0A0F0E" strokeOpacity="0.07" strokeWidth="1.5" />
           ))}
-          <path d={`${line(REVENUE, cw, ch)} L${cw} ${ch} L0 ${ch} Z`} fill="#14A36B" fillOpacity="0.08" style={{ clipPath: `inset(0 ${100 - p * 100}% 0 0)` }} />
-          <path d={line(COSTS, cw, ch)} fill="none" stroke="#F25C2A" strokeWidth="2.2" strokeLinecap="round" pathLength="1" strokeDasharray="1" strokeDashoffset={1 - p} />
-          <path d={line(REVENUE, cw, ch)} fill="none" stroke="#14A36B" strokeWidth="2.8" strokeLinecap="round" pathLength="1" strokeDasharray="1" strokeDashoffset={1 - p} />
+          <path d={`${line(REVENUE, cw, ch)} L${cw} ${ch} L0 ${ch} Z`} fill="#14A36B" fillOpacity="0.12" style={{ clipPath: `inset(0 ${100 - p * 100}% 0 0)` }} />
+          <path d={line(COSTS, cw, ch)} fill="none" stroke="#F25C2A" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" pathLength="1" strokeDasharray="1" strokeDashoffset={1 - p} />
+          <path d={line(REVENUE, cw, ch)} fill="none" stroke="#14A36B" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" pathLength="1" strokeDasharray="1" strokeDashoffset={1 - p} />
         </svg>
       </div>
     </div>
