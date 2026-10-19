@@ -135,7 +135,7 @@ export default function Outcomes() {
             >
               <Reveal delay={i * 0.08} className="flex flex-col">
                 <div className="relative aspect-[16/10] overflow-hidden rounded-[22px] bg-[#E7E1D6]">
-                  <img src={o.poster} alt={o.alt} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
+                  <img src={o.poster} alt={o.alt} loading="lazy" className="absolute inset-0 h-full w-full object-cover" style={o.mirror ? { transform: 'scaleX(-1)' } : undefined} />
                   {!reduce ? (
                     <video
                       ref={(el) => {
@@ -144,6 +144,7 @@ export default function Outcomes() {
                       src={o.video}
                       poster={o.poster}
                       className="absolute inset-0 h-full w-full object-cover"
+                      style={o.mirror ? { transform: 'scaleX(-1)' } : undefined}
                       muted
                       playsInline
                       preload={i === 0 ? 'auto' : 'metadata'}

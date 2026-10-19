@@ -259,12 +259,6 @@
   {
    "kind": "video",
    "width": 960,
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261019_103143_bd2a2ccd-955f-40a2-9c1e-47999c873856.mp4",
-   "out": "public/media/outcomes/savings-3"
-  },
-  {
-   "kind": "video",
-   "width": 960,
    "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261019_105220_e71db567-2da9-493f-aaf3-5e2f5116c7b2.mp4",
    "out": "public/media/outcomes/savings-van"
   }

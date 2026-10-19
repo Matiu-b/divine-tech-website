@@ -408,11 +408,13 @@ export const outcomes = {
   items: [
     {
       key: 'cost',
-      video: '/media/outcomes/savings-3.mp4',
-      poster: '/media/outcomes/savings-3-poster.webp',
-      alt: 'A receptionist takes one call while Aurora answers the other lines on her screen.',
-      // her monitor in the film; the Aurora front-desk view is fitted onto it and fills in as the film plays
-      screen: { kind: 'calls', quad: [[0.2438, 0.3097], [0.4573, 0.3209], [0.4859, 0.6157], [0.2766, 0.6688]], aspect: 960 / 536, from: 400, span: 5600 },
+      video: '/media/outcomes/savings-van.mp4',
+      poster: '/media/outcomes/savings-van-poster.webp',
+      alt: 'An owner waits at a red light in his van while Aurora handles his calls on the phone on the dash.',
+      // shown mirrored so the van is left-hand drive; the phone's corners are given for the mirrored picture.
+      // The Aurora app is fitted onto the phone and fills in as the film plays.
+      mirror: true,
+      screen: { kind: 'phone', quad: [[0.6664, 0.4963], [0.7301, 0.4994], [0.6895, 0.7914], [0.6291, 0.7575]], aspect: 960 / 536, from: 1200, span: 5200 },
       label: 'Savings',
       title: 'Lower cost per task',
       text: 'Calls, follow-ups, scheduling and data entry run on Aurora around the clock, without adding headcount.',
