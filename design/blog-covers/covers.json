@@ -1,8 +1,8 @@
 [
-  { "slug": "ai-operating-system-for-business", "file": "ai-operating-system-for-business-2", "title": "One system, every department", "tone": "dark", "seed": "os2", "palette": ["#5B0E2D", "#FF5E7E", "#7B61FF", "#FFB347"] },
+  { "slug": "ai-operating-system-for-business", "file": "ai-operating-system-for-business-3", "title": "What is an AI operating system?", "tone": "dark", "seed": "morning", "saturation": 1.0, "palette": ["#1A1F1C", "#40584A", "#9C7BA0", "#E6D3B3"] },
   { "slug": "ai-for-real-estate-lead-follow-up", "title": "The brokerage, on autopilot", "tone": "dark" },
   { "slug": "ai-receptionist-for-clinics", "title": "The front desk that never sleeps", "tone": "light" },
   { "slug": "ai-answering-service-for-contractors", "title": "Dispatch, without the dispatcher", "tone": "dark" },
-  { "slug": "prepare-your-business-for-ai-agents", "file": "prepare-your-business-for-ai-agents-2", "title": "When the caller is an agent", "tone": "dark", "seed": "caller", "palette": ["#3A0CA3", "#00C2FF", "#FF4FA3", "#FFD166"] },
-  { "slug": "ai-customer-service-agents", "title": "How an AI agent solves a request", "tone": "dark", "seed": "resolve", "palette": ["#08204F", "#1F7AFF", "#FF9F45", "#FF5FA2"] }
+  { "slug": "prepare-your-business-for-ai-agents", "file": "prepare-your-business-for-ai-agents-3", "title": "When the caller is an agent", "tone": "light", "seed": "loam", "saturation": 1.05, "palette": ["#EEE7DC", "#B9C7A5", "#E7B98A", "#7D93A8"] },
+  { "slug": "ai-customer-service-agents", "file": "ai-customer-service-agents-2", "title": "How an AI agent solves a request", "tone": "dark", "seed": "tide", "saturation": 1.0, "palette": ["#12262C", "#2E5E63", "#D7A443", "#E9DFC8"] }
 ]

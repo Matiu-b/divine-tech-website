@@ -124,7 +124,7 @@
       "@type": "BlogPosting",
       "headline": "AI customer service agents: how they work end to end",
       "description": "How AI customer service agents work, from first message to resolved ticket: intent, context, knowledge, actions, handoff and the audit record.",
-      "image": "https://divine-tech.ai/img/blog/ai-customer-service-agents-og.jpg",
+      "image": "https://divine-tech.ai/img/blog/ai-customer-service-agents-2-og.jpg",
       "datePublished": "2026-10-19",
       "dateModified": "2026-10-19",
       "author": {
@@ -256,22 +256,22 @@
   "images": [
     {
       "role": "hero",
-      "file_name": "ai-customer-service-agents-1600.webp",
-      "alt": "Soft deep-blue light with hot pink and orange glows, the Divine Tech AI wordmark and the headline How an AI agent solves a request",
+      "file_name": "ai-customer-service-agents-2-1600.webp",
+      "alt": "Soft deep teal light with a warm gold glow and a pale cream haze, the Divine Tech AI wordmark and the headline How an AI agent solves a request",
       "placement": "top",
-      "generation_prompt": "scripts/make-blog-covers.py palette background (#08204F, #1F7AFF, #FF9F45, #FF5FA2, seed 'resolve') + headline 'How an AI agent solves a request'"
+      "generation_prompt": "scripts/make-blog-covers.py palette background (#12262C, #2E5E63, #D7A443, #E9DFC8, seed 'tide', saturation 1.0) + headline 'How an AI agent solves a request'"
     },
     {
       "role": "og",
       "file_name": "ai-customer-service-agents-og.jpg",
-      "alt": "Soft deep-blue light with hot pink and orange glows, the Divine Tech AI wordmark and the headline How an AI agent solves a request",
+      "alt": "Soft deep teal light with a warm gold glow and a pale cream haze, the Divine Tech AI wordmark and the headline How an AI agent solves a request",
       "placement": "og"
     }
   ],
   "open_graph": {
     "og_title": "AI customer service agents: how they work end to end",
     "og_description": "One request followed through all six stages, with the rules, handoffs and records that decide whether an AI agent resolves problems or just answers them.",
-    "og_image": "https://divine-tech.ai/img/blog/ai-customer-service-agents-og.jpg"
+    "og_image": "https://divine-tech.ai/img/blog/ai-customer-service-agents-2-og.jpg"
   },
   "author": {
     "name": "Divine Tech AI",

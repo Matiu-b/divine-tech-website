@@ -122,7 +122,7 @@
       "@type": "BlogPosting",
       "headline": "When your customer's AI agent calls: how to prepare your business for AI agents",
       "description": "How to prepare your business for AI agents that act for your customers: identity checks, rules for agent callers, structured answers and a checklist.",
-      "image": "https://divine-tech.ai/img/blog/prepare-your-business-for-ai-agents-2-og.jpg",
+      "image": "https://divine-tech.ai/img/blog/prepare-your-business-for-ai-agents-3-og.jpg",
       "datePublished": "2026-10-14",
       "dateModified": "2026-10-14",
       "author": {
@@ -263,22 +263,22 @@
   "images": [
     {
       "role": "hero",
-      "file_name": "prepare-your-business-for-ai-agents-2-1600.webp",
-      "alt": "Soft violet-blue light with golden yellow and pink glows, the Divine Tech AI wordmark and the headline When the caller is an agent",
+      "file_name": "prepare-your-business-for-ai-agents-3-1600.webp",
+      "alt": "Soft cream light with sage green, apricot and slate blue glows, the Divine Tech AI wordmark and the headline When the caller is an agent",
       "placement": "top",
       "generation_prompt": "Higgsfield nano_banana_2_1 text-free background (plum, acid lime, coral, cyan; hairline node networks meeting at a checkpoint) + headline 'When the caller is an agent' rendered by scripts/make-blog-covers.py"
     },
     {
       "role": "og",
-      "file_name": "prepare-your-business-for-ai-agents-2-og.jpg",
-      "alt": "Soft violet-blue light with golden yellow and pink glows, the Divine Tech AI wordmark and the headline When the caller is an agent",
+      "file_name": "prepare-your-business-for-ai-agents-3-og.jpg",
+      "alt": "Soft cream light with sage green, apricot and slate blue glows, the Divine Tech AI wordmark and the headline When the caller is an agent",
       "placement": "og"
     }
   ],
   "open_graph": {
     "og_title": "When your customer's AI agent calls: how to prepare your business for AI agents",
     "og_description": "Personal agents from Meta and others now book, cancel and ask questions for their users. What a business needs before they call: identity, rules, clean facts and a record.",
-    "og_image": "https://divine-tech.ai/img/blog/prepare-your-business-for-ai-agents-2-og.jpg"
+    "og_image": "https://divine-tech.ai/img/blog/prepare-your-business-for-ai-agents-3-og.jpg"
   },
   "author": {
     "name": "Divine Tech AI",

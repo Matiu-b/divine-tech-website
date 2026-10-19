@@ -119,22 +119,33 @@ palette, so titles stay editable and nothing is downloaded.
    Write it the way a person would say it or search for it, as a plain sentence or question
    (for example "How an AI agent solves a request"). Avoid slogan patterns such as
    "From X to Y" or "X, without the Y" (Yuri's note: people do not talk like that).
-2. Choose a **new palette** of 4 colours, darkest first, clearly different from the covers already
-   in `design/blog-covers/covers.json`. A hint of the brand kit is welcome (Divine green `#14A36B` /
-   `#3DDC97`, Aurora `#FFC857` / `#FF9F45` / `#F25C2A`) but not required. Keep the middle of the
-   frame calm enough for the headline. Use saturated, lively colours: no greyed-out, dusty or tired
-   mixes (Yuri's note). Recent examples: violet-blue + yellow + pink, crimson + violet + tangerine.
+2. Choose a **new palette** of 4 colours, base colour first (the darkest for a dark cover, the
+   palest for a light one). Take the colours from real light and real materials, not from a
+   screen: morning mist, sage and cream (the clinics cover); forest, amber, rust and charcoal (the
+   contractors cover); deep teal and lamp gold (customer service agents); sage, apricot and slate
+   blue (prepare for AI agents). One main family plus one accent works better than four loud
+   hues. Yuri's notes:
+   - Variety matters most. Open the last three covers in `covers.json` and pick a different
+     colour family and, where it fits, a different tone (alternate light and dark covers).
+   - Avoid the synthetic neon family (violet, electric blue, hot pink, tangerine). Three covers
+     in a row came out of it and the blog looked like one template.
+   - Lively still means alive: no mud and no flat grey. Each cover needs at least one clear glow.
+   A hint of the brand kit is welcome (Divine green `#14A36B`, Aurora `#FFC857` / `#FF9F45`) but
+   not required. Keep the middle of the frame calm enough for the headline.
 3. Add the entry to `design/blog-covers/covers.json`:
    ```json
-   { "slug": "<slug>", "title": "<headline>", "tone": "dark", "seed": "<any word>", "palette": ["#0B3B40", "#127A78", "#F27BA0", "#FFC9A8"] }
+   { "slug": "<slug>", "title": "<headline>", "tone": "dark", "seed": "<any word>", "saturation": 1.0, "palette": ["#12262C", "#2E5E63", "#D7A443", "#E9DFC8"] }
    ```
    - `"tone": "dark"` gives white text; use `"light"` (dark text) for pale palettes.
+   - `"saturation": 1.0` keeps the colours as chosen (1.0 to 1.1 suits natural palettes). Without
+     the key the script boosts colour by 25%, which is what made earlier covers look neon.
    - Change `seed` to move the glows around if the first draw puts a bright glow behind the text.
 4. Render it: `python3 scripts/make-blog-covers.py <slug>` (Playwright with Chromium; in cloud
    sessions set `CHROMIUM_PATH=/opt/pw-browsers/chromium-1194/chrome-linux/chrome`). If it cannot
    run, push `covers.json` alone and the **Blog covers** GitHub Action renders and commits the images.
 5. Open `public/img/blog/<slug>-800.webp` with Read and check that the headline is spelled
-   correctly and readable, and that the colours look like soft light, not mud.
+   correctly and readable, that no bright glow sits behind white text, and that the cover looks
+   different from the last three on the blog page.
 6. Set `image.alt` to describe the cover: colours, headline, logo.
 
 ## 4. Validate
