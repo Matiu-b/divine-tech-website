@@ -154,6 +154,7 @@ palette, so titles stay editable and nothing is downloaded.
      | ink-and-paper | almost mono | off-white, graphite, one ink colour |
      | night-city | dark, vivid | indigo, magenta, amber (use rarely) |
      | spring-pastel | light, soft | mint, peach, butter, baby blue |
+     | lagoon | dark, fresh | deep teal, green, coral, sun yellow |
      New moods are welcome. Add them to this table so later runs can rotate through them too.
    - Every cover needs at least one clear glow: no mud and no flat grey. The middle of the frame
      stays calm enough for the headline.

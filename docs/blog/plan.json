@@ -30,21 +30,14 @@
       "slug": "ai-customer-service-agents",
       "cluster": "customer-service",
       "type": "pillar"
+    },
+    {
+      "slug": "ai-agents-vs-chatbots-vs-rpa",
+      "cluster": "ai-os",
+      "type": "support"
     }
   ],
   "queue": [
-    {
-      "status": "in_review",
-      "cluster": "ai-os",
-      "type": "support",
-      "topic": "AI agents vs chatbots vs RPA: what each one actually does in a business",
-      "angle": "Architecture-level comparison: memory, decisions, actions in systems, failure modes. Diagram-style table.",
-      "link_to": [
-        "/blog/ai-operating-system-for-business",
-        "/platform"
-      ],
-      "slug": "ai-agents-vs-chatbots-vs-rpa"
-    },
     {
       "status": "queued",
       "cluster": "customer-service",

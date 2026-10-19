@@ -4,5 +4,6 @@
   { "slug": "ai-receptionist-for-clinics", "mood": "morning-mist", "title": "The front desk that never sleeps", "tone": "light" },
   { "slug": "ai-answering-service-for-contractors", "mood": "campfire", "title": "Dispatch, without the dispatcher", "tone": "dark" },
   { "slug": "prepare-your-business-for-ai-agents", "mood": "orchard", "file": "prepare-your-business-for-ai-agents-3", "title": "When the caller is an agent", "tone": "light", "seed": "loam", "saturation": 1.05, "palette": ["#EEE7DC", "#B9C7A5", "#E7B98A", "#7D93A8"] },
-  { "slug": "ai-customer-service-agents", "mood": "harbor-dusk", "file": "ai-customer-service-agents-2", "title": "How an AI agent solves a request", "tone": "dark", "seed": "tide", "saturation": 1.0, "palette": ["#12262C", "#2E5E63", "#D7A443", "#E9DFC8"] }
+  { "slug": "ai-customer-service-agents", "mood": "harbor-dusk", "file": "ai-customer-service-agents-2", "title": "How an AI agent solves a request", "tone": "dark", "seed": "tide", "saturation": 1.0, "palette": ["#12262C", "#2E5E63", "#D7A443", "#E9DFC8"] },
+  { "slug": "ai-agents-vs-chatbots-vs-rpa", "mood": "lagoon", "title": "Script, reply or decision", "tone": "dark", "seed": "trio", "palette": ["#04343A", "#14A36B", "#FF6F61", "#FFC857"] }
 ]

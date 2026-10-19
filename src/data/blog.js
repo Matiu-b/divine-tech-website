@@ -101,6 +101,102 @@ export const posts = [
     ]
   },
   {
+    "slug": "ai-agents-vs-chatbots-vs-rpa",
+    "title": "AI agents vs chatbots vs RPA: what each one actually does in a business",
+    "titleTag": "AI Agents vs Chatbots vs RPA: How Each One Works",
+    "description": "AI agents vs chatbots vs RPA compared: memory, decisions, actions in your systems and how each fails, with a side-by-side table and vendor questions.",
+    "dek": "Vendors call almost everything an agent now. A systems-level comparison of what RPA, chatbots and AI agents remember, decide and change, and how each one breaks.",
+    "category": "Guides",
+    "date": "2026-10-16",
+    "updated": "2026-10-16",
+    "author": "Divine Tech AI",
+    "image": {
+      "base": "/img/blog/ai-agents-vs-chatbots-vs-rpa",
+      "alt": "Deep teal and green light with amber and orange glows, the Divine Tech AI wordmark and the headline Script, reply or decision",
+      "og": "/img/blog/ai-agents-vs-chatbots-vs-rpa-og.jpg"
+    },
+    "bodyHtml": "<p><strong>The short answer to AI agents vs chatbots vs RPA: all three automate work, but they do different jobs. RPA follows a fixed script across screens and systems. A chatbot answers questions in a conversation. An AI agent takes a request, decides the steps within your rules, acts inside your systems and records what it did.</strong> Most real setups use more than one, so the useful question is which job each one should own.</p>\n\n<h2>AI agents vs chatbots vs RPA: what is the difference?</h2>\n\n<table>\n<thead><tr><th></th><th>RPA bot</th><th>Chatbot</th><th>AI agent</th></tr></thead>\n<tbody>\n<tr><td><strong>Starts from</strong></td><td>A trigger or schedule with structured input (a file, a form, a queue item)</td><td>A message from a person</td><td>A request or event on any channel, structured or not</td></tr>\n<tr><td><strong>Decides by</strong></td><td>Fixed steps and if/then rules written in advance</td><td>A script or decision tree, or a language model that writes a reply</td><td>A language model that plans steps, checked against business rules and limits</td></tr>\n<tr><td><strong>Remembers</strong></td><td>Nothing between runs, apart from logs</td><td>The current conversation, sometimes a short history</td><td>The customer or employee, past conversations and the state of open tasks</td></tr>\n<tr><td><strong>Can change</strong></td><td>Anything its login can reach, exactly as scripted</td><td>Usually nothing, or one or two narrow actions</td><td>Records, bookings, messages and tasks in connected systems, within permissions</td></tr>\n<tr><td><strong>When input changes</strong></td><td>Stops or does the wrong thing</td><td>Falls back to \"I didn't understand\" or guesses</td><td>Adapts, asks a question or hands off</td></tr>\n<tr><td><strong>Typical failure</strong></td><td>Breaks after a screen or format change</td><td>Gives a confident wrong answer</td><td>Takes a wrong or unapproved action</td></tr>\n<tr><td><strong>Best at</strong></td><td>High-volume, stable, rule-based back-office steps</td><td>Answering common questions fast</td><td>Variable requests that need judgment and work across systems</td></tr>\n</tbody>\n</table>\n\n<p>Each column to the right handles messier input and fails in a new way, so controls matter more the closer you get to agents.</p>\n\n<h2>Why is everything suddenly called an agent?</h2>\n\n<p>The word \"agent\" is now on almost every automation product, and analysts have started to push back. Gartner calls the practice \"agent washing\": rebranding AI assistants, RPA and chatbots as agentic when they lack real agentic features. It estimates that only about 130 of the thousands of vendors selling agentic AI are real, and it predicts that over 40% of agentic AI projects will be canceled by the end of 2027 because of cost, unclear value or weak risk controls (<a href=\"https://www.gartner.com/en/newsroom/press-releases/2025-06-25-gartner-predicts-over-40-percent-of-agentic-ai-projects-will-be-canceled-by-end-of-2027\">Gartner</a>).</p>\n\n<p>A quick test in any demo: ask the system to handle a request it has never seen, and ask to see the log for one action, with the rule that applied and who approved it. A renamed chatbot struggles with the log. Renamed RPA struggles with the new request.</p>\n\n<h2>What does a chatbot get wrong?</h2>\n\n<p>A chatbot's main output is a reply, and its main failure is a fluent, wrong answer that the business owns. In <em>Moffatt v. Air Canada</em> (February 2024), the airline's website chatbot told a customer he could apply for a bereavement fare after travel, which contradicted the airline's own policy page.</p>\n\n<p>Air Canada argued it was not liable for what the chatbot said. The tribunal called that \"a remarkable submission,\" found the airline liable for negligent misrepresentation and ordered it to pay $812.02 in damages, interest and fees (<a href=\"https://decisions.civilresolutionbc.ca/crt/crtd/en/525448/1/document.do\">Civil Resolution Tribunal</a>). The principle: whatever an automated assistant tells a customer on your website counts as your answer.</p>\n\n<h2>How does each one fail, and how do you contain it?</h2>\n\n<p>Every automation fails sometimes. What you control is how big a failure gets.</p>\n\n<ul>\n<li><strong>RPA bots</strong> stop or enter wrong data after a system change. Contain that with alerts on failed runs and an owner for the exception queue.</li>\n<li><strong>Chatbots</strong> answer wrongly or make up a policy. Limit them to approved documents and give them a clear handoff to a person.</li>\n<li><strong>AI agents</strong> take an action they should not, or too many actions. Use least-privilege access, approval for high-impact actions, spending and refund limits, and an audit log.</li>\n</ul>\n\n<p>The agent risk matches what the OWASP security project calls \"excessive agency\": damaging actions caused by giving an AI system too much functionality, too many permissions or too much autonomy. Its main recommendations are to grant the minimum permissions needed and to \"require a human to approve high-impact actions before they are taken\" (<a href=\"https://genai.owasp.org/llmrisk/llm062025-excessive-agency/\">OWASP</a>).</p>\n\n<h2>Frequently asked questions</h2>\n\n<h3>Is a chatbot with integrations an AI agent?</h3>\n<p>Not unless it can plan several steps toward a goal, act in those systems on its own and work within rules you set. If it can only fetch information or run one fixed action per question, it is still a chatbot.</p>\n\n<h3>Will AI agents replace RPA?</h3>\n<p>AI agents will take over many tasks that RPA handled badly, such as reading emails and handling exceptions. RPA will stay useful for stable, high-volume steps in systems without an API, often called by an agent as one of its tools.</p>\n\n<h3>Are AI agents riskier than chatbots?</h3>\n<p>They carry a different risk because they can change records, not only say things. Least-privilege access, approval for high-impact actions and a full audit log keep an agent's mistakes small and visible.</p>\n\n<h2>Next steps</h2>\n\n<p>The difference comes down to who decides and who checks. An AI agent decides in the moment, which is only safe when your rules limit it and the log shows what it did.</p>\n\n<p>To see those rules, approvals and the audit log in practice, explore <a href=\"/platform\">the Aurora platform</a> or read <a href=\"/platform#security\">how Aurora keeps you in control</a>. If your customers are starting to use agents of their own, our guide on <a href=\"/blog/prepare-your-business-for-ai-agents\">how to prepare your business for AI agents</a> covers the other side.</p>",
+    "schema": [
+      {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "AI agents vs chatbots vs RPA: what each one actually does in a business",
+        "description": "AI agents vs chatbots vs RPA compared: memory, decisions, actions in your systems and how each fails, with a side-by-side table and vendor questions.",
+        "image": "https://divine-tech.ai/img/blog/ai-agents-vs-chatbots-vs-rpa-og.jpg",
+        "datePublished": "2026-10-16",
+        "dateModified": "2026-10-16",
+        "author": {
+          "@type": "Organization",
+          "name": "Divine Tech AI",
+          "url": "https://divine-tech.ai"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Divine Tech AI",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://divine-tech.ai/icon-512.png"
+          }
+        },
+        "mainEntityOfPage": "https://divine-tech.ai/blog/ai-agents-vs-chatbots-vs-rpa"
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://divine-tech.ai/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Blog",
+            "item": "https://divine-tech.ai/blog"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "AI agents vs chatbots vs RPA: what each one actually does in a business",
+            "item": "https://divine-tech.ai/blog/ai-agents-vs-chatbots-vs-rpa"
+          }
+        ]
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Is a chatbot with integrations an AI agent?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Not unless it can plan several steps toward a goal, act in those systems on its own and work within rules you set. If it can only fetch information or run one fixed action per question, it is still a chatbot."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Will AI agents replace RPA?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "AI agents will take over many tasks that RPA handled badly, such as reading emails and handling exceptions. RPA will stay useful for stable, high-volume steps in systems without an API, often called by an agent as one of its tools."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Are AI agents riskier than chatbots?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "They carry a different risk because they can change records, not only say things. Least-privilege access, approval for high-impact actions and a full audit log keep an agent's mistakes small and visible."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
     "slug": "prepare-your-business-for-ai-agents",
     "title": "When your customer's AI agent calls: how to prepare your business for AI agents",
     "titleTag": "Prepare Your Business for AI Agents: 2026 Checklist",
