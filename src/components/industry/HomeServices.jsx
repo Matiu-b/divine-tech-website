@@ -308,40 +308,12 @@ function HsArt({ grow, reduce }) {
   );
 }
 
-/** What happens after the form, in three short beats (under the closing headline). */
-function NextSteps({ grow }) {
-  return (
-    <ol className="grid gap-3">
-      {hsClosing.next.map((x, i) => (
-        <li
-          key={x.text}
-          className="flex items-center gap-4 transition-all duration-700"
-          style={{ opacity: grow ? 1 : 0, transform: grow ? 'none' : 'translateY(8px)', transitionDelay: `${0.2 + i * 0.15}s` }}
-        >
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/10 text-[13px] font-medium text-white">{i + 1}</span>
-          <span>
-            <span className="block text-[11px] font-medium uppercase tracking-[0.08em] text-[#FFC857]/80">{x.time}</span>
-            <span className="block text-[16px] text-white/85">{x.text}</span>
-          </span>
-        </li>
-      ))}
-    </ol>
-  );
-}
-
 export function HsClosing({ it }) {
   return (
     <Closing
       c={hsClosing}
       industry={it.leadIndustry}
-      art={(grow, reduce) => (
-        <>
-          <HsArt grow={grow} reduce={reduce} />
-          <div className="mt-6 lg:mt-8">
-            <NextSteps grow={grow} />
-          </div>
-        </>
-      )}
+      art={(grow, reduce) => <HsArt grow={grow} reduce={reduce} />}
     />
   );
 }

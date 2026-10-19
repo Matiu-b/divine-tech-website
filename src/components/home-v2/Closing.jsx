@@ -9,7 +9,7 @@ import { useInViewport } from './hooks';
  * The closing section shared across the site: ink with a low dawn glow (Sun, Amber, Gold) that settles back to plain
  * ink before the footer; the headline and one line on the left with the page's own drawing or content under them, and
  * the demo form in glass on the right. `art(grow, reduce)` draws what sits under the text once the section is seen.
- * @param {{ c: { titleA: string, titleB?: string, text: string, form?: string }, industry?: string, art?: (grow: boolean, reduce: boolean) => any }} props
+ * @param {{ c: { titleA: string, titleB?: string, text?: string, form?: string }, industry?: string, art?: (grow: boolean, reduce: boolean) => any }} props
  */
 export default function Closing({ c, industry = undefined, art = undefined }) {
   const reduce = !!useReducedMotion();
@@ -32,7 +32,7 @@ export default function Closing({ c, industry = undefined, art = undefined }) {
           <h2 id="contact-title" className="t-display balance lg:text-[clamp(2.4rem,0.6rem+3vw,3.9rem)]">
             <RevealLines lines={c.titleB ? [c.titleA, c.titleB] : [c.titleA]} lineClassNames={['', '']} />
           </h2>
-          <p className="t-lead pretty mt-5 max-w-[32em] !text-white/70">{c.text}</p>
+          {c.text ? <p className="t-lead pretty mt-5 max-w-[32em] !text-white/70">{c.text}</p> : null}
           {art ? <div className="mt-8 max-w-[560px] lg:mt-12">{art(grow, reduce)}</div> : null}
         </div>
         <LiquidGlass tone="dark" className="rounded-[clamp(20px,2.2vw,28px)] p-5 xs:p-6 md:p-7">
