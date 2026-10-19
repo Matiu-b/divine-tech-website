@@ -83,6 +83,19 @@ export default function Outcomes() {
     return () => window.clearTimeout(id);
   }, [running, playing, phone, touched]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // follow the playing film frame by frame, so what is drawn on its monitor moves smoothly with it
+  useEffect(() => {
+    if (!running || !items[playing].screen) return undefined;
+    let raf = 0;
+    const tick = () => {
+      const v = videos.current[playing];
+      if (v) setClipT(v.currentTime * 1000);
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [running, playing, items]);
+
   function next() {
     const n = (playing + 1) % items.length;
     if (phone) {
@@ -134,9 +147,6 @@ export default function Outcomes() {
                       muted
                       playsInline
                       preload={i === 0 ? 'auto' : 'metadata'}
-                      onTimeUpdate={(e) => {
-                        if (i === playing) setClipT(e.currentTarget.currentTime * 1000);
-                      }}
                       onEnded={() => {
                         if (i === playing) next();
                       }}
