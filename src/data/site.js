@@ -74,6 +74,20 @@ export const hero = {
   secondary: 'See it in action',
 };
 
+// Launch film (home page, right under the hero): a 90 s motion-design film of the platform,
+// with generated footage of fictional people. Plays with sound only when the visitor presses play.
+export const launchFilm = {
+  titleA: 'Meet Aurora.',
+  titleB: 'In 90 seconds.',
+  text: 'How Aurora connects to your systems, understands your business, and puts an agent on every team.',
+  label: 'Watch the film',
+  duration: '1:30',
+  video: '/video/aurora-launch-film.mp4',
+  poster: '/img/film/aurora-launch-poster-1600.webp',
+  posterSrcSet: '/img/film/aurora-launch-poster-960.webp 960w, /img/film/aurora-launch-poster-1600.webp 1600w',
+  alt: 'Aurora launch film: the Aurora logo and the line "The AI operating system for your business"',
+};
+
 // Hero film: the same request flow on four channels (illustrative scenarios,
 // fictional customers). Timing lives in HeroFilm.jsx; copy lives here.
 // Each scene: inbound message, Aurora's reply, customer confirms, Aurora books,
