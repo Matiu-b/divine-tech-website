@@ -416,8 +416,8 @@ export const outcomes = {
       mirror: true,
       screen: { kind: 'phone', quad: [[0.6664, 0.4963], [0.7301, 0.4994], [0.6895, 0.7914], [0.6291, 0.7575]], aspect: 960 / 536, from: 1200, span: 5200 },
       label: 'Savings',
-      title: 'Lower cost per task',
-      text: 'Calls, follow-ups, scheduling and data entry run on Aurora around the clock, without adding headcount.',
+      title: 'Keep up without a new hire',
+      text: 'Calls, bookings, quotes and follow-ups get handled while you are out on a job, around the clock, without adding a receptionist or a dispatcher.',
     },
     {
       key: 'speed',
