@@ -69,3 +69,68 @@ export function bindContactClickTracking() {
     trackMetaContact(isPhone ? 'phone' : 'email');
   });
 }
+
+// Recorded calls (the AI phone calls you can listen to on the platform and industry pages).
+// One document-level listener catches every <audio> on the site, so a new call player needs no extra code.
+// Events: call_play (first play of that call on this page view), call_progress (25/50/75 %), call_complete.
+const CALL_NAMES = {
+  '/audio/hero-voice-call.mp3': 'platform_water_heater_call',
+  '/media/home-services/call-customer-3.mp3': 'home_services_after_hours_call',
+  '/media/home-services/call-brief-9.mp3': 'home_services_morning_brief',
+  '/media/real-estate/call-c.mp3': 'real_estate_maple_street_call',
+  '/media/real-estate/emma-call-2.mp3': 'real_estate_reactivation_call',
+};
+let callsBound = false;
+
+/** @param {HTMLMediaElement} el */
+function callName(el) {
+  let path = el.currentSrc || el.src || '';
+  try { path = new URL(path, window.location.href).pathname; } catch (e) { /* keep as is */ }
+  return CALL_NAMES[path] || path.split('/').pop().replace(/\.[a-z0-9]+$/i, '') || 'unknown_call';
+}
+
+export function bindCallTracking() {
+  if (callsBound || typeof document === 'undefined') return;
+  callsBound = true;
+  /** @type {WeakMap<HTMLMediaElement, {name: string, played: boolean, marks: Set<number>}>} */
+  const seen = new WeakMap();
+  const state = (el) => {
+    const name = callName(el);
+    let s = seen.get(el);
+    if (!s || s.name !== name) { s = { name, played: false, marks: new Set() }; seen.set(el, s); }
+    return s;
+  };
+  const isCall = (t) => t instanceof HTMLAudioElement;
+  const base = (s) => ({ call_name: s.name, call_page: window.location.pathname });
+
+  document.addEventListener('play', (e) => {
+    if (!isCall(e.target)) return;
+    const el = /** @type {HTMLAudioElement} */ (e.target);
+    const s = state(el);
+    if (s.played) return;
+    s.played = true;
+    push({ event: 'call_play', ...base(s), call_start: Math.round(el.currentTime || 0) });
+  }, true);
+
+  document.addEventListener('timeupdate', (e) => {
+    if (!isCall(e.target)) return;
+    const el = /** @type {HTMLAudioElement} */ (e.target);
+    if (!el.duration || !isFinite(el.duration)) return;
+    const s = state(el);
+    const pct = (el.currentTime / el.duration) * 100;
+    [25, 50, 75].forEach((m) => {
+      if (pct >= m && !s.marks.has(m)) {
+        s.marks.add(m);
+        push({ event: 'call_progress', ...base(s), call_percent: m });
+      }
+    });
+  }, true);
+
+  document.addEventListener('ended', (e) => {
+    if (!isCall(e.target)) return;
+    const s = state(/** @type {HTMLAudioElement} */ (e.target));
+    if (s.marks.has(100)) return;
+    s.marks.add(100);
+    push({ event: 'call_complete', ...base(s), call_percent: 100 });
+  }, true);
+}

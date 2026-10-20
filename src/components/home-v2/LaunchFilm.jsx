@@ -24,7 +24,7 @@ const MARKS = [25, 50, 75, 100];
  * under a play button and a row of chapter chips. Pressing play, a chapter, or the hero's
  * "See it in action" starts the full film with sound in that same click; native controls take over.
  * Both <video> elements are in the prerendered HTML with preload="none", so nothing downloads early.
- * Analytics: film_view (section seen), film_play (source, start second), film_progress (25/50/75/100 %).
+ * Analytics: film_view (section seen), film_play (source, start second), film_progress (25/50/75 %), film_complete.
  */
 export default function LaunchFilm() {
   const section = useRef(null);
@@ -99,7 +99,7 @@ export default function LaunchFilm() {
     MARKS.forEach((m) => {
       if (pct >= m - (m === 100 ? 1 : 0) && !marks.current.has(m)) {
         marks.current.add(m);
-        push({ event: 'film_progress', film_name: 'aurora_launch', film_percent: m });
+        push({ event: m === 100 ? 'film_complete' : 'film_progress', film_name: 'aurora_launch', film_percent: m });
       }
     });
   };
