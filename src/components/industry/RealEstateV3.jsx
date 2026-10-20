@@ -1006,7 +1006,7 @@ const RULE_ICONS = { price: CircleDollarSign, fair: Scale, stop: BellOff, handof
 const TONES = {
   ok: { icon: Check, cls: 'bg-[#E4F4E8] text-[#2E7A48]' },
   wait: { icon: Hourglass, cls: 'bg-[#FFF1E4] text-[#B4471A]' },
-  shield: { icon: ShieldCheck, cls: 'bg-[#E8EEF9] text-[#3A5A9A]' },
+  shield: { icon: ShieldCheck, cls: 'bg-[#F1EBE1] text-ink/80' }, // brand colours only, no blue
   stop: { icon: BellOff, cls: 'bg-ink/[0.06] text-ink/70' },
 };
 // how long each rule stays on screen (ms)

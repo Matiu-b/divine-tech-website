@@ -167,7 +167,7 @@ export const wellnessV3 = {
     ],
     rows: [
       { key: 'health', group: 'guard', icon: 'health', label: 'Health questions', values: ['Never advise'] },
-      { key: 'price', group: 'guard', icon: 'price', label: 'Membership prices', values: ['Share the list', 'Ask me first'] },
+      { key: 'price', group: 'guard', icon: 'price', label: 'Prices', values: ['Share list', 'Ask me first'] },
       { key: 'pause', group: 'guard', icon: 'pause', label: 'Cancel requests', values: ['Offer a pause'] },
       { key: 'stop', group: 'guard', icon: 'stop', label: 'Opt-out requests', values: ['Stop at once'] },
       { key: 'flex', group: 'obj', label: '“I’m not flexible enough”', values: ['Beginner class'] },

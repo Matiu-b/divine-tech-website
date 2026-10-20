@@ -6,7 +6,7 @@ import SectionHeader from '@/components/home-v2/primitives/SectionHeader';
 import Closing from '@/components/home-v2/Closing';
 import { lastIndex } from '@/components/home-v2/CallBox';
 import { useInViewport, useMediaQuery, usePageLoaded, usePageVisible } from '@/components/home-v2/hooks';
-import { Bubble, Composer, Dots, MESSAGES, StepBars, StepTimeline, ThreadHeader, useLoop } from '@/components/industry/RealEstateV3';
+import { Bubble, Composer, Dots, MESSAGES, StepTimeline, ThreadHeader, useLoop } from '@/components/industry/RealEstateV3';
 
 /*
  * Wellness & Healthcare page: the parts that are not shared with the real estate page. The waitlist scene (a late
@@ -31,6 +31,17 @@ const T = {
   log: [3500, OFFER, 12900],
 };
 const STEP_ICONS = [Users, CalendarX, null, Check, CalendarCheck];
+
+/** Where the morning is: one dot per step, the current one a short pill (orange once Aurora is at work). */
+function StepDots({ steps, step, className = '' }) {
+  return (
+    <div className={cn('flex items-center gap-1.5', className)} aria-hidden="true">
+      {steps.map((x, i) => (
+        <span key={x.title} className={cn('h-1.5 rounded-full transition-all duration-300', i === step ? (i >= 2 ? 'w-5 bg-[#F25C2A]' : 'w-5 bg-ink') : i < step ? 'w-1.5 bg-ink/40' : 'w-1.5 bg-ink/15')} />
+      ))}
+    </div>
+  );
+}
 
 function phoneClock(t) {
   if (t < 3500) return '6:02';
@@ -143,9 +154,16 @@ function RosterCard({ r, t, reduce, short = false }) {
       {/* what happened, as the studio's activity log */}
       <ul className={cn('grid border-t border-ink/[0.06]', short ? 'mt-2.5 gap-1.5 pt-2.5' : 'mt-3.5 gap-2 pt-3.5')}>
         {r.log.map((line, i) => (
-          <li key={line} className={cn('flex items-center gap-2 text-[12.5px] transition-opacity duration-500', t >= T.log[i] ? 'opacity-100' : 'opacity-0')}>
-            <span className={cn('h-1.5 w-1.5 shrink-0 rounded-full', i === 0 ? 'bg-ink/30' : 'bg-[#F25C2A]')} />
-            <span className="text-ink/80">{line}</span>
+          <li key={line} className="flex h-[18px] items-center gap-2 text-[12.5px]">
+            <span className={cn('h-1.5 w-1.5 shrink-0 rounded-full transition-colors duration-500', t < T.log[i] ? 'bg-ink/10' : i === 0 ? 'bg-ink/30' : 'bg-[#F25C2A]')} />
+            {t >= T.log[i] ? (
+              <motion.span key="on" className="text-ink/80" initial={reduce ? false : { opacity: 0, x: -4 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.4, ease: EASE }}>
+                {line}
+              </motion.span>
+            ) : (
+              // not yet: a placeholder line, as in an empty record
+              <span className="inline-block h-2.5 rounded-full bg-ink/[0.07]" style={{ width: 100 + ((i * 37) % 60) + 'px' }} />
+            )}
           </li>
         ))}
       </ul>
@@ -239,7 +257,7 @@ export function WxWaitlist({ it }) {
           <div className="relative lg:flex lg:flex-col lg:self-stretch">
             {wide ? (
               <div aria-live="polite" className="xl:hidden">
-                <StepBars steps={r.steps} T={T} t={t} auroraFrom={2} />
+                <StepDots steps={r.steps} step={step} />
                 <AnimatePresence mode="wait" initial={false}>
                   <motion.div key={step} className="mt-3.5 min-h-[112px]" initial={reduce ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6, transition: { duration: 0.2 } }} transition={{ duration: 0.45, ease: EASE }}>
                     <p className="flex items-center justify-between text-[12px]">
@@ -255,7 +273,7 @@ export function WxWaitlist({ it }) {
               </div>
             ) : (
               <>
-                <StepBars steps={r.steps} T={T} t={t} auroraFrom={2} className="mx-auto max-w-[352px]" />
+                <StepDots steps={r.steps} step={step} className="mx-auto max-w-[352px]" />
                 <div className="relative mx-auto mt-4 min-h-[124px] w-full max-w-[352px] [display:flow-root] min-[360px]:min-h-[136px]">
                   <div aria-hidden="true" className="float-right h-[48px] w-0 min-[360px]:h-[54px]" />
                   <div className="relative z-[3] float-right clear-right -mb-[38px] ml-3 h-[108px] w-[108px] overflow-hidden rounded-[20px] shadow-[0_0_0_3px_#FBFAF7,0_18px_36px_-12px_rgba(40,25,10,0.5)] min-[360px]:-mb-[44px] min-[360px]:h-[124px] min-[360px]:w-[124px] min-[400px]:h-[132px] min-[400px]:w-[132px]">
