@@ -321,6 +321,36 @@
         1400,
         2000
       ]
+    },
+    {
+      "kind": "video",
+      "width": 1920,
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261020_100022_63123155-9ff6-47f4-8971-b0d9b5f902ba.mp4",
+      "out": "public/media/wellness/studio-night"
+    },
+    {
+      "kind": "video",
+      "width": 1280,
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261020_100023_6f8a55ad-e0f6-4c71-b733-f0599e31026f.mp4",
+      "out": "public/media/wellness/chloe-dawn"
+    },
+    {
+      "kind": "video",
+      "width": 1280,
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261020_100022_f8ee9671-e1a8-490d-a1f6-f89ae355319e.mp4",
+      "out": "public/media/wellness/chloe-desk"
+    },
+    {
+      "kind": "video",
+      "width": 1280,
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261020_100023_3d016bbf-f287-4cac-9b33-a700462b2f83.mp4",
+      "out": "public/media/wellness/chloe-class"
+    },
+    {
+      "kind": "video",
+      "width": 1280,
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261020_100022_c9a518a8-d21e-4a60-aede-9bb6f5c1fcc3.mp4",
+      "out": "public/media/wellness/chloe-friend"
     }
   ]
 }
