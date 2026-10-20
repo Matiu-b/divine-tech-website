@@ -1,4 +1,5 @@
-// Wellness & Healthcare page (v3, like the real estate page): one boutique studio's story told across the page.
+// Wellness & Healthcare page: one boutique studio's story told across the page, in its own design (only the hero call
+// is shared with the real estate page).
 // Linen & Light, Chloe, Nina and every name, time, price and rule here are illustrative, and each section says so.
 
 const M = '/media/wellness/';
@@ -92,14 +93,14 @@ const winCall = {
   ],
 };
 
-export const wellnessV3 = {
+export const wellness = {
   hero: {
     eyebrow: 'Aurora for wellness',
     titleA: 'The AI front desk for',
     titleB: 'wellness studios.',
     text: 'Aurora answers every call and message, books intro classes and appointments, fills late cancellations from the waitlist and brings quiet members back. For Pilates, yoga and fitness studios, spas and wellness clinics.',
     textShort: 'Aurora answers every call, books the intro class and keeps every class full.',
-    more: { label: 'See the waitlist', href: '#race' },
+    more: { label: 'See it at work', href: '#desk' },
     // the studio after closing: the phone on the desk rings and Aurora answers. Mirrored, so the desk sits under the
     // headline and the call card covers the empty end of the room; the sky behind the headline is the room's own colours.
     film: {
@@ -113,175 +114,142 @@ export const wellnessV3 = {
     call: heroCall,
   },
 
-  // A late cancellation at dawn, seen on Chloe's phone (she is first on the waitlist) and on the studio's roster.
-  waitlist: {
+  // While you teach: one 50-minute class, and what Aurora handles at the desk meanwhile. Names and times are illustrative.
+  desk: {
+    eyebrow: 'While you teach',
+    titleA: 'Teach.',
+    titleB: 'Aurora has the desk.',
+    text: 'The phone rings and the DMs pile up while you’re in the middle of a class. Aurora answers every one, so nothing waits until you’re free.',
+    film: { video: M + 'chloe-class.mp4', poster: M + 'chloe-class-poster.webp', alt: 'Nina guides a member through footwork on a reformer in a sunlit Pilates class' },
+    klass: { name: 'Reformer Flow', with: 'with Nina', minutes: 50, left: 'min left' },
+    // `at` is the minute of the class when it comes in
+    items: [
+      { at: 3, channel: 'instagram', who: 'New lead', said: 'Do you have classes for total beginners?', done: 'Intro class booked · Sat 9:00' },
+      { at: 9, channel: 'call', who: 'Priya, member', said: 'Can I move Thursday to the morning?', done: 'Moved to Fri 7:00 am' },
+      { at: 16, channel: 'text', who: 'Sam, new member', said: 'Where do I fill in the waiver?', done: 'Waiver sent and signed' },
+      { at: 24, channel: 'email', who: 'Billing', said: 'Monthly payment declined for Dana R.', done: 'New card on file · paid' },
+      { at: 33, channel: 'chat', who: 'Website visitor', said: 'Do you sell gift cards?', done: 'Gift card sent · $120' },
+      { at: 41, channel: 'call', who: 'Leah, member', said: 'My knee was sore after Tuesday’s class.', done: 'No advice given · Nina calls her after class', tone: 'care' },
+    ],
+    tally: '{n} conversations handled · 0 interruptions',
+    note: 'An example class. Names, times and messages are illustrative.',
+  },
+
+  // The week's schedule: late cancellations, each refilled from the waitlist. Every class, name and time is illustrative.
+  week: {
     eyebrow: 'Waitlist',
-    titleA: 'Every class full.',
-    titleB: 'Every waitlist moving.',
-    text: 'Late cancellations leave empty reformers. Aurora offers the bed to the waitlist the minute it opens, at any hour, and the roster updates itself.',
-    steps: [
-      { time: '6:02 am', title: 'Class full, 2 waiting', text: 'Reformer Flow at 7:00 is booked out: 12 of 12 beds, two members on the waitlist.' },
-      { time: '6:12 am', title: 'A late cancellation', text: 'Jess can’t make it. A bed opens 48 minutes before class, with no one at the desk.' },
-      { time: '+20 sec', title: 'Aurora texts the waitlist', text: 'Chloe is first in line. Aurora offers her the bed and holds it for 10 minutes.' },
-      { time: '6:14 am', title: 'Chloe takes the bed', text: 'One reply and she’s booked. The roster updates itself, and Jess’s spot isn’t wasted.' },
-      { time: '7:00 am', title: '12 of 12 on the reformers', text: 'A full class, and nobody at the studio lifted a finger before sunrise.' },
+    titleA: 'Every empty spot',
+    titleB: 'is gone for good.',
+    text: 'A class happens once. When someone cancels late, Aurora offers the spot to the waitlist at once, day or night, and books whoever says yes first.',
+    days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+    times: ['7:00', '9:30', '12:15', '18:00', '19:15'],
+    // the timetable: [day, time, class, capacity]; a missing slot has no class
+    classes: [
+      [0, 0, 'Reformer Flow', 12], [0, 2, 'Express', 10], [0, 3, 'Reformer Flow', 12], [0, 4, 'Yoga Flow', 16],
+      [1, 0, 'Barre', 14], [1, 1, 'Foundations', 8], [1, 3, 'Reformer Flow', 12], [1, 4, 'Restore', 16],
+      [2, 0, 'Reformer Flow', 12], [2, 2, 'Express', 10], [2, 3, 'Barre', 14], [2, 4, 'Yoga Flow', 16],
+      [3, 0, 'Barre', 14], [3, 1, 'Foundations', 8], [3, 3, 'Reformer Flow', 12], [3, 4, 'Restore', 16],
+      [4, 0, 'Reformer Flow', 12], [4, 2, 'Express', 10], [4, 3, 'Yoga Flow', 16],
+      [5, 1, 'Reformer Flow', 12], [5, 2, 'Foundations', 8],
     ],
-    phone: {
-      studio: 'Linen & Light',
-      sub: 'Aurora · AI assistant',
-      earlier: { text: 'You’re #1 on the waitlist for Reformer Flow tomorrow at 7:00. I’ll text you if a bed opens.', time: 'Yesterday 8:41 PM' },
-      offer: 'Good morning, Chloe! A bed just opened in Reformer Flow at 7:00 with Nina. Want it? I’ll hold it for 10 minutes.',
-      reply: 'Yes!! On my way 🙌',
-      booked: { title: 'You’re in', detail: 'Reformer Flow · 7:00 am · Bed 4' },
-      after: 'See you at 7! Grip socks are at the desk if you need them.',
-      typingField: 'Text Message',
-      repliedIn: 'Offered 20 sec after the cancellation',
-    },
-    // her morning, from the moment the offer lands: reads it, replies, grabs her mat and goes (8 s)
+    // the late cancellations, in order: which class, who cancelled, who took the spot, how fast
+    events: [
+      { day: 0, time: 0, out: 'Jess', in: 'Chloe', at: '6:12 am', took: '2 min', how: 'by text, before sunrise' },
+      { day: 1, time: 3, out: 'Marco', in: 'Aisha', at: '4:40 pm', took: '6 min', how: 'by text, during a class' },
+      { day: 2, time: 2, out: 'Kim', in: 'Tom', at: '11:58 am', took: '3 min', how: 'on a call' },
+      { day: 3, time: 0, out: 'Ruth', in: 'Ella', at: '5:51 am', took: '4 min', how: 'by text, before sunrise' },
+      { day: 4, time: 3, out: 'Ben', in: 'Noor', at: '3:20 pm', took: '9 min', how: 'second on the waitlist' },
+      { day: 5, time: 1, out: 'Ivy', in: 'Grace', at: '8:47 am', took: '2 min', how: 'by text' },
+    ],
+    labels: { cancel: 'cancelled', filled: 'took the spot', in: 'in', refilled: 'spots refilled this week', full: 'Full', open: '1 open' },
     film: { video: M + 'chloe-dawn.mp4', poster: M + 'chloe-dawn-poster.webp' },
-    roster: {
-      title: 'Reformer Flow · 7:00 am',
-      sub: 'with Nina · Linen & Light',
-      bedLabel: 'Bed',
-      // the twelve beds, by member initials; bed 4 is Jess's, then Chloe's
-      beds: ['AL', 'MR', 'SK', 'JM', 'DP', 'EW', 'RT', 'HN', 'LB', 'OC', 'KF', 'TG'],
-      swap: { bed: 3, from: 'JM', to: 'CB', name: 'Chloe B.' },
-      status: ['Full · 12 of 12', '1 bed open', 'Offered to Chloe · waitlist #1', 'Full again · 12 of 12'],
-      waiting: ['2 on the waitlist', '2 on the waitlist', '2 on the waitlist', '1 on the waitlist'],
-      log: ['Jess cancelled · 6:12 am', 'Bed held for Chloe · 10 min', 'Chloe booked · 6:14 am'],
-      done: 'No empty beds · no calls from the desk',
-    },
-    note: 'An example morning. Names, times and messages are illustrative.',
+    note: 'An example week. Classes, names and times are illustrative.',
   },
 
-  // Your playbook: the studio's settings on the left, one rule at a time on the right. Every name, price and reply is illustrative.
-  rules: {
-    eyebrow: 'Your rules',
-    titleA: 'Sells the membership.',
-    titleB: 'Never gives health advice.',
-    text: 'You set what Aurora never says, what needs your OK first, and how it answers clients who hesitate.',
-    panel: { title: 'Your playbook', sub: 'Linen & Light Studio', edited: 'Set by you' },
-    groups: [
-      { key: 'guard', label: 'Guardrails' },
-      { key: 'obj', label: 'Objections' },
+  // A member's year as a circle: intro class, habit, a quiet spell, back again. Chloe's story; illustrative.
+  cycle: {
+    eyebrow: 'Retention',
+    titleA: 'From intro class',
+    titleB: 'to habit.',
+    text: 'Members rarely quit on purpose. They drift. Aurora keeps each one moving around the circle, and calls when someone goes quiet.',
+    member: 'Chloe',
+    did: 'What Aurora did',
+    stages: [
+      {
+        key: 'intro', name: 'Intro class', when: 'Week 1',
+        media: { video: M + 'chloe-class.mp4', poster: M + 'chloe-class-poster.webp' },
+        line: 'Her first reformer class, booked on a call the night she found the studio.',
+        did: ['Booked the intro class and sent the waiver', 'Texted the membership offer that evening'],
+      },
+      {
+        key: 'habit', name: 'Habit', when: 'Months 1–2',
+        media: { video: M + 'chloe-dawn.mp4', poster: M + 'chloe-dawn-poster.webp' },
+        line: 'Three classes a week, and the first one off the waitlist when a spot opens.',
+        did: ['Reminders two hours before class', 'Waitlist spots offered the minute they open'],
+      },
+      {
+        key: 'quiet', name: 'Gone quiet', when: 'Month 3',
+        media: { video: M + 'chloe-desk.mp4', poster: M + 'chloe-desk-poster.webp' },
+        line: 'Work got busy and three weeks went by without a class. Aurora called.',
+        did: ['Noticed after ten days without a class', 'Called with a time that fits her week'],
+        call: true,
+      },
+      {
+        key: 'back', name: 'Back, with a friend', when: 'Month 4',
+        media: { video: M + 'chloe-friend.mp4', poster: M + 'chloe-friend-poster.webp' },
+        line: 'Saturdays at nine now, and this week she brought Maya.',
+        did: ['Rolled her missed classes over, as Nina allowed', 'Booked Maya’s guest pass beside her'],
+      },
     ],
-    rows: [
-      { key: 'health', group: 'guard', icon: 'health', label: 'Health questions', values: ['Never advise'] },
-      { key: 'price', group: 'guard', icon: 'price', label: 'Prices', values: ['Share list', 'Ask me first'] },
-      { key: 'pause', group: 'guard', icon: 'pause', label: 'Cancel requests', values: ['Offer a pause'] },
-      { key: 'stop', group: 'guard', icon: 'stop', label: 'Opt-out requests', values: ['Stop at once'] },
-      { key: 'flex', group: 'obj', label: '“I’m not flexible enough”', values: ['Beginner class'] },
-      { key: 'cost', group: 'obj', label: '“It’s too expensive”', values: ['Class pack'] },
-      { key: 'time', group: 'obj', label: '“I don’t have time”', values: ['Express class'] },
-      { key: 'later', group: 'obj', label: '“I’ll think about it”', values: ['Hold the spot'] },
-    ],
-    flow: { when: 'Client', then: 'Aurora', result: 'Result' },
-    scenes: [
-      { row: 'health', value: 0, channel: 'via Instagram', trigger: 'I have a herniated disc. Which exercises should I avoid?', action: 'Gives no health advice. Books a call with an instructor and suggests asking their doctor.', result: 'Call with Nina · 6:00 pm', tone: 'shield', reply: 'That’s one for an instructor, and your doctor too. Nina can call you before your first class to plan around it. Free at 6 today?' },
-      { row: 'price', value: 0, channel: 'via text', trigger: 'How much is unlimited a month?', action: 'Shares the price from your list, and the intro offer.', result: 'Intro month offered', tone: 'ok', reply: 'Unlimited is $219 a month. If you’re new, your first month is $99 with unlimited classes. Want me to start it?' },
-      { row: 'price', value: 1, channel: 'via text', trigger: 'How much is unlimited a month?', action: 'Holds the reply and asks you first.', result: 'Approval sent to Nina · one tap', tone: 'wait', reply: 'Good question! Let me check the current rates with the studio and text you back within the hour.' },
-      { row: 'pause', value: 0, channel: 'via text', trigger: 'I want to cancel. I’m travelling for a month.', action: 'Offers to pause the membership instead, and lets the studio know.', result: 'Paused for a month · member kept', tone: 'ok', reply: 'Have a great trip! Instead of cancelling, I can pause your membership for the month, so you keep your rate. Want me to?' },
-      { row: 'stop', value: 0, channel: 'via text', trigger: 'STOP', action: 'Confirms once and never texts again.', result: 'Opted out · reminders cancelled', tone: 'stop', reply: 'Got it. You won’t hear from us again.' },
-      { row: 'flex', value: 0, channel: 'on a call', trigger: 'I’m not flexible enough for Pilates.', action: 'Explains the beginner class and books a first one.', result: 'Intro class booked · Sat 9:00', tone: 'ok', reply: 'You don’t need to be! That’s what Reformer Foundations is for: small, slow and made for first-timers. Saturday at nine?' },
-      { row: 'cost', value: 0, channel: 'via web chat', trigger: 'It’s a bit too expensive for me.', action: 'Offers a class pack instead of a membership.', result: 'Class pack details sent', tone: 'ok', reply: 'Totally fair. A 5-class pack lets you come when it suits you, with no monthly fee. Want the details?' },
-      { row: 'time', value: 0, channel: 'via text', trigger: 'I don’t have time for an hour-long class.', action: 'Suggests the 30-minute express class at lunch.', result: 'Express class booked · Wed 12:15', tone: 'ok', reply: 'Our 30-minute Express classes start at 12:15, made for a lunch break. Want me to save you a spot on Wednesday?' },
-      { row: 'later', value: 0, channel: 'via Instagram', trigger: 'Let me think about it.', action: 'Holds the spot for a day and checks back once.', result: 'Spot held 24 h · one follow-up', tone: 'wait', reply: 'Of course! I’ll hold your spot in Saturday’s 9:00 class until tomorrow evening. Just reply YES to keep it.' },
-    ],
-    note: 'An example playbook. Rules, names, prices and replies are illustrative.',
+    call: winCall,
+    note: 'An example member. Names, times and messages are illustrative.',
   },
 
-  // After the first class: one member's months, in three steps. Chloe went quiet; Aurora calls her back, she returns,
-  // and she brings a friend. Illustrative.
-  after: {
-    eyebrow: 'After the first class',
-    titleA: 'The intro class is day one.',
-    titleB: 'Aurora keeps members coming back.',
-    text: 'Busy weeks pull members away long before they cancel. Here’s how Aurora brought one back, and what came after.',
-    lead: { name: 'Chloe Bennett', initials: 'CB', intro: 'Member since January, then three weeks without a class' },
-    labels: { team: 'What your team sees', prev: 'Previous step', next: 'Next step', you: 'Aurora', text: 'Text', locked: 'Hear the call first' },
-    steps: [
-      {
-        key: 'call', name: 'Win-back call', date: 'Apr 8', icon: 'phone',
-        media: { video: M + 'chloe-desk.mp4', poster: M + 'chloe-desk-poster.webp', focus: '58% 30%' },
-        happened: 'Three weeks without a class. One AI call, a time that fits her week, and she’s booked again.',
-        call: winCall,
-        team: 'Studio · At risk → Active · Sat 9:00 Reformer Flow',
-      },
-      {
-        key: 'back', name: 'Back on the reformer', date: 'Apr 11', icon: 'calendar',
-        media: { video: M + 'chloe-class.mp4', poster: M + 'chloe-class-poster.webp', focus: '40% 50%' },
-        happened: 'A reminder the evening before, Nina knows she’s returning, and the missed classes rolled over.',
-        thread: [
-          { who: 'aurora', text: 'See you tomorrow at 9, Chloe! Nina saved you bed 4, your usual.' },
-          { who: 'lead', text: 'Can’t wait. I’ve missed this.' },
-          { who: 'aurora', text: 'Your 3 unused classes are now on May. Nothing lost.' },
-        ],
-        team: 'Studio · Attended · 3 classes rolled over',
-      },
-      {
-        key: 'friend', name: 'Brings a friend', date: 'Apr 25', icon: 'crm',
-        media: { video: M + 'chloe-friend.mp4', poster: M + 'chloe-friend-poster.webp', focus: '55% 35%' },
-        happened: 'Two weeks in a row, then a guest pass for a friend. One quiet member, now two.',
-        thread: [
-          { who: 'aurora', text: 'Members can bring a friend free this month. Want me to save a bed for someone?' },
-          { who: 'lead', text: 'Yes! My friend Maya, Saturday at 9.' },
-          { who: 'aurora', text: 'Done. Two beds, side by side. See you both!' },
-        ],
-        team: 'Studio · Guest booked · New lead: Maya',
-      },
+  // Clinics: the same front desk, with the clinical line drawn clearly.
+  clinics: {
+    eyebrow: 'Wellness clinics',
+    titleA: 'Clinics too.',
+    titleB: 'The clinical line stays with you.',
+    text: 'Physiotherapy, massage and aesthetics practices run on the same calendar pressure. Aurora handles the desk; anything clinical goes to your team.',
+    kinds: [
+      { key: 'physio', name: 'Physiotherapy & chiropractic', icon: 'activity', does: ['Books first visits and follow-up series', 'Sends intake forms before the first visit', 'Reminds patients of their next session'] },
+      { key: 'spa', name: 'Massage & spa', icon: 'flower', does: ['Books by therapist, room and length', 'Sells and redeems gift cards and packages', 'Fills late cancellations from the waitlist'] },
+      { key: 'aesthetics', name: 'Aesthetics & med spa', icon: 'sparkles', does: ['Books consultations before treatments', 'Sends before-and-after care notes you wrote', 'Rebooks the next treatment on time'] },
     ],
-    kpi: {
-      badge: 'Patented KPI Agent',
-      title: 'Measured against your goals.',
-      text: 'You set a goal for each part of the studio. Every week the KPI Agent measures Aurora against it and changes what holds a number back. Bigger changes wait for your approval.',
-      goalLabel: 'Goal',
-      legend: { goal: 'Your goal', now: 'This year', last: 'Last year' },
-      since: 'Beating the goal since week',
-      story: { cause: 'Cause found', change: 'Change made', result: 'Result' },
-      result: 'Past the goal from week {n}, and well above last year.',
-      weekLabel: 'Week',
-      slipping: 'Slipping',
-      note: 'An example. The goals, weekly figures and changes are illustrative.',
-      weeks: ['W1', 'W2', 'W3', 'W4', 'W5', 'W6', 'W7', 'W8'],
-      goals: [
-        {
-          key: 'sales', area: 'Sales', name: 'Intro to member', target: '4 in 10 intro clients', goal: 0.66,
-          values: [0.48, 0.4, 0.35, 0.5, 0.64, 0.76, 0.86, 0.92],
-          last: [0.4, 0.41, 0.38, 0.42, 0.44, 0.41, 0.45, 0.44],
-          dip: 'Fewer intro clients join than last year.', cause: 'The membership offer went out a week after the first class.',
-          change: { after: 2, text: 'Aurora texts the intro offer the evening after the first class, while it still feels good.' },
-        },
-        {
-          key: 'schedule', area: 'Schedule', name: 'Beds filled', target: '9 in 10 beds', goal: 0.76,
-          values: [0.62, 0.55, 0.5, 0.64, 0.75, 0.84, 0.9, 0.95],
-          last: [0.58, 0.56, 0.6, 0.57, 0.59, 0.58, 0.61, 0.6],
-          dip: 'Early classes run with empty beds.', cause: 'Late cancellations came in while the desk was closed.',
-          change: { after: 2, text: 'Every freed bed goes to the waitlist at once, at any hour.' },
-        },
-        {
-          key: 'retention', area: 'Retention', name: 'Members active each week', target: '8 in 10 members', goal: 0.72,
-          values: [0.6, 0.52, 0.46, 0.58, 0.7, 0.8, 0.87, 0.92],
-          last: [0.55, 0.54, 0.52, 0.55, 0.53, 0.56, 0.54, 0.55],
-          dip: 'More members skip whole weeks.', cause: 'No one noticed a member was gone until they cancelled.',
-          change: { after: 2, text: 'After ten days without a class, Aurora calls with a time that fits.', who: 'Approved by Nina' },
-        },
-        {
-          key: 'service', area: 'Service', name: 'Member satisfaction', target: '4.7 out of 5', goal: 0.78,
-          values: [0.66, 0.6, 0.56, 0.52, 0.68, 0.82, 0.88, 0.94],
-          last: [0.6, 0.62, 0.59, 0.61, 0.63, 0.62, 0.64, 0.62],
-          dip: 'Ratings dip after a new member’s first week.', cause: 'New members didn’t know what to bring or how the reformer works.',
-          change: { after: 3, text: 'A short what-to-expect text goes out the day before every first class.' },
-        },
-        {
-          key: 'ops', area: 'Operations', name: 'Classes attended as booked', target: '19 in 20', goal: 0.8,
-          values: [0.68, 0.58, 0.5, 0.64, 0.76, 0.86, 0.91, 0.96],
-          last: [0.62, 0.6, 0.63, 0.61, 0.62, 0.6, 0.64, 0.63],
-          dip: 'More booked members miss their class.', cause: 'Reminders went out by email the night before.',
-          change: { after: 2, text: 'Reminders move to a text two hours before class, with a one-tap cancel that frees the bed.' },
-        },
+    line: { never: 'Never', neverText: 'diagnoses, gives medical advice or discusses treatment results.', always: 'Always', alwaysText: 'hands clinical questions and urgent cases to your staff, with the conversation attached.' },
+  },
+
+  // The owner's Monday letter: the week in a few lines, and one goal the KPI Agent moved. Every figure is illustrative.
+  journal: {
+    eyebrow: 'Every Monday',
+    titleA: 'Your week at the studio,',
+    titleB: 'in one letter.',
+    text: 'Every Monday morning Aurora writes to you: what it handled, who joined, who came back, and the one goal the KPI Agent is working on.',
+    letter: {
+      date: 'Monday, 8:00 am',
+      from: 'From Aurora',
+      hello: 'Good morning, Nina.',
+      intro: 'Here’s last week at Linen & Light.',
+      lines: [
+        { icon: 'refill', n: '9', text: 'late spots refilled from the waitlist' },
+        { icon: 'join', n: '4 of 9', text: 'intro clients joined as members' },
+        { icon: 'back', n: '3', text: 'quiet members came back' },
+        { icon: 'answer', n: '71', text: 'calls and messages answered, 18 after hours' },
       ],
+      goal: {
+        badge: 'KPI Agent',
+        name: 'Beds filled',
+        target: 'Your goal: 9 in 10',
+        weeks: [0.78, 0.81, 0.84, 0.88, 0.91, 0.93],
+        goal: 0.9,
+        change: 'Reminders now go out two hours before class, with a one-tap cancel that frees the bed for the waitlist.',
+        result: '93% last week, past your goal for the second week running.',
+      },
+      sign: 'Have a lovely week,',
+      name: 'Aurora',
     },
-    note: 'An example. Names, dates, classes and messages are illustrative.',
+    photo: { src: M + 'chloe-friend-900.webp', alt: 'Two friends laughing at the studio’s front desk after class, mats under their arms' },
+    note: 'An example letter. The figures are illustrative.',
   },
 
   closing: {

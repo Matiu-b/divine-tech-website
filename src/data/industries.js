@@ -4,7 +4,7 @@
 // problem and what it costs, how Aurora joins the process, where people stay in
 // control, and what changes. No metrics are claimed until they are verified.
 
-import { wellnessV3 } from './wellness.js';
+import { wellness } from './wellness.js';
 
 const PHOTOS = '/img/photos/';
 const srcSet = (name, widths) => widths.map((w) => PHOTOS + name + '-' + w + '.webp ' + w + 'w').join(', ');
@@ -539,8 +539,8 @@ export const industries = [
     key: 'hc',
     label: 'Wellness & Healthcare',
     leadIndustry: 'Wellness & Healthcare',
-    // Page v3, like real estate: one boutique studio's story; clinics are named in the hero and the FAQ.
-    v3: wellnessV3,
+    // Its own page design (src/components/industry/Wellness.jsx): one boutique studio's story, then clinics.
+    wx: wellness,
     meta: {
       title: 'AI Front Desk for Wellness Studios & Clinics | Aurora by Divine Tech AI',
       description:
