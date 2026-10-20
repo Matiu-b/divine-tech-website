@@ -22,6 +22,7 @@ import LiveSteps from '@/components/home-v2/LiveSteps';
 import { HsClosing, HsHero } from '@/components/industry/HomeServices';
 import { hsField, hsHear, hsLive } from '@/data/homeServices';
 import { RxAfter, RxClosing, RxHero, RxKpi, RxRace, RxRules, RxStack, RxFaqMore } from '@/components/industry/RealEstateV3';
+import { WxClosing, WxClinics, WxCycle, WxDesk, WxHero, WxJournal, WxWeek } from '@/components/industry/Wellness';
 
 /** @param {any} props */
 function IndustryHero({ it }) {
@@ -277,6 +278,22 @@ export default function IndustryPage() {
         <Faq id="ind-faq-title" items={it.faq} className="pt-0" />
         <OtherIndustries it={it} />
         <HsClosing it={it} />
+      </SiteLayout>
+    );
+  }
+  // Wellness & Healthcare: its own design, one studio's story, then clinics
+  if (it.wx) {
+    return (
+      <SiteLayout key={it.slug} industry={it.leadIndustry} meta={it.meta}>
+        <WxHero it={it} />
+        <WxDesk it={it} />
+        <WxWeek it={it} />
+        <WxCycle it={it} />
+        <WxClinics it={it} />
+        <WxJournal it={it} />
+        <Faq id="ind-faq-title" items={it.faq} visible={it.faqVisible || 0} className="pt-0" more={it.wx.faqMore ? <RxFaqMore m={it.wx.faqMore} guide={it.article ? postPath(it.article) : null} /> : null} />
+        <OtherIndustries it={it} />
+        <WxClosing it={it} />
       </SiteLayout>
     );
   }

@@ -4,6 +4,8 @@
 // problem and what it costs, how Aurora joins the process, where people stay in
 // control, and what changes. No metrics are claimed until they are verified.
 
+import { wellness } from './wellness.js';
+
 const PHOTOS = '/img/photos/';
 const srcSet = (name, widths) => widths.map((w) => PHOTOS + name + '-' + w + '.webp ' + w + 'w').join(', ');
 
@@ -537,12 +539,14 @@ export const industries = [
     key: 'hc',
     label: 'Wellness & Healthcare',
     leadIndustry: 'Wellness & Healthcare',
+    // Its own page design (src/components/industry/Wellness.jsx): one boutique studio's story, then clinics.
+    wx: wellness,
     meta: {
-      title: 'Aurora for wellness & healthcare · Every call answered | Divine Tech AI',
+      title: 'AI Front Desk for Wellness Studios & Clinics | Aurora by Divine Tech AI',
       description:
-        'Aurora answers calls and messages on the first ring, books, confirms and reschedules appointments, and gives front-desk time back to the people in the room.',
+        'Aurora is the AI front desk for Pilates, yoga and fitness studios, spas and wellness clinics: it answers every call, books intro classes, fills the waitlist and brings members back.',
     },
-    short: 'Answer every call, keep the schedule full, and issue invoices and aftercare emails on their own.',
+    short: 'Answer every call, book the intro class, fill late cancellations from the waitlist and bring quiet members back.',
     hero: {
       eyebrow: 'Aurora for wellness & healthcare',
       titleA: 'Every call answered.',
@@ -597,11 +601,20 @@ export const industries = [
     ],
     success: 'From a ringing phone to a full, confirmed schedule.',
     systems: ['Scheduling system', 'Practice management', 'CRM', 'Phone', 'SMS', 'Web chat', 'WhatsApp'],
+    // the first six show on the page; the rest open with a button (all of them stay in the HTML and the FAQ schema)
+    faqVisible: 6,
     faq: [
-      ['Does Aurora give medical advice?', 'No. Aurora is set up for scheduling, questions about your services and admin. Anything clinical or urgent goes straight to your staff.'],
-      ['Can it work across several locations?', 'Yes. Intake, reminders and answers stay consistent across every location, and each booking lands in the right calendar.'],
-      FAQ_CHANNELS,
+      ['What is an AI front desk for a wellness studio?', 'An AI front desk answers the calls, texts and messages a studio’s front desk would, at any hour. Aurora answers questions about classes and prices from your own lists, books intro classes and appointments, offers freed spots to the waitlist, sends reminders and checks in with members who have gone quiet, all inside the rules you set.'],
+      ['Which businesses is Aurora for?', 'Pilates, yoga, barre and fitness studios, spas and massage studios, and wellness clinics such as physiotherapy, chiropractic and aesthetics practices. Anywhere the schedule is the business and the phone rings while the team is with clients.'],
+      ['Does Aurora give health or medical advice?', 'No. Aurora is set up for bookings, questions about your services and admin. Anything about an injury, a condition or treatment goes to your instructors or clinicians, and urgent cases go to your staff at once, with the conversation attached.'],
+      ['Can Aurora fill late cancellations from the waitlist?', 'Yes. When a spot opens, Aurora offers it to the waitlist in order, holds it for the time you choose and books whoever says yes first, even at six in the morning. The roster updates itself.'],
       FAQ_LIVE,
+      ['How much does Aurora cost for a studio or clinic?', 'Aurora is priced for each business. The price depends on what Aurora takes on, from calls and bookings to the waitlist and win-back calls, the channels it covers and the systems it connects to. We map your process first, then send a proposal based on that plan.'],
+      ['Will Aurora sell memberships and packs?', 'Within the rules you set. Aurora can share prices from your list, offer an intro deal or a class pack to someone who hesitates, and hold a spot for a day. Anything outside your rules, like a special rate, waits for your approval.'],
+      ['What happens when a member wants to cancel?', 'You decide. Aurora can offer a pause or a different class time first, then pass the request to your team with the full conversation, so the decision stays with a person.'],
+      ['Can it work across several locations?', 'Yes. Answers, reminders and the waitlist stay consistent across every location, and each booking lands in the right calendar and the right room.'],
+      ['Do clients know they’re talking to AI?', 'Yes. Aurora introduces itself as your studio’s AI assistant, as in the call at the top of this page, and brings in a person whenever a client asks for one.'],
+      FAQ_CHANNELS,
     ],
   },
   {
