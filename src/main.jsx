@@ -2,12 +2,13 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from '@/App.jsx'
 import '@/index.css'
-import { bindContactClickTracking } from '@/lib/tracking'
+import { bindCallTracking, bindContactClickTracking } from '@/lib/tracking'
 import { initMetaPixel } from '@/lib/metaPixel'
 import { pageForPath, preloadPage } from '@/pages/routes'
 
 initMetaPixel()
 bindContactClickTracking()
+bindCallTracking()
 
 // Load this page's chunk first, so React can take over the prerendered HTML in one pass rather
 // than through an empty Suspense frame.
