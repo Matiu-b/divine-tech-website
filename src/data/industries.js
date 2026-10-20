@@ -4,7 +4,7 @@
 // problem and what it costs, how Aurora joins the process, where people stay in
 // control, and what changes. No metrics are claimed until they are verified.
 
-import { wellnessV3 } from './wellness';
+import { wellnessV3 } from './wellness.js';
 
 const PHOTOS = '/img/photos/';
 const srcSet = (name, widths) => widths.map((w) => PHOTOS + name + '-' + w + '.webp ' + w + 'w').join(', ');

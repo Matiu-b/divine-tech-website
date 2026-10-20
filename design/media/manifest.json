@@ -351,6 +351,16 @@
       "width": 1280,
       "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261020_100022_c9a518a8-d21e-4a60-aede-9bb6f5c1fcc3.mp4",
       "out": "public/media/wellness/chloe-friend"
+    },
+    {
+      "kind": "audio",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261020_101028_cbcd4688-927e-436a-b5e6-eac2ec93b888.mp3",
+      "out": "public/media/wellness/call-chloe-1"
+    },
+    {
+      "kind": "audio",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261020_101028_c9a9ae09-b42d-431f-8df9-6e983a999051.mp3",
+      "out": "public/media/wellness/call-chloe-2"
     }
   ]
 }
