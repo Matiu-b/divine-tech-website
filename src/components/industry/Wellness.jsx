@@ -79,8 +79,8 @@ function ClassRing({ k, minute, reduce }) {
         <span className="absolute inset-0 flex items-center justify-center text-[17px] font-medium tabular-nums text-ink">{left}</span>
       </span>
       <span className="min-w-0">
-        <span className="block text-[13.5px] font-medium leading-tight text-ink">{k.name}</span>
-        <span className="block text-[12px] leading-tight text-slate">
+        <span className="block whitespace-nowrap text-[13.5px] font-medium leading-tight text-ink">{k.name}</span>
+        <span className="block whitespace-nowrap text-[12px] leading-tight text-slate">
           {k.with} · {left} {k.left}
         </span>
       </span>
