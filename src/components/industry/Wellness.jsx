@@ -95,12 +95,11 @@ function DeskItem({ x, reduce }) {
   const care = x.tone === 'care';
   return (
     <motion.li
-      layout={!reduce}
+      layout={reduce ? false : 'position'}
       initial={reduce ? false : { opacity: 0, y: -14, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, transition: { duration: 0.25 } }}
       transition={{ duration: 0.7, ease: EASE }}
-      className="flex gap-3 rounded-[20px] bg-[#FFFDF8] p-3.5 shadow-[0_0_0_1px_rgba(10,15,14,0.05),0_14px_30px_-24px_rgba(60,40,20,0.5)] sm:gap-3.5 sm:p-4"
+      className="flex shrink-0 gap-3 rounded-[20px] bg-[#FFFDF8] p-3.5 shadow-[0_0_0_1px_rgba(10,15,14,0.05),0_14px_30px_-24px_rgba(60,40,20,0.5)] sm:gap-3.5 sm:p-4"
     >
       <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#F1EBE1] text-ink/70">
         <Icon className="h-4 w-4" strokeWidth={1.9} aria-hidden="true" />
@@ -133,7 +132,7 @@ export function WxDesk({ it }) {
   const t = useLoop(end, { active: inView && visible, still: reduce });
   const minute = Math.min(d.klass.minutes, t / MIN_MS);
   const shown = d.items.filter((x) => x.at <= minute);
-  const recent = shown.slice(-3).reverse();
+  const recent = shown.slice(-4).reverse(); // newest on top; the oldest slides out under the fade
 
   return (
     <section id="desk" data-nav-theme="light" aria-labelledby="wx-desk-title" className="section relative !pt-[clamp(48px,6vw,88px)]">
@@ -149,12 +148,10 @@ export function WxDesk({ it }) {
             <p className="pretty mt-4 max-w-[30em] text-[15px] leading-[1.6] text-graphite md:text-[16px]">{d.text}</p>
 
             {/* the latest three, newest on top; a fixed height so the column never jumps */}
-            <ul className="mt-6 grid h-[318px] content-start gap-2.5 overflow-hidden sm:h-[330px] lg:mt-8" aria-live="polite">
-              <AnimatePresence initial={false} mode="popLayout">
-                {recent.map((x) => (
-                  <DeskItem key={x.at} x={x} reduce={reduce} />
-                ))}
-              </AnimatePresence>
+            <ul className="mt-6 flex h-[318px] flex-col gap-2.5 overflow-hidden [mask-image:linear-gradient(to_bottom,#000_72%,transparent)] sm:h-[330px] lg:mt-8" aria-live="polite">
+              {recent.map((x) => (
+                <DeskItem key={x.at} x={x} reduce={reduce} />
+              ))}
             </ul>
             <p className="mt-4 flex items-center gap-2 text-[13px] font-medium text-ink">
               <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#2E9A58] text-white">
@@ -251,7 +248,7 @@ export function WxWeek({ it }) {
     <section id="week" data-nav-theme="light" aria-labelledby="wx-week-title" className="section relative pt-0">
       <div className="shell">
         <SectionHeader id="wx-week-title" titleA={w.titleA} titleB={w.titleB} text={w.text} layout="split" />
-        <div ref={ref} className="canvas relative mt-8 grid gap-6 overflow-hidden bg-white p-4 shadow-[0_0_0_1px_rgba(10,15,14,0.06)] xs:p-5 md:mt-12 md:p-8 lg:grid-cols-[minmax(0,1fr)_minmax(260px,320px)] lg:items-center lg:gap-12 lg:p-10">
+        <div ref={ref} className="canvas relative mt-8 grid gap-6 overflow-hidden bg-white p-4 shadow-[0_0_0_1px_rgba(10,15,14,0.06)] xs:p-5 md:mt-10 md:p-8 lg:grid-cols-[minmax(0,1fr)_240px] lg:items-center lg:gap-10 lg:px-10 lg:py-8 xl:grid-cols-[minmax(0,1fr)_260px] xl:gap-14">
           {/* the timetable: days across, times down (phones: the day of the current cancellation) */}
           <div className="min-w-0">
             <div className="flex gap-1.5 md:hidden" role="tablist" aria-label="Days">
@@ -282,7 +279,7 @@ export function WxWeek({ it }) {
               ))}
               {w.times.map((ti, r) => (
                 <React.Fragment key={ti}>
-                  <span className="t-data flex h-[60px] items-center text-[11px] text-ink/40 lg:h-[clamp(54px,calc((100svh_-_420px)/5),68px)]">{ti}</span>
+                  <span className="t-data flex h-[56px] items-center text-[11px] text-ink/40 [@media(max-height:760px)]:h-[48px]">{ti}</span>
                   {w.days.map((d, di) => {
                     const c = at(di, r);
                     return <div key={d}>{c ? <Slot c={c} state={stateOf(c)} reduce={reduce} /> : <span className="block h-full rounded-[14px] border border-dashed border-ink/[0.07]" />}</div>;
@@ -294,7 +291,7 @@ export function WxWeek({ it }) {
 
           {/* the member who took the spot, in an arch, and what just happened */}
           <div className="grid grid-cols-[96px_minmax(0,1fr)] items-center gap-4 lg:block">
-            <div className={cn('relative aspect-[3/4] w-full overflow-hidden bg-[#E9E1D4] lg:aspect-[4/5]', ARCH)}>
+            <div className={cn('relative aspect-[3/4] w-full overflow-hidden bg-[#E9E1D4] lg:aspect-[5/6] [@media(max-height:760px)]:lg:aspect-square', ARCH)}>
               <Clip film={w.film} active={inView && visible} className="object-[45%_40%]" />
             </div>
             <div className="min-w-0 lg:mt-5" aria-live="polite">
@@ -426,7 +423,7 @@ export function WxCycle({ it }) {
           </div>
 
           {/* the ring */}
-          <div className="relative mx-auto aspect-square w-full max-w-[300px] sm:max-w-[380px] lg:max-w-[min(480px,calc(100svh_-_220px))]">
+          <div className="relative mx-auto aspect-square w-full max-w-[300px] sm:max-w-[380px] lg:my-10 lg:max-w-[min(440px,calc(100svh_-_280px))]">
             <svg viewBox="0 0 100 100" className="absolute inset-0 h-full w-full -rotate-90" aria-hidden="true">
               <circle cx="50" cy="50" r={R} fill="none" stroke="rgba(10,15,14,0.1)" strokeWidth="0.5" />
               <circle cx="50" cy="50" r={R} fill="none" stroke="#F25C2A" strokeWidth="0.8" strokeLinecap="round" strokeDasharray={arc} strokeDashoffset={arc * (1 - k / n)} style={{ transition: reduce ? 'none' : 'stroke-dashoffset 1.6s cubic-bezier(0.65,0,0.35,1)' }} />
@@ -512,7 +509,7 @@ export function WxClinics({ it }) {
             const Icon = CLINIC_ICONS[k.icon];
             return (
               <Reveal key={k.key} delay={i * 0.08} className="flex gap-4 rounded-[28px] bg-white p-4 shadow-[0_0_0_1px_rgba(10,15,14,0.06)] md:block md:p-6">
-                <span className={cn('flex h-[88px] w-[64px] shrink-0 items-end justify-center pb-4 md:h-[132px] md:w-[96px] md:pb-6', ARCH, SAND)}>
+                <span className={cn('flex h-[80px] w-[64px] shrink-0 items-center justify-center pt-3 md:h-[112px] md:w-[88px] md:pt-5', ARCH, SAND)}>
                   <Icon className="h-6 w-6 text-[#D9481C] md:h-7 md:w-7" strokeWidth={1.5} aria-hidden="true" />
                 </span>
                 <span className="block min-w-0">
@@ -570,7 +567,7 @@ export function WxJournal({ it }) {
   return (
     <section id="journal" data-nav-theme="light" aria-labelledby="wx-journal-title" className="section relative pt-0">
       <div className="shell">
-        <div ref={ref} className={cn('canvas canvas-grain relative grid gap-8 overflow-hidden p-4 xs:p-5 md:p-8 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-center lg:gap-14 lg:p-10 xl:px-16', SAND)}>
+        <div ref={ref} className={cn('canvas canvas-grain relative grid gap-8 overflow-hidden p-4 xs:p-5 md:p-8 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-center lg:gap-14 lg:px-10 lg:py-8 xl:px-16', SAND)}>
           <div className="relative">
             <h2 id="wx-journal-title" className="text-[clamp(30px,3vw,46px)] font-medium leading-[1.06] tracking-[-0.025em] text-ink">
               {j.titleA} <span className="block">{j.titleB}</span>
@@ -582,7 +579,7 @@ export function WxJournal({ it }) {
           </div>
 
           {/* the letter */}
-          <article className="relative rounded-[6px] bg-[#FFFDF8] p-5 shadow-[0_1px_2px_rgba(60,40,20,0.08),0_40px_80px_-50px_rgba(60,40,20,0.55)] sm:p-7 lg:-rotate-[0.6deg] lg:p-9">
+          <article className="relative rounded-[6px] bg-[#FFFDF8] p-5 shadow-[0_1px_2px_rgba(60,40,20,0.08),0_40px_80px_-50px_rgba(60,40,20,0.55)] sm:p-7 lg:-rotate-[0.6deg] lg:px-8 lg:py-7">
             <header className="flex items-center justify-between gap-4 border-b border-ink/[0.08] pb-4">
               <span className="flex items-center gap-2.5">
                 <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.06)]">
@@ -592,10 +589,10 @@ export function WxJournal({ it }) {
               </span>
               <span className="t-data text-[11px] text-ink/40">{L.date}</span>
             </header>
-            <p className="mt-5 text-[19px] font-medium tracking-[-0.01em] text-ink sm:text-[21px]">{L.hello}</p>
+            <p className="mt-4 text-[19px] font-medium tracking-[-0.01em] text-ink sm:text-[21px]">{L.hello}</p>
             <p className="mt-1 text-[14.5px] text-graphite">{L.intro}</p>
 
-            <ul className="mt-5 grid gap-3">
+            <ul className="mt-4 grid gap-2.5">
               {L.lines.map((x, i) => {
                 const Icon = LETTER_ICONS[x.icon];
                 return (
@@ -613,7 +610,7 @@ export function WxJournal({ it }) {
             </ul>
 
             {/* the one goal this week */}
-            <div className="mt-6 grid gap-4 rounded-[18px] bg-[#F6F1E9] p-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end sm:p-5" style={line(L.lines.length)}>
+            <div className="mt-5 grid gap-4 rounded-[18px] bg-[#F6F1E9] p-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end sm:p-5" style={line(L.lines.length)}>
               <div className="min-w-0">
                 <p className="flex items-center gap-2">
                   <span className="rounded-full bg-ink px-2 py-0.5 text-[10.5px] font-medium uppercase tracking-[0.06em] text-white">{g.badge}</span>
@@ -625,7 +622,7 @@ export function WxJournal({ it }) {
               </div>
               {/* six weeks as columns, the goal as a line across */}
               <div className="relative flex h-[72px] w-[150px] items-end gap-2 self-center sm:self-end" aria-hidden="true">
-                <span className="absolute inset-x-0 border-t border-dashed border-[#B4471A]/50" style={{ bottom: (g.goal - 0.6) / 0.4 * 100 + '%' }} />
+                <span className="absolute inset-x-0 border-t border-dashed border-[#B4471A]/80" style={{ bottom: (g.goal - 0.6) / 0.4 * 100 + '%' }} />
                 {g.weeks.map((v, i) => (
                   <span
                     key={i}
@@ -636,7 +633,7 @@ export function WxJournal({ it }) {
               </div>
             </div>
 
-            <p className="mt-6 text-[14.5px] text-graphite" style={line(L.lines.length + 1)}>
+            <p className="mt-5 text-[14.5px] text-graphite" style={line(L.lines.length + 1)}>
               {L.sign}
               <span className="mt-0.5 block text-[16px] font-medium text-ink">{L.name}</span>
             </p>

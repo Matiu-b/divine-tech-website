@@ -145,12 +145,12 @@ export const wellness = {
     times: ['7:00', '9:30', '12:15', '18:00', '19:15'],
     // the timetable: [day, time, class, capacity]; a missing slot has no class
     classes: [
-      [0, 0, 'Reformer Flow', 12], [0, 2, 'Express', 10], [0, 3, 'Reformer Flow', 12], [0, 4, 'Yoga Flow', 16],
-      [1, 0, 'Barre', 14], [1, 1, 'Foundations', 8], [1, 3, 'Reformer Flow', 12], [1, 4, 'Restore', 16],
-      [2, 0, 'Reformer Flow', 12], [2, 2, 'Express', 10], [2, 3, 'Barre', 14], [2, 4, 'Yoga Flow', 16],
-      [3, 0, 'Barre', 14], [3, 1, 'Foundations', 8], [3, 3, 'Reformer Flow', 12], [3, 4, 'Restore', 16],
-      [4, 0, 'Reformer Flow', 12], [4, 2, 'Express', 10], [4, 3, 'Yoga Flow', 16],
-      [5, 1, 'Reformer Flow', 12], [5, 2, 'Foundations', 8],
+      [0, 0, 'Reformer', 12], [0, 2, 'Express', 10], [0, 3, 'Reformer', 12], [0, 4, 'Yoga', 16],
+      [1, 0, 'Barre', 14], [1, 1, 'Basics', 8], [1, 3, 'Reformer', 12], [1, 4, 'Restore', 16],
+      [2, 0, 'Reformer', 12], [2, 2, 'Express', 10], [2, 3, 'Barre', 14], [2, 4, 'Yoga', 16],
+      [3, 0, 'Barre', 14], [3, 1, 'Basics', 8], [3, 3, 'Reformer', 12], [3, 4, 'Restore', 16],
+      [4, 0, 'Reformer', 12], [4, 2, 'Express', 10], [4, 3, 'Yoga', 16],
+      [5, 1, 'Reformer', 12], [5, 2, 'Basics', 8],
     ],
     // the late cancellations, in order: which class, who cancelled, who took the spot, how fast
     events: [
@@ -209,7 +209,7 @@ export const wellness = {
   clinics: {
     eyebrow: 'Wellness clinics',
     titleA: 'Clinics too.',
-    titleB: 'The clinical line stays with you.',
+    titleB: 'Care stays with you.',
     text: 'Physiotherapy, massage and aesthetics practices run on the same calendar pressure. Aurora handles the desk; anything clinical goes to your team.',
     kinds: [
       { key: 'physio', name: 'Physiotherapy & chiropractic', icon: 'activity', does: ['Books first visits and follow-up series', 'Sends intake forms before the first visit', 'Reminds patients of their next session'] },
