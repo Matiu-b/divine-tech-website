@@ -80,12 +80,24 @@ export const launchFilm = {
   titleA: 'Meet Aurora.',
   titleB: 'In 90 seconds.',
   text: 'How Aurora connects to your systems, understands your business, and puts an agent on every team.',
-  label: 'Watch the film',
+  cta: 'See Aurora run a business',
+  label: 'Watch with sound',
   duration: '1:30',
   video: '/video/aurora-launch-film.mp4',
+  // 10 s silent loop of the busiest moments; plays muted while the section is on screen
+  teaser: '/video/aurora-launch-teaser.mp4',
   poster: '/img/film/aurora-launch-poster-1600.webp',
   posterSrcSet: '/img/film/aurora-launch-poster-960.webp 960w, /img/film/aurora-launch-poster-1600.webp 1600w',
-  alt: 'Aurora launch film: the Aurora logo and the line "The AI operating system for your business"',
+  alt: 'Aurora launch film: the agent map, with several AI agents working in every department',
+  // chapter chips under the player; t = seconds into the film
+  chapters: [
+    { label: 'Connect', t: 10 },
+    { label: 'Understand', t: 18 },
+    { label: 'Knowledge', t: 26 },
+    { label: 'Agents', t: 36 },
+    { label: 'Console', t: 54 },
+    { label: 'KPI Agent', t: 64 },
+  ],
 };
 
 // Hero film: the same request flow on four channels (illustrative scenarios,
