@@ -1,266 +1,326 @@
 {
- "note": "Media generated in Higgsfield for the Teams collage. The site-media workflow downloads each url, compresses it and commits the result to 'out'.",
- "items": [
-  {
-   "kind": "video",
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_093114_3bc73eed-d110-4a49-a8ea-af79f3491196.mp4",
-   "out": "public/media/teams/sales"
-  },
-  {
-   "kind": "video",
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_093115_bd836d35-4e15-47c3-b773-f9b04f02447d.mp4",
-   "out": "public/media/teams/service"
-  },
-  {
-   "kind": "video",
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_095032_39aa424e-2942-4aac-9aee-cea20b5f1e8d.mp4",
-   "out": "public/media/teams/internal"
-  },
-  {
-   "kind": "image",
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_094618_df09be87-2ee7-4532-babb-f8b60b6b069b.png",
-   "out": "public/media/teams/sales-object"
-  },
-  {
-   "kind": "image",
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_093120_be81e52b-a13f-465d-8d8a-2c2d89bd3ff5.png",
-   "out": "public/media/teams/service-object"
-  },
-  {
-   "kind": "image",
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_093122_13c7bcce-2d7d-48f3-9fdc-0bad66a5a329.png",
-   "out": "public/media/teams/internal-object"
-  },
-  {
-   "kind": "image",
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_121813_75871d4b-5936-4438-8889-7971e5493d49.png",
-   "out": "public/media/real-estate/hero"
-  },
-  {
-   "kind": "image",
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_121812_84e0ea26-00b0-4e32-badc-a9becb34d0b2.png",
-   "out": "public/media/real-estate/buyers"
-  },
-  {
-   "kind": "image",
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_121810_df339729-0fef-4a75-b2bd-d5dd353b5488.png",
-   "out": "public/media/real-estate/sellers"
-  },
-  {
-   "kind": "image",
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_121813_ca95ddd5-c7ae-46fe-a55c-2113109cdc53.png",
-   "out": "public/media/real-estate/showings"
-  },
-  {
-   "kind": "image",
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_121810_478c8e8e-30a5-4e97-8ba8-007222cbf8ef.png",
-   "out": "public/media/real-estate/past"
-  },
-  {
-   "kind": "image",
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_121811_f2919646-b135-4e36-866d-a827b0a3c2cc.png",
-   "out": "public/media/real-estate/keys"
-  },
-  {
-   "kind": "image",
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_121811_fd426286-c620-46b0-a564-1f5c526e801c.png",
-   "out": "public/media/real-estate/sign"
-  },
-  {
-   "kind": "image",
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_121813_944c1af8-f9da-4618-8315-d8a746cef004.png",
-   "out": "public/media/real-estate/lockbox"
-  },
-  {
-   "kind": "image",
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_121811_d0d6a68a-a4b4-4959-b5b9-621bae95a266.png",
-   "out": "public/media/real-estate/welcome"
-  },
-  {
-   "kind": "audio",
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_125754_23fe57b8-7691-46de-a5de-1fb21e5eee4d.mp3",
-   "out": "public/media/real-estate/call-c"
-  },
-  {
-   "kind": "image",
-   "widths": [
-    600,
-    900,
-    1200,
-    1600,
-    2000
-   ],
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_134649_a16d0f15-24b5-40f5-81e7-a9e6dbfa4b45.png",
-   "out": "public/media/real-estate/house-4"
-  },
-  {
-   "kind": "image",
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_145552_d5ab1271-0a48-45a2-be9f-2a3fd272e02a.png",
-   "out": "public/media/real-estate/listing-elm"
-  },
-  {
-   "kind": "image",
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_145552_80840e7d-5384-4fc9-82bf-4c959e286642.png",
-   "out": "public/media/real-estate/listing-birch"
-  },
-  {
-   "kind": "image",
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_145552_9894de06-417c-4f5b-9855-075d9b6bfe01.png",
-   "out": "public/media/real-estate/listing-oak"
-  },
-  {
-   "kind": "image",
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_145853_663f9916-2c51-4234-bf03-62d303fb1a1a.png",
-   "out": "public/media/real-estate/listing-willow"
-  },
-  {
-   "kind": "video",
-   "width": 900,
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_155612_1f141c6a-d102-4848-8f2a-210e5a10164e.mp4",
-   "out": "public/media/real-estate/emma-sofa"
-  },
-  {
-   "kind": "image",
-   "url": "https://www.google.com/s2/favicons?domain=followupboss.com&sz=128",
-   "out": "public/media/logos/followupboss",
-   "widths": [
-    96
-   ]
-  },
-  {
-   "kind": "image",
-   "url": "https://www.google.com/s2/favicons?domain=lofty.com&sz=128",
-   "out": "public/media/logos/lofty",
-   "widths": [
-    96
-   ]
-  },
-  {
-   "kind": "image",
-   "url": "https://www.google.com/s2/favicons?domain=boldtrail.com&sz=128",
-   "out": "public/media/logos/boldtrail",
-   "widths": [
-    96
-   ]
-  },
-  {
-   "kind": "image",
-   "url": "https://www.google.com/s2/favicons?domain=realtor.com&sz=128",
-   "out": "public/media/logos/realtor",
-   "widths": [
-    96
-   ]
-  },
-  {
-   "kind": "image",
-   "url": "https://www.google.com/s2/favicons?domain=homes.com&sz=128",
-   "out": "public/media/logos/homes",
-   "widths": [
-    96
-   ]
-  },
-  {
-   "kind": "image",
-   "url": "https://www.google.com/s2/favicons?domain=zillow.com&sz=128",
-   "out": "public/media/logos/zillow",
-   "widths": [
-    96
-   ]
-  },
-  {
-   "kind": "video",
-   "width": 900,
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_073238_c71a787d-8867-45c2-8e21-059f651f7233.mp4",
-   "out": "public/media/real-estate/emma-showing"
-  },
-  {
-   "kind": "video",
-   "width": 900,
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_073515_b1e97096-ab89-479c-88ff-cbf24621fcc9.mp4",
-   "out": "public/media/real-estate/emma-closing"
-  },
-  {
-   "kind": "audio",
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_080507_823b0f74-e519-4271-807a-971dfcbb27c6.mp3",
-   "out": "public/media/real-estate/emma-call-2"
-  },
-  {
-   "kind": "video",
-   "width": 900,
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_080720_18a0ad2e-977c-41f1-9c85-b611df0cb3ff.mp4",
-   "out": "public/media/real-estate/emma-desk"
-  },
-  {
-   "kind": "image",
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_125545_a5b34753-dc2c-450a-affb-eadb4222baff.png",
-   "out": "public/media/home-services/hero-b",
-   "widths": [
-    900,
-    1400,
-    2000
-   ]
-  },
-  {
-   "kind": "audio",
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_140337_1a045c5b-d1a7-45bf-a989-2050bac0a422.mp3",
-   "out": "public/media/home-services/call-customer-3"
-  },
-  {
-   "kind": "video",
-   "width": 1280,
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_162718_09fd5e09-1104-46e6-a5dd-5e2a4f72a482.mp4",
-   "out": "public/media/home-services/job-ac"
-  },
-  {
-   "kind": "video",
-   "width": 1280,
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_162718_ef668e94-02f4-4d00-b1f5-9b0fb23c0da1.mp4",
-   "out": "public/media/home-services/job-roof"
-  },
-  {
-   "kind": "video",
-   "width": 1280,
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_162718_88c234c8-fb87-41aa-94cf-963fe6917752.mp4",
-   "out": "public/media/home-services/job-heater"
-  },
-  {
-   "kind": "image",
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261019_071219_7c7fb58c-88fa-4d51-96ce-47b8c3cde6cb.png",
-   "out": "public/media/home-services/brief-dana",
-   "widths": [
-    900,
-    1400,
-    2000
-   ]
-  },
-  {
-   "kind": "video",
-   "width": 1280,
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261019_071329_05b6a0df-c127-4277-9c7e-7d2a0c891d8f.mp4",
-   "out": "public/media/home-services/brief-dana-loop"
-  },
-  {
-   "kind": "audio",
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261019_073615_043120ec-0b7d-4ebd-8e74-14aa2d93d37b.mp3",
-   "out": "public/media/home-services/call-brief-9"
-  },
-  {
-   "kind": "video",
-   "width": 960,
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261019_100151_1fea95e8-dc21-4067-b342-a3d46cb6e120.mp4",
-   "out": "public/media/outcomes/efficiency-2"
-  },
-  {
-   "kind": "video",
-   "width": 960,
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261019_101443_f35fb5bc-b946-44a9-917d-ab04b9b1dd52.mp4",
-   "out": "public/media/outcomes/profit-2"
-  },
-  {
-   "kind": "video",
-   "width": 960,
-   "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261019_105220_e71db567-2da9-493f-aaf3-5e2f5116c7b2.mp4",
-   "out": "public/media/outcomes/savings-van"
-  }
- ]
+  "note": "Media generated in Higgsfield for the Teams collage. The site-media workflow downloads each url, compresses it and commits the result to 'out'.",
+  "items": [
+    {
+      "kind": "video",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_093114_3bc73eed-d110-4a49-a8ea-af79f3491196.mp4",
+      "out": "public/media/teams/sales"
+    },
+    {
+      "kind": "video",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_093115_bd836d35-4e15-47c3-b773-f9b04f02447d.mp4",
+      "out": "public/media/teams/service"
+    },
+    {
+      "kind": "video",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_095032_39aa424e-2942-4aac-9aee-cea20b5f1e8d.mp4",
+      "out": "public/media/teams/internal"
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_094618_df09be87-2ee7-4532-babb-f8b60b6b069b.png",
+      "out": "public/media/teams/sales-object"
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_093120_be81e52b-a13f-465d-8d8a-2c2d89bd3ff5.png",
+      "out": "public/media/teams/service-object"
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_093122_13c7bcce-2d7d-48f3-9fdc-0bad66a5a329.png",
+      "out": "public/media/teams/internal-object"
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_121813_75871d4b-5936-4438-8889-7971e5493d49.png",
+      "out": "public/media/real-estate/hero"
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_121812_84e0ea26-00b0-4e32-badc-a9becb34d0b2.png",
+      "out": "public/media/real-estate/buyers"
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_121810_df339729-0fef-4a75-b2bd-d5dd353b5488.png",
+      "out": "public/media/real-estate/sellers"
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_121813_ca95ddd5-c7ae-46fe-a55c-2113109cdc53.png",
+      "out": "public/media/real-estate/showings"
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_121810_478c8e8e-30a5-4e97-8ba8-007222cbf8ef.png",
+      "out": "public/media/real-estate/past"
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_121811_f2919646-b135-4e36-866d-a827b0a3c2cc.png",
+      "out": "public/media/real-estate/keys"
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_121811_fd426286-c620-46b0-a564-1f5c526e801c.png",
+      "out": "public/media/real-estate/sign"
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_121813_944c1af8-f9da-4618-8315-d8a746cef004.png",
+      "out": "public/media/real-estate/lockbox"
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_121811_d0d6a68a-a4b4-4959-b5b9-621bae95a266.png",
+      "out": "public/media/real-estate/welcome"
+    },
+    {
+      "kind": "audio",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_125754_23fe57b8-7691-46de-a5de-1fb21e5eee4d.mp3",
+      "out": "public/media/real-estate/call-c"
+    },
+    {
+      "kind": "image",
+      "widths": [
+        600,
+        900,
+        1200,
+        1600,
+        2000
+      ],
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_134649_a16d0f15-24b5-40f5-81e7-a9e6dbfa4b45.png",
+      "out": "public/media/real-estate/house-4"
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_145552_d5ab1271-0a48-45a2-be9f-2a3fd272e02a.png",
+      "out": "public/media/real-estate/listing-elm"
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_145552_80840e7d-5384-4fc9-82bf-4c959e286642.png",
+      "out": "public/media/real-estate/listing-birch"
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_145552_9894de06-417c-4f5b-9855-075d9b6bfe01.png",
+      "out": "public/media/real-estate/listing-oak"
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_145853_663f9916-2c51-4234-bf03-62d303fb1a1a.png",
+      "out": "public/media/real-estate/listing-willow"
+    },
+    {
+      "kind": "video",
+      "width": 900,
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261014_155612_1f141c6a-d102-4848-8f2a-210e5a10164e.mp4",
+      "out": "public/media/real-estate/emma-sofa"
+    },
+    {
+      "kind": "image",
+      "url": "https://www.google.com/s2/favicons?domain=followupboss.com&sz=128",
+      "out": "public/media/logos/followupboss",
+      "widths": [
+        96
+      ]
+    },
+    {
+      "kind": "image",
+      "url": "https://www.google.com/s2/favicons?domain=lofty.com&sz=128",
+      "out": "public/media/logos/lofty",
+      "widths": [
+        96
+      ]
+    },
+    {
+      "kind": "image",
+      "url": "https://www.google.com/s2/favicons?domain=boldtrail.com&sz=128",
+      "out": "public/media/logos/boldtrail",
+      "widths": [
+        96
+      ]
+    },
+    {
+      "kind": "image",
+      "url": "https://www.google.com/s2/favicons?domain=realtor.com&sz=128",
+      "out": "public/media/logos/realtor",
+      "widths": [
+        96
+      ]
+    },
+    {
+      "kind": "image",
+      "url": "https://www.google.com/s2/favicons?domain=homes.com&sz=128",
+      "out": "public/media/logos/homes",
+      "widths": [
+        96
+      ]
+    },
+    {
+      "kind": "image",
+      "url": "https://www.google.com/s2/favicons?domain=zillow.com&sz=128",
+      "out": "public/media/logos/zillow",
+      "widths": [
+        96
+      ]
+    },
+    {
+      "kind": "video",
+      "width": 900,
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_073238_c71a787d-8867-45c2-8e21-059f651f7233.mp4",
+      "out": "public/media/real-estate/emma-showing"
+    },
+    {
+      "kind": "video",
+      "width": 900,
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_073515_b1e97096-ab89-479c-88ff-cbf24621fcc9.mp4",
+      "out": "public/media/real-estate/emma-closing"
+    },
+    {
+      "kind": "audio",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_080507_823b0f74-e519-4271-807a-971dfcbb27c6.mp3",
+      "out": "public/media/real-estate/emma-call-2"
+    },
+    {
+      "kind": "video",
+      "width": 900,
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_080720_18a0ad2e-977c-41f1-9c85-b611df0cb3ff.mp4",
+      "out": "public/media/real-estate/emma-desk"
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_125545_a5b34753-dc2c-450a-affb-eadb4222baff.png",
+      "out": "public/media/home-services/hero-b",
+      "widths": [
+        900,
+        1400,
+        2000
+      ]
+    },
+    {
+      "kind": "audio",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_140337_1a045c5b-d1a7-45bf-a989-2050bac0a422.mp3",
+      "out": "public/media/home-services/call-customer-3"
+    },
+    {
+      "kind": "video",
+      "width": 1280,
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_162718_09fd5e09-1104-46e6-a5dd-5e2a4f72a482.mp4",
+      "out": "public/media/home-services/job-ac"
+    },
+    {
+      "kind": "video",
+      "width": 1280,
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_162718_ef668e94-02f4-4d00-b1f5-9b0fb23c0da1.mp4",
+      "out": "public/media/home-services/job-roof"
+    },
+    {
+      "kind": "video",
+      "width": 1280,
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261018_162718_88c234c8-fb87-41aa-94cf-963fe6917752.mp4",
+      "out": "public/media/home-services/job-heater"
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261019_071219_7c7fb58c-88fa-4d51-96ce-47b8c3cde6cb.png",
+      "out": "public/media/home-services/brief-dana",
+      "widths": [
+        900,
+        1400,
+        2000
+      ]
+    },
+    {
+      "kind": "video",
+      "width": 1280,
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261019_071329_05b6a0df-c127-4277-9c7e-7d2a0c891d8f.mp4",
+      "out": "public/media/home-services/brief-dana-loop"
+    },
+    {
+      "kind": "audio",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261019_073615_043120ec-0b7d-4ebd-8e74-14aa2d93d37b.mp3",
+      "out": "public/media/home-services/call-brief-9"
+    },
+    {
+      "kind": "video",
+      "width": 960,
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261019_100151_1fea95e8-dc21-4067-b342-a3d46cb6e120.mp4",
+      "out": "public/media/outcomes/efficiency-2"
+    },
+    {
+      "kind": "video",
+      "width": 960,
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261019_101443_f35fb5bc-b946-44a9-917d-ab04b9b1dd52.mp4",
+      "out": "public/media/outcomes/profit-2"
+    },
+    {
+      "kind": "video",
+      "width": 960,
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261019_105220_e71db567-2da9-493f-aaf3-5e2f5116c7b2.mp4",
+      "out": "public/media/outcomes/savings-van"
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261020_091535_7244d053-7f05-4062-be0f-86b37efb9edb.png",
+      "out": "public/media/wellness/chloe-ref",
+      "widths": [
+        900,
+        1400,
+        2000
+      ]
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261020_091535_1cd52f66-2319-4c1e-a0dc-2b35a9eded73.png",
+      "out": "public/media/wellness/studio-night",
+      "widths": [
+        900,
+        1400,
+        2000
+      ]
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261020_091700_1c2f0201-f651-4982-809e-5a81063e7c9d.png",
+      "out": "public/media/wellness/chloe-dawn",
+      "widths": [
+        900,
+        1400,
+        2000
+      ]
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261020_091700_67d0048f-4037-4985-8df7-a473ec4dc9ee.png",
+      "out": "public/media/wellness/chloe-desk",
+      "widths": [
+        900,
+        1400,
+        2000
+      ]
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261020_091700_cd53adba-9e34-44f5-9cff-fc4b5701f78b.png",
+      "out": "public/media/wellness/chloe-class",
+      "widths": [
+        900,
+        1400,
+        2000
+      ]
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261020_091702_205b33e2-e023-4c83-9b69-214849d1f99b.png",
+      "out": "public/media/wellness/chloe-friend",
+      "widths": [
+        900,
+        1400,
+        2000
+      ]
+    }
+  ]
 }
