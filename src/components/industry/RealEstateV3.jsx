@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, m as motion, useReducedMotion } from 'framer-motion';
-import { ArrowUp, CalendarCheck, Check, ChevronLeft, ChevronRight, CircleDollarSign, Database, Hand, Pause, Play, Scale, Volume2, Send, Clock, House, BellOff, Hourglass, ShieldCheck, User, ArrowRight, TrendingUp, Heart, MessageSquareText, MessagesSquare, Plus, PhoneOutgoing } from 'lucide-react';
+import { ArrowUp, CalendarCheck, Check, ChevronLeft, ChevronRight, CircleDollarSign, Database, Hand, Pause, Play, Scale, Volume2, Send, Clock, House, BellOff, Hourglass, ShieldCheck, User, ArrowRight, TrendingUp, Heart, MessageSquareText, MessagesSquare, Plus, PhoneOutgoing, HeartPulse, CalendarClock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import CTAButton from '@/components/home-v2/primitives/CTAButton';
 import SectionHeader from '@/components/home-v2/primitives/SectionHeader';
@@ -133,10 +133,12 @@ function CallStage({ h, header }) {
         <div
           className={cn(
             'relative flex flex-col min-[560px]:overflow-hidden min-[560px]:rounded-[28px] min-[560px]:shadow-[0_40px_80px_-48px_rgba(30,30,60,0.55)]',
-            'min-[560px]:bg-[linear-gradient(180deg,rgba(22,34,72,0.45),rgba(22,34,72,0)_220px),linear-gradient(90deg,#396299,#4e72aa_20%,#4e6ea8_40%,#536ea7_60%,#6371a8_80%,#737aac)]',
+            f.sky ? '' : 'min-[560px]:bg-[linear-gradient(180deg,rgba(22,34,72,0.45),rgba(22,34,72,0)_220px),linear-gradient(90deg,#396299,#4e72aa_20%,#4e6ea8_40%,#536ea7_60%,#6371a8_80%,#737aac)]',
             'lg:h-[clamp(600px,calc(100svh_-_var(--nav-h)_-_40px),860px)]'
           )}
+          style={f.sky ? /** @type {any} */ ({ '--sky': f.sky }) : undefined}
         >
+          {f.sky ? <div aria-hidden="true" className="pointer-events-none absolute inset-0 hidden [background:var(--sky)] min-[560px]:block" /> : null}
           {/* a soft shade under the header and along the bottom edge */}
           <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[1] hidden bg-[linear-gradient(180deg,rgba(16,22,46,0.38)_0%,rgba(16,22,46,0)_42%,rgba(16,22,46,0)_72%,rgba(16,22,46,0.3)_100%)] min-[560px]:block" />
           <div className="relative z-[2] min-[560px]:px-7 min-[560px]:pt-7 sm:px-8 sm:pt-8 lg:pr-[calc(var(--card-w)_+_72px)] lg:[@media(max-height:760px)]:pt-6">{header}</div>
@@ -149,11 +151,12 @@ function CallStage({ h, header }) {
               sizes="(min-width: 1440px) 1376px, 100vw"
               alt={f.video ? '' : f.alt}
               className="absolute inset-0 h-full w-full object-cover object-[30%_50%] motion-safe:animate-[intro-fade_0.9s_cubic-bezier(0.22,1,0.36,1)_0.2s_both] min-[560px]:inset-auto min-[560px]:left-0 min-[560px]:top-[-9.16cqw] min-[560px]:h-[calc(100%_+_9.16cqw)] min-[560px]:min-h-[55.87cqw] min-[560px]:object-[30%_0%] min-[560px]:[mask-image:linear-gradient(to_bottom,transparent,#000_7%)]"
+              style={f.mirror ? { transform: 'scaleX(-1)' } : undefined}
               decoding="async"
               fetchpriority="high"
             />
             {wantVideo && f.video ? (
-              <video ref={videoRef} src={f.video} poster={f.poster} muted loop playsInline preload="auto" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover object-[30%_50%] motion-safe:animate-[intro-fade_0.9s_cubic-bezier(0.22,1,0.36,1)_0.2s_both] min-[560px]:inset-auto min-[560px]:left-0 min-[560px]:top-[-9.16cqw] min-[560px]:h-[calc(100%_+_9.16cqw)] min-[560px]:min-h-[55.87cqw] min-[560px]:object-[30%_0%] min-[560px]:[mask-image:linear-gradient(to_bottom,transparent,#000_7%)]" />
+              <video ref={videoRef} src={f.video} poster={f.poster} muted loop playsInline preload="auto" aria-hidden="true" style={f.mirror ? { transform: 'scaleX(-1)' } : undefined} className="absolute inset-0 h-full w-full object-cover object-[30%_50%] motion-safe:animate-[intro-fade_0.9s_cubic-bezier(0.22,1,0.36,1)_0.2s_both] min-[560px]:inset-auto min-[560px]:left-0 min-[560px]:top-[-9.16cqw] min-[560px]:h-[calc(100%_+_9.16cqw)] min-[560px]:min-h-[55.87cqw] min-[560px]:object-[30%_0%] min-[560px]:[mask-image:linear-gradient(to_bottom,transparent,#000_7%)]" />
             ) : null}
             {f.video ? <span className="sr-only">{f.alt}</span> : null}
             <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(20,24,40,0.25)_0%,rgba(20,24,40,0)_30%,rgba(20,24,40,0)_60%,rgba(20,24,40,0.35)_100%)] min-[560px]:hidden" />
@@ -292,8 +295,8 @@ export function RxHero({ it }) {
                   <CTAButton size="lg" onClick={open} className="max-sm:h-12 max-sm:px-3.5 max-sm:text-[14px] max-sm:[&_.btn-arrow]:hidden lg:h-12 lg:px-5 lg:text-[15px] lg:[@media(max-height:760px)]:h-11">
                     Book a demo
                   </CTAButton>
-                  <CTAButton size="lg" variant="glass" href="#race" arrow={false} onClick={(e) => onAnchorClick(e, '#race')} className="max-sm:h-12 max-sm:px-3.5 max-sm:text-[14px] max-sm:[&_.btn-arrow]:hidden lg:h-12 lg:px-5 lg:text-[15px] lg:[@media(max-height:760px)]:h-11">
-                    Why speed wins
+                  <CTAButton size="lg" variant="glass" href={h.more ? h.more.href : '#race'} arrow={false} onClick={(e) => onAnchorClick(e, h.more ? h.more.href : '#race')} className="max-sm:h-12 max-sm:px-3.5 max-sm:text-[14px] max-sm:[&_.btn-arrow]:hidden lg:h-12 lg:px-5 lg:text-[15px] lg:[@media(max-height:760px)]:h-11">
+                    {h.more ? h.more.label : 'Why speed wins'}
                   </CTAButton>
                 </div>
               </div>
@@ -311,7 +314,7 @@ export function RxHero({ it }) {
  * Aurora, which answers in seconds while its CRM fills in. She reads and types at a person's pace;
  * Aurora replies quickly.
  */
-const typeMs = (text, min = 600, max = 1600) => Math.min(max, Math.max(min, text.length * 34));
+export const typeMs = (text, min = 600, max = 1600) => Math.min(max, Math.max(min, text.length * 34));
 
 // Her first message to the brokerage with Aurora lands at exactly this moment: the clip of her on the
 // sofa runs until then, and the CRM opens with the new lead.
@@ -397,7 +400,7 @@ function clockOf(p, T, t) {
 }
 
 /** A clock for timed scenes: runs while `active`, loops at `end`, and holds the last frame when `still`. */
-function useLoop(end, { active, still }) {
+export function useLoop(end, { active, still }) {
   const [t, setT] = useState(still ? end : 0);
   const now = useRef(t);
   useEffect(() => {
@@ -428,7 +431,7 @@ function useLoop(end, { active, still }) {
   return t;
 }
 
-function Dots({ className = '' }) {
+export function Dots({ className = '' }) {
   return (
     <span className={cn('inline-flex items-center gap-[3px]', className)} aria-label="typing">
       {[0, 1, 2].map((i) => (
@@ -438,7 +441,7 @@ function Dots({ className = '' }) {
   );
 }
 
-function Avatar({ initials, aurora = false, size = 'h-10 w-10' }) {
+export function Avatar({ initials, aurora = false, size = 'h-10 w-10' }) {
   return (
     <span className={cn('flex shrink-0 items-center justify-center rounded-full text-[12.5px] font-medium', size, aurora ? 'bg-ink' : 'bg-[linear-gradient(140deg,#E9E4DA,#D9D2C4)] text-ink/70')}>
       {aurora ? <img src="/brand/aurora-symbol-color.svg" alt="" width="20" height="20" className="h-1/2 w-1/2" /> : initials}
@@ -525,7 +528,7 @@ function Listing({ p, l, tap, t, reduce }) {
 }
 
 /** The message field at the bottom of a thread; shows her text as she types it. */
-function Composer({ p, text, from, to, t }) {
+export function Composer({ p, text, from, to, t }) {
   const typing = text && t >= from && t < to;
   const shown = typing ? text.slice(0, Math.max(1, Math.round(((t - from) / (to - from)) * text.length))) : '';
   return (
@@ -547,7 +550,7 @@ function Composer({ p, text, from, to, t }) {
   );
 }
 
-function Bubble({ m, reduce, note = null }) {
+export function Bubble({ m, reduce, note = null }) {
   const mine = m.who === 'buyer';
   return (
     <motion.div
@@ -576,7 +579,7 @@ function Bubble({ m, reduce, note = null }) {
   );
 }
 
-function ThreadHeader({ name, sub, initials, aurora }) {
+export function ThreadHeader({ name, sub, initials, aurora }) {
   return (
     <div className="flex items-center gap-2.5 border-b border-ink/[0.07] px-3 pb-2.5 pt-1">
       <ChevronLeft className="h-5 w-5 text-[#0A84FF]" strokeWidth={2.2} aria-hidden="true" />
@@ -589,7 +592,7 @@ function ThreadHeader({ name, sub, initials, aurora }) {
   );
 }
 
-const MESSAGES = 'flex min-h-0 flex-1 flex-col justify-end gap-1.5 overflow-hidden px-3 pb-2 [mask-image:linear-gradient(to_bottom,transparent,#000_12%)]';
+export const MESSAGES = 'flex min-h-0 flex-1 flex-col justify-end gap-1.5 overflow-hidden px-3 pb-2 [mask-image:linear-gradient(to_bottom,transparent,#000_12%)]';
 
 /** Her message to a listing agent: typed, sent, delivered, and then nothing. */
 function AgentThread({ p, T, i, t, reduce }) {
@@ -791,7 +794,7 @@ function SofaClip({ film, T, t, reduce, active, small = false }) {
  * Where the evening is: one segment per step, filling as the step plays (like stories). The steps where Aurora is
  * at work fill in her orange.
  */
-function StepBars({ steps, T, t, className = '' }) {
+export function StepBars({ steps, T, t, className = '', auroraFrom = 3 }) {
   return (
     <div className={cn('flex w-full gap-1.5', className)} aria-hidden="true">
       {steps.map((x, i) => {
@@ -801,7 +804,7 @@ function StepBars({ steps, T, t, className = '' }) {
         return (
           <span key={x.title} className="relative h-[3px] flex-1 overflow-hidden rounded-full bg-ink/[0.09]">
             <span
-              className={cn('absolute inset-y-0 left-0 rounded-full', i >= 3 ? 'bg-[linear-gradient(90deg,#FF8A3D,#F25C2A)]' : 'bg-ink/80')}
+              className={cn('absolute inset-y-0 left-0 rounded-full', i >= auroraFrom ? 'bg-[linear-gradient(90deg,#FF8A3D,#F25C2A)]' : 'bg-ink/80')}
               style={{ width: f * 100 + '%' }}
             />
           </span>
@@ -817,7 +820,7 @@ const STEP_ICONS = [Send, Clock, House, null, CalendarCheck];
  * Wide screens: the evening as an activity log under the headline, the way a brokerage would read it. Each event has
  * an icon on a line that fills as the event plays; the current one opens with its detail. Aurora's events are orange.
  */
-function StepTimeline({ steps, T, t, step, reduce }) {
+export function StepTimeline({ steps, T, t, step, reduce, icons = STEP_ICONS, auroraFrom = 3 }) {
   return (
     <ol className="grid" aria-live="polite">
       {steps.map((x, i) => {
@@ -826,8 +829,8 @@ function StepTimeline({ steps, T, t, step, reduce }) {
         const f = Math.min(1, Math.max(0, (t - from) / Math.max(1, to - from)));
         const cur = i === step;
         const past = i < step;
-        const aurora = i >= 3;
-        const Icon = STEP_ICONS[i];
+        const aurora = i >= auroraFrom;
+        const Icon = icons[i];
         const last = i === steps.length - 1;
         return (
           <li key={x.title} className="grid grid-cols-[30px_minmax(0,1fr)] gap-x-3.5" aria-current={cur ? 'step' : undefined}>
@@ -853,7 +856,7 @@ function StepTimeline({ steps, T, t, step, reduce }) {
               </span>
               {last ? null : (
                 <span className="relative my-1 w-[2px] flex-1 overflow-hidden rounded-full bg-ink/[0.09]">
-                  <span className={cn('absolute inset-x-0 top-0 rounded-full', aurora || i === 2 ? 'bg-[linear-gradient(180deg,#FF8A3D,#F25C2A)]' : 'bg-ink/60')} style={{ height: f * 100 + '%' }} />
+                  <span className={cn('absolute inset-x-0 top-0 rounded-full', aurora || i === auroraFrom - 1 ? 'bg-[linear-gradient(180deg,#FF8A3D,#F25C2A)]' : 'bg-ink/60')} style={{ height: f * 100 + '%' }} />
                 </span>
               )}
             </span>
@@ -999,7 +1002,7 @@ export function RxRace({ it }) {
   );
 }
 
-const RULE_ICONS = { price: CircleDollarSign, fair: Scale, stop: BellOff, handoff: Hand };
+const RULE_ICONS = { price: CircleDollarSign, fair: Scale, stop: BellOff, handoff: Hand, health: HeartPulse, pause: CalendarClock };
 const TONES = {
   ok: { icon: Check, cls: 'bg-[#E4F4E8] text-[#2E7A48]' },
   wait: { icon: Hourglass, cls: 'bg-[#FFF1E4] text-[#B4471A]' },
@@ -1641,7 +1644,7 @@ export function RxAfter({ it }) {
                 <span className="block text-[12.5px] leading-snug text-slate">{a.lead.intro}</span>
               </span>
             </p>
-            <ol className="relative grid" style={{ gridTemplateColumns: `repeat(${n}, minmax(0, 1fr))` }} aria-label="Emma’s journey">
+            <ol className="relative grid" style={{ gridTemplateColumns: `repeat(${n}, minmax(0, 1fr))` }} aria-label={a.lead.name.split(' ')[0] + '’s journey'}>
               <span aria-hidden="true" className="absolute top-[13px] h-px bg-ink/15" style={{ left: `${50 / n}%`, right: `${50 / n}%` }} />
               {a.steps.map((x, i) => {
                 const cur = i === k;

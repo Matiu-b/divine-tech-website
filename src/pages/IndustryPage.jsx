@@ -22,6 +22,7 @@ import LiveSteps from '@/components/home-v2/LiveSteps';
 import { HsClosing, HsHero } from '@/components/industry/HomeServices';
 import { hsField, hsHear, hsLive } from '@/data/homeServices';
 import { RxAfter, RxClosing, RxHero, RxKpi, RxRace, RxRules, RxStack, RxFaqMore } from '@/components/industry/RealEstateV3';
+import { WxClosing, WxWaitlist } from '@/components/industry/Wellness';
 
 /** @param {any} props */
 function IndustryHero({ it }) {
@@ -284,14 +285,15 @@ export default function IndustryPage() {
     return (
       <SiteLayout key={it.slug} industry={it.leadIndustry} meta={it.meta}>
         <RxHero it={it} />
-        <RxRace it={it} />
+        {it.v3.race ? <RxRace it={it} /> : null}
+        {it.v3.waitlist ? <WxWaitlist it={it} /> : null}
         <RxRules it={it} />
         {it.v3.after ? <RxAfter it={it} /> : null}
         {it.v3.after ? <RxKpi it={it} /> : null}
         {it.v3.stack ? <RxStack it={it} /> : null}
         <Faq id="ind-faq-title" items={it.faq} visible={it.faqVisible || 0} className="pt-0" more={it.v3.faqMore ? <RxFaqMore m={it.v3.faqMore} guide={it.article ? postPath(it.article) : null} /> : null} />
         <OtherIndustries it={it} />
-        {it.v3.closing ? <RxClosing it={it} /> : <FinalCTA industry={it.leadIndustry} />}
+        {it.v3.closing ? it.v3.closing.art === 'studio' ? <WxClosing it={it} /> : <RxClosing it={it} /> : <FinalCTA industry={it.leadIndustry} />}
       </SiteLayout>
     );
   }
