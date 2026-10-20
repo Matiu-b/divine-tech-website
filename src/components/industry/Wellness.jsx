@@ -137,39 +137,40 @@ export function WxDesk({ it }) {
   return (
     <section id="desk" data-nav-theme="light" aria-labelledby="wx-desk-title" className="section relative !pt-[clamp(48px,6vw,88px)]">
       <div className="shell">
-        <div ref={ref} className={cn('canvas canvas-grain relative grid gap-6 overflow-hidden p-4 xs:p-5 md:p-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1fr)] lg:items-center lg:gap-14 lg:p-10 xl:gap-20 xl:px-16', SAND)}>
+        <div ref={ref} className={cn('canvas canvas-grain relative grid gap-6 overflow-hidden p-4 xs:p-5 md:p-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1fr)] lg:gap-x-14 lg:gap-y-8 lg:p-10 xl:gap-x-20 xl:px-16', SAND)}>
           <div aria-hidden="true" className="pointer-events-none absolute left-[-8%] top-[-20%] h-[70%] w-[45%] rounded-full bg-[radial-gradient(closest-side,rgba(255,214,170,0.6),rgba(255,214,170,0))] blur-2xl" />
 
-          {/* the headline: first on phones, beside the arch on laptops */}
-          <div className="relative lg:col-start-2 lg:row-start-1">
+          {/* phones: headline, the class, then the desk. Laptops: the class in an arch on the left, the rest beside it */}
+          <div className="relative lg:col-start-2 lg:row-start-1 lg:self-end">
             <h2 id="wx-desk-title" className="text-[clamp(30px,3vw,46px)] font-medium leading-[1.06] tracking-[-0.025em] text-ink">
               {d.titleA} <span className="block">{d.titleB}</span>
             </h2>
             <p className="pretty mt-4 max-w-[30em] text-[15px] leading-[1.6] text-graphite md:text-[16px]">{d.text}</p>
+          </div>
 
-            {/* the latest three, newest on top; a fixed height so the column never jumps */}
-            <ul className="mt-6 flex h-[318px] flex-col gap-2.5 overflow-hidden [mask-image:linear-gradient(to_bottom,#000_72%,transparent)] sm:h-[330px] lg:mt-8" aria-live="polite">
+          <div className="relative pb-4 lg:col-start-1 lg:row-span-2 lg:row-start-1 lg:pb-0">
+            <div className={cn('relative mx-auto aspect-[5/4] w-full max-w-[460px] overflow-hidden bg-[#E9E1D4] shadow-[0_40px_80px_-50px_rgba(60,40,20,0.6)] sm:aspect-[4/5] lg:aspect-auto lg:h-[clamp(440px,calc(100svh_-_220px),600px)]', ARCH)}>
+              <Clip film={d.film} active={inView && visible} className="object-[38%_50%]" />
+              <span className="sr-only">{d.film.alt}</span>
+            </div>
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 sm:left-4 sm:translate-x-0 lg:-left-4 lg:bottom-8">
+              <ClassRing k={d.klass} minute={minute} reduce={reduce} />
+            </div>
+          </div>
+
+          {/* the latest few, newest on top; a fixed height so the column never jumps */}
+          <div className="relative lg:col-start-2 lg:row-start-2 lg:self-start">
+            <ul className="flex h-[222px] flex-col gap-2.5 overflow-hidden [mask-image:linear-gradient(to_bottom,#000_72%,transparent)] sm:h-[330px]" aria-live="polite">
               {recent.map((x) => (
                 <DeskItem key={x.at} x={x} reduce={reduce} />
               ))}
             </ul>
             <p className="mt-4 flex items-center gap-2 text-[13px] font-medium text-ink">
-              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#2E9A58] text-white">
+              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#2E9A58] text-white">
                 <Check className="h-3 w-3" strokeWidth={3} aria-hidden="true" />
               </span>
               {d.tally.replace('{n}', String(shown.length))}
             </p>
-          </div>
-
-          {/* the class, in an arch, with its clock */}
-          <div className="relative lg:col-start-1 lg:row-start-1">
-            <div className={cn('relative mx-auto aspect-[4/5] w-full max-w-[460px] overflow-hidden bg-[#E9E1D4] shadow-[0_40px_80px_-50px_rgba(60,40,20,0.6)] lg:aspect-auto lg:h-[clamp(440px,calc(100svh_-_220px),600px)]', ARCH)}>
-              <Clip film={d.film} active={inView && visible} className="object-[38%_50%]" />
-              <span className="sr-only">{d.film.alt}</span>
-            </div>
-            <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 sm:left-4 sm:translate-x-0 lg:-left-4 lg:bottom-8">
-              <ClassRing k={d.klass} minute={minute} reduce={reduce} />
-            </div>
           </div>
         </div>
         <p className="mt-4 text-[12px] text-slate">{d.note}</p>
@@ -262,7 +263,7 @@ export function WxWeek({ it }) {
               {w.times.map((ti, r) => {
                 const c = at(ev.day, r);
                 return (
-                  <div key={ti} className="grid h-[52px] grid-cols-[48px_minmax(0,1fr)] items-center gap-2">
+                  <div key={ti} className="grid h-[46px] grid-cols-[48px_minmax(0,1fr)] items-center gap-2">
                     <span className="t-data text-[11px] text-ink/40">{ti}</span>
                     {c ? <Slot c={c} state={stateOf(c)} reduce={reduce} /> : <span className="h-full rounded-[14px] border border-dashed border-ink/[0.07]" />}
                   </div>
@@ -376,18 +377,20 @@ export function WxCycle({ it }) {
   return (
     <section id="cycle" data-nav-theme="light" aria-labelledby="wx-cycle-title" className="section relative pt-0">
       <div className="shell">
-        <div ref={ref} className={cn('canvas canvas-grain relative grid gap-8 overflow-hidden p-4 xs:p-5 md:p-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:items-center lg:gap-14 lg:p-10 xl:px-16', SAND)}>
+        <div ref={ref} className={cn('canvas canvas-grain relative grid gap-8 overflow-hidden p-4 xs:p-5 md:p-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-x-14 lg:gap-y-8 lg:p-10 xl:px-16', SAND)}>
           <div aria-hidden="true" className="pointer-events-none absolute right-[-6%] top-[-18%] h-[70%] w-[45%] rounded-full bg-[radial-gradient(closest-side,rgba(255,214,170,0.55),rgba(255,214,170,0))] blur-2xl" />
 
-          {/* the headline and the stage in words */}
-          <div className="relative min-w-0">
+          {/* phones: headline, the ring, then the stage in words. Laptops: words on the left, the ring on the right */}
+          <div className="relative min-w-0 lg:col-start-1 lg:row-start-1 lg:self-end">
             <h2 id="wx-cycle-title" className="text-[clamp(30px,3vw,46px)] font-medium leading-[1.06] tracking-[-0.025em] text-ink">
               {cy.titleA} <span className="block">{cy.titleB}</span>
             </h2>
             <p className="pretty mt-4 max-w-[30em] text-[15px] leading-[1.6] text-graphite md:text-[16px]">{cy.text}</p>
+          </div>
 
+          <div className="relative min-w-0 lg:col-start-1 lg:row-start-2 lg:self-start">
             {/* phones and tablets: the stages as chips (laptops click the ring) */}
-            <div className="mt-6 grid grid-cols-4 gap-1.5 lg:hidden">
+            <div className="grid grid-cols-4 gap-1.5 lg:hidden">
               {cy.stages.map((x, i) => (
                 <button key={x.key} type="button" onClick={() => go(i)} aria-pressed={i === k} className={cn('rounded-full px-1 py-1.5 text-[11.5px] font-medium leading-tight transition-colors', i === k ? 'bg-ink text-white' : 'bg-white/70 text-ink/60')}>
                   {x.name.split(',')[0]}
@@ -395,7 +398,7 @@ export function WxCycle({ it }) {
               ))}
             </div>
 
-            <div className="mt-6 min-h-[236px] lg:mt-9" aria-live="polite">
+            <div className="mt-5 min-h-[214px] lg:mt-0 lg:min-h-[236px]" aria-live="polite">
               <AnimatePresence mode="wait" initial={false}>
                 <motion.div key={k} initial={reduce ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6, transition: { duration: 0.2 } }} transition={{ duration: 0.55, ease: EASE }}>
                   <p className="t-data text-[11px] uppercase tracking-[0.08em] text-[#B4471A]">
@@ -423,7 +426,7 @@ export function WxCycle({ it }) {
           </div>
 
           {/* the ring */}
-          <div className="relative mx-auto aspect-square w-full max-w-[300px] sm:max-w-[380px] lg:my-10 lg:max-w-[min(440px,calc(100svh_-_280px))]">
+          <div className="relative mx-auto aspect-square w-full max-w-[240px] sm:max-w-[340px] lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:my-10 lg:max-w-[min(440px,calc(100svh_-_280px))] lg:self-center">
             <svg viewBox="0 0 100 100" className="absolute inset-0 h-full w-full -rotate-90" aria-hidden="true">
               <circle cx="50" cy="50" r={R} fill="none" stroke="rgba(10,15,14,0.1)" strokeWidth="0.5" />
               <circle cx="50" cy="50" r={R} fill="none" stroke="#F25C2A" strokeWidth="0.8" strokeLinecap="round" strokeDasharray={arc} strokeDashoffset={arc * (1 - k / n)} style={{ transition: reduce ? 'none' : 'stroke-dashoffset 1.6s cubic-bezier(0.65,0,0.35,1)' }} />
@@ -504,16 +507,16 @@ export function WxClinics({ it }) {
     <section id="clinics" data-nav-theme="light" aria-labelledby="wx-clinics-title" className="section relative pt-0">
       <div className="shell">
         <SectionHeader id="wx-clinics-title" titleA={c.titleA} titleB={c.titleB} text={c.text} layout="split" />
-        <div className="mt-8 grid gap-3 md:mt-12 md:grid-cols-3 md:gap-5">
+        <div className="no-scrollbar mx-[calc(-1*var(--gutter))] mt-8 flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-px-[var(--gutter)] px-[var(--gutter)] md:mx-0 md:mt-12 md:grid md:grid-cols-3 md:gap-5 md:overflow-visible md:px-0">
           {c.kinds.map((k, i) => {
             const Icon = CLINIC_ICONS[k.icon];
             return (
-              <Reveal key={k.key} delay={i * 0.08} className="flex gap-4 rounded-[28px] bg-white p-4 shadow-[0_0_0_1px_rgba(10,15,14,0.06)] md:block md:p-6">
-                <span className={cn('flex h-[80px] w-[64px] shrink-0 items-center justify-center pt-3 md:h-[112px] md:w-[88px] md:pt-5', ARCH, SAND)}>
+              <Reveal key={k.key} delay={i * 0.08} className="w-[84%] shrink-0 snap-start rounded-[28px] bg-white p-5 shadow-[0_0_0_1px_rgba(10,15,14,0.06)] md:w-auto md:p-6">
+                <span className={cn('flex h-[84px] w-[66px] shrink-0 items-center justify-center pt-3 md:h-[112px] md:w-[88px] md:pt-5', ARCH, SAND)}>
                   <Icon className="h-6 w-6 text-[#D9481C] md:h-7 md:w-7" strokeWidth={1.5} aria-hidden="true" />
                 </span>
                 <span className="block min-w-0">
-                  <span className="block text-[17px] font-medium leading-snug tracking-[-0.01em] text-ink md:mt-5 md:text-[19px]">{k.name}</span>
+                  <span className="mt-4 block text-[17px] font-medium leading-snug tracking-[-0.01em] text-ink md:mt-5 md:text-[19px]">{k.name}</span>
                   <ul className="mt-2 grid gap-1 md:mt-3 md:gap-1.5">
                     {k.does.map((x) => (
                       <li key={x} className="flex items-start gap-2 text-[14px] leading-snug text-graphite">
@@ -617,7 +620,7 @@ export function WxJournal({ it }) {
                   <span className="text-[14px] font-medium text-ink">{g.name}</span>
                   <span className="text-[12px] text-slate">· {g.target}</span>
                 </p>
-                <p className="mt-2 text-[13.5px] leading-snug text-graphite">{g.change}</p>
+                <p className="mt-2 text-[13.5px] leading-snug text-graphite max-sm:hidden">{g.change}</p>
                 <p className="mt-1.5 text-[13.5px] font-medium leading-snug text-ink">{g.result}</p>
               </div>
               {/* six weeks as columns, the goal as a line across */}
