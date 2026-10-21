@@ -436,7 +436,7 @@ export function WxCycle({ it }) {
             <div className="absolute inset-[15%] overflow-hidden rounded-full bg-[#E9E1D4] shadow-[0_40px_80px_-40px_rgba(60,40,20,0.6)]">
               {cy.stages.map((x, i) => (
                 <div key={x.key} className={cn('absolute inset-0 transition-opacity duration-1000', i === k ? 'opacity-100' : 'opacity-0')}>
-                  <Clip film={x.media} active={running && i === k} className="object-[45%_40%]" />
+                  <Clip film={x.media} active={running && i === k} style={{ objectPosition: x.media.focus || '45% 40%' }} />
                 </div>
               ))}
             </div>

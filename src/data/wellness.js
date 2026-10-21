@@ -178,14 +178,14 @@ export const wellness = {
       {
         key: 'intro', name: 'Intro class', when: 'Week 1',
         // her first morning at the front desk: Nina hands her grip socks and shows her in
-        media: { video: M + 'chloe-first.mp4', poster: M + 'chloe-first-poster.webp' },
+        media: { video: M + 'chloe-first.mp4', poster: M + 'chloe-first-poster.webp', focus: '50% 35%' },
         line: 'Her first reformer class, booked on a call the night she found the studio.',
         did: ['Booked the intro class and sent the waiver', 'Texted the membership offer that evening'],
       },
       {
         key: 'habit', name: 'Habit', when: 'Months 1–2',
         // her regular walk to class, mat on her shoulder
-        media: { video: M + 'chloe-walk.mp4', poster: M + 'chloe-walk-poster.webp' },
+        media: { video: M + 'chloe-walk.mp4', poster: M + 'chloe-walk-poster.webp', focus: '50% 40%' },
         line: 'Three classes a week, and the walk there is part of the routine now.',
         did: ['Reminders two hours before class', 'Waitlist spots offered the minute they open'],
       },
