@@ -142,6 +142,10 @@ function HeroCall({ c, reduce, active }) {
  * plays the after-hours call that booked him, with what the team sees as it goes. Phones: the promise, then the photo
  * with the card under its bottom edge. After the page loads, a clip of the same scene plays over the photo once.
  */
+// Where the hero scene is framed. Tablets (560 to 1023 px) show a narrow slice of the wide photo with the call card in
+// its bottom right corner, so the slice moves right to keep the technician and the door left of the card.
+const FOCUS = 'object-[58%_62%] min-[560px]:object-[75%_62%] md:object-[66%_62%] lg:object-[58%_62%]';
+
 export function HsHero() {
   const { open } = useLead();
   const ref = useRef(null);
@@ -199,8 +203,7 @@ export function HsHero() {
                 alt={m.alt}
                 fetchPriority="high"
                 decoding="async"
-                className="absolute inset-0 h-full w-full origin-[50%_74%] scale-[1.45] object-cover motion-safe:animate-[intro-dim_0.9s_cubic-bezier(0.22,1,0.36,1)_0.2s_both] min-[560px]:scale-100"
-                style={{ objectPosition: m.focus }}
+                className={cn('absolute inset-0 h-full w-full origin-[50%_74%] scale-[1.45] object-cover motion-safe:animate-[intro-dim_0.9s_cubic-bezier(0.22,1,0.36,1)_0.2s_both] min-[560px]:scale-100', FOCUS)}
               />
               {loaded && m.video && !reduce ? (
                 // added after the page has loaded, over the photo, and faded in once it plays (cropped like the photo on phones).
@@ -213,8 +216,7 @@ export function HsHero() {
                   preload="auto"
                   aria-hidden="true"
                   onPlaying={() => setPlaying(true)}
-                  className={cn('absolute inset-0 h-full w-full origin-[50%_74%] scale-[1.45] object-cover transition-opacity duration-700 min-[560px]:scale-100', playing ? 'opacity-100' : 'opacity-0')}
-                  style={{ objectPosition: m.focus }}
+                  className={cn('absolute inset-0 h-full w-full origin-[50%_74%] scale-[1.45] object-cover transition-opacity duration-700 min-[560px]:scale-100', FOCUS, playing ? 'opacity-100' : 'opacity-0')}
                 />
               ) : null}
               {/* dusk shade: deeper behind the headline, a little along the bottom */}
