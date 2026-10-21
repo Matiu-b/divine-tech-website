@@ -1,0 +1,278 @@
+{
+  "language": "en-US",
+  "target_url": "https://divine-tech.ai/blog/ai-agent-human-handoff",
+  "keywords": {
+    "primary": "AI-to-human handoff",
+    "secondary": [
+      "when should an AI agent hand off to a human",
+      "AI agent human handoff",
+      "AI escalation to a human agent",
+      "chatbot handoff to a live agent"
+    ],
+    "long_tail_questions": [
+      "what triggers an AI to human handoff",
+      "what context should pass from AI to a human",
+      "how fast must a human respond after a chatbot handoff",
+      "what is California AB 1609",
+      "is a high handoff rate bad"
+    ],
+    "entities": [
+      "handoff triggers",
+      "approval",
+      "escalation",
+      "history",
+      "California AB 1609",
+      "Right to Human Customer Service Act",
+      "Gartner",
+      "chatbot",
+      "15 minutes",
+      "one business day",
+      "owner",
+      "callback"
+    ],
+    "cluster": "customer-service",
+    "cluster_role": "support",
+    "notes": "No volume data; keyword chosen from SERP (Bardeen, Aloware, Vida, eesel, Pedowitz rank with the exact question)."
+  },
+  "competitor_analysis": [
+    {
+      "url": "https://www.bardeen.ai/answers/ai-to-human-handoff",
+      "word_count": 1300,
+      "strengths": "Clear trigger list and context checklist, FAQ",
+      "gaps": "No numeric thresholds, no legal or regulatory angle, promotional"
+    },
+    {
+      "url": "https://www.eesel.ai/blog/when-to-hand-off-from-ai-to-a-human",
+      "word_count": 1900,
+      "strengths": "Exact question in H1, triggers grouped by customer, issue and system",
+      "gaps": "No independent data, no thresholds, nothing on right-to-a-human rules"
+    },
+    {
+      "url": "https://vida.io/blog/ai-agent-human-handoff",
+      "word_count": 2400,
+      "strengths": "Confidence bands, compliance triggers, metrics",
+      "gaps": "Citations not tied to claims, thin on what happens when no one is available, no legal timing"
+    }
+  ],
+  "information_gain": "A six-row trigger table with the agent's action for each, the difference between asking for approval and handing over the conversation, a five-item handoff packet, and the new California AB 1609 timing (15 minutes or an appointment within one business day) used as a design target. None of the top results cover AB 1609 or a no-one-available fallback with an owner.",
+  "brand_inputs_used": [
+    "src/data/site.js platformPage console (take over in one click, full history, every handoff in one place)",
+    "src/data/site.js security (rules allowed / approval / never, approvals to the right person)",
+    "src/data/site.js faq (team can take over, Aurora picks up again)",
+    "docs/blog/trends.md"
+  ],
+  "engagement_elements": [
+    {
+      "type": "comparison_table",
+      "description": "Six handoff triggers with an example and the agent's action",
+      "placement": "H2 What should trigger a handoff?"
+    },
+    {
+      "type": "checklist",
+      "description": "Five things the person must receive",
+      "placement": "H2 What should the person receive?"
+    }
+  ],
+  "cta": {
+    "text": "Read the end-to-end guide, explore the Aurora platform, see how Aurora keeps you in control",
+    "offer": "Handoff and approvals shown on /platform",
+    "placement": "end"
+  },
+  "target_word_count": 600,
+  "title_tag": "AI-to-Human Handoff: When an AI Agent Should Hand Off",
+  "meta_description": "When should an AI agent hand off to a human? Six triggers for an AI-to-human handoff, what the person needs, and the 15-minute rule in California.",
+  "slug": "ai-agent-human-handoff",
+  "h1": "AI-to-human handoff: when should an AI agent hand off to a human?",
+  "answer_first": "An AI agent should hand off to a human when the customer asks for one, when the next step crosses a limit you set or needs judgment, when the answer is not in your own sources, or when the agent has failed twice on the same request. A good AI-to-human handoff gives the person the whole conversation and a record of what the agent already did, so the customer never has to start over.",
+  "body_html": "<p><strong>An AI agent should hand off to a human when the customer asks for one, when the next step crosses a limit you set or needs judgment, when the answer is not in your own sources, or when the agent has failed twice on the same request.</strong> A good AI-to-human handoff gives the person the whole conversation and a record of what the agent already did, so the customer never has to start over.</p>\n\n<p>The route to a person decides how customers feel about the agent. In Gartner's survey of 5,728 customers, 64% said they would prefer companies did not use AI for customer service, and the top worry was that AI would make it harder to reach a person (<a href=\"https://www.gartner.com/en/newsroom/press-releases/2024-07-09-gartner-survey-finds-64-percent-of-customers-would-prefer-that-companies-didnt-use-ai-for-customer-service\">Gartner, July 2024</a>).</p>\n\n<h2>What should trigger an AI-to-human handoff?</h2>\n\n<p>Write escalation triggers as rules the agent checks on every turn. Six cover most businesses:</p>\n\n<table>\n<thead><tr><th>Trigger</th><th>Example</th><th>What the agent does</th></tr></thead>\n<tbody>\n<tr><td>The customer asks for a person</td><td>\"Can I talk to someone?\", \"agent\", pressing 0</td><td>Hands off at once, with no retry</td></tr>\n<tr><td>A limit is crossed</td><td>A refund above your approval limit, a discount outside policy</td><td>Asks the named approver, or hands off</td></tr>\n<tr><td>No source for the answer</td><td>The policy page is silent, or two pages disagree</td><td>Hands off instead of guessing</td></tr>\n<tr><td>Repeated failure</td><td>The customer asks the same thing twice, or an action fails twice</td><td>Stops the loop and hands off</td></tr>\n<tr><td>An action is not confirmed</td><td>The booking or refund never shows up in your system</td><td>Says so, and hands off</td></tr>\n<tr><td>A sensitive topic</td><td>A complaint, a legal threat, a safety issue, a billing dispute</td><td>Hands off with the reason flagged</td></tr>\n</tbody>\n</table>\n\n<p>Frustration and confidence scores can add early warnings, but a request for a person should never wait on a score. Treat it as a hard rule, in any wording and on any channel.</p>\n\n<p>A limit is not always a full handoff. If a refund only needs a manager's yes, the agent can ask for that approval and finish the task itself. Hand over the conversation when the customer needs to talk to someone.</p>\n\n<h2>What should the person receive?</h2>\n\n<p>A transcript is not enough. The person taking over should be able to reply well in their first message, which means the handoff carries:</p>\n\n<ul>\n<li>who the customer is, matched to one record;</li>\n<li>the request in one sentence, with the full history from every channel;</li>\n<li>each action the agent took, and whether your system confirmed it;</li>\n<li>why the agent stopped, and the decision it needs;</li>\n<li>what the customer was told about timing.</li>\n</ul>\n\n<p>On the customer's side, the agent should say that a person is coming and roughly when. Once a person joins, the agent stays quiet in that conversation. When the person is done, the agent can pick up the remaining tasks, with the decision on record.</p>\n\n<h2>How fast does a person need to respond?</h2>\n\n<p>California now puts a number on it. Governor Newsom signed AB 1609, the Right to Human Customer Service Act, on September 28, 2026 (<a href=\"https://www.gov.ca.gov/2026/09/28/governor-newsom-signs-commonsense-legislation-to-make-your-life-easier/\">Office of the Governor</a>). According to the <a href=\"https://sjud.senate.ca.gov/system/files/2026-06/ab-1609-zbur-sjud-analysis.pdf\">Senate Judiciary Committee analysis</a>, it applies to businesses with more than $500 million in annual revenue, and requires them to:</p>\n\n<ul>\n<li>offer a clear way to ask for a person on every customer service channel, chatbots and phone lines included, during business hours;</li>\n<li>make a good-faith effort to connect the customer within 15 minutes, or offer a specific appointment within one business day;</li>\n<li>tell customers when they are talking to a chatbot.</li>\n</ul>\n\n<p>The <a href=\"https://sfstandard.com/2026/10/15/anthropic-customer-service-human/\">San Francisco Standard</a> reports that the rules start next year. This is not legal advice, so check the final text with counsel. Smaller businesses are not covered, but the numbers are a sensible target anyway. In practice that means a named owner for every handoff, a queue someone actually watches, and a specific callback time to offer when nobody is free.</p>\n\n<h2>Frequently asked questions</h2>\n\n<h3>Is a high handoff rate a bad sign?</h3>\n<p>Not on its own. Track the handoff rate together with the reason for each handoff. A rising share of \"no source\" handoffs points to gaps in your documents, which you can fix. If you push the rate down by making people harder to reach, customers notice.</p>\n\n<h3>What if nobody is available to take the handoff?</h3>\n<p>The agent should say so plainly, offer a specific callback time or the next opening, and record the promise as a task with an owner. A vague \"someone will get back to you\" with no owner is how requests get dropped.</p>\n\n<h2>Next steps</h2>\n\n<p>Write your six triggers down before you launch an agent, along with who owns each one. An AI-to-human handoff only works if someone is on the other end. In Aurora, your team can take over any conversation with the full history, requests that cross a limit go to the right person for approval, and every handoff is on record.</p>\n\n<p>See how the full flow works in <a href=\"/blog/ai-customer-service-agents\">AI customer service agents: how they work end to end</a>, explore <a href=\"/platform\">the Aurora platform</a>, or read <a href=\"/platform#security\">how Aurora keeps you in control</a>.</p>",
+  "faq": [
+    {
+      "question": "Is a high handoff rate a bad sign?",
+      "answer": "Not on its own. Track the handoff rate together with the reason for each handoff. A rising share of \"no source\" handoffs points to gaps in your documents, which you can fix. If you push the rate down by making people harder to reach, customers notice."
+    },
+    {
+      "question": "What if nobody is available to take the handoff?",
+      "answer": "The agent should say so plainly, offer a specific callback time or the next opening, and record the promise as a task with an owner. A vague \"someone will get back to you\" with no owner is how requests get dropped."
+    }
+  ],
+  "schema_jsonld": [
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "AI-to-human handoff: when should an AI agent hand off to a human?",
+      "description": "When should an AI agent hand off to a human? Six triggers for an AI-to-human handoff, what the person needs, and the 15-minute rule in California.",
+      "image": "https://divine-tech.ai/img/blog/ai-agent-human-handoff-og.jpg",
+      "datePublished": "2026-10-21",
+      "dateModified": "2026-10-21",
+      "author": {
+        "@type": "Organization",
+        "name": "Divine Tech AI",
+        "url": "https://divine-tech.ai"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Divine Tech AI",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://divine-tech.ai/icon-512.png"
+        }
+      },
+      "mainEntityOfPage": "https://divine-tech.ai/blog/ai-agent-human-handoff"
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://divine-tech.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Blog",
+          "item": "https://divine-tech.ai/blog"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "AI-to-human handoff: when should an AI agent hand off to a human?",
+          "item": "https://divine-tech.ai/blog/ai-agent-human-handoff"
+        }
+      ]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is a high handoff rate a bad sign?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not on its own. Track the handoff rate together with the reason for each handoff. A rising share of \"no source\" handoffs points to gaps in your documents, which you can fix. If you push the rate down by making people harder to reach, customers notice."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What if nobody is available to take the handoff?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The agent should say so plainly, offer a specific callback time or the next opening, and record the promise as a task with an owner. A vague \"someone will get back to you\" with no owner is how requests get dropped."
+          }
+        }
+      ]
+    }
+  ],
+  "internal_links": [
+    {
+      "anchor": "AI customer service agents: how they work end to end",
+      "url": "/blog/ai-customer-service-agents",
+      "direction": "outbound_from_this_page"
+    },
+    {
+      "anchor": "the Aurora platform",
+      "url": "/platform",
+      "direction": "outbound_from_this_page"
+    },
+    {
+      "anchor": "how Aurora keeps you in control",
+      "url": "/platform#security",
+      "direction": "outbound_from_this_page"
+    },
+    {
+      "anchor": "when should an AI agent hand off to a human",
+      "url": "/blog/ai-customer-service-agents",
+      "direction": "inbound_to_this_page",
+      "note": "Suggest adding a link from the 'When should a person take over?' section of the pillar in a later refresh."
+    }
+  ],
+  "external_sources": [
+    {
+      "url": "https://www.gartner.com/en/newsroom/press-releases/2024-07-09-gartner-survey-finds-64-percent-of-customers-would-prefer-that-companies-didnt-use-ai-for-customer-service",
+      "title": "Gartner survey: 64% of customers would prefer companies didn't use AI for customer service",
+      "publisher": "Gartner",
+      "date": "2024-07-09",
+      "used_for": "5,728 customers, 64%, top concern is reaching a person"
+    },
+    {
+      "url": "https://www.gov.ca.gov/2026/09/28/governor-newsom-signs-commonsense-legislation-to-make-your-life-easier/",
+      "title": "Governor Newsom signs commonsense legislation",
+      "publisher": "Office of the Governor of California",
+      "date": "2026-09-28",
+      "used_for": "AB 1609 signed; 15 minutes or appointment; chatbot disclosure"
+    },
+    {
+      "url": "https://sjud.senate.ca.gov/system/files/2026-06/ab-1609-zbur-sjud-analysis.pdf",
+      "title": "AB 1609 (Zbur) Senate Judiciary Committee analysis",
+      "publisher": "California State Senate",
+      "date": "2026-06-30",
+      "used_for": "$500M threshold, every channel during business hours, 15 minutes or one business day, disclosure"
+    },
+    {
+      "url": "https://sfstandard.com/2026/10/15/anthropic-customer-service-human/",
+      "title": "A new law may force a change",
+      "publisher": "San Francisco Standard",
+      "date": "2026-10-15",
+      "used_for": "rules start next year"
+    }
+  ],
+  "images": [
+    {
+      "role": "hero",
+      "file_name": "ai-agent-human-handoff-1600.webp",
+      "alt": "Soft sand and cream light with a dusty pink and terracotta glow, the Divine Tech AI wordmark and the headline When to bring in a person",
+      "placement": "top",
+      "generation_prompt": "scripts/make-blog-covers.py palette background (#F1E6D6, #E3B79A, #C8714F, #D9A3A6, seed 'adobe', saturation 1.0, mood desert-clay, tone light) + headline 'When to bring in a person'"
+    }
+  ],
+  "open_graph": {
+    "og_title": "AI-to-human handoff: when should an AI agent hand off to a human?",
+    "og_description": "Six handoff triggers, the context a person needs to reply in one message, and what California's new right-to-a-human law says about speed.",
+    "og_image": "https://divine-tech.ai/img/blog/ai-agent-human-handoff-og.jpg"
+  },
+  "author": {
+    "name": "Divine Tech AI",
+    "credentials": "",
+    "url": "https://divine-tech.ai"
+  },
+  "date_published": "2026-10-21",
+  "date_modified": "2026-10-21",
+  "publishing": {
+    "canonical": "https://divine-tech.ai/blog/ai-agent-human-handoff",
+    "category": "Guides",
+    "tags": [
+      "AI agents",
+      "customer service",
+      "handoff",
+      "escalation",
+      "AB 1609"
+    ],
+    "indexnow": true,
+    "sitemap": true,
+    "gsc_request_indexing": true,
+    "distribution": [
+      "LinkedIn company page",
+      "founders' LinkedIn",
+      "newsletter"
+    ]
+  },
+  "quality_gate": {
+    "beats_top_result": true,
+    "information_gain_present": true,
+    "facts_verified": true,
+    "expert_would_sign": true,
+    "not_duplicate": true,
+    "unverified_claims": [],
+    "comments": "Facts from pages opened 2026-10-21: Gartner press release (2024-07-09), Office of the Governor release (2026-09-28), Senate Judiciary analysis of AB 1609 (June 2026 version; the final chaptered text could differ in detail), San Francisco Standard (2026-10-15). The official leginfo text could not be opened from this session, so the exact operative date is stated only as reported ('next year'). Aurora claims are limited to what /platform states. Not legal advice."
+  },
+  "review_status": "needs_human_review",
+  "notes": [
+    "Split from the customer service agents pillar per plan.json.",
+    "Five9 2026 figures from the queue angle were left out: the SiliconANGLE page could not be reopened this run, and the rule is to drop numbers that cannot be re-verified.",
+    "Follow-ups already queued: 'How does an AI voice agent hand a live call to a person?' and 'Is a business liable for what its chatbot says?'. Link them to this page when published.",
+    "Yuri: AB 1609 thresholds come from the Senate committee analysis; worth a quick check against the chaptered text."
+  ]
+}
