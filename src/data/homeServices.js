@@ -11,7 +11,7 @@ export const hsHero = {
   secondaryShort: 'The field',
   secondaryHref: '#field',
   // the scene: a technician walking up to a customer's door at dusk, the van behind him; the clip has him reach the
-  // door and knock, then loops
+  // door and knock, once
   media: {
     poster: '/media/home-services/hero-b-2000.webp',
     srcSet: '/media/home-services/hero-b-900.webp 900w, /media/home-services/hero-b-1400.webp 1400w, /media/home-services/hero-b-2000.webp 2000w',

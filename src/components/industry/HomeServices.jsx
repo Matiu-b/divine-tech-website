@@ -140,8 +140,7 @@ function HeroCall({ c, reduce, active }) {
 /**
  * Hero: one cinematic frame, a technician walking up to a customer's door at dusk. The promise sits in the sky; the card
  * plays the after-hours call that booked him, with what the team sees as it goes. Phones: the promise, then the photo
- * with the card under its bottom edge. The photo takes a looping clip when there is one.
- * The photo takes a looping clip when there is one.
+ * with the card under its bottom edge. After the page loads, a clip of the same scene plays over the photo once.
  */
 export function HsHero() {
   const { open } = useLead();
@@ -204,12 +203,12 @@ export function HsHero() {
                 style={{ objectPosition: m.focus }}
               />
               {loaded && m.video && !reduce ? (
-                // added after the page has loaded, over the photo, and faded in once it plays (cropped like the photo on phones)
+                // added after the page has loaded, over the photo, and faded in once it plays (cropped like the photo on phones).
+                // It plays once: he reaches the door and knocks, and the scene holds there
                 <video
                   ref={videoRef}
                   src={m.video}
                   muted
-                  loop
                   playsInline
                   preload="auto"
                   aria-hidden="true"
