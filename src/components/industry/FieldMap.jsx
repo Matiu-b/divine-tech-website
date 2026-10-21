@@ -410,7 +410,7 @@ export default function FieldMap({ d }) {
                 <span className="h-[3px] w-5 rounded-full bg-[#F25C2A]" />
                 {d.labels.aurora} · {hm(total)}
               </span>
-              <span className="flex items-center gap-2 text-ink/55">
+              <span className="flex items-center gap-2 text-ink/60">
                 <span className="w-5 border-t-2 border-dashed border-ink/35" />
                 {d.labels.asBooked} · {hm(d.booked.drive)}
               </span>
