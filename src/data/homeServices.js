@@ -10,11 +10,12 @@ export const hsHero = {
   secondary: 'See the field',
   secondaryShort: 'The field',
   secondaryHref: '#field',
-  // the scene: a technician walking up to a customer's door at dusk, the van behind him; takes a looping clip later
+  // the scene: a technician walking up to a customer's door at dusk, the van behind him; the clip has him reach the
+  // door and knock, then loops
   media: {
     poster: '/media/home-services/hero-b-2000.webp',
     srcSet: '/media/home-services/hero-b-900.webp 900w, /media/home-services/hero-b-1400.webp 1400w, /media/home-services/hero-b-2000.webp 2000w',
-    video: null,
+    video: '/media/home-services/hero-b-walk.mp4',
     focus: '58% 62%',
     alt: 'At dusk, a home-services technician with a tool bag walks up the path to a family home, his white van parked in the driveway',
   },

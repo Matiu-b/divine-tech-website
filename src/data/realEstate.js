@@ -18,6 +18,9 @@ export const realEstate = {
         src: '/media/real-estate/house-4-1600.webp',
         srcSet: '/media/real-estate/house-4-900.webp 900w, /media/real-estate/house-4-1200.webp 1200w, /media/real-estate/house-4-1600.webp 1600w, /media/real-estate/house-4-2000.webp 2000w',
       },
+      // the same scene, alive: trees in the breeze and a car passing on the road; starts and ends on the photo, so it loops
+      video: '/media/real-estate/house-4-loop.mp4',
+      poster: '/media/real-estate/house-4-loop-poster.webp',
       alt: 'The Maple Street listing at dusk: a craftsman house with a two-car garage, a fenced backyard and a For Sale sign on the lawn',
     },
     call: {
