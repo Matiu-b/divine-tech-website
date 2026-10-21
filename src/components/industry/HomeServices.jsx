@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, m as motion, useReducedMotion } from 'framer-motion';
 import { Database, Pause, Play, Volume2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -8,7 +8,7 @@ import CTAButton from '@/components/home-v2/primitives/CTAButton';
 import { RevealLines } from '@/components/home-v2/primitives/MotionReveal';
 import { clock, lastIndex, subtitle, useCallClock } from '@/components/home-v2/CallBox';
 import { useLead } from '@/components/home-v2/LeadDrawer';
-import { onAnchorClick, useInViewport, usePageVisible } from '@/components/home-v2/hooks';
+import { onAnchorClick, useInViewport, usePageLoaded, usePageVisible } from '@/components/home-v2/hooks';
 import Closing from '@/components/home-v2/Closing';
 
 const EASE = [0.22, 1, 0.36, 1];
@@ -140,9 +140,12 @@ function HeroCall({ c, reduce, active }) {
 /**
  * Hero: one cinematic frame, a technician walking up to a customer's door at dusk. The promise sits in the sky; the card
  * plays the after-hours call that booked him, with what the team sees as it goes. Phones: the promise, then the photo
- * with the card under its bottom edge. The photo takes a looping clip when there is one.
- * The photo takes a looping clip when there is one.
+ * with the card under its bottom edge. After the page loads, a clip of the same scene plays over the photo once.
  */
+// Where the hero scene is framed. Tablets (560 to 1023 px) show a narrow slice of the wide photo with the call card in
+// its bottom right corner, so the slice moves right to keep the technician and the door left of the card.
+const FOCUS = 'object-[58%_62%] min-[560px]:object-[75%_62%] md:object-[66%_62%] lg:object-[58%_62%]';
+
 export function HsHero() {
   const { open } = useLead();
   const ref = useRef(null);
@@ -150,6 +153,8 @@ export function HsHero() {
   const reduce = !!useReducedMotion();
   const inView = useInViewport(ref, { threshold: 0.2 });
   const visible = usePageVisible();
+  const loaded = usePageLoaded();
+  const [playing, setPlaying] = useState(false);
   const m = H.media;
 
   useEffect(() => {
@@ -157,7 +162,7 @@ export function HsHero() {
     if (!v) return;
     if (inView && visible) v.play().catch(() => {});
     else v.pause();
-  }, [inView, visible]);
+  }, [inView, visible, loaded]);
 
   const btn = 'max-sm:h-12 max-sm:px-4 max-sm:text-[14.5px] lg:h-12 lg:px-5 lg:text-[15px]';
   return (
@@ -198,11 +203,21 @@ export function HsHero() {
                 alt={m.alt}
                 fetchPriority="high"
                 decoding="async"
-                className="absolute inset-0 h-full w-full origin-[50%_74%] scale-[1.45] object-cover motion-safe:animate-[intro-dim_0.9s_cubic-bezier(0.22,1,0.36,1)_0.2s_both] min-[560px]:scale-100"
-                style={{ objectPosition: m.focus }}
+                className={cn('absolute inset-0 h-full w-full origin-[50%_74%] scale-[1.45] object-cover motion-safe:animate-[intro-dim_0.9s_cubic-bezier(0.22,1,0.36,1)_0.2s_both] min-[560px]:scale-100', FOCUS)}
               />
-              {m.video && !reduce ? (
-                <video ref={videoRef} src={m.video} poster={m.poster} muted loop playsInline preload="none" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: m.focus }} />
+              {loaded && m.video && !reduce ? (
+                // added after the page has loaded, over the photo, and faded in once it plays (cropped like the photo on phones).
+                // It plays once: he reaches the door and knocks, and the scene holds there
+                <video
+                  ref={videoRef}
+                  src={m.video}
+                  muted
+                  playsInline
+                  preload="auto"
+                  aria-hidden="true"
+                  onPlaying={() => setPlaying(true)}
+                  className={cn('absolute inset-0 h-full w-full origin-[50%_74%] scale-[1.45] object-cover transition-opacity duration-700 min-[560px]:scale-100', FOCUS, playing ? 'opacity-100' : 'opacity-0')}
+                />
               ) : null}
               {/* dusk shade: deeper behind the headline, a little along the bottom */}
               <div aria-hidden="true" className="pointer-events-none absolute inset-0 hidden bg-[linear-gradient(180deg,rgba(14,20,44,0.55)_0%,rgba(14,20,44,0.18)_38%,rgba(14,20,44,0)_58%,rgba(14,20,44,0.28)_100%)] min-[560px]:block" />
