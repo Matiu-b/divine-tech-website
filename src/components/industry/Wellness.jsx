@@ -499,50 +499,29 @@ export function WxCycle({ it }) {
 /* Clinics                                                                                                             */
 /* ------------------------------------------------------------------------------------------------------------------ */
 
-/** Clinics: six kinds of practice, each beside its room in an arch, then the rest by name, and the clinical line. */
+/** Clinics: twelve kinds of practice as equal tiles, each with its room in a small arch, then the clinical line. */
 export function WxClinics({ it }) {
   const c = it.wx.clinics;
   return (
     <section id="clinics" data-nav-theme="light" aria-labelledby="wx-clinics-title" className="section relative pt-0">
       <div className="shell">
         <SectionHeader id="wx-clinics-title" titleA={c.titleA} titleB={c.titleB} text={c.text} layout="split" />
-        <div className="no-scrollbar mx-[calc(-1*var(--gutter))] mt-8 flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-px-[var(--gutter)] px-[var(--gutter)] md:mx-0 md:mt-10 md:grid md:grid-cols-2 md:overflow-visible md:px-0 lg:grid-cols-3 lg:gap-4">
+        {/* every practice the same size: a small arch photo, its name and one line */}
+        <ul className="mt-8 grid grid-cols-2 gap-2 md:mt-10 md:grid-cols-3 md:gap-3 lg:grid-cols-4">
           {c.kinds.map((k, i) => (
-            <Reveal key={k.key} delay={(i % 3) * 0.08} className="flex w-[84%] shrink-0 snap-start items-center gap-4 rounded-[28px] bg-white p-3 pr-5 shadow-[0_0_0_1px_rgba(10,15,14,0.06)] md:w-auto">
-              <span className={cn('relative h-[148px] w-[112px] shrink-0 overflow-hidden bg-[#E9E1D4] [@media(max-height:820px)]:lg:h-[124px] [@media(max-height:820px)]:lg:w-[96px]', ARCH)}>
-                <img
-                  src={M + k.image + '-600.webp'}
-                  srcSet={M + k.image + '-600.webp 600w, ' + M + k.image + '-900.webp 900w'}
-                  sizes="112px"
-                  alt=""
-                  className="absolute inset-0 h-full w-full object-cover"
-                  loading="lazy"
-                  decoding="async"
-                />
+            <Reveal as="li" key={k.key} delay={(i % 4) * 0.06} className="flex items-center gap-3 rounded-[22px] bg-white p-2 pr-3 shadow-[0_0_0_1px_rgba(10,15,14,0.06)] md:gap-3.5 md:p-2.5 md:pr-4">
+              <span className={cn('relative h-[64px] w-[50px] shrink-0 overflow-hidden bg-[#E9E1D4] md:h-[88px] md:w-[70px] [@media(max-height:820px)]:lg:h-[76px] [@media(max-height:820px)]:lg:w-[60px]', ARCH)}>
+                <img src={M + k.image + '-600.webp'} alt="" className="absolute inset-0 h-full w-full object-cover" loading="lazy" decoding="async" />
               </span>
               <span className="block min-w-0">
-                <span className="block text-[16.5px] font-medium leading-snug tracking-[-0.01em] text-ink">{k.name}</span>
-                <ul className="mt-2 grid gap-1">
-                  {k.does.map((x) => (
-                    <li key={x} className="flex items-start gap-2 text-[13.5px] leading-snug text-graphite">
-                      <span className="mt-[7px] h-1 w-1 shrink-0 rounded-full bg-[#F25C2A]" aria-hidden="true" />
-                      {x}
-                    </li>
-                  ))}
-                </ul>
+                <span className="block text-[13px] font-medium leading-snug tracking-[-0.01em] text-ink md:text-[15px]">{k.name}</span>
+                <span className="mt-1 block text-[12.5px] leading-snug text-graphite max-md:hidden">{k.line}</span>
               </span>
             </Reveal>
           ))}
-        </div>
-
-        {/* the rest, by name */}
-        <Reveal delay={0.15} className="mt-4 flex flex-wrap items-center gap-2">
-          <span className="mr-1 text-[12px] font-medium uppercase tracking-[0.08em] text-ink/45">{c.more.label}</span>
-          {c.more.items.map((x) => (
-            <span key={x} className="rounded-full bg-white px-3 py-1.5 text-[13px] text-ink/75 shadow-[0_0_0_1px_rgba(10,15,14,0.07)]">
-              {x}
-            </span>
-          ))}
+        </ul>
+        <Reveal delay={0.15}>
+          <p className="mt-4 text-[13.5px] text-slate">{c.more}</p>
         </Reveal>
 
         {/* the clinical line */}

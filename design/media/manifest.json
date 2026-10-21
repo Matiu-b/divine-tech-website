@@ -457,6 +457,60 @@
         600,
         900
       ]
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261021_124824_1411ced0-46d4-41aa-9d46-afdfef4e330e.png",
+      "out": "public/media/wellness/clinic-studio",
+      "widths": [
+        600,
+        900
+      ]
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261021_124825_1e839b2d-2b78-483b-b228-a8fddd441a8e.png",
+      "out": "public/media/wellness/clinic-sports",
+      "widths": [
+        600,
+        900
+      ]
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261021_124825_9ab6f58c-59d8-40df-b43b-4ccfb895e035.png",
+      "out": "public/media/wellness/clinic-iv",
+      "widths": [
+        600,
+        900
+      ]
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261021_124823_3007117c-f627-41f0-8280-b9b5580d9930.png",
+      "out": "public/media/wellness/clinic-counselling",
+      "widths": [
+        600,
+        900
+      ]
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261021_124825_701e265a-beae-4f5a-b57b-a7b06c3f48e6.png",
+      "out": "public/media/wellness/clinic-optometry",
+      "widths": [
+        600,
+        900
+      ]
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261021_124825_d795220a-b350-4b29-ac2d-6fff345d6189.png",
+      "out": "public/media/wellness/clinic-skin",
+      "widths": [
+        600,
+        900
+      ]
     }
   ]
 }
