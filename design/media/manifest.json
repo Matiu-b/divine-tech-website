@@ -361,6 +361,36 @@
       "kind": "audio",
       "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261020_101028_c9a9ae09-b42d-431f-8df9-6e983a999051.mp3",
       "out": "public/media/wellness/call-chloe-2"
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261021_093755_e8f5cfb9-77ef-4562-a198-9efe78c38e83.png",
+      "out": "public/media/wellness/chloe-first",
+      "widths": [
+        900,
+        1400,
+        2000
+      ]
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261021_093754_4e7b7f13-37f5-46d8-819c-6fd061a7ce84.png",
+      "out": "public/media/wellness/chloe-walk",
+      "widths": [
+        900,
+        1400,
+        2000
+      ]
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261021_093755_c692e639-13b2-4ac5-97bd-dccf5c65a3ed.png",
+      "out": "public/media/wellness/nina-monday",
+      "widths": [
+        900,
+        1400,
+        2000
+      ]
     }
   ]
 }
