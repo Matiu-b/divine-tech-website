@@ -178,8 +178,8 @@ export const wellness = {
       {
         key: 'intro', name: 'Intro class', when: 'Week 1',
         // her first morning at the front desk: Nina hands her grip socks and shows her in
-        media: { video: M + 'chloe-first.mp4', poster: M + 'chloe-first-poster.webp', focus: '50% 35%' },
-        line: 'Her first reformer class, booked on a call the night she found the studio.',
+        media: { video: M + 'chloe-first.mp4', poster: M + 'chloe-first-poster.webp', focus: '22% 35%' },
+        line: 'Her first morning at the studio, booked on a call the night she found it.',
         did: ['Booked the intro class and sent the waiver', 'Texted the membership offer that evening'],
       },
       {
