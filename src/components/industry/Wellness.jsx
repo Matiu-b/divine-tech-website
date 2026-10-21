@@ -509,12 +509,12 @@ export function WxClinics({ it }) {
         {/* every practice the same size: a small arch photo, its name and one line */}
         <ul className="mt-8 grid grid-cols-2 gap-2 md:mt-10 md:grid-cols-3 md:gap-3 lg:grid-cols-4">
           {c.kinds.map((k, i) => (
-            <Reveal as="li" key={k.key} delay={(i % 4) * 0.06} className="flex items-center gap-3 rounded-[22px] bg-white p-2 pr-3 shadow-[0_0_0_1px_rgba(10,15,14,0.06)] md:gap-3.5 md:p-2.5 md:pr-4">
-              <span className={cn('relative h-[64px] w-[50px] shrink-0 overflow-hidden bg-[#E9E1D4] md:h-[88px] md:w-[70px] [@media(max-height:820px)]:lg:h-[76px] [@media(max-height:820px)]:lg:w-[60px]', ARCH)}>
+            <Reveal as="li" key={k.key} delay={(i % 4) * 0.06} className="flex items-center gap-2.5 rounded-[22px] bg-white p-2 pr-2.5 shadow-[0_0_0_1px_rgba(10,15,14,0.06)] md:gap-3.5 md:p-2.5 md:pr-4">
+              <span className={cn('relative h-[60px] w-[46px] shrink-0 overflow-hidden bg-[#E9E1D4] md:h-[88px] md:w-[70px] [@media(max-height:820px)]:lg:h-[76px] [@media(max-height:820px)]:lg:w-[60px]', ARCH)}>
                 <img src={M + k.image + '-600.webp'} alt="" className="absolute inset-0 h-full w-full object-cover" loading="lazy" decoding="async" />
               </span>
               <span className="block min-w-0">
-                <span className="block text-[13px] font-medium leading-snug tracking-[-0.01em] text-ink md:text-[15px]">{k.name}</span>
+                <span className="block hyphens-auto text-[12.5px] font-medium leading-snug tracking-[-0.01em] text-ink [overflow-wrap:anywhere] md:text-[15px]">{k.name}</span>
                 <span className="mt-1 block text-[12.5px] leading-snug text-graphite max-md:hidden">{k.line}</span>
               </span>
             </Reveal>
