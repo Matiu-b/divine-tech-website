@@ -177,14 +177,16 @@ export const wellness = {
     stages: [
       {
         key: 'intro', name: 'Intro class', when: 'Week 1',
-        media: { video: M + 'chloe-class.mp4', poster: M + 'chloe-class-poster.webp' },
+        // her first morning at the front desk: Nina hands her grip socks and shows her in
+        media: { video: M + 'chloe-first.mp4', poster: M + 'chloe-first-poster.webp' },
         line: 'Her first reformer class, booked on a call the night she found the studio.',
         did: ['Booked the intro class and sent the waiver', 'Texted the membership offer that evening'],
       },
       {
         key: 'habit', name: 'Habit', when: 'Months 1–2',
-        media: { video: M + 'chloe-dawn.mp4', poster: M + 'chloe-dawn-poster.webp' },
-        line: 'Three classes a week, and the first one off the waitlist when a spot opens.',
+        // her regular walk to class, mat on her shoulder
+        media: { video: M + 'chloe-walk.mp4', poster: M + 'chloe-walk-poster.webp' },
+        line: 'Three classes a week, and the walk there is part of the routine now.',
         did: ['Reminders two hours before class', 'Waitlist spots offered the minute they open'],
       },
       {
@@ -248,7 +250,7 @@ export const wellness = {
       sign: 'Have a lovely week,',
       name: 'Aurora',
     },
-    photo: { src: M + 'chloe-friend-900.webp', alt: 'Two friends laughing at the studio’s front desk after class, mats under their arms' },
+    photo: { src: M + 'nina-monday-900.webp', alt: 'The studio owner reading her phone with a coffee in her empty studio on a Monday morning' },
     note: 'An example letter. The figures are illustrative.',
   },
 

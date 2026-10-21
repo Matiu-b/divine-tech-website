@@ -391,6 +391,18 @@
         1400,
         2000
       ]
+    },
+    {
+      "kind": "video",
+      "width": 1280,
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261021_094033_19cf0802-9413-4993-95c4-d71a52a784c2.mp4",
+      "out": "public/media/wellness/chloe-first"
+    },
+    {
+      "kind": "video",
+      "width": 1280,
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261021_094033_d4062bc1-81e0-45ec-ab5b-9cd40bca333a.mp4",
+      "out": "public/media/wellness/chloe-walk"
     }
   ]
 }

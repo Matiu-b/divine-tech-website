@@ -577,7 +577,7 @@ export function WxJournal({ it }) {
             </h2>
             <p className="pretty mt-4 max-w-[28em] text-[15px] leading-[1.6] text-graphite md:text-[16px]">{j.text}</p>
             <div className={cn('relative mt-8 hidden aspect-[4/5] w-[min(260px,70%)] overflow-hidden bg-[#E9E1D4] shadow-[0_30px_60px_-40px_rgba(60,40,20,0.6)] lg:block', ARCH)}>
-              <img src={j.photo.src} alt={j.photo.alt} className="absolute inset-0 h-full w-full object-cover object-[60%_40%]" loading="lazy" decoding="async" />
+              <img src={j.photo.src} alt={j.photo.alt} className="absolute inset-0 h-full w-full object-cover object-[50%_35%]" loading="lazy" decoding="async" />
             </div>
           </div>
 
