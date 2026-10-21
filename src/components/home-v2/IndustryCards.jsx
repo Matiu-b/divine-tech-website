@@ -86,15 +86,19 @@ export default function IndustryCards() {
                 className="group flex h-full flex-col overflow-hidden rounded-[28px] bg-white shadow-[0_0_0_1px_rgba(10,15,14,0.06),0_20px_40px_-28px_rgba(10,15,14,0.35)] transition-shadow duration-500 hover:shadow-[0_0_0_1px_rgba(10,15,14,0.1),0_30px_60px_-30px_rgba(10,15,14,0.45)]"
               >
                 <div className="relative aspect-[4/3] overflow-hidden bg-paper-2">
-                  <img
-                    src={it.how.photo.src}
-                    srcSet={it.how.photo.srcSet}
-                    sizes="(min-width: 1024px) 420px, 84vw"
-                    alt={it.how.photo.alt}
-                    loading="lazy"
-                    decoding="async"
-                    className="h-full w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.03]"
-                  />
+                  {/* the industry page's own hero scene, so this row doesn't repeat the people in the outcomes films above */}
+                  <span className="block h-full w-full" style={it.cover && it.cover.mirror ? { transform: 'scaleX(-1)' } : undefined}>
+                    <img
+                      src={(it.cover || it.how.photo).src}
+                      srcSet={(it.cover || it.how.photo).srcSet}
+                      sizes="(min-width: 1024px) 420px, 84vw"
+                      alt={(it.cover || it.how.photo).alt}
+                      loading="lazy"
+                      decoding="async"
+                      className="h-full w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.03]"
+                      style={it.cover ? { objectPosition: it.cover.position } : undefined}
+                    />
+                  </span>
                   <div className="absolute inset-x-4 bottom-4">
                     <span className="flex w-fit max-w-full items-center gap-2.5 rounded-[14px] bg-white/90 px-3 py-2.5 text-ink shadow-sm backdrop-blur">
                       <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[9px] bg-paper-2">
@@ -120,8 +124,8 @@ export default function IndustryCards() {
           ))}
         </div>
 
-        {/* pager on phones and tablets: the active bar fills while it waits to move on */}
-        <div className="mt-6 flex gap-2 lg:hidden">
+        {/* pager on phones and tablets: one dot per card */}
+        <div className="mt-6 flex justify-center gap-2 lg:hidden">
           {industries.map((it, i) => (
             <button
               key={it.slug}
@@ -132,13 +136,9 @@ export default function IndustryCards() {
               }}
               aria-label={`Show ${it.label}`}
               aria-current={i === active ? 'true' : undefined}
-              className="relative h-1 flex-1 overflow-hidden rounded-full bg-ink/10"
+              className="flex h-6 w-6 items-center justify-center"
             >
-              <span
-                key={`${active}-${touched}`}
-                className={cn('absolute inset-y-0 left-0 rounded-full bg-ink', i <= active ? 'w-full' : 'w-0')}
-                style={i === active && !touched && !reduce ? { animation: `outcomes-fill ${ADVANCE_MS}ms linear forwards` } : undefined}
-              />
+              <span className={cn('block h-2 rounded-full transition-all duration-300', i === active ? 'w-5 bg-ink' : 'w-2 bg-ink/20')} />
             </button>
           ))}
         </div>

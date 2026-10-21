@@ -50,6 +50,13 @@ export const industries = [
     },
     caption: 'Your brokers are out showing homes. Aurora answers every new lead.',
     card: { icon: 'calendar', title: 'Viewing booked', detail: 'Sat 11:00, right broker, confirmation sent' },
+    // the home page's industry card shows this page's own hero scene
+    cover: {
+      src: '/media/real-estate/house-4-1200.webp',
+      srcSet: '/media/real-estate/house-4-900.webp 900w, /media/real-estate/house-4-1200.webp 1200w, /media/real-estate/house-4-1600.webp 1600w',
+      alt: 'A craftsman family home at dusk with a For Sale sign on the lawn',
+      position: '30% 60%',
+    },
     events: [
       { icon: 'message', title: 'New lead answered', detail: 'Text message, 2BR inquiry' },
       { icon: 'mail', title: 'Listing email written and sent', detail: '12 matching buyers, personal intro' },
@@ -136,7 +143,14 @@ export const industries = [
       cost: 'Empty slots, and a front desk that never gets ahead.',
     },
     caption: 'The front desk is with a client. Aurora answers the phone.',
-    card: { icon: 'invoice', title: 'Invoice issued and sent', detail: 'Payment link included, record updated' },
+    card: { icon: 'calendar', title: 'Late spot refilled', detail: 'Offered to the waitlist, booked in 2 min' },
+    cover: {
+      src: '/media/wellness/studio-night-900.webp',
+      srcSet: '/media/wellness/studio-night-900.webp 900w, /media/wellness/studio-night-1400.webp 1400w',
+      alt: 'A boutique Pilates studio after closing: oak reformers, candles and an olive tree',
+      position: '62% 55%',
+      mirror: true,
+    },
     events: [
       { icon: 'service', title: 'Call answered', detail: 'First ring, after hours' },
       { icon: 'invoice', title: 'Invoice issued and sent', detail: 'Visit 4821, payment link included' },
@@ -220,6 +234,12 @@ export const industries = [
     },
     caption: 'Your technician is on a job. Aurora books the next one.',
     card: { icon: 'mail', title: 'Follow-up email written and sent', detail: 'Quote, photos and next steps' },
+    cover: {
+      src: '/media/home-services/hero-b-900.webp',
+      srcSet: '/media/home-services/hero-b-900.webp 900w, /media/home-services/hero-b-1400.webp 1400w',
+      alt: 'At dusk, a home-services technician walks up the path to a family home, his van in the driveway',
+      position: '58% 62%',
+    },
     events: [
       { icon: 'service', title: 'Call answered', detail: 'Water heater, urgent' },
       { icon: 'send', title: 'Quote sent', detail: 'From your price book' },
