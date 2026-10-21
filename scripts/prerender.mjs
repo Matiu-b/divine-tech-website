@@ -117,9 +117,12 @@ function write(path, html) {
 const manifest = JSON.parse(readFileSync(join(dist, '.vite/manifest.json'), 'utf8'));
 rmSync(join(dist, '.vite'), { recursive: true, force: true }); // build metadata, not for the site
 const entryChunks = new Set((template.match(/\/assets\/[^"]+\.js/g) || []).map((s) => s.slice(1)));
+// Industries with their own page module (as in src/pages/routes.jsx).
+const industryPages = { 'real-estate': 'industries/RealEstatePage', 'wellness-healthcare': 'industries/WellnessPage', 'home-services': 'industries/HomeServicesPage' };
 const pageSource = (path) =>
   path === '/' ? 'Home' : path === '/platform' ? 'PlatformPage' : path === '/privacy' ? 'PrivacyPolicy' : path === '/blog' ? 'Blog'
-    : path.startsWith('/blog/') ? 'BlogPost' : path.startsWith('/industries/') ? 'IndustryPage' : path.startsWith('/guides/') ? 'GuidePage' : null;
+    : path.startsWith('/blog/') ? 'BlogPost' : path.startsWith('/industries/') ? industryPages[path.slice('/industries/'.length)] || 'IndustryPage'
+    : path.startsWith('/guides/') ? 'GuidePage' : null;
 function preloads(path) {
   const name = pageSource(path);
   if (!name) return '';

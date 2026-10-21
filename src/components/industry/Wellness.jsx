@@ -7,7 +7,7 @@ import { Reveal } from '@/components/home-v2/primitives/MotionReveal';
 import Closing from '@/components/home-v2/Closing';
 import { CallOverlay, useCallClock } from '@/components/home-v2/CallBox';
 import { useInViewport, usePageLoaded, usePageVisible } from '@/components/home-v2/hooks';
-import { RxHero, useLoop } from '@/components/industry/RealEstateV3';
+import { RxHero, useLoop } from '@/components/industry/CallHero';
 
 /*
  * Wellness & Healthcare page, in its own design: calm, airy, editorial. Linen and sand grounds, photographs and clips

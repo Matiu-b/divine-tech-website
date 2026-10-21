@@ -5,7 +5,7 @@ import PageNotFound from './lib/PageNotFound';
 import { trackMetaPageView } from '@/lib/metaPixel';
 import ScrollToTop from './components/ScrollToTop';
 import ConsentBanner from './components/ConsentBanner';
-import { Page } from '@/pages/routes';
+import { IndustryRoute, Page } from '@/pages/routes';
 
 // Animation features (including layout animations) load in their own chunk after the first render;
 // components use `m` from framer-motion, which needs them.
@@ -30,7 +30,7 @@ export function AppRoutes() {
         <Routes>
           <Route path="/" element={<Page name="home" />} />
           <Route path="/platform" element={<Page name="platform" />} />
-          <Route path="/industries/:slug" element={<Page name="industry" />} />
+          <Route path="/industries/:slug" element={<IndustryRoute />} />
           <Route path="/blog" element={<Page name="blog" />} />
           <Route path="/blog/:slug" element={<Page name="post" />} />
           <Route path="/guides/:slug" element={<Page name="guide" />} />

@@ -766,5 +766,5 @@ export const posts = [
   }
 ];
 
-export const postPath = (slug) => `/blog/${slug}`;
+export { postPath } from './postPath.js';
 export const readMinutes = (html) => Math.max(1, Math.round(html.replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length / 230));
