@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useReducedMotion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { ArrowUpRight, Check } from 'lucide-react';
-import { EVENT_ICONS } from './eventIcons';
+import { ArrowUpRight } from 'lucide-react';
 import { industriesSection } from '@/data/site';
 import { industries, industryPath } from '@/data/industries';
 import SectionHeader from './primitives/SectionHeader';
@@ -99,21 +98,12 @@ export default function IndustryCards() {
                       style={it.cover ? { objectPosition: it.cover.position } : undefined}
                     />
                   </span>
-                  <div className="absolute inset-x-4 bottom-4">
-                    <span className="flex w-fit max-w-full items-center gap-2.5 rounded-[14px] bg-white/90 px-3 py-2.5 text-ink shadow-sm backdrop-blur">
-                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[9px] bg-paper-2">
-                        {React.createElement(EVENT_ICONS[it.card.icon] || Check, { className: 'h-3.5 w-3.5', strokeWidth: 1.8, 'aria-hidden': 'true' })}
-                      </span>
-                      <span className="min-w-0">
-                        <span className="block truncate text-[12.5px] font-medium">{it.card.title}</span>
-                        <span className="block truncate text-[11px] text-graphite">{it.card.detail}</span>
-                      </span>
-                    </span>
-                  </div>
+                  {/* the industry's name over its scene, on a soft shade along the bottom */}
+                  <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(14,12,10,0)_45%,rgba(14,12,10,0.62)_100%)]" />
+                  <h3 className="absolute inset-x-6 bottom-5 text-[24px] font-medium leading-[1.1] tracking-[-0.02em] text-white [text-shadow:0_2px_16px_rgba(10,10,10,0.35)] md:inset-x-7 md:bottom-6 md:text-[26px]">{it.label}</h3>
                 </div>
                 <div className="flex flex-1 flex-col p-6 md:p-7">
-                  <h3 className="t-h4">{it.label}</h3>
-                  <p className="mt-2 flex-1 text-[14px] leading-relaxed text-graphite">{it.short}</p>
+                  <p className="flex-1 text-[14px] leading-relaxed text-graphite">{it.short}</p>
                   <span className="mt-6 flex items-center gap-1.5 text-[13.5px] font-medium text-ink">
                     Explore
                     <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" strokeWidth={1.8} aria-hidden="true" />
