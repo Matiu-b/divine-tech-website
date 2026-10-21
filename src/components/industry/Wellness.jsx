@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, m as motion, useReducedMotion } from 'framer-motion';
-import { Activity, Check, Flower2, HeartHandshake, Mail, MessageCircle, MessageSquareText, MessagesSquare, Phone, RefreshCw, ShieldCheck, Sparkles, UserPlus, Undo2 } from 'lucide-react';
+import { Check, HeartHandshake, Mail, MessageCircle, MessageSquareText, MessagesSquare, Phone, RefreshCw, ShieldCheck, UserPlus, Undo2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import SectionHeader from '@/components/home-v2/primitives/SectionHeader';
 import { Reveal } from '@/components/home-v2/primitives/MotionReveal';
@@ -17,6 +17,7 @@ import { RxHero, useLoop } from '@/components/industry/CallHero';
  */
 
 const EASE = [0.22, 1, 0.36, 1];
+const M = '/media/wellness/';
 const SAND = 'bg-[linear-gradient(170deg,#F6F1E9_0%,#EFE7DB_100%)]';
 const ARCH = 'rounded-t-[999px] rounded-b-[28px]';
 
@@ -443,7 +444,7 @@ export function WxCycle({ it }) {
             <div className="absolute inset-[15%] overflow-hidden rounded-full bg-[#E9E1D4] shadow-[0_40px_80px_-40px_rgba(60,40,20,0.6)]">
               {cy.stages.map((x, i) => (
                 <div key={x.key} className={cn('absolute inset-0 transition-opacity duration-1000', i === k ? 'opacity-100' : 'opacity-0')}>
-                  <Clip film={x.media} active={running && i === k} className="object-[45%_40%]" />
+                  <Clip film={x.media} active={running && i === k} style={{ objectPosition: x.media.focus || '45% 40%' }} />
                 </div>
               ))}
             </div>
@@ -505,40 +506,33 @@ export function WxCycle({ it }) {
 /* Clinics                                                                                                             */
 /* ------------------------------------------------------------------------------------------------------------------ */
 
-const CLINIC_ICONS = { activity: Activity, flower: Flower2, sparkles: Sparkles };
-
-/** Clinics: three kinds of practice, each under an arch, and the clinical line across the bottom. */
+/** Clinics: twelve kinds of practice as equal tiles, each with its room in a small arch, then the clinical line. */
 export function WxClinics({ it }) {
   const c = it.wx.clinics;
   return (
     <section id="clinics" data-nav-theme="light" aria-labelledby="wx-clinics-title" className="section relative pt-0">
       <div className="shell">
         <SectionHeader id="wx-clinics-title" titleA={c.titleA} titleB={c.titleB} text={c.text} layout="split" />
-        <div className="no-scrollbar mx-[calc(-1*var(--gutter))] mt-8 flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-px-[var(--gutter)] px-[var(--gutter)] md:mx-0 md:mt-12 md:grid md:grid-cols-3 md:gap-5 md:overflow-visible md:px-0">
-          {c.kinds.map((k, i) => {
-            const Icon = CLINIC_ICONS[k.icon];
-            return (
-              <Reveal key={k.key} delay={i * 0.08} className="w-[84%] shrink-0 snap-start rounded-[28px] bg-white p-5 shadow-[0_0_0_1px_rgba(10,15,14,0.06)] md:w-auto md:p-6">
-                <span className={cn('flex h-[84px] w-[66px] shrink-0 items-center justify-center pt-3 md:h-[112px] md:w-[88px] md:pt-5', ARCH, SAND)}>
-                  <Icon className="h-6 w-6 text-[#D9481C] md:h-7 md:w-7" strokeWidth={1.5} aria-hidden="true" />
-                </span>
-                <span className="block min-w-0">
-                  <span className="mt-4 block text-[17px] font-medium leading-snug tracking-[-0.01em] text-ink md:mt-5 md:text-[19px]">{k.name}</span>
-                  <ul className="mt-2 grid gap-1 md:mt-3 md:gap-1.5">
-                    {k.does.map((x) => (
-                      <li key={x} className="flex items-start gap-2 text-[14px] leading-snug text-graphite">
-                        <span className="mt-[7px] h-1 w-1 shrink-0 rounded-full bg-[#F25C2A]" aria-hidden="true" />
-                        {x}
-                      </li>
-                    ))}
-                  </ul>
-                </span>
-              </Reveal>
-            );
-          })}
-        </div>
+        {/* every practice the same size: a small arch photo, its name and one line */}
+        <ul className="mt-8 grid grid-cols-2 gap-2 md:mt-10 md:grid-cols-3 md:gap-3 lg:grid-cols-4">
+          {c.kinds.map((k, i) => (
+            <Reveal as="li" key={k.key} delay={(i % 4) * 0.06} className="flex items-center gap-2.5 rounded-[22px] bg-white p-2 pr-2.5 shadow-[0_0_0_1px_rgba(10,15,14,0.06)] md:gap-3.5 md:p-2.5 md:pr-4">
+              <span className={cn('relative h-[60px] w-[46px] shrink-0 overflow-hidden bg-[#E9E1D4] md:h-[88px] md:w-[70px] [@media(max-height:820px)]:lg:h-[76px] [@media(max-height:820px)]:lg:w-[60px]', ARCH)}>
+                <img src={M + k.image + '-600.webp'} alt="" className="absolute inset-0 h-full w-full object-cover" loading="lazy" decoding="async" />
+              </span>
+              <span className="block min-w-0">
+                <span className="block hyphens-auto text-[12.5px] font-medium leading-snug tracking-[-0.01em] text-ink [overflow-wrap:anywhere] md:text-[15px]">{k.name}</span>
+                <span className="mt-1 block text-[12.5px] leading-snug text-graphite max-md:hidden">{k.line}</span>
+              </span>
+            </Reveal>
+          ))}
+        </ul>
+        <Reveal delay={0.15}>
+          <p className="mt-4 text-[13.5px] text-slate">{c.more}</p>
+        </Reveal>
+
         {/* the clinical line */}
-        <Reveal delay={0.2} className="mt-3 grid overflow-hidden rounded-[28px] bg-ink text-white md:mt-5 md:grid-cols-2">
+        <Reveal delay={0.2} className="mt-4 grid overflow-hidden rounded-[28px] bg-ink text-white md:grid-cols-2">
           <p className="flex items-start gap-3 p-5 md:p-6">
             <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-[#FFC857]" strokeWidth={1.8} aria-hidden="true" />
             <span className="text-[14.5px] leading-snug text-white/75">
@@ -584,7 +578,7 @@ export function WxJournal({ it }) {
             </h2>
             <p className="pretty mt-4 max-w-[28em] text-[15px] leading-[1.6] text-graphite md:text-[16px]">{j.text}</p>
             <div className={cn('relative mt-8 hidden aspect-[4/5] w-[min(260px,70%)] overflow-hidden bg-[#E9E1D4] shadow-[0_30px_60px_-40px_rgba(60,40,20,0.6)] lg:block', ARCH)}>
-              <img src={j.photo.src} alt={j.photo.alt} className="absolute inset-0 h-full w-full object-cover object-[60%_40%]" loading="lazy" decoding="async" />
+              <img src={j.photo.src} alt={j.photo.alt} className="absolute inset-0 h-full w-full object-cover object-[50%_35%]" loading="lazy" decoding="async" />
             </div>
           </div>
 

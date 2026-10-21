@@ -361,6 +361,156 @@
       "kind": "audio",
       "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261020_101028_c9a9ae09-b42d-431f-8df9-6e983a999051.mp3",
       "out": "public/media/wellness/call-chloe-2"
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261021_093755_e8f5cfb9-77ef-4562-a198-9efe78c38e83.png",
+      "out": "public/media/wellness/chloe-first",
+      "widths": [
+        900,
+        1400,
+        2000
+      ]
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261021_093754_4e7b7f13-37f5-46d8-819c-6fd061a7ce84.png",
+      "out": "public/media/wellness/chloe-walk",
+      "widths": [
+        900,
+        1400,
+        2000
+      ]
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261021_093755_c692e639-13b2-4ac5-97bd-dccf5c65a3ed.png",
+      "out": "public/media/wellness/nina-monday",
+      "widths": [
+        900,
+        1400,
+        2000
+      ]
+    },
+    {
+      "kind": "video",
+      "width": 1280,
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261021_094033_19cf0802-9413-4993-95c4-d71a52a784c2.mp4",
+      "out": "public/media/wellness/chloe-first"
+    },
+    {
+      "kind": "video",
+      "width": 1280,
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261021_094033_d4062bc1-81e0-45ec-ab5b-9cd40bca333a.mp4",
+      "out": "public/media/wellness/chloe-walk"
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261021_095513_23e1e342-a9b5-46a5-9225-2adad8ca59d5.png",
+      "out": "public/media/wellness/clinic-physio",
+      "widths": [
+        600,
+        900
+      ]
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261021_095512_c4f25a18-025c-45da-97d9-896f1c1ac186.png",
+      "out": "public/media/wellness/clinic-spa",
+      "widths": [
+        600,
+        900
+      ]
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261021_095513_6e36ff2d-1445-407a-9069-faf7931e0724.png",
+      "out": "public/media/wellness/clinic-aesthetics",
+      "widths": [
+        600,
+        900
+      ]
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261021_095513_3f571edc-020e-456d-b435-2db51871ddd5.png",
+      "out": "public/media/wellness/clinic-dental",
+      "widths": [
+        600,
+        900
+      ]
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261021_095512_90818963-1b56-48d7-a66a-bfc71a187268.png",
+      "out": "public/media/wellness/clinic-holistic",
+      "widths": [
+        600,
+        900
+      ]
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261021_095512_9616e5d6-9800-4bf8-afcf-b0769d0c0414.png",
+      "out": "public/media/wellness/clinic-nutrition",
+      "widths": [
+        600,
+        900
+      ]
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261021_124824_1411ced0-46d4-41aa-9d46-afdfef4e330e.png",
+      "out": "public/media/wellness/clinic-studio",
+      "widths": [
+        600,
+        900
+      ]
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261021_124825_1e839b2d-2b78-483b-b228-a8fddd441a8e.png",
+      "out": "public/media/wellness/clinic-sports",
+      "widths": [
+        600,
+        900
+      ]
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261021_124825_9ab6f58c-59d8-40df-b43b-4ccfb895e035.png",
+      "out": "public/media/wellness/clinic-iv",
+      "widths": [
+        600,
+        900
+      ]
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261021_124823_3007117c-f627-41f0-8280-b9b5580d9930.png",
+      "out": "public/media/wellness/clinic-counselling",
+      "widths": [
+        600,
+        900
+      ]
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261021_124825_701e265a-beae-4f5a-b57b-a7b06c3f48e6.png",
+      "out": "public/media/wellness/clinic-optometry",
+      "widths": [
+        600,
+        900
+      ]
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261021_124825_d795220a-b350-4b29-ac2d-6fff345d6189.png",
+      "out": "public/media/wellness/clinic-skin",
+      "widths": [
+        600,
+        900
+      ]
     }
   ]
 }
