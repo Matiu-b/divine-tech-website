@@ -142,10 +142,24 @@ function preloads(path) {
 process.env.NODE_ENV ||= 'production';
 const { render: renderApp } = await import(pathToFileURL(join(root, 'dist-ssr/entry-server.js')).href);
 
+// Industry pages open on a photo, their largest paint. Preloading it ahead of the font and the
+// scripts lets phones start it first instead of queueing it behind a dozen chunks.
+function heroPreload(path, body) {
+  if (!path.startsWith('/industries/')) return '';
+  const img = body.match(/<img [^>]*fetchPriority="high"[^>]*>/);
+  if (!img) return '';
+  const attr = (name) => (img[0].match(new RegExp(` ${name}="([^"]*)"`)) || [])[1];
+  const set = attr('srcSet');
+  return `<link rel="preload" as="image" href="${attr('src')}"${set ? ` imagesrcset="${set}" imagesizes="${attr('sizes')}"` : ''} fetchpriority="high" />`;
+}
+
 async function render(path, meta) {
   const links = preloads(path);
-  const html = setMeta(template, { ...meta, path });
-  write(path, withBody(links ? html.replace('</head>', `  ${links}\n  </head>`) : html, await renderApp(path), path));
+  const body = await renderApp(path);
+  const hero = heroPreload(path, body);
+  let html = setMeta(template, { ...meta, path });
+  if (hero) html = html.replace('<link rel="preload" href="/fonts/', `${hero}\n    <link rel="preload" href="/fonts/`);
+  write(path, withBody(links ? html.replace('</head>', `  ${links}\n  </head>`) : html, body, path));
 }
 
 // Pages

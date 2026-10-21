@@ -947,6 +947,8 @@
 @keyframes intro-rise { from { opacity: 0; transform: translateY(16px); } }
 @keyframes intro-slide { from { transform: translateY(16px); } }
 @keyframes intro-fade { from { opacity: 0; } }
+/* Hero photos: a fade up from dark instead of from transparent, so the photo counts as the page's largest paint the moment it shows (Chrome ignores paints at opacity 0). */
+@keyframes intro-dim { from { filter: brightness(0.35); } }
 @keyframes intro-line { from { opacity: 0; transform: translateY(18px); filter: blur(10px); } }
 .intro-rise { animation: intro-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both; }
 .intro-slide { animation: intro-slide 0.9s cubic-bezier(0.22, 1, 0.36, 1) both; }

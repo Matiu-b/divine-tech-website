@@ -146,7 +146,7 @@ function CallStage({ h, header }) {
               srcSet={f.image ? f.image.srcSet : undefined}
               sizes="(min-width: 1440px) 1376px, 100vw"
               alt={f.video ? '' : f.alt}
-              className="absolute inset-0 h-full w-full object-cover object-[30%_50%] motion-safe:animate-[intro-fade_0.9s_cubic-bezier(0.22,1,0.36,1)_0.2s_both] min-[560px]:inset-auto min-[560px]:left-0 min-[560px]:top-[-9.16cqw] min-[560px]:h-[calc(100%_+_9.16cqw)] min-[560px]:min-h-[55.87cqw] min-[560px]:object-[30%_0%] min-[560px]:[mask-image:linear-gradient(to_bottom,transparent,#000_7%)]"
+              className="absolute inset-0 h-full w-full object-cover object-[30%_50%] motion-safe:animate-[intro-dim_0.9s_cubic-bezier(0.22,1,0.36,1)_0.2s_both] min-[560px]:inset-auto min-[560px]:left-0 min-[560px]:top-[-9.16cqw] min-[560px]:h-[calc(100%_+_9.16cqw)] min-[560px]:min-h-[55.87cqw] min-[560px]:object-[30%_0%] min-[560px]:[mask-image:linear-gradient(to_bottom,transparent,#000_7%)]"
               style={f.mirror ? { transform: 'scaleX(-1)' } : undefined}
               decoding="async"
               fetchPriority="high"

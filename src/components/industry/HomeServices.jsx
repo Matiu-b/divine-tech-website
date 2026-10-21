@@ -190,7 +190,7 @@ export function HsHero() {
               </div>
             </div>
 
-            <figure className="intro-rise relative m-0 mt-5 aspect-[16/9] overflow-hidden rounded-[24px] bg-[#2B3550] max-[559px]:shadow-[0_30px_60px_-40px_rgba(30,30,60,0.55)] min-[560px]:absolute min-[560px]:inset-0 min-[560px]:mt-0 min-[560px]:aspect-auto min-[560px]:rounded-none" style={{ animationDelay: '0.2s' }}>
+            <figure className="intro-slide relative m-0 mt-5 aspect-[16/9] overflow-hidden rounded-[24px] bg-[#2B3550] max-[559px]:shadow-[0_30px_60px_-40px_rgba(30,30,60,0.55)] min-[560px]:absolute min-[560px]:inset-0 min-[560px]:mt-0 min-[560px]:aspect-auto min-[560px]:rounded-none" style={{ animationDelay: '0.2s' }}>
               <img
                 src={m.poster}
                 srcSet={m.srcSet}
@@ -198,7 +198,7 @@ export function HsHero() {
                 alt={m.alt}
                 fetchPriority="high"
                 decoding="async"
-                className="absolute inset-0 h-full w-full origin-[50%_74%] scale-[1.45] object-cover min-[560px]:scale-100"
+                className="absolute inset-0 h-full w-full origin-[50%_74%] scale-[1.45] object-cover motion-safe:animate-[intro-dim_0.9s_cubic-bezier(0.22,1,0.36,1)_0.2s_both] min-[560px]:scale-100"
                 style={{ objectPosition: m.focus }}
               />
               {m.video && !reduce ? (
