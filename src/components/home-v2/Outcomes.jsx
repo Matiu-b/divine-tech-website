@@ -20,6 +20,9 @@ export default function Outcomes() {
   const [clipT, setClipT] = useState(0); // where the playing film is, in ms
   const reduce = !!useReducedMotion();
   const inView = useInViewport(track, { threshold: 0.4 });
+  // The films (and their posters) start downloading once the section is a screen away, not with
+  // the page: on phones the first one alone is about 300 KB, which held back the first screen.
+  const near = useInViewport(track, { rootMargin: '100% 0px', once: true });
   const visible = usePageVisible();
   const running = inView && visible && !reduce;
 
@@ -141,8 +144,8 @@ export default function Outcomes() {
                       ref={(el) => {
                         videos.current[i] = el;
                       }}
-                      src={o.video}
-                      poster={o.poster}
+                      src={near ? o.video : undefined}
+                      poster={near ? o.poster : undefined}
                       className="absolute inset-0 h-full w-full object-cover"
                       style={o.mirror ? { transform: 'scaleX(-1)' } : undefined}
                       muted
