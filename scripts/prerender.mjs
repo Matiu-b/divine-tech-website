@@ -14,7 +14,12 @@ import * as site from '../src/data/site.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const dist = join(root, 'dist');
-const template = readFileSync(join(dist, 'index.html'), 'utf8');
+// The preloaded script chunks load at low priority: the HTML is already rendered, so the stylesheet,
+// font and hero image get the bandwidth for the first paint, and the code that makes the page
+// interactive follows. (PageSpeed counted the 130 KB of chunks toward the first paint.) The small
+// entry script keeps its normal priority, so on HTTP/1.1 the browser doesn't queue it behind images.
+const lowPriority = (html) => html.replace(/<link rel="modulepreload" crossorigin/g, '<link rel="modulepreload" fetchpriority="low" crossorigin');
+const template = lowPriority(readFileSync(join(dist, 'index.html'), 'utf8'));
 
 const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const abs = (path) => SITE_URL + (path === '/' ? '/' : path);
@@ -134,7 +139,7 @@ function preloads(path) {
     (chunk.imports || []).forEach(visit);
   };
   visit(`src/pages/${name}.jsx`);
-  return [...files].filter((f) => !entryChunks.has(f)).map((f) => `<link rel="modulepreload" crossorigin href="/${f}">`).join('\n    ');
+  return [...files].filter((f) => !entryChunks.has(f)).map((f) => `<link rel="modulepreload" fetchpriority="low" crossorigin href="/${f}">`).join('\n    ');
 }
 
 // The page itself, rendered by React from the server build (src/entry-server.jsx), with React's

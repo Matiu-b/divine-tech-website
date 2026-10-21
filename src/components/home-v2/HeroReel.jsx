@@ -15,7 +15,8 @@ import { useHydrated, useMediaQuery, usePageLoaded, usePageVisible } from './hoo
  * poster, code and font come first. Reduced motion shows the first still only.
  * The first still is also a <picture> under the clips, which picks the phone or wide version with a
  * media query: the prerendered HTML can't know the screen, so the clips only get their posters
- * once the page is hydrated, and the picture covers the first paint until then.
+ * once the page is hydrated, and the picture covers the first paint until then. The later clips get
+ * their posters when they start loading, so the first screen doesn't download all four stills.
  * A small glass card says what Aurora did in each scene, and a dot per scene shows where the reel is.
  * Hand-offs are soft: the next clip starts a moment before the current one ends and fades in over it,
  * while the outgoing clip keeps playing to its last frame; it is only rewound once it is fully hidden.
@@ -115,7 +116,7 @@ export default function HeroReel({ className = undefined }) {
             }}
             className={cn('absolute inset-0 h-full w-full object-cover transition-opacity duration-[1400ms] ease-out', i === active ? 'opacity-100' : 'opacity-0')}
             src={load ? (tall ? c.tall : c.wide) : undefined}
-            poster={hydrated ? poster : undefined}
+            poster={hydrated && (i === 0 || load) ? poster : undefined}
             muted
             playsInline
             preload={load ? 'auto' : 'none'}
