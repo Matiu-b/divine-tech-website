@@ -7,7 +7,7 @@ import { Reveal } from '@/components/home-v2/primitives/MotionReveal';
 import Closing from '@/components/home-v2/Closing';
 import { CallOverlay, useCallClock } from '@/components/home-v2/CallBox';
 import { useInViewport, usePageLoaded, usePageVisible } from '@/components/home-v2/hooks';
-import { RxHero, useLoop } from '@/components/industry/RealEstateV3';
+import { RxHero, useLoop } from '@/components/industry/CallHero';
 
 /*
  * Wellness & Healthcare page, in its own design: calm, airy, editorial. Linen and sand grounds, photographs and clips
@@ -21,22 +21,29 @@ const M = '/media/wellness/';
 const SAND = 'bg-[linear-gradient(170deg,#F6F1E9_0%,#EFE7DB_100%)]';
 const ARCH = 'rounded-t-[999px] rounded-b-[28px]';
 
-/** A muted clip that plays only while `active`, over its poster. */
+/**
+ * A muted clip that plays only while `active`, over its poster. The video is added the first time the clip is active,
+ * so the clips further down the page don't all download with it.
+ */
 function Clip({ film, active, className = '', style = undefined, rate = 1 }) {
   const ref = useRef(null);
   const loaded = usePageLoaded();
   const reduce = !!useReducedMotion();
+  const [wanted, setWanted] = useState(false);
+  useEffect(() => {
+    if (active) setWanted(true);
+  }, [active]);
   useEffect(() => {
     const v = ref.current;
     if (!v) return;
     v.playbackRate = rate;
     if (active) v.play().catch(() => {});
     else v.pause();
-  }, [active, rate, loaded]);
+  }, [active, rate, loaded, wanted]);
   return (
     <>
       <img src={film.poster} alt={film.alt || ''} className={cn('absolute inset-0 h-full w-full object-cover', className)} style={style} loading="lazy" decoding="async" />
-      {loaded && !reduce ? <video ref={ref} src={film.video} poster={film.poster} muted loop playsInline preload="metadata" aria-hidden="true" className={cn('absolute inset-0 h-full w-full object-cover', className)} style={style} /> : null}
+      {loaded && wanted && !reduce ? <video ref={ref} src={film.video} poster={film.poster} muted loop playsInline preload="metadata" aria-hidden="true" className={cn('absolute inset-0 h-full w-full object-cover', className)} style={style} /> : null}
     </>
   );
 }
@@ -110,7 +117,7 @@ function DeskItem({ x, reduce }) {
           <span className="truncate text-[13px] font-medium text-ink">
             {x.who} <span className="font-normal text-slate">· {ch.label}</span>
           </span>
-          <span className="t-data shrink-0 text-[10.5px] text-ink/35">min {x.at}</span>
+          <span className="t-data shrink-0 text-[10.5px] text-ink/60">min {x.at}</span>
         </span>
         <span className="mt-0.5 block truncate text-[13.5px] leading-snug text-graphite">“{x.said}”</span>
         <span className={cn('mt-2 inline-flex max-w-full items-center gap-1.5 rounded-full px-2.5 py-1 text-[12px] font-medium', care ? 'bg-[#FFF1E4] text-[#B4471A]' : 'bg-[#E9F4EC] text-[#2E7A48]')}>
@@ -211,7 +218,7 @@ function Slot({ c, state, reduce }) {
     >
       {state === 'offer' && !reduce ? <span className="ring-ping absolute inset-0 rounded-[14px] bg-[#F25C2A]/10" /> : null}
       <span className="relative truncate text-[12px] font-medium leading-tight text-ink">{name}</span>
-      <span className={cn('relative mt-0.5 flex items-center gap-1 text-[11px] tabular-nums leading-tight', open ? 'text-[#B4471A]' : 'text-ink/45')}>
+      <span className={cn('relative mt-0.5 flex items-center gap-1 text-[11px] tabular-nums leading-tight', open ? 'text-[#B4471A]' : 'text-ink/60')}>
         {state === 'refilled' ? <img src="/brand/aurora-symbol-color.svg" alt="" width="10" height="10" className="h-2.5 w-2.5" /> : null}
         {open ? cap - 1 : cap}/{cap}
       </span>
@@ -255,7 +262,7 @@ export function WxWeek({ it }) {
           <div className="min-w-0">
             <div className="flex gap-1.5 md:hidden" role="tablist" aria-label="Days">
               {w.days.map((d, i) => (
-                <span key={d} role="tab" aria-selected={i === ev.day} className={cn('flex-1 rounded-full py-1.5 text-center text-[12px] font-medium transition-colors duration-500', i === ev.day ? 'bg-ink text-white' : 'bg-[#F3EEE6] text-ink/55')}>
+                <span key={d} role="tab" aria-selected={i === ev.day} className={cn('flex-1 rounded-full py-1.5 text-center text-[12px] font-medium transition-colors duration-500', i === ev.day ? 'bg-ink text-white' : 'bg-[#F3EEE6] text-ink/60')}>
                   {d}
                 </span>
               ))}
@@ -265,7 +272,7 @@ export function WxWeek({ it }) {
                 const c = at(ev.day, r);
                 return (
                   <div key={ti} className="grid h-[46px] grid-cols-[48px_minmax(0,1fr)] items-center gap-2">
-                    <span className="t-data text-[11px] text-ink/40">{ti}</span>
+                    <span className="t-data text-[11px] text-ink/60">{ti}</span>
                     {c ? <Slot c={c} state={stateOf(c)} reduce={reduce} /> : <span className="h-full rounded-[14px] border border-dashed border-ink/[0.07]" />}
                   </div>
                 );
@@ -275,13 +282,13 @@ export function WxWeek({ it }) {
             <div className="hidden md:grid md:grid-cols-[48px_repeat(6,minmax(0,1fr))] md:gap-1.5" aria-hidden="true">
               <span />
               {w.days.map((d, i) => (
-                <span key={d} className={cn('pb-1 text-center text-[12px] font-medium transition-colors duration-500', i === ev.day ? 'text-ink' : 'text-ink/40')}>
+                <span key={d} className={cn('pb-1 text-center text-[12px] font-medium transition-colors duration-500', i === ev.day ? 'text-ink' : 'text-ink/60')}>
                   {d}
                 </span>
               ))}
               {w.times.map((ti, r) => (
                 <React.Fragment key={ti}>
-                  <span className="t-data flex h-[56px] items-center text-[11px] text-ink/40 [@media(max-height:760px)]:h-[48px]">{ti}</span>
+                  <span className="t-data flex h-[56px] items-center text-[11px] text-ink/60 [@media(max-height:760px)]:h-[48px]">{ti}</span>
                   {w.days.map((d, di) => {
                     const c = at(di, r);
                     return <div key={d}>{c ? <Slot c={c} state={stateOf(c)} reduce={reduce} /> : <span className="block h-full rounded-[14px] border border-dashed border-ink/[0.07]" />}</div>;
@@ -406,7 +413,7 @@ export function WxCycle({ it }) {
                     {s.when} · {s.name}
                   </p>
                   <p className="pretty mt-2 text-[17px] leading-[1.45] text-ink md:text-[19px]">{s.line}</p>
-                  <p className="mt-5 text-[11px] font-medium uppercase tracking-[0.08em] text-ink/40">{cy.did}</p>
+                  <p className="mt-5 text-[11px] font-medium uppercase tracking-[0.08em] text-ink/60">{cy.did}</p>
                   <ul className="mt-2 grid gap-1.5">
                     {s.did.map((x) => (
                       <li key={x} className="flex items-start gap-2.5 text-[14.5px] leading-snug text-graphite">
@@ -466,7 +473,7 @@ export function WxCycle({ it }) {
                   <span
                     className={cn(
                       'pointer-events-none absolute hidden whitespace-nowrap text-[13px] font-medium transition-colors lg:block',
-                      cur ? 'text-ink' : 'text-ink/45',
+                      cur ? 'text-ink' : 'text-ink/60',
                       side === 'top' && 'bottom-6 left-1/2 -translate-x-1/2 text-center',
                       side === 'bottom' && 'left-1/2 top-6 -translate-x-1/2 text-center',
                       side === 'right' && 'left-6 top-1/2 -translate-y-1/2',
@@ -474,7 +481,7 @@ export function WxCycle({ it }) {
                     )}
                   >
                     {x.name}
-                    <span className="t-data block text-[10.5px] font-normal text-ink/40">{x.when}</span>
+                    <span className="t-data block text-[10.5px] font-normal text-ink/60">{x.when}</span>
                   </span>
                 </button>
               );
@@ -584,7 +591,7 @@ export function WxJournal({ it }) {
                 </span>
                 <span className="text-[13px] font-medium text-ink">{L.from}</span>
               </span>
-              <span className="t-data text-[11px] text-ink/40">{L.date}</span>
+              <span className="t-data text-[11px] text-ink/60">{L.date}</span>
             </header>
             <p className="mt-4 text-[19px] font-medium tracking-[-0.01em] text-ink sm:text-[21px]">{L.hello}</p>
             <p className="mt-1 text-[14.5px] text-graphite">{L.intro}</p>

@@ -410,7 +410,7 @@ export default function FieldMap({ d }) {
                 <span className="h-[3px] w-5 rounded-full bg-[#F25C2A]" />
                 {d.labels.aurora} · {hm(total)}
               </span>
-              <span className="flex items-center gap-2 text-ink/55">
+              <span className="flex items-center gap-2 text-ink/60">
                 <span className="w-5 border-t-2 border-dashed border-ink/35" />
                 {d.labels.asBooked} · {hm(d.booked.drive)}
               </span>
@@ -455,7 +455,7 @@ export default function FieldMap({ d }) {
                   <li key={s.job} className="flex flex-1 items-center last:flex-none">
                     <span className={cn('flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold transition-colors duration-300', i === leg ? 'bg-[#F25C2A] text-white' : i < leg ? 'bg-ink/15 text-ink/60' : 'bg-white text-ink/60 shadow-[inset_0_0_0_1px_rgba(10,15,14,0.15)]')}>{i + 1}</span>
                     {i < n - 1 ? (
-                      <span className="flex flex-1 items-center justify-center gap-0.5 text-[10.5px] text-ink/40">
+                      <span className="flex flex-1 items-center justify-center gap-0.5 text-[10.5px] text-ink/60">
                         {d.stops[i + 1].drive}′
                       </span>
                     ) : null}

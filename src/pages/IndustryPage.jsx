@@ -2,8 +2,9 @@ import React from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import { ArrowRight, ArrowUpRight, Check, ScrollText, ShieldCheck, UserCheck } from 'lucide-react';
 import { brand } from '@/data/site';
-import { industries, industryBySlug, industryPath } from '@/data/industries';
+import { industryBySlug } from '@/data/industries';
 import { posts, postPath, readMinutes } from '@/data/blog';
+import OtherIndustries from '@/components/industry/OtherIndustries';
 import LiquidGlass from '@/components/home-v2/primitives/LiquidGlass';
 import SiteLayout from '@/components/home-v2/SiteLayout';
 import FinalCTA from '@/components/home-v2/FinalCTA';
@@ -16,13 +17,6 @@ import SmartLink from '@/components/home-v2/primitives/SmartLink';
 import { Reveal, RevealGroup, RevealItem, RevealLines } from '@/components/home-v2/primitives/MotionReveal';
 import { useLead } from '@/components/home-v2/LeadDrawer';
 import { onAnchorClick } from '@/components/home-v2/hooks';
-import FieldMap from '@/components/industry/FieldMap';
-import MorningBrief from '@/components/industry/MorningBrief';
-import LiveSteps from '@/components/home-v2/LiveSteps';
-import { HsClosing, HsHero } from '@/components/industry/HomeServices';
-import { hsField, hsHear, hsLive } from '@/data/homeServices';
-import { RxAfter, RxClosing, RxHero, RxKpi, RxRace, RxRules, RxStack, RxFaqMore } from '@/components/industry/RealEstateV3';
-import { WxClosing, WxClinics, WxCycle, WxDesk, WxHero, WxJournal, WxWeek } from '@/components/industry/Wellness';
 
 /** @param {any} props */
 function IndustryHero({ it }) {
@@ -233,85 +227,12 @@ function GoLive({ it }) {
   );
 }
 
-function OtherIndustries({ it }) {
-  const others = industries.filter((o) => o.slug !== it.slug);
-  return (
-    <section data-nav-theme="light" aria-label="Other industries" className="relative pb-[var(--section-y)]">
-      <div className="shell">
-        <p className="text-[13px] font-medium text-slate">Aurora in other industries</p>
-        <div className="mt-4 grid gap-4 md:grid-cols-2">
-          {others.map((o) => (
-            <SmartLink
-              key={o.slug}
-              href={industryPath(o.slug)}
-              className="group flex items-center justify-between gap-6 rounded-[24px] bg-white p-6 shadow-[0_0_0_1px_rgba(10,15,14,0.06)] transition-shadow hover:shadow-[0_0_0_1px_rgba(10,15,14,0.12)] md:p-7"
-            >
-              <span>
-                <span className="t-h4 block">{o.label}</span>
-                <span className="mt-1.5 block text-[13.5px] leading-relaxed text-graphite">{o.short}</span>
-              </span>
-              <ArrowUpRight className="h-5 w-5 shrink-0 text-ink/40 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ink" strokeWidth={1.7} aria-hidden="true" />
-            </SmartLink>
-          ))}
-        </div>
-        <SmartLink href="/" className="mt-8 inline-flex items-center gap-1.5 text-[13.5px] font-medium text-graphite hover:text-ink">
-          {'See everything ' + brand.product + ' does'}
-          <ArrowRight className="h-4 w-4" strokeWidth={1.8} aria-hidden="true" />
-        </SmartLink>
-      </div>
-    </section>
-  );
-}
-
+// The shared industry layout, for any industry without a design of its own. Real estate, wellness and home
+// services have their own pages in src/pages/industries/, each in its own chunk.
 export default function IndustryPage() {
   const { slug } = useParams();
   const it = industryBySlug[slug];
   if (!it) return <Navigate to="/" replace />;
-  if (it.five) {
-    // each scene one screen: the promise with the customer call, jobs to the field on the map, the morning brief, going live under your rules, then the form
-    return (
-      <SiteLayout key={it.slug} industry={it.leadIndustry} meta={it.meta}>
-        <HsHero />
-        <FieldMap d={hsField} />
-        <MorningBrief d={hsHear} />
-        <LiveSteps d={hsLive} id="how" />
-        <Faq id="ind-faq-title" items={it.faq} className="pt-0" />
-        <OtherIndustries it={it} />
-        <HsClosing it={it} />
-      </SiteLayout>
-    );
-  }
-  // Wellness & Healthcare: its own design, one studio's story, then clinics
-  if (it.wx) {
-    return (
-      <SiteLayout key={it.slug} industry={it.leadIndustry} meta={it.meta}>
-        <WxHero it={it} />
-        <WxDesk it={it} />
-        <WxWeek it={it} />
-        <WxCycle it={it} />
-        <WxClinics it={it} />
-        <WxJournal it={it} />
-        <Faq id="ind-faq-title" items={it.faq} visible={it.faqVisible || 0} className="pt-0" more={it.wx.faqMore ? <RxFaqMore m={it.wx.faqMore} guide={it.article ? postPath(it.article) : null} /> : null} />
-        <OtherIndustries it={it} />
-        <WxClosing it={it} />
-      </SiteLayout>
-    );
-  }
-  if (it.v3) {
-    return (
-      <SiteLayout key={it.slug} industry={it.leadIndustry} meta={it.meta}>
-        <RxHero it={it} />
-        <RxRace it={it} />
-        <RxRules it={it} />
-        {it.v3.after ? <RxAfter it={it} /> : null}
-        {it.v3.after ? <RxKpi it={it} /> : null}
-        {it.v3.stack ? <RxStack it={it} /> : null}
-        <Faq id="ind-faq-title" items={it.faq} visible={it.faqVisible || 0} className="pt-0" more={it.v3.faqMore ? <RxFaqMore m={it.v3.faqMore} guide={it.article ? postPath(it.article) : null} /> : null} />
-        <OtherIndustries it={it} />
-        {it.v3.closing ? <RxClosing it={it} /> : <FinalCTA industry={it.leadIndustry} />}
-      </SiteLayout>
-    );
-  }
   return (
     <SiteLayout key={it.slug} industry={it.leadIndustry} meta={it.meta}>
       <IndustryHero it={it} />
