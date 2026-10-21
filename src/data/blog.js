@@ -13,6 +13,94 @@ export const blog = {
 
 export const posts = [
   {
+    "slug": "ai-agent-human-handoff",
+    "title": "AI-to-human handoff: when should an AI agent hand off to a human?",
+    "titleTag": "AI-to-Human Handoff: When an AI Agent Should Hand Off",
+    "description": "When should an AI agent hand off to a human? Six triggers for an AI-to-human handoff, what the person needs, and the 15-minute rule in California.",
+    "dek": "Six handoff triggers, the context a person needs to reply in one message, and what California's new right-to-a-human law says about speed.",
+    "category": "Guides",
+    "date": "2026-10-21",
+    "updated": "2026-10-21",
+    "author": "Divine Tech AI",
+    "image": {
+      "base": "/img/blog/ai-agent-human-handoff",
+      "alt": "Soft sand and cream light with a dusty pink and terracotta glow, the Divine Tech AI wordmark and the headline When to bring in a person",
+      "og": "/img/blog/ai-agent-human-handoff-og.jpg"
+    },
+    "bodyHtml": "<p><strong>An AI agent should hand off to a human when the customer asks for one, when the next step crosses a limit you set or needs judgment, when the answer is not in your own sources, or when the agent has failed twice on the same request.</strong> A good AI-to-human handoff gives the person the whole conversation and a record of what the agent already did, so the customer never has to start over.</p>\n\n<p>The route to a person decides how customers feel about the agent. In Gartner's survey of 5,728 customers, 64% said they would prefer companies did not use AI for customer service, and the top worry was that AI would make it harder to reach a person (<a href=\"https://www.gartner.com/en/newsroom/press-releases/2024-07-09-gartner-survey-finds-64-percent-of-customers-would-prefer-that-companies-didnt-use-ai-for-customer-service\">Gartner, July 2024</a>).</p>\n\n<h2>What should trigger an AI-to-human handoff?</h2>\n\n<p>Write escalation triggers as rules the agent checks on every turn. Six cover most businesses:</p>\n\n<table>\n<thead><tr><th>Trigger</th><th>Example</th><th>What the agent does</th></tr></thead>\n<tbody>\n<tr><td>The customer asks for a person</td><td>\"Can I talk to someone?\", \"agent\", pressing 0</td><td>Hands off at once, with no retry</td></tr>\n<tr><td>A limit is crossed</td><td>A refund above your approval limit, a discount outside policy</td><td>Asks the named approver, or hands off</td></tr>\n<tr><td>No source for the answer</td><td>The policy page is silent, or two pages disagree</td><td>Hands off instead of guessing</td></tr>\n<tr><td>Repeated failure</td><td>The customer asks the same thing twice, or an action fails twice</td><td>Stops the loop and hands off</td></tr>\n<tr><td>An action is not confirmed</td><td>The booking or refund never shows up in your system</td><td>Says so, and hands off</td></tr>\n<tr><td>A sensitive topic</td><td>A complaint, a legal threat, a safety issue, a billing dispute</td><td>Hands off with the reason flagged</td></tr>\n</tbody>\n</table>\n\n<p>Frustration and confidence scores can add early warnings, but a request for a person should never wait on a score. Treat it as a hard rule, in any wording and on any channel.</p>\n\n<p>A limit is not always a full handoff. If a refund only needs a manager's yes, the agent can ask for that approval and finish the task itself. Hand over the conversation when the customer needs to talk to someone.</p>\n\n<h2>What should the person receive?</h2>\n\n<p>A transcript is not enough. The person taking over should be able to reply well in their first message, which means the handoff carries:</p>\n\n<ul>\n<li>who the customer is, matched to one record;</li>\n<li>the request in one sentence, with the full history from every channel;</li>\n<li>each action the agent took, and whether your system confirmed it;</li>\n<li>why the agent stopped, and the decision it needs;</li>\n<li>what the customer was told about timing.</li>\n</ul>\n\n<p>On the customer's side, the agent should say that a person is coming and roughly when. Once a person joins, the agent stays quiet in that conversation. When the person is done, the agent can pick up the remaining tasks, with the decision on record.</p>\n\n<h2>How fast does a person need to respond?</h2>\n\n<p>California now puts a number on it. Governor Newsom signed AB 1609, the Right to Human Customer Service Act, on September 28, 2026 (<a href=\"https://www.gov.ca.gov/2026/09/28/governor-newsom-signs-commonsense-legislation-to-make-your-life-easier/\">Office of the Governor</a>). According to the <a href=\"https://sjud.senate.ca.gov/system/files/2026-06/ab-1609-zbur-sjud-analysis.pdf\">Senate Judiciary Committee analysis</a>, it applies to businesses with more than $500 million in annual revenue, and requires them to:</p>\n\n<ul>\n<li>offer a clear way to ask for a person on every customer service channel, chatbots and phone lines included, during business hours;</li>\n<li>make a good-faith effort to connect the customer within 15 minutes, or offer a specific appointment within one business day;</li>\n<li>tell customers when they are talking to a chatbot.</li>\n</ul>\n\n<p>The <a href=\"https://sfstandard.com/2026/10/15/anthropic-customer-service-human/\">San Francisco Standard</a> reports that the rules start next year. This is not legal advice, so check the final text with counsel. Smaller businesses are not covered, but the numbers are a sensible target anyway. In practice that means a named owner for every handoff, a queue someone actually watches, and a specific callback time to offer when nobody is free.</p>\n\n<h2>Frequently asked questions</h2>\n\n<h3>Is a high handoff rate a bad sign?</h3>\n<p>Not on its own. Track the handoff rate together with the reason for each handoff. A rising share of \"no source\" handoffs points to gaps in your documents, which you can fix. If you push the rate down by making people harder to reach, customers notice.</p>\n\n<h3>What if nobody is available to take the handoff?</h3>\n<p>The agent should say so plainly, offer a specific callback time or the next opening, and record the promise as a task with an owner. A vague \"someone will get back to you\" with no owner is how requests get dropped.</p>\n\n<h2>Next steps</h2>\n\n<p>Write your six triggers down before you launch an agent, along with who owns each one. An AI-to-human handoff only works if someone is on the other end. In Aurora, your team can take over any conversation with the full history, requests that cross a limit go to the right person for approval, and every handoff is on record.</p>\n\n<p>See how the full flow works in <a href=\"/blog/ai-customer-service-agents\">AI customer service agents: how they work end to end</a>, explore <a href=\"/platform\">the Aurora platform</a>, or read <a href=\"/platform#security\">how Aurora keeps you in control</a>.</p>",
+    "schema": [
+      {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "AI-to-human handoff: when should an AI agent hand off to a human?",
+        "description": "When should an AI agent hand off to a human? Six triggers for an AI-to-human handoff, what the person needs, and the 15-minute rule in California.",
+        "image": "https://divine-tech.ai/img/blog/ai-agent-human-handoff-og.jpg",
+        "datePublished": "2026-10-21",
+        "dateModified": "2026-10-21",
+        "author": {
+          "@type": "Organization",
+          "name": "Divine Tech AI",
+          "url": "https://divine-tech.ai"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Divine Tech AI",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://divine-tech.ai/icon-512.png"
+          }
+        },
+        "mainEntityOfPage": "https://divine-tech.ai/blog/ai-agent-human-handoff"
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://divine-tech.ai/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Blog",
+            "item": "https://divine-tech.ai/blog"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "AI-to-human handoff: when should an AI agent hand off to a human?",
+            "item": "https://divine-tech.ai/blog/ai-agent-human-handoff"
+          }
+        ]
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Is a high handoff rate a bad sign?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Not on its own. Track the handoff rate together with the reason for each handoff. A rising share of \"no source\" handoffs points to gaps in your documents, which you can fix. If you push the rate down by making people harder to reach, customers notice."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What if nobody is available to take the handoff?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The agent should say so plainly, offer a specific callback time or the next opening, and record the promise as a task with an owner. A vague \"someone will get back to you\" with no owner is how requests get dropped."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
     "slug": "ai-customer-service-agents",
     "title": "AI customer service agents: how they work end to end",
     "titleTag": "AI Customer Service Agents: How They Work End to End",
