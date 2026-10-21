@@ -177,14 +177,16 @@ export const wellness = {
     stages: [
       {
         key: 'intro', name: 'Intro class', when: 'Week 1',
-        media: { video: M + 'chloe-class.mp4', poster: M + 'chloe-class-poster.webp' },
-        line: 'Her first reformer class, booked on a call the night she found the studio.',
+        // her first morning at the front desk: Nina hands her grip socks and shows her in
+        media: { video: M + 'chloe-first.mp4', poster: M + 'chloe-first-poster.webp', focus: '22% 35%' },
+        line: 'Her first morning at the studio, booked on a call the night she found it.',
         did: ['Booked the intro class and sent the waiver', 'Texted the membership offer that evening'],
       },
       {
         key: 'habit', name: 'Habit', when: 'Months 1–2',
-        media: { video: M + 'chloe-dawn.mp4', poster: M + 'chloe-dawn-poster.webp' },
-        line: 'Three classes a week, and the first one off the waitlist when a spot opens.',
+        // her regular walk to class, mat on her shoulder
+        media: { video: M + 'chloe-walk.mp4', poster: M + 'chloe-walk-poster.webp', focus: '50% 40%' },
+        line: 'Three classes a week, and the walk there is part of the routine now.',
         did: ['Reminders two hours before class', 'Waitlist spots offered the minute they open'],
       },
       {
@@ -210,12 +212,23 @@ export const wellness = {
     eyebrow: 'Wellness clinics',
     titleA: 'Clinics too.',
     titleB: 'Care stays with you.',
-    text: 'Physiotherapy, massage and aesthetics practices run on the same calendar pressure. Aurora handles the desk; anything clinical goes to your team.',
+    text: 'Every practice that lives by its calendar. Aurora handles the desk; anything clinical goes to your team.',
+    // twelve practices, each the same size, in an arch photo with one line on what Aurora does there
     kinds: [
-      { key: 'physio', name: 'Physiotherapy & chiropractic', icon: 'activity', does: ['Books first visits and follow-up series', 'Sends intake forms before the first visit', 'Reminds patients of their next session'] },
-      { key: 'spa', name: 'Massage & spa', icon: 'flower', does: ['Books by therapist, room and length', 'Sells and redeems gift cards and packages', 'Fills late cancellations from the waitlist'] },
-      { key: 'aesthetics', name: 'Aesthetics & med spa', icon: 'sparkles', does: ['Books consultations before treatments', 'Sends before-and-after care notes you wrote', 'Rebooks the next treatment on time'] },
+      { key: 'studio', name: 'Yoga, Pilates & fitness', image: 'clinic-studio', line: 'Intro classes, waitlists and memberships' },
+      { key: 'physio', name: 'Physio & chiropractic', image: 'clinic-physio', line: 'First visits, follow-up series, intake forms' },
+      { key: 'spa', name: 'Massage & spa', image: 'clinic-spa', line: 'By therapist, room and length; gift cards' },
+      { key: 'aesthetics', name: 'Aesthetics & med spa', image: 'clinic-aesthetics', line: 'Consultations first, then the next treatment' },
+      { key: 'dental', name: 'Dental clinics', image: 'clinic-dental', line: 'Check-ups, cleanings and recalls when due' },
+      { key: 'holistic', name: 'Acupuncture & holistic', image: 'clinic-holistic', line: 'Sessions by practitioner, what to expect' },
+      { key: 'nutrition', name: 'Nutrition & dietitians', image: 'clinic-nutrition', line: 'Consultations, check-ins, questionnaires' },
+      { key: 'sports', name: 'Sports medicine', image: 'clinic-sports', line: 'Assessments and rehab blocks, on time' },
+      { key: 'iv', name: 'IV & wellness lounges', image: 'clinic-iv', line: 'Chair bookings, packages and memberships' },
+      { key: 'counselling', name: 'Counselling practices', image: 'clinic-counselling', line: 'Scheduling only; the sessions stay with you' },
+      { key: 'optometry', name: 'Optometry', image: 'clinic-optometry', line: 'Eye exams, fittings and pick-up reminders' },
+      { key: 'skin', name: 'Beauty & skin clinics', image: 'clinic-skin', line: 'Facials and courses, rebooked on time' },
     ],
+    more: 'And any practice that runs on its calendar.',
     line: { never: 'Never', neverText: 'diagnoses, gives medical advice or discusses treatment results.', always: 'Always', alwaysText: 'hands clinical questions and urgent cases to your staff, with the conversation attached.' },
   },
 
@@ -248,7 +261,7 @@ export const wellness = {
       sign: 'Have a lovely week,',
       name: 'Aurora',
     },
-    photo: { src: M + 'chloe-friend-900.webp', alt: 'Two friends laughing at the studio’s front desk after class, mats under their arms' },
+    photo: { src: M + 'nina-monday-900.webp', alt: 'The studio owner reading her phone with a coffee in her empty studio on a Monday morning' },
     note: 'An example letter. The figures are illustrative.',
   },
 
