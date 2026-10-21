@@ -403,6 +403,60 @@
       "width": 1280,
       "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261021_094033_d4062bc1-81e0-45ec-ab5b-9cd40bca333a.mp4",
       "out": "public/media/wellness/chloe-walk"
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261021_095513_23e1e342-a9b5-46a5-9225-2adad8ca59d5.png",
+      "out": "public/media/wellness/clinic-physio",
+      "widths": [
+        600,
+        900
+      ]
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261021_095512_c4f25a18-025c-45da-97d9-896f1c1ac186.png",
+      "out": "public/media/wellness/clinic-spa",
+      "widths": [
+        600,
+        900
+      ]
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261021_095513_6e36ff2d-1445-407a-9069-faf7931e0724.png",
+      "out": "public/media/wellness/clinic-aesthetics",
+      "widths": [
+        600,
+        900
+      ]
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261021_095513_3f571edc-020e-456d-b435-2db51871ddd5.png",
+      "out": "public/media/wellness/clinic-dental",
+      "widths": [
+        600,
+        900
+      ]
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261021_095512_90818963-1b56-48d7-a66a-bfc71a187268.png",
+      "out": "public/media/wellness/clinic-holistic",
+      "widths": [
+        600,
+        900
+      ]
+    },
+    {
+      "kind": "image",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3Jg2ZFpVL5E1jVl8P4jJhoRmINj/hf_20261021_095512_9616e5d6-9800-4bf8-afcf-b0769d0c0414.png",
+      "out": "public/media/wellness/clinic-nutrition",
+      "widths": [
+        600,
+        900
+      ]
     }
   ]
 }

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, m as motion, useReducedMotion } from 'framer-motion';
-import { Activity, Check, Flower2, HeartHandshake, Mail, MessageCircle, MessageSquareText, MessagesSquare, Phone, RefreshCw, ShieldCheck, Sparkles, UserPlus, Undo2 } from 'lucide-react';
+import { Check, HeartHandshake, Mail, MessageCircle, MessageSquareText, MessagesSquare, Phone, RefreshCw, ShieldCheck, UserPlus, Undo2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import SectionHeader from '@/components/home-v2/primitives/SectionHeader';
 import { Reveal } from '@/components/home-v2/primitives/MotionReveal';
@@ -17,6 +17,7 @@ import { RxHero, useLoop } from '@/components/industry/RealEstateV3';
  */
 
 const EASE = [0.22, 1, 0.36, 1];
+const M = '/media/wellness/';
 const SAND = 'bg-[linear-gradient(170deg,#F6F1E9_0%,#EFE7DB_100%)]';
 const ARCH = 'rounded-t-[999px] rounded-b-[28px]';
 
@@ -498,40 +499,54 @@ export function WxCycle({ it }) {
 /* Clinics                                                                                                             */
 /* ------------------------------------------------------------------------------------------------------------------ */
 
-const CLINIC_ICONS = { activity: Activity, flower: Flower2, sparkles: Sparkles };
-
-/** Clinics: three kinds of practice, each under an arch, and the clinical line across the bottom. */
+/** Clinics: six kinds of practice, each beside its room in an arch, then the rest by name, and the clinical line. */
 export function WxClinics({ it }) {
   const c = it.wx.clinics;
   return (
     <section id="clinics" data-nav-theme="light" aria-labelledby="wx-clinics-title" className="section relative pt-0">
       <div className="shell">
         <SectionHeader id="wx-clinics-title" titleA={c.titleA} titleB={c.titleB} text={c.text} layout="split" />
-        <div className="no-scrollbar mx-[calc(-1*var(--gutter))] mt-8 flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-px-[var(--gutter)] px-[var(--gutter)] md:mx-0 md:mt-12 md:grid md:grid-cols-3 md:gap-5 md:overflow-visible md:px-0">
-          {c.kinds.map((k, i) => {
-            const Icon = CLINIC_ICONS[k.icon];
-            return (
-              <Reveal key={k.key} delay={i * 0.08} className="w-[84%] shrink-0 snap-start rounded-[28px] bg-white p-5 shadow-[0_0_0_1px_rgba(10,15,14,0.06)] md:w-auto md:p-6">
-                <span className={cn('flex h-[84px] w-[66px] shrink-0 items-center justify-center pt-3 md:h-[112px] md:w-[88px] md:pt-5', ARCH, SAND)}>
-                  <Icon className="h-6 w-6 text-[#D9481C] md:h-7 md:w-7" strokeWidth={1.5} aria-hidden="true" />
-                </span>
-                <span className="block min-w-0">
-                  <span className="mt-4 block text-[17px] font-medium leading-snug tracking-[-0.01em] text-ink md:mt-5 md:text-[19px]">{k.name}</span>
-                  <ul className="mt-2 grid gap-1 md:mt-3 md:gap-1.5">
-                    {k.does.map((x) => (
-                      <li key={x} className="flex items-start gap-2 text-[14px] leading-snug text-graphite">
-                        <span className="mt-[7px] h-1 w-1 shrink-0 rounded-full bg-[#F25C2A]" aria-hidden="true" />
-                        {x}
-                      </li>
-                    ))}
-                  </ul>
-                </span>
-              </Reveal>
-            );
-          })}
+        <div className="no-scrollbar mx-[calc(-1*var(--gutter))] mt-8 flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-px-[var(--gutter)] px-[var(--gutter)] md:mx-0 md:mt-10 md:grid md:grid-cols-2 md:overflow-visible md:px-0 lg:grid-cols-3 lg:gap-4">
+          {c.kinds.map((k, i) => (
+            <Reveal key={k.key} delay={(i % 3) * 0.08} className="flex w-[84%] shrink-0 snap-start items-center gap-4 rounded-[28px] bg-white p-3 pr-5 shadow-[0_0_0_1px_rgba(10,15,14,0.06)] md:w-auto">
+              <span className={cn('relative h-[148px] w-[112px] shrink-0 overflow-hidden bg-[#E9E1D4] [@media(max-height:820px)]:lg:h-[124px] [@media(max-height:820px)]:lg:w-[96px]', ARCH)}>
+                <img
+                  src={M + k.image + '-600.webp'}
+                  srcSet={M + k.image + '-600.webp 600w, ' + M + k.image + '-900.webp 900w'}
+                  sizes="112px"
+                  alt=""
+                  className="absolute inset-0 h-full w-full object-cover"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </span>
+              <span className="block min-w-0">
+                <span className="block text-[16.5px] font-medium leading-snug tracking-[-0.01em] text-ink">{k.name}</span>
+                <ul className="mt-2 grid gap-1">
+                  {k.does.map((x) => (
+                    <li key={x} className="flex items-start gap-2 text-[13.5px] leading-snug text-graphite">
+                      <span className="mt-[7px] h-1 w-1 shrink-0 rounded-full bg-[#F25C2A]" aria-hidden="true" />
+                      {x}
+                    </li>
+                  ))}
+                </ul>
+              </span>
+            </Reveal>
+          ))}
         </div>
+
+        {/* the rest, by name */}
+        <Reveal delay={0.15} className="mt-4 flex flex-wrap items-center gap-2">
+          <span className="mr-1 text-[12px] font-medium uppercase tracking-[0.08em] text-ink/45">{c.more.label}</span>
+          {c.more.items.map((x) => (
+            <span key={x} className="rounded-full bg-white px-3 py-1.5 text-[13px] text-ink/75 shadow-[0_0_0_1px_rgba(10,15,14,0.07)]">
+              {x}
+            </span>
+          ))}
+        </Reveal>
+
         {/* the clinical line */}
-        <Reveal delay={0.2} className="mt-3 grid overflow-hidden rounded-[28px] bg-ink text-white md:mt-5 md:grid-cols-2">
+        <Reveal delay={0.2} className="mt-4 grid overflow-hidden rounded-[28px] bg-ink text-white md:grid-cols-2">
           <p className="flex items-start gap-3 p-5 md:p-6">
             <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-[#FFC857]" strokeWidth={1.8} aria-hidden="true" />
             <span className="text-[14.5px] leading-snug text-white/75">

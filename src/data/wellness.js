@@ -212,12 +212,17 @@ export const wellness = {
     eyebrow: 'Wellness clinics',
     titleA: 'Clinics too.',
     titleB: 'Care stays with you.',
-    text: 'Physiotherapy, massage and aesthetics practices run on the same calendar pressure. Aurora handles the desk; anything clinical goes to your team.',
+    text: 'Physio, spa, aesthetics, dental and every practice that lives by its calendar. Aurora handles the desk; anything clinical goes to your team.',
+    // each practice in an arch photo; `more` names the rest, so the list never reads as the only ones
     kinds: [
-      { key: 'physio', name: 'Physiotherapy & chiropractic', icon: 'activity', does: ['Books first visits and follow-up series', 'Sends intake forms before the first visit', 'Reminds patients of their next session'] },
-      { key: 'spa', name: 'Massage & spa', icon: 'flower', does: ['Books by therapist, room and length', 'Sells and redeems gift cards and packages', 'Fills late cancellations from the waitlist'] },
-      { key: 'aesthetics', name: 'Aesthetics & med spa', icon: 'sparkles', does: ['Books consultations before treatments', 'Sends before-and-after care notes you wrote', 'Rebooks the next treatment on time'] },
+      { key: 'physio', name: 'Physiotherapy & chiropractic', image: 'clinic-physio', does: ['Books first visits and follow-up series', 'Sends intake forms before the first visit'] },
+      { key: 'spa', name: 'Massage & spa', image: 'clinic-spa', does: ['Books by therapist, room and length', 'Sells and redeems gift cards and packages'] },
+      { key: 'aesthetics', name: 'Aesthetics & med spa', image: 'clinic-aesthetics', does: ['Books consultations before treatments', 'Rebooks the next treatment on time'] },
+      { key: 'dental', name: 'Dental clinics', image: 'clinic-dental', does: ['Books check-ups and cleanings', 'Recalls patients when they’re due'] },
+      { key: 'holistic', name: 'Acupuncture & holistic', image: 'clinic-holistic', does: ['Books sessions by practitioner', 'Sends what to expect before a first visit'] },
+      { key: 'nutrition', name: 'Nutrition & dietitians', image: 'clinic-nutrition', does: ['Books consultations and check-ins', 'Collects intake questionnaires ahead'] },
     ],
+    more: { label: 'And more', items: ['Yoga, Pilates & fitness studios', 'Sports medicine', 'IV & wellness lounges', 'Counselling practices', 'Optometry', 'Beauty & skin clinics'] },
     line: { never: 'Never', neverText: 'diagnoses, gives medical advice or discusses treatment results.', always: 'Always', alwaysText: 'hands clinical questions and urgent cases to your staff, with the conversation attached.' },
   },
 
