@@ -152,7 +152,7 @@ function CallStage({ h, header }) {
               fetchPriority="high"
             />
             {wantVideo && f.video ? (
-              <video ref={videoRef} src={f.video} poster={f.poster} muted loop playsInline preload="auto" aria-hidden="true" style={f.mirror ? { transform: 'scaleX(-1)' } : undefined} className="absolute inset-0 h-full w-full object-cover object-[30%_50%] motion-safe:animate-[intro-fade_0.9s_cubic-bezier(0.22,1,0.36,1)_0.2s_both] min-[560px]:inset-auto min-[560px]:left-0 min-[560px]:top-[-9.16cqw] min-[560px]:h-[calc(100%_+_9.16cqw)] min-[560px]:min-h-[55.87cqw] min-[560px]:object-[30%_0%] min-[560px]:[mask-image:linear-gradient(to_bottom,transparent,#000_7%)]" />
+              <video ref={videoRef} src={f.video} poster={f.poster} muted loop={!f.once} playsInline preload="auto" aria-hidden="true" style={f.mirror ? { transform: 'scaleX(-1)' } : undefined} className="absolute inset-0 h-full w-full object-cover object-[30%_50%] motion-safe:animate-[intro-fade_0.9s_cubic-bezier(0.22,1,0.36,1)_0.2s_both] min-[560px]:inset-auto min-[560px]:left-0 min-[560px]:top-[-9.16cqw] min-[560px]:h-[calc(100%_+_9.16cqw)] min-[560px]:min-h-[55.87cqw] min-[560px]:object-[30%_0%] min-[560px]:[mask-image:linear-gradient(to_bottom,transparent,#000_7%)]" />
             ) : null}
             {f.video ? <span className="sr-only">{f.alt}</span> : null}
             <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(20,24,40,0.25)_0%,rgba(20,24,40,0)_30%,rgba(20,24,40,0)_60%,rgba(20,24,40,0.35)_100%)] min-[560px]:hidden" />
