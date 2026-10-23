@@ -13,6 +13,94 @@ export const blog = {
 
 export const posts = [
   {
+    "slug": "what-is-mcp",
+    "title": "What is MCP, and does your business need to care about it?",
+    "titleTag": "What Is MCP? A Plain-English Guide for Business Owners",
+    "description": "What is MCP? The Model Context Protocol in plain words: what it connects, what changed in 2026, and five questions to ask any AI vendor about it.",
+    "dek": "What the Model Context Protocol connects, why AI tools can now write to your systems through it, and five questions to ask before you switch it on.",
+    "category": "Trends",
+    "date": "2026-10-23",
+    "updated": "2026-10-23",
+    "author": "Divine Tech AI",
+    "image": {
+      "base": "/img/blog/what-is-mcp",
+      "alt": "Deep plum and raspberry light with a rose glow in the upper left, the Divine Tech AI wordmark and the headline What does MCP connect?",
+      "og": "/img/blog/what-is-mcp-og.jpg"
+    },
+    "bodyHtml": "<p><strong>What is MCP? The Model Context Protocol (MCP) is an open standard that lets an AI assistant or agent connect to business software, read data from it and take actions in it, through one common connector instead of a custom integration for every pair of tools.</strong> You do not need to build anything with it, but you should know when an AI tool can change your data through it, and who controls that.</p>\n\n<p>Anthropic introduced MCP in late 2024 and in December 2025 handed it to the Agentic AI Foundation, a fund under the Linux Foundation that Anthropic co-founded with Block and OpenAI (<a href=\"https://blog.modelcontextprotocol.io/posts/2025-12-09-mcp-joins-agentic-ai-foundation/\">MCP blog</a>). ChatGPT, Gemini and Microsoft Copilot all support it (<a href=\"https://www.anthropic.com/news/donating-the-model-context-protocol-and-establishing-of-the-agentic-ai-foundation\">Anthropic</a>), so it is no longer one company's format.</p>\n\n<h2>What is MCP made of?</h2>\n\n<p>An MCP setup has three parts:</p>\n\n<ul>\n<li>the client, which is the AI app a person uses, such as Claude, ChatGPT, Copilot or an agent platform;</li>\n<li>the MCP server, a connector a software company publishes for its product, such as your CRM, your practice management tool or your knowledge base;</li>\n<li>the tools, which are the actions that server offers (\"find unpaid invoices\", \"create a task\", \"log time\"), each with a short description the AI reads to decide when to use it.</li>\n</ul>\n\n<p>Once your CRM has an MCP server, any assistant that speaks MCP can use it, within the permissions the server allows. Software makers only have to build the connector once, and many have: the official MCP software kits now see close to half a billion downloads a month (<a href=\"https://blog.modelcontextprotocol.io/posts/2026-07-28/\">MCP blog, July 2026</a>).</p>\n\n<h2>What changed with MCP in 2026?</h2>\n\n<p>The specification released on July 28, 2026 makes connectors easier to run at scale, tightens how sign-in works, and adds an extension that lets a company's IT team manage sign-ins centrally (<a href=\"https://blog.modelcontextprotocol.io/posts/2026-07-28/\">MCP blog</a>).</p>\n\n<p>The bigger change for owners is that connectors now write as well as read. On October 20, Financial Cents launched an MCP server that lets Claude, ChatGPT and Gemini read and update an accounting firm's data within the firm's permission levels. The assistant confirms before changes, every action is audited, and deletes are not available at all (<a href=\"https://prnewswire.com/news-releases/financial-cents-launches-mcp-server-to-put-firm-data-to-work-inside-everyday-ai-assistants-302910604.html\">PR Newswire</a>). Two days later Haystack added write access to its MCP server in Claude, ChatGPT, Copilot and Slack, so employees can draft and publish posts from an assistant (<a href=\"https://finance.yahoo.com/technology/ai/articles/haystacks-mcp-server-now-works-124600200.html\">Yahoo Finance</a>).</p>\n\n<p>The NSA has noticed too. In May 2026 it published guidance telling MCP adopters to \"proceed with caution\" (<a href=\"https://www.nsa.gov/Press-Room/Press-Releases-Statements/Press-Release-View/Article/4496698/\">NSA</a>). It recommends least privilege, logging every tool call with its inputs and the identity behind it, and treating whatever a tool returns as untrusted.</p>\n\n<h2>Does your business need to care about MCP?</h2>\n\n<p>Yes, in two cases: your staff connect AI assistants to company tools, or you buy an AI agent that works inside your systems. If neither applies yet, it is plumbing you can ignore for now.</p>\n\n<p>When it applies, ask the vendor five questions:</p>\n\n<table>\n<thead><tr><th>Question</th><th>A good answer</th></tr></thead>\n<tbody>\n<tr><td>Which actions can the AI take?</td><td>A written list of tools, marked read or write, with deletes and payments off unless you turn them on</td></tr>\n<tr><td>Whose permissions does it use?</td><td>Each person signs in as themselves, and the AI sees only what that person can see</td></tr>\n<tr><td>What needs a person's approval?</td><td>Changes above limits you set wait for a named approver</td></tr>\n<tr><td>What is logged?</td><td>Every tool call, with its inputs, the user and the result, in a log you can read</td></tr>\n<tr><td>How do we switch it off?</td><td>A list of every connection, and one click to revoke each one</td></tr>\n</tbody>\n</table>\n\n<p>Ask them whether or not the vendor uses MCP. The protocol standardizes the connection, not what the AI is allowed to do.</p>\n\n<h2>Frequently asked questions</h2>\n\n<h3>Is MCP the same as an API?</h3>\n<p>No. An API is how one program talks to another product. An MCP server usually sits on top of that API and describes its actions in a standard way, so any AI assistant can find and use them without a custom integration.</p>\n\n<h3>Is MCP safe to use?</h3>\n<p>It is as safe as its setup. The NSA lists risks such as text inside returned data that tries to steer the AI, and tools that are discovered without checking where they come from. Limit each connection to the actions it needs, require approval for changes that matter, and log every call.</p>\n\n<h2>Next steps</h2>\n\n<p>Before anyone connects an assistant to company data, write down which actions it may take and who approves the rest. Aurora works inside the CRM, calendar, messaging and payment tools you already use, under the same rules: you decide what it does on its own, what needs approval and what it never does, and every action goes to the audit log.</p>\n\n<p>Read <a href=\"/blog/ai-operating-system-for-business\">what an AI operating system is</a>, compare <a href=\"/blog/ai-agents-vs-chatbots-vs-rpa\">agents, chatbots and RPA</a>, or see <a href=\"/platform#security\">how Aurora keeps you in control</a> on <a href=\"/platform\">the platform page</a>.</p>",
+    "schema": [
+      {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "What is MCP, and does your business need to care about it?",
+        "description": "What is MCP? The Model Context Protocol in plain words: what it connects, what changed in 2026, and five questions to ask any AI vendor about it.",
+        "image": "https://divine-tech.ai/img/blog/what-is-mcp-og.jpg",
+        "datePublished": "2026-10-23",
+        "dateModified": "2026-10-23",
+        "author": {
+          "@type": "Organization",
+          "name": "Divine Tech AI",
+          "url": "https://divine-tech.ai"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Divine Tech AI",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://divine-tech.ai/icon-512.png"
+          }
+        },
+        "mainEntityOfPage": "https://divine-tech.ai/blog/what-is-mcp"
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://divine-tech.ai/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Blog",
+            "item": "https://divine-tech.ai/blog"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "What is MCP, and does your business need to care about it?",
+            "item": "https://divine-tech.ai/blog/what-is-mcp"
+          }
+        ]
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Is MCP the same as an API?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. An API is how one program talks to another product. An MCP server usually sits on top of that API and describes its actions in a standard way, so any AI assistant can find and use them without a custom integration."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is MCP safe to use?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "It is as safe as its setup. The NSA lists risks such as text inside returned data that tries to steer the AI, and tools that are discovered without checking where they come from. Limit each connection to the actions it needs, require approval for changes that matter, and log every call."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
     "slug": "ai-agent-human-handoff",
     "title": "AI-to-human handoff: when should an AI agent hand off to a human?",
     "titleTag": "AI-to-Human Handoff: When an AI Agent Should Hand Off",

@@ -35,23 +35,16 @@
       "slug": "ai-agents-vs-chatbots-vs-rpa",
       "cluster": "ai-os",
       "type": "support"
+    },
+    {
+      "slug": "ai-agent-human-handoff",
+      "cluster": "customer-service",
+      "type": "support"
     }
   ],
   "queue": [
     {
       "status": "in_review",
-      "cluster": "customer-service",
-      "type": "support",
-      "topic": "When should an AI agent hand off to a human?",
-      "angle": "Concrete handoff triggers, what the person must receive, why the route to a person matters (Gartner 2024, Five9 2026). Split from the customer service agents guide.",
-      "link_to": [
-        "/blog/ai-customer-service-agents",
-        "/platform"
-      ],
-      "slug": "ai-agent-human-handoff"
-    },
-    {
-      "status": "queued",
       "cluster": "trends",
       "type": "trend",
       "topic": "What is MCP, and does a business need to care about it?",
@@ -59,7 +52,8 @@
       "link_to": [
         "/platform",
         "/blog/ai-operating-system-for-business"
-      ]
+      ],
+      "slug": "what-is-mcp"
     },
     {
       "status": "queued",
