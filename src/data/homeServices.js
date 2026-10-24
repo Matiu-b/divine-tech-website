@@ -220,10 +220,5 @@ export const hsLive = {
 export const hsClosing = {
   titleA: 'Ready to scale with us?',
   titleB: 'Book a demo.',
-  text: 'Aurora answers your customers and runs the office behind them, so the team you have handles more jobs. Bring one real process and watch it work.',
-  next: [
-    { time: 'Now', text: 'Leave your details' },
-    { time: 'Minutes later', text: 'Aurora calls you, so you hear it first-hand' },
-    { time: 'Within days', text: 'We map one of your processes together' },
-  ],
+  form: 'Leave your details. Aurora calls you within minutes.',
 };
