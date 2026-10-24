@@ -24,7 +24,6 @@ import {
   WhatsAppMark,
 } from './BrandMarks';
 import ProcessBoard from './ProcessBoard';
-import LiquidGlass from './primitives/LiquidGlass';
 
 // Who does each phase decides its colour on the rail: ink = our experts with you, green = Aurora.
 const TONE = { you: 'bg-ink', aurora: 'bg-brand' };
@@ -242,21 +241,16 @@ export function GoLiveVisual() {
 
   const bubble = 'max-w-[84%] w-fit px-3.5 py-2 text-[13px] leading-snug';
   const styles = {
-    customer: cn(bubble, 'rounded-[20px] rounded-bl-[6px] bg-white text-ink shadow-[0_1px_2px_rgba(10,15,14,0.06)]'),
-    aurora: cn(bubble, 'ml-auto rounded-[20px] rounded-br-[6px] bg-[linear-gradient(160deg,rgba(214,216,220,0.85),rgba(190,193,198,0.7))] text-ink ring-1 ring-white/70 shadow-[inset_0_1px_0_rgba(255,255,255,0.8),0_6px_16px_-10px_rgba(10,15,14,0.35)] backdrop-blur-md'),
+    customer: cn(bubble, 'rounded-[20px] rounded-bl-[6px] bg-[#F3F1EC] text-ink'),
+    aurora: cn(bubble, 'ml-auto rounded-[20px] rounded-br-[6px] bg-[linear-gradient(160deg,#E4E6E9,#D5D8DC)] text-ink'),
   };
   const enter = reduce ? {} : { initial: { opacity: 0, y: 10, scale: 0.98 }, animate: { opacity: 1, y: 0, scale: 1 }, exit: { opacity: 0 }, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } };
 
   return (
     <div ref={ref}>
-      <div className="canvas relative bg-[linear-gradient(160deg,#F3F1EC_0%,#E9E5DD_100%)] p-3 xs:p-4 md:p-5">
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-          <div className={cn('absolute -left-[10%] -top-[20%] h-[70%] w-[70%] rounded-full bg-[radial-gradient(closest-side,rgba(255,159,69,0.22),rgba(255,159,69,0))] blur-2xl', !reduce && 'animate-drift')} />
-          <div className={cn('absolute -bottom-[20%] -right-[10%] h-[70%] w-[70%] rounded-full bg-[radial-gradient(closest-side,rgba(255,200,87,0.3),rgba(255,200,87,0))] blur-2xl', !reduce && 'animate-drift [animation-delay:-8s]')} />
-        </div>
-
-        <LiquidGlass className="relative overflow-hidden rounded-[26px]" style={{ '--lg-tint-a': 'rgba(255,250,242,0.55)', '--lg-tint-b': 'rgba(255,246,229,0.25)' }}>
-          <div className="flex items-center justify-between border-b border-white/50 px-4 py-2 text-[10.5px] font-medium text-ink/45">
+      <Stage tone="mint">
+        <div className="ui-card relative overflow-hidden">
+          <div className="flex items-center justify-between border-b border-ink/[0.06] px-4 py-2 text-[10.5px] font-medium text-ink/45">
             <span>Customer</span>
             <span>{brand.product}, your AI agent</span>
           </div>
@@ -272,25 +266,25 @@ export function GoLiveVisual() {
                 ))}
               </AnimatePresence>
             </div>
-            <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-8 bg-gradient-to-b from-[#FBF7F0]/80 to-transparent" />
+            <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-8 bg-gradient-to-b from-white to-transparent" />
           </div>
 
-          <div className={cn('flex items-center justify-between gap-3 border-t border-white/50 px-4 py-2.5 transition-colors duration-500', t >= 14 ? 'bg-white/45' : 'bg-white/15')}>
+          <div className={cn('flex items-center justify-between gap-3 border-t border-ink/[0.06] px-4 py-2.5 transition-colors duration-500', t >= 14 ? 'bg-[#E4F4E8]/60' : 'bg-transparent')}>
             <span className="min-w-0 text-[11.5px] leading-snug text-ink/70">
               {t >= 14 ? 'Approved. Customers now get these answers.' : t >= 13 ? 'Test passed: 24 of 24 answers correct' : 'Testing on real questions…'}
             </span>
             <span
               className={cn(
                 'flex h-7 shrink-0 items-center gap-1.5 rounded-full px-3 text-[11.5px] font-medium transition-all duration-500',
-                t >= 14 ? 'bg-ink text-white' : t >= 13 ? 'bg-white text-ink shadow-[0_1px_2px_rgba(10,15,14,0.1)]' : 'bg-white/40 text-ink/40'
+                t >= 14 ? 'bg-ink text-white' : t >= 13 ? 'bg-white text-ink shadow-[0_0_0_1px_rgba(10,15,14,0.1)]' : 'bg-ink/[0.05] text-ink/40'
               )}
             >
               {t >= 14 ? <Check className="h-3.5 w-3.5" strokeWidth={2.6} aria-hidden="true" /> : null}
               {t >= 14 ? 'Live' : 'Approve'}
             </span>
           </div>
-        </LiquidGlass>
-      </div>
+        </div>
+      </Stage>
     </div>
   );
 }
